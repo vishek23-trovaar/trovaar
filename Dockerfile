@@ -58,7 +58,7 @@ USER nextjs
 EXPOSE 3001
 ENV PORT=3001
 ENV HOSTNAME="0.0.0.0"
-ENV DATABASE_PATH=/app/data/servicerequest.db
+ENV DATABASE_PATH=/app/data/trovaar.db
 
 # Use tini for proper signal handling
 ENTRYPOINT ["/sbin/tini", "--"]

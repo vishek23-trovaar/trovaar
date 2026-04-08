@@ -7,7 +7,7 @@
  * Alternatively, run this SQL directly against the SQLite database:
  *   UPDATE users SET is_admin = 1 WHERE email = 'your@email.com';
  *
- * The database file is located at: ./data/servicerequest.db
+ * The database file is located at: ./data/trovaar.db
  * (or wherever DATABASE_PATH env var points)
  */
 

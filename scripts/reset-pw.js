@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const D = require('better-sqlite3');
-const db = new D('./data/servicerequest.db');
+const db = new D('./data/trovaar.db');
 
 // Use async hash like the app does
 const password = 'Test1234';

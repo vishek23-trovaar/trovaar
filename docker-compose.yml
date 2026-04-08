@@ -10,7 +10,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3001
-      - DATABASE_PATH=/app/data/servicerequest.db
+      - DATABASE_PATH=/app/data/trovaar.db
     volumes:
       # Persist SQLite database across container restarts
       - db-data:/app/data

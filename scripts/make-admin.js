@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const Database = require("better-sqlite3");
 const { randomUUID } = require("crypto");
 
-const db = new Database("./data/servicerequest.db");
+const db = new Database("./data/trovaar.db");
 
 const EMAIL = "vishek2333@outlook.com";
 const PASSWORD = "Admin123!";

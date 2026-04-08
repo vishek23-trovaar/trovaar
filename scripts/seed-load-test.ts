@@ -20,7 +20,7 @@ if (fs.existsSync(envPath)) {
 
 const dbPath = process.env.DATABASE_PATH
   ? path.resolve(process.env.DATABASE_PATH)
-  : path.resolve(process.cwd(), "./data/servicerequest.db");
+  : path.resolve(process.cwd(), "./data/trovaar.db");
 
 const db = new Database(dbPath);
 db.pragma("journal_mode = WAL");

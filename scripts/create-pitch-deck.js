@@ -2,8 +2,8 @@ const pptxgen = require("pptxgenjs");
 
 const pres = new pptxgen();
 pres.layout = "LAYOUT_16x9";
-pres.author = "Trovar";
-pres.title = "Trovar - Investor Pitch Deck";
+pres.author = "Trovaar";
+pres.title = "Trovaar - Investor Pitch Deck";
 
 // ── Brand Colors ──
 const C = {
@@ -58,7 +58,7 @@ const makeShadow = () => ({
   });
 
   // Title
-  s.addText("Trovar", {
+  s.addText("Trovaar", {
     x: 0.5, y: 2.4, w: 9, h: 1.0,
     fontSize: 54, fontFace: "Arial Black", color: C.white,
     bold: true, align: "center", valign: "middle", margin: 0,
@@ -257,9 +257,9 @@ const makeShadow = () => ({
     line: { color: C.slate300, width: 0.5 },
   });
 
-  // Trovar difference callouts
+  // Trovaar difference callouts
   s.addText([
-    { text: "Trovar flips this: ", options: { bold: true, color: C.blue, fontSize: 11 } },
+    { text: "Trovaar flips this: ", options: { bold: true, color: C.blue, fontSize: 11 } },
     { text: "Customers describe the job once → Contractors bid on the listing → No phone spam, no lead fees, no repeating yourself. Post once, get multiple competitive bids.", options: { color: C.slate500, fontSize: 11 } },
   ], {
     x: 0.6, y: 5.05, w: 8.8, h: 0.45,
@@ -279,7 +279,7 @@ const makeShadow = () => ({
     fontSize: 36, fontFace: "Arial Black", color: C.slate900, bold: true, margin: 0,
   });
 
-  s.addText("Trovar is the Uber of home services — transparent, competitive, and fair.", {
+  s.addText("Trovaar is the Uber of home services — transparent, competitive, and fair.", {
     x: 0.6, y: 1.0, w: 8.8, h: 0.5,
     fontSize: 16, fontFace: "Calibri", color: C.slate500,
   });
@@ -501,7 +501,7 @@ const makeShadow = () => ({
     fontFace: "Calibri",
   });
 
-  // Right — After (Trovar)
+  // Right — After (Trovaar)
   s.addShape(pres.shapes.RECTANGLE, {
     x: 5.2, y: 1.6, w: 4.3, h: 3.2,
     fill: { color: "0D1F17" },
@@ -511,7 +511,7 @@ const makeShadow = () => ({
     x: 5.2, y: 1.6, w: 4.3, h: 0.06,
     fill: { color: C.green },
   });
-  s.addText("✅  Trovar", {
+  s.addText("✅  Trovaar", {
     x: 5.4, y: 1.8, w: 3.9, h: 0.45,
     fontSize: 16, fontFace: "Calibri", color: C.greenLight, bold: true,
   });
@@ -604,7 +604,7 @@ const makeShadow = () => ({
   const breakdown = [
     { label: "Client Pays", value: "$600", x: 4.0 },
     { label: "Contractor Gets", value: "$500", x: 6.0 },
-    { label: "Trovar Keeps", value: "$100", x: 8.0 },
+    { label: "Trovaar Keeps", value: "$100", x: 8.0 },
   ];
   breakdown.forEach((b) => {
     s.addText(b.value, {
@@ -688,7 +688,7 @@ const makeShadow = () => ({
   });
 
   // Comparison table
-  const headers = ["", "Trovar", "Angi", "Thumbtack", "TaskRabbit", "Nextdoor"];
+  const headers = ["", "Trovaar", "Angi", "Thumbtack", "TaskRabbit", "Nextdoor"];
   const rows = [
     ["Blind bidding (anti-discrimination)", "✅", "❌", "❌", "❌", "❌"],
     ["AI video job posting", "✅", "❌", "❌", "❌", "❌"],
@@ -949,7 +949,7 @@ const makeShadow = () => ({
     bold: true, align: "center", margin: 0,
   });
 
-  s.addText("Trovar is ready to disrupt a $657B industry with fair pricing,\nAI-powered simplicity, and a platform built for everyone.", {
+  s.addText("Trovaar is ready to disrupt a $657B industry with fair pricing,\nAI-powered simplicity, and a platform built for everyone.", {
     x: 1.5, y: 1.7, w: 7, h: 0.8,
     fontSize: 14, fontFace: "Calibri", color: C.slate400,
     align: "center",
@@ -981,7 +981,7 @@ const makeShadow = () => ({
     x: 0, y: 5.1, w: 10, h: 0.525,
     fill: { color: C.blue },
   });
-  s.addText("vishek23@gmail.com  |  trovar.com  |  Patent Pending", {
+  s.addText("vishek23@gmail.com  |  trovaar.com  |  Patent Pending", {
     x: 0, y: 5.1, w: 10, h: 0.525,
     fontSize: 13, fontFace: "Calibri", color: C.white,
     align: "center", valign: "middle",
@@ -989,6 +989,6 @@ const makeShadow = () => ({
 })();
 
 // ── Save ──
-pres.writeFile({ fileName: "C:/Claude/ServiceRequest/Trovar-Pitch-Deck.pptx" })
-  .then(() => console.log("✅ Pitch deck saved: C:/Claude/ServiceRequest/Trovar-Pitch-Deck.pptx"))
+pres.writeFile({ fileName: "C:/Claude/ServiceRequest/Trovaar-Pitch-Deck.pptx" })
+  .then(() => console.log("✅ Pitch deck saved: C:/Claude/ServiceRequest/Trovaar-Pitch-Deck.pptx"))
   .catch((err) => console.error("Error:", err));

@@ -23,7 +23,7 @@ import { PrismaClient } from "@prisma/client";
 
 const SQLITE_PATH = path.resolve(
   process.cwd(),
-  process.env.SQLITE_PATH || "./data/servicerequest.db"
+  process.env.SQLITE_PATH || "./data/trovaar.db"
 );
 
 const sqlite = new Database(SQLITE_PATH, { readonly: true });

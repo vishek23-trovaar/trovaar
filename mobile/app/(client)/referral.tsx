@@ -191,7 +191,7 @@ export default function ReferralScreen() {
     try {
       await Share.share({
         message: `Use my referral code ${data.referralCode} to sign up and get $10 credit on your first job! Download the app and use code: ${data.referralCode}`,
-        title: "Join me on ServiceRequest",
+        title: "Join me on Trovaar",
       });
     } catch {
       // User dismissed share sheet — no action needed

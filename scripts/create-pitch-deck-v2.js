@@ -17,8 +17,8 @@ function captureUrl(url, filePath) {
 async function buildDeck() {
   const pres = new pptxgen();
   pres.layout = "LAYOUT_16x9";
-  pres.author = "Trovar";
-  pres.title = "Trovar - Investor Pitch Deck 2026";
+  pres.author = "Trovaar";
+  pres.title = "Trovaar - Investor Pitch Deck 2026";
 
   // ── Brand Colors ──
   const C = {
@@ -129,7 +129,7 @@ async function buildDeck() {
     });
 
     // Title
-    s.addText("Trovar", {
+    s.addText("Trovaar", {
       x: 0.5, y: 2.2, w: 9, h: 1.0,
       fontSize: 54, fontFace: "Arial Black", color: C.white,
       bold: true, align: "center", valign: "middle", margin: 0,
@@ -220,7 +220,7 @@ async function buildDeck() {
       x: 0.7, y: 3.98, w: 8.6, h: 0.35,
       fontSize: 14, fontFace: "Arial", color: C.white, bold: true, margin: 0,
     });
-    s.addText("Connecting every skill to a trade. Trovar is the networking platform for services \u2014 where skilled professionals find work on their own terms and customers get fair, transparent pricing. Payments are held in escrow until the job is done and confirmed by both sides. One app that finally works for everyone.", {
+    s.addText("Connecting every skill to a trade. Trovaar is the networking platform for services \u2014 where skilled professionals find work on their own terms and customers get fair, transparent pricing. Payments are held in escrow until the job is done and confirmed by both sides. One app that finally works for everyone.", {
       x: 0.7, y: 4.32, w: 8.6, h: 0.55,
       fontSize: 11, fontFace: "Calibri", color: C.blueBright, margin: 0,
     });
@@ -291,12 +291,12 @@ async function buildDeck() {
       fontSize: 11, fontFace: "Calibri", color: C.slate300, lineSpacingMultiple: 1.4, margin: 0,
     });
 
-    // Trovar advantage banner at bottom
+    // Trovaar advantage banner at bottom
     s.addShape(pres.shapes.RECTANGLE, {
       x: 0.5, y: 5.1, w: 9, h: 0.45,
       fill: { color: C.blue },
     });
-    s.addText("\u26A1  Trovar: Contractors keep 100% of their bid. Work for yourself. Set your own prices. Build YOUR reputation.", {
+    s.addText("\u26A1  Trovaar: Contractors keep 100% of their bid. Work for yourself. Set your own prices. Build YOUR reputation.", {
       x: 0.5, y: 5.1, w: 9, h: 0.45,
       fontSize: 11, fontFace: "Calibri", color: C.white, bold: true, align: "center", valign: "middle", margin: 0,
     });
@@ -382,7 +382,7 @@ async function buildDeck() {
   // ════════════════════════════════════════════════════════════════
   (() => {
     const s = pres.addSlide();
-    addSectionTitle(s, "The Web Platform", "Live at trovar.com \u2014 fully functional marketplace");
+    addSectionTitle(s, "The Web Platform", "Live at trovaar.com \u2014 fully functional marketplace");
 
     // Screenshot placeholder with border
     s.addShape(pres.shapes.RECTANGLE, {
@@ -700,7 +700,7 @@ async function buildDeck() {
 
     s.addText([
       { text: "Platform Markup on Every Transaction\n", options: { fontSize: 16, color: C.white, bold: true, breakLine: true } },
-      { text: "Built into the price. Customer pays total. Contractor receives their bid amount. Trovar keeps 20%.\n", options: { fontSize: 11, color: C.slate400, breakLine: true } },
+      { text: "Built into the price. Customer pays total. Contractor receives their bid amount. Trovaar keeps 20%.\n", options: { fontSize: 11, color: C.slate400, breakLine: true } },
       { text: "No subscriptions. No lead fees. We only make money when work gets done.", options: { fontSize: 11, color: C.greenLight, italic: true } },
     ], {
       x: 2.5, y: 1.9, w: 6.8, h: 1.2,
@@ -733,7 +733,7 @@ async function buildDeck() {
       { label: "Contractor bids:", value: "$400", color: C.white },
       { label: "Held in escrow:", value: "$480", color: C.blueLight },
       { label: "Both confirm \u2192 Released:", value: "$400 to pro", color: C.green },
-      { label: "Trovar keeps:", value: "$80", color: C.amber },
+      { label: "Trovaar keeps:", value: "$80", color: C.amber },
     ];
 
     txnRows.forEach((r, i) => {
@@ -818,7 +818,7 @@ async function buildDeck() {
     addSectionTitle(s, "Competitive Landscape", "We win where the incumbents fail");
 
     // Table headers
-    const headers = ["Feature", "Trovar", "Angi", "Thumbtack", "TaskRabbit"];
+    const headers = ["Feature", "Trovaar", "Angi", "Thumbtack", "TaskRabbit"];
     const headerColors = [C.slate400, C.green, C.slate500, C.slate500, C.slate500];
 
     headers.forEach((h, i) => {
@@ -1106,7 +1106,7 @@ async function buildDeck() {
     });
     s.addText([
       { text: "Let's build the future of home services together.\n", options: { fontSize: 14, color: C.white, bold: true, breakLine: true } },
-      { text: "vishek23@gmail.com  \u2022  trovar.com", options: { fontSize: 11, color: C.blueBright } },
+      { text: "vishek23@gmail.com  \u2022  trovaar.com", options: { fontSize: 11, color: C.blueBright } },
     ], {
       x: 2.0, y: 4.5, w: 6, h: 0.9,
       fontFace: "Calibri", align: "center", valign: "middle", margin: 0,
@@ -1114,7 +1114,7 @@ async function buildDeck() {
   })();
 
   // ── Save ──
-  const outputPath = path.join(__dirname, "..", "Trovar-Pitch-Deck-v2.pptx");
+  const outputPath = path.join(__dirname, "..", "Trovaar-Pitch-Deck-v2.pptx");
   await pres.writeFile({ fileName: outputPath });
   console.log(`\n\u2705 Pitch deck created: ${outputPath}`);
   console.log(`   ${TOTAL_SLIDES} slides | Premium investor deck with live product data\n`);
