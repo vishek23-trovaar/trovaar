@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-primary: #2563EB;
+  --color-primary-dark: #1D4ED8;
+  --color-primary-light: #3B82F6;
+  --color-secondary: #0F172A;
+  --color-accent: #F59E0B;
+  --color-success: #10B981;
+  --color-danger: #EF4444;
+  --color-warning: #F59E0B;
+  --color-muted: #64748B;
+  --color-surface: #F8FAFC;
+  --color-surface-dark: #F1F5F9;
+  --color-border: #E2E8F0;
+  --color-auto: #EF4444;
+  --color-plumbing: #3B82F6;
+  --color-electrical: #F59E0B;
+  --color-handyman: #10B981;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: #F8FAFC;
+  color: #0F172A;
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+.category-auto_repair { --cat-color: #EF4444; }
+.category-plumbing { --cat-color: #3B82F6; }
+.category-electrical { --cat-color: #F59E0B; }
+.category-handyman { --cat-color: #10B981; }

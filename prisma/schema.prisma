@@ -1,0 +1,738 @@
+// ============================================================
+//  Prisma Schema — ServiceRequest Platform
+//  Provider: PostgreSQL (Neon / Supabase / Railway / self-hosted)
+//
+//  This schema is the PostgreSQL-ready mirror of the SQLite
+//  schema managed by src/lib/db.ts.  When you are ready to
+//  switch databases:
+//    1.  Set DATABASE_URL to a Postgres connection string
+//    2.  Run: npx prisma migrate dev --name init
+//    3.  Run: npx ts-node scripts/sqlite-to-postgres.ts
+//    4.  Swap getDb() calls to use src/lib/prisma.ts
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Enums ────────────────────────────────────────────────────
+
+enum UserRole {
+  consumer
+  contractor
+}
+
+enum JobStatus {
+  posted
+  bidding
+  accepted
+  en_route
+  arrived
+  in_progress
+  completed
+  cancelled
+}
+
+enum JobUrgency {
+  low
+  medium
+  high
+  emergency
+}
+
+enum BidStatus {
+  pending
+  accepted
+  rejected
+  withdrawn
+}
+
+enum VerificationStatus {
+  none
+  pending
+  approved
+  rejected
+}
+
+enum ContractorType {
+  independent
+  business
+}
+
+enum DisputeStatus {
+  open
+  investigating
+  resolved
+  closed
+}
+
+enum ChangeOrderStatus {
+  pending
+  approved
+  rejected
+}
+
+enum HelpRequestStatus {
+  open
+  filled
+  cancelled
+  completed
+}
+
+enum HelpApplicationStatus {
+  pending
+  accepted
+  rejected
+  withdrawn
+}
+
+enum ReceiptType {
+  receipt
+  invoice
+  estimate
+  other
+}
+
+enum CompletionBondStatus {
+  held
+  released
+  forfeited
+}
+
+enum GroupJobStatus {
+  forming
+  active
+  completed
+  cancelled
+}
+
+// ── Users ────────────────────────────────────────────────────
+
+model User {
+  id                     String    @id @default(uuid())
+  email                  String    @unique
+  passwordHash           String?   @map("password_hash")
+  name                   String
+  role                   UserRole
+  phone                  String?   @unique
+  location               String?
+  emailVerified          Boolean   @default(false) @map("email_verified")
+  oauthProvider          String?   @map("oauth_provider")
+  latitude               Float?
+  longitude              Float?
+  isAdmin                Boolean   @default(false) @map("is_admin")
+  referralCode           String?   @unique @map("referral_code")
+  referredBy             String?   @map("referred_by")
+  creditBalanceCents     Int       @default(0) @map("credit_balance_cents")
+  phoneVerified          Boolean   @default(false) @map("phone_verified")
+  phoneVerifyCode        String?   @map("phone_verify_code")
+  phoneVerifyExpires     DateTime? @map("phone_verify_expires")
+  phoneNumber            String?   @map("phone_number")
+  smsAlertsEnabled       Boolean   @default(false) @map("sms_alerts_enabled")
+  isSeniorAccount        Boolean   @default(false) @map("is_senior_account")
+  familyOverseerEmail    String?   @map("family_overseer_email")
+  familyOversightEnabled Boolean   @default(false) @map("family_oversight_enabled")
+  accountNumber          String?   @unique @map("account_number")
+  createdAt              DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  contractorProfile    ContractorProfile?
+  postedJobs           Job[]                  @relation("ConsumerJobs")
+  bids                 Bid[]
+  oauthAccounts        OauthAccount[]
+  verificationCodes    VerificationCode[]
+  reviewsGiven         Review[]               @relation("ReviewerReviews")
+  reviewsReceived      Review[]               @relation("ContractorReviews")
+  notifications        Notification[]
+  sentMessages         Message[]              @relation("SentMessages")
+  receivedMessages     Message[]              @relation("ReceivedMessages")
+  savedContractors     SavedContractor[]      @relation("ConsumerSavedContractors")
+  savedByConsumers     SavedContractor[]      @relation("ContractorSavedBy")
+  disputesReported     Dispute[]
+  tipsSent             Tip[]                  @relation("TipsSent")
+  tipsReceived         Tip[]                  @relation("TipsReceived")
+  callsInitiated       CallLog[]              @relation("CallerLogs")
+  callsReceived        CallLog[]              @relation("ReceiverLogs")
+  seniorProtection     SeniorProtection[]
+  contractorStrikes    ContractorStrike[]
+  contractorSuspensions ContractorSuspension[]
+  completionBonds      CompletionBond[]
+  helpRequests         JobHelpRequest[]
+  helpApplications     JobHelpApplication[]
+  jobReceipts          JobReceipt[]
+  portfolioItems       PortfolioItem[]
+  contractorStats      ContractorStats?
+  neighborhoodActivity NeighborhoodActivity[]
+
+  @@map("users")
+}
+
+// ── Contractor Profile ───────────────────────────────────────
+
+model ContractorProfile {
+  userId                  String             @id @map("user_id")
+  bio                     String?
+  yearsExperience         Int                @default(0) @map("years_experience")
+  categories              Json               @default("[]")        // String[] serialised
+  profilePhoto            String?            @map("profile_photo")
+  rating                  Float              @default(0)
+  ratingCount             Int                @default(0) @map("rating_count")
+  verificationStatus      VerificationStatus @default(none) @map("verification_status")
+  insuranceStatus         VerificationStatus @default(none) @map("insurance_status")
+  businessEstablished     Int?               @map("business_established")
+  portfolioPhotos         Json               @default("[]") @map("portfolio_photos")
+  contractorType          ContractorType     @default(independent) @map("contractor_type")
+  qualifications          Json               @default("[]")
+  stripeAccountId         String?            @map("stripe_account_id")
+  stripeOnboardingComplete Boolean           @default(false) @map("stripe_onboarding_complete")
+  backgroundCheckStatus   String             @default("none") @map("background_check_status")
+  instantBookEnabled      Boolean            @default(false) @map("instant_book_enabled")
+  instantBookPrice        Int?               @map("instant_book_price")
+  licenseNumber           String?            @map("license_number")
+  licenseState            String?            @map("license_state")
+  idDocumentUrl           String?            @map("id_document_url")
+  idVerified              Boolean            @default(false) @map("id_verified")
+  serviceZipCodes         String?            @map("service_zip_codes")
+  serviceRadiusMiles      Int                @default(25) @map("service_radius_miles")
+  cancellationCount       Int                @default(0) @map("cancellation_count")
+  noShowCount             Int                @default(0) @map("no_show_count")
+  acceptanceCount         Int                @default(0) @map("acceptance_count")
+  completionCount         Int                @default(0) @map("completion_count")
+  strikeCount             Int                @default(0) @map("strike_count")
+  isSuspended             Boolean            @default(false) @map("is_suspended")
+  suspendedUntil          DateTime?          @map("suspended_until")
+  insuranceDocumentUrl    String?            @map("insurance_document_url")
+  createdAt               DateTime           @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("contractor_profiles")
+}
+
+// ── Jobs ─────────────────────────────────────────────────────
+
+model Job {
+  id                    String     @id @default(uuid())
+  consumerId            String     @map("consumer_id")
+  title                 String
+  description           String?
+  category              String
+  photos                Json       @default("[]")
+  location              String
+  urgency               JobUrgency
+  status                JobStatus  @default(posted)
+  latitude              Float?
+  longitude             Float?
+  emergencyFee          Int        @default(0) @map("emergency_fee")
+  expectedCompletionDate DateTime? @map("expected_completion_date")
+  paymentStatus         String     @default("unpaid") @map("payment_status")
+  paymentIntentId       String?    @map("payment_intent_id")
+  platformFeeCents      Int?       @map("platform_fee_cents")
+  expiresAt             DateTime?  @map("expires_at")
+  isInstantBook         Boolean    @default(false) @map("is_instant_book")
+  aiQuestions           Json?      @map("ai_questions")
+  contractorConfirmed   Boolean    @default(false) @map("contractor_confirmed")
+  consumerConfirmed     Boolean    @default(false) @map("consumer_confirmed")
+  termsAcceptedAt       DateTime?  @map("terms_accepted_at")
+  referenceLinks        Json?      @map("reference_links")
+  inspirationPhotos     Json?      @map("inspiration_photos")
+  completedAt           DateTime?  @map("completed_at")
+  beforePhotoUrl        String?    @map("before_photo_url")
+  afterPhotoUrl         String?    @map("after_photo_url")
+  budgetRange           String?    @map("budget_range")
+  scheduledArrivalAt    DateTime?  @map("scheduled_arrival_at")
+  certificateGenerated  Boolean    @default(false) @map("certificate_generated")
+  firstBidAt            DateTime?  @map("first_bid_at")
+  acceptedBidAt         DateTime?  @map("accepted_bid_at")
+  createdAt             DateTime   @default(now()) @map("created_at")
+  updatedAt             DateTime   @default(now()) @updatedAt @map("updated_at")
+
+  consumer             User                 @relation("ConsumerJobs", fields: [consumerId], references: [id], onDelete: Cascade)
+  bids                 Bid[]
+  messages             Message[]
+  reviews              Review[]
+  notifications        Notification[]
+  disputes             Dispute[]
+  tips                 Tip[]
+  changeOrders         ChangeOrder[]
+  callLogs             CallLog[]
+  completionBonds      CompletionBond[]
+  helpRequests         JobHelpRequest[]
+  helpApplications     JobHelpApplication[]
+  receipts             JobReceipt[]
+  neighborhoodActivity NeighborhoodActivity[]
+  groupParticipation   GroupJobParticipant[]
+
+  @@index([category])
+  @@index([status])
+  @@index([consumerId])
+  @@index([createdAt])
+  @@map("jobs")
+}
+
+// ── Bids ─────────────────────────────────────────────────────
+
+model Bid {
+  id               String    @id @default(uuid())
+  jobId            String    @map("job_id")
+  contractorId     String    @map("contractor_id")
+  price            Int                              // cents — contractor's net price
+  timelineDays     Int       @map("timeline_days")
+  availabilityDate DateTime  @map("availability_date")
+  message          String?
+  status           BidStatus @default(pending)
+  laborCents       Int?      @map("labor_cents")
+  materialsJson    Json?     @map("materials_json")
+  partsSummary     String?   @map("parts_summary")
+  equipmentJson    Json?     @map("equipment_json")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  job          Job           @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  contractor   User          @relation(fields: [contractorId], references: [id], onDelete: Cascade)
+  changeOrders ChangeOrder[]
+
+  @@index([jobId])
+  @@index([contractorId])
+  @@map("bids")
+}
+
+// ── OAuth Accounts ───────────────────────────────────────────
+
+model OauthAccount {
+  id             String   @id @default(uuid())
+  userId         String   @map("user_id")
+  provider       String
+  providerUserId String   @map("provider_user_id")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerUserId])
+  @@index([provider, providerUserId])
+  @@map("oauth_accounts")
+}
+
+// ── Verification Codes ───────────────────────────────────────
+
+model VerificationCode {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  code      String
+  expiresAt DateTime @map("expires_at")
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("verification_codes")
+}
+
+// ── Reviews ──────────────────────────────────────────────────
+
+model Review {
+  id           String   @id @default(uuid())
+  jobId        String   @map("job_id")
+  reviewerId   String   @map("reviewer_id")
+  contractorId String   @map("contractor_id")
+  rating       Int                          // 1–5
+  comment      String?
+  photos       Json     @default("[]")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  job        Job  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  reviewer   User @relation("ReviewerReviews", fields: [reviewerId], references: [id], onDelete: Cascade)
+  contractor User @relation("ContractorReviews", fields: [contractorId], references: [id], onDelete: Cascade)
+
+  @@unique([jobId, reviewerId])
+  @@index([contractorId])
+  @@index([jobId])
+  @@map("reviews")
+}
+
+// ── Notifications ────────────────────────────────────────────
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  type      String
+  title     String
+  message   String
+  jobId     String?  @map("job_id")
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job  Job?  @relation(fields: [jobId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@map("notifications")
+}
+
+// ── Messages ─────────────────────────────────────────────────
+
+model Message {
+  id              String   @id @default(uuid())
+  jobId           String   @map("job_id")
+  senderId        String   @map("sender_id")
+  receiverId      String?  @map("receiver_id")
+  content         String
+  read            Boolean  @default(false)
+  flagged         Boolean  @default(false)
+  flagReasons     Json?    @map("flag_reasons")
+  wasRedacted     Boolean  @default(false) @map("was_redacted")
+  redactedOriginal String? @map("redacted_original")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  job      Job   @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  sender   User  @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User? @relation("ReceivedMessages", fields: [receiverId], references: [id])
+
+  @@index([jobId])
+  @@index([senderId])
+  @@index([receiverId])
+  @@map("messages")
+}
+
+// ── Saved Contractors ────────────────────────────────────────
+
+model SavedContractor {
+  id           String   @id @default(uuid())
+  consumerId   String   @map("consumer_id")
+  contractorId String   @map("contractor_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  consumer   User @relation("ConsumerSavedContractors", fields: [consumerId], references: [id], onDelete: Cascade)
+  contractor User @relation("ContractorSavedBy", fields: [contractorId], references: [id], onDelete: Cascade)
+
+  @@unique([consumerId, contractorId])
+  @@index([consumerId])
+  @@map("saved_contractors")
+}
+
+// ── Disputes ─────────────────────────────────────────────────
+
+model Dispute {
+  id         String        @id @default(uuid())
+  jobId      String        @map("job_id")
+  reporterId String        @map("reporter_id")
+  reason     String
+  details    String?
+  status     DisputeStatus @default(open)
+  resolution String?
+  createdAt  DateTime      @default(now()) @map("created_at")
+  updatedAt  DateTime      @default(now()) @updatedAt @map("updated_at")
+
+  job      Job  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  reporter User @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+
+  @@index([jobId])
+  @@index([status])
+  @@map("disputes")
+}
+
+// ── Tips ─────────────────────────────────────────────────────
+
+model Tip {
+  id                    String   @id @default(uuid())
+  jobId                 String   @map("job_id")
+  fromUserId            String   @map("from_user_id")
+  toContractorId        String   @map("to_contractor_id")
+  amountCents           Int      @map("amount_cents")
+  message               String?
+  stripePaymentIntentId String?  @map("stripe_payment_intent_id")
+  createdAt             DateTime @default(now()) @map("created_at")
+
+  job          Job  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  fromUser     User @relation("TipsSent", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toContractor User @relation("TipsReceived", fields: [toContractorId], references: [id], onDelete: Cascade)
+
+  @@index([toContractorId])
+  @@index([jobId])
+  @@map("tips")
+}
+
+// ── Change Orders ────────────────────────────────────────────
+
+model ChangeOrder {
+  id                  String            @id @default(uuid())
+  jobId               String            @map("job_id")
+  bidId               String            @map("bid_id")
+  contractorId        String            @map("contractor_id")
+  title               String
+  description         String
+  additionalCostCents Int               @default(0) @map("additional_cost_cents")
+  materialsJson       Json?             @map("materials_json")
+  status              ChangeOrderStatus @default(pending)
+  rejectionReason     String?           @map("rejection_reason")
+  createdAt           DateTime          @default(now()) @map("created_at")
+  updatedAt           DateTime          @default(now()) @updatedAt @map("updated_at")
+
+  job        Job  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  bid        Bid  @relation(fields: [bidId], references: [id], onDelete: Cascade)
+  contractor User @relation(fields: [contractorId], references: [id], onDelete: Cascade)
+
+  @@index([jobId])
+  @@index([contractorId])
+  @@map("change_orders")
+}
+
+// ── Portfolio Items ──────────────────────────────────────────
+
+model PortfolioItem {
+  id           String   @id @default(uuid())
+  contractorId String   @map("contractor_id")
+  category     String
+  title        String
+  description  String?
+  beforePhotos Json     @default("[]") @map("before_photos")
+  afterPhotos  Json     @default("[]") @map("after_photos")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  contractor User @relation(fields: [contractorId], references: [id], onDelete: Cascade)
+
+  @@index([contractorId])
+  @@index([contractorId, category])
+  @@map("portfolio_items")
+}
+
+// ── Contractor Stats ─────────────────────────────────────────
+
+model ContractorStats {
+  contractorId     String   @id @map("contractor_id")
+  avgResponseHours Float?   @map("avg_response_hours")
+  totalBids        Int      @default(0) @map("total_bids")
+  acceptedBids     Int      @default(0) @map("accepted_bids")
+  acceptanceRate   Float?   @map("acceptance_rate")
+  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at")
+
+  contractor User @relation(fields: [contractorId], references: [id], onDelete: Cascade)
+
+  @@map("contractor_stats")
+}
+
+// ── Contractor Strikes ───────────────────────────────────────
+
+model ContractorStrike {
+  id           String    @id @default(uuid())
+  contractorId String    @map("contractor_id")
+  jobId        String?   @map("job_id")
+  strikeType   String    @map("strike_type")
+  notes        String?
+  createdAt    DateTime  @default(now()) @map("created_at")
+  expiresAt    DateTime? @map("expires_at")
+
+  contractor User @relation(fields: [contractorId], references: [id])
+
+  @@map("contractor_strikes")
+}
+
+// ── Contractor Suspensions ───────────────────────────────────
+
+model ContractorSuspension {
+  id              String    @id @default(uuid())
+  contractorId    String    @map("contractor_id")
+  reason          String
+  suspendedUntil  DateTime? @map("suspended_until")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  contractor User @relation(fields: [contractorId], references: [id])
+
+  @@map("contractor_suspensions")
+}
+
+// ── Completion Bonds ─────────────────────────────────────────
+
+model CompletionBond {
+  id           String              @id @default(uuid())
+  jobId        String              @unique @map("job_id")
+  contractorId String              @map("contractor_id")
+  amountCents  Int                 @default(1000) @map("amount_cents")
+  status       CompletionBondStatus @default(held)
+  createdAt    DateTime            @default(now()) @map("created_at")
+  resolvedAt   DateTime?           @map("resolved_at")
+
+  contractor User @relation(fields: [contractorId], references: [id])
+
+  @@map("completion_bonds")
+}
+
+// ── Call Logs ────────────────────────────────────────────────
+
+model CallLog {
+  id              String    @id @default(uuid())
+  jobId           String    @map("job_id")
+  callerId        String    @map("caller_id")
+  receiverId      String    @map("receiver_id")
+  twilioCallSid   String?   @map("twilio_call_sid")
+  recordingUrl    String?   @map("recording_url")
+  recordingSid    String?   @map("recording_sid")
+  transcript      String?
+  durationSeconds Int       @default(0) @map("duration_seconds")
+  status          String    @default("initiated")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  endedAt         DateTime? @map("ended_at")
+
+  job      Job  @relation(fields: [jobId], references: [id])
+  caller   User @relation("CallerLogs", fields: [callerId], references: [id])
+  receiver User @relation("ReceiverLogs", fields: [receiverId], references: [id])
+
+  @@index([jobId])
+  @@index([callerId])
+  @@map("call_logs")
+}
+
+// ── Group Jobs (Neighborhood Group Buying) ───────────────────
+
+model GroupJob {
+  id                String         @id @default(uuid())
+  category          String
+  zipCode           String         @map("zip_code")
+  leadJobId         String         @map("lead_job_id")
+  status            GroupJobStatus @default(forming)
+  minParticipants   Int            @default(2) @map("min_participants")
+  maxParticipants   Int            @default(8) @map("max_participants")
+  participantCount  Int            @default(1) @map("participant_count")
+  createdAt         DateTime       @default(now()) @map("created_at")
+  expiresAt         DateTime?      @map("expires_at")
+
+  participants GroupJobParticipant[]
+
+  @@map("group_jobs")
+}
+
+model GroupJobParticipant {
+  id          String   @id @default(uuid())
+  groupJobId  String   @map("group_job_id")
+  jobId       String   @map("job_id")
+  consumerId  String   @map("consumer_id")
+  joinedAt    DateTime @default(now()) @map("joined_at")
+
+  groupJob GroupJob @relation(fields: [groupJobId], references: [id])
+  job      Job      @relation(fields: [jobId], references: [id])
+
+  @@map("group_job_participants")
+}
+
+// ── Job Receipts ─────────────────────────────────────────────
+
+model JobReceipt {
+  id           String      @id @default(uuid())
+  jobId        String      @map("job_id")
+  contractorId String      @map("contractor_id")
+  fileUrl      String      @map("file_url")
+  fileName     String      @map("file_name")
+  fileType     String      @default("image") @map("file_type")
+  description  String?
+  amountCents  Int?        @map("amount_cents")
+  receiptType  ReceiptType @default(receipt) @map("receipt_type")
+  createdAt    DateTime    @default(now()) @map("created_at")
+
+  job        Job  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  contractor User @relation(fields: [contractorId], references: [id], onDelete: Cascade)
+
+  @@index([jobId])
+  @@index([contractorId])
+  @@map("job_receipts")
+}
+
+// ── Job Help Requests (Contractor Collaboration) ─────────────
+
+model JobHelpRequest {
+  id               String            @id @default(uuid())
+  jobId            String            @map("job_id")
+  leadContractorId String            @map("lead_contractor_id")
+  title            String
+  description      String?
+  skillsNeeded     String?           @map("skills_needed")
+  payCents         Int               @map("pay_cents")
+  spots            Int               @default(1)
+  spotsFilled      Int               @default(0) @map("spots_filled")
+  dateNeeded       DateTime?         @map("date_needed")
+  status           HelpRequestStatus @default(open)
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @default(now()) @updatedAt @map("updated_at")
+
+  job             Job                  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  leadContractor  User                 @relation(fields: [leadContractorId], references: [id], onDelete: Cascade)
+  applications    JobHelpApplication[]
+
+  @@index([jobId])
+  @@index([leadContractorId])
+  @@index([status])
+  @@map("job_help_requests")
+}
+
+model JobHelpApplication {
+  id            String                @id @default(uuid())
+  helpRequestId String                @map("help_request_id")
+  jobId         String                @map("job_id")
+  applicantId   String                @map("applicant_id")
+  message       String?
+  status        HelpApplicationStatus @default(pending)
+  createdAt     DateTime              @default(now()) @map("created_at")
+
+  helpRequest JobHelpRequest @relation(fields: [helpRequestId], references: [id], onDelete: Cascade)
+  job         Job            @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  applicant   User           @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+
+  @@unique([helpRequestId, applicantId])
+  @@index([helpRequestId])
+  @@index([applicantId])
+  @@map("job_help_applications")
+}
+
+// ── Neighborhood Activity ────────────────────────────────────
+
+model NeighborhoodActivity {
+  id          String   @id @default(uuid())
+  jobId       String   @map("job_id")
+  contractorId String? @map("contractor_id")
+  category    String
+  city        String?
+  state       String?
+  zipCode     String?  @map("zip_code")
+  completedAt DateTime @default(now()) @map("completed_at")
+
+  job        Job   @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  contractor User? @relation(fields: [contractorId], references: [id])
+
+  @@index([zipCode])
+  @@index([city])
+  @@map("neighborhood_activity")
+}
+
+// ── Senior Protection ────────────────────────────────────────
+
+model SeniorProtection {
+  id         String   @id @default(uuid())
+  consumerId String   @map("consumer_id")
+  familyEmail String  @map("family_email")
+  familyName String?  @map("family_name")
+  enabled    Boolean  @default(true)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  consumer User @relation(fields: [consumerId], references: [id])
+
+  @@map("senior_protection")
+}
+
+// ── Admin Categories ─────────────────────────────────────────
+
+model AdminCategory {
+  value      String   @id
+  label      String
+  groupLabel String   @map("group_label")
+  icon       String   @default("🔧")
+  active     Boolean  @default(true)
+  sortOrder  Int      @default(0) @map("sort_order")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("admin_categories")
+}
