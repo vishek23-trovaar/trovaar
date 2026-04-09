@@ -19,8 +19,7 @@ export async function GET(
       cp.business_established, cp.portfolio_photos,
       cp.contractor_type, cp.qualifications,
       cp.headline, cp.about_me, cp.license_number,
-      cp.insurance_verified, cp.background_check_status,
-      cp.instant_book_enabled, cp.instant_book_price, cp.instant_book_categories
+      cp.insurance_verified, cp.background_check_status
     FROM users u
     LEFT JOIN contractor_profiles cp ON u.id = cp.user_id
     WHERE u.id = ? AND u.role = 'contractor'
@@ -197,23 +196,6 @@ export async function PATCH(
       if (body.license_number !== undefined) {
         updates.push("license_number = ?");
         vals.push(body.license_number || null);
-      }
-      if (updates.length > 0) {
-        vals.push(id);
-        await db.prepare(`UPDATE contractor_profiles SET ${updates.join(", ")} WHERE user_id = ?`).run(...vals);
-      }
-    }
-
-    if (body.instant_book_enabled !== undefined || body.instant_book_price !== undefined) {
-      const updates: string[] = [];
-      const vals: unknown[] = [];
-      if (body.instant_book_enabled !== undefined) {
-        updates.push("instant_book_enabled = ?");
-        vals.push(body.instant_book_enabled ? 1 : 0);
-      }
-      if (body.instant_book_price !== undefined) {
-        updates.push("instant_book_price = ?");
-        vals.push(body.instant_book_price);
       }
       if (updates.length > 0) {
         vals.push(id);

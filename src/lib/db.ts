@@ -252,10 +252,6 @@ export async function initializeDatabase(): Promise<void> {
       stripe_account_id TEXT,
       stripe_onboarding_complete INTEGER NOT NULL DEFAULT 0,
       background_check_status TEXT NOT NULL DEFAULT 'none',
-      instant_book_enabled INTEGER NOT NULL DEFAULT 0,
-      instant_book_price INTEGER,
-      instant_book_categories TEXT NOT NULL DEFAULT '[]',
-      instant_book_hours TEXT NOT NULL DEFAULT '{}',
       license_number TEXT,
       service_radius_miles INTEGER DEFAULT 25,
       id_document_url TEXT,
@@ -284,7 +280,6 @@ export async function initializeDatabase(): Promise<void> {
       payment_intent_id TEXT,
       platform_fee_cents INTEGER,
       expires_at TIMESTAMPTZ,
-      is_instant_book INTEGER NOT NULL DEFAULT 0,
       ai_questions TEXT,
       contractor_confirmed INTEGER NOT NULL DEFAULT 0,
       consumer_confirmed INTEGER NOT NULL DEFAULT 0,
@@ -1272,15 +1267,6 @@ export async function initializeDatabase(): Promise<void> {
        END IF;
      END $$`,
 
-    // Instant Book — categories + availability hours
-    `DO $$ BEGIN
-       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='contractor_profiles' AND column_name='instant_book_categories') THEN
-         ALTER TABLE contractor_profiles ADD COLUMN instant_book_categories TEXT NOT NULL DEFAULT '[]';
-       END IF;
-       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='contractor_profiles' AND column_name='instant_book_hours') THEN
-         ALTER TABLE contractor_profiles ADD COLUMN instant_book_hours TEXT NOT NULL DEFAULT '{}';
-       END IF;
-     END $$`,
   ];
 
   for (const migration of schemaMigrations) {

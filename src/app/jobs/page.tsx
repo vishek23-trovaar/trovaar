@@ -346,11 +346,6 @@ function BrowseJobsContent() {
                           <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${URGENCY_PILL[job.urgency] ?? URGENCY_PILL.low}`}>
                             {job.urgency.charAt(0).toUpperCase() + job.urgency.slice(1)}
                           </span>
-                          {!!job.is_instant_book && (
-                            <span className="text-[10px] font-semibold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded-full">
-                              ⚡ Instant
-                            </span>
-                          )}
                           {dist && (
                             <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full">
                               {dist}

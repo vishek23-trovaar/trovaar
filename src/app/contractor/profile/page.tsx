@@ -197,15 +197,6 @@ export default function ContractorPerformancePage() {
   const [newWorkEnd, setNewWorkEnd] = useState("");
   const [workAdding, setWorkAdding] = useState(false);
 
-  // Instant Book state
-  const [ibEnabled, setIbEnabled] = useState(false);
-  const [ibPrice, setIbPrice] = useState("");
-  const [ibCategories, setIbCategories] = useState<string[]>([]);
-  const [ibHours, setIbHours] = useState<Record<string, { start: string; end: string }>>({});
-  const [ibLoading, setIbLoading] = useState(true);
-  const [ibSaving, setIbSaving] = useState(false);
-  const [ibSaved, setIbSaved] = useState(false);
-
   // ── Auth guard ──────────────────────────────────────────────────────────────
   useEffect(() => {
     if (!authLoading && (!user || user.role !== "contractor")) {
@@ -294,53 +285,11 @@ export default function ContractorPerformancePage() {
       }
     }
 
-    async function fetchInstantBook() {
-      if (!user) return;
-      try {
-        const res = await fetch(`/api/contractors/${user.id}/instant-book`);
-        if (res.ok) {
-          const data = await res.json();
-          setIbEnabled(data.enabled ?? false);
-          setIbPrice(data.price != null ? String(data.price / 100) : "");
-          setIbCategories(data.categories ?? []);
-          setIbHours(data.hours ?? {});
-        }
-      } catch { /* silent */ } finally {
-        setIbLoading(false);
-      }
-    }
-
     fetchProfile();
     fetchEarnings();
     fetchStripe();
     fetchAlertPrefs();
-    fetchInstantBook();
   }, [user]);
-
-  async function saveInstantBook() {
-    if (!user) return;
-    setIbSaving(true);
-    setIbSaved(false);
-    try {
-      const priceCents = ibPrice ? Math.round(parseFloat(ibPrice) * 100) : 0;
-      const res = await fetch(`/api/contractors/${user.id}/instant-book`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          enabled: ibEnabled,
-          price: priceCents,
-          categories: ibCategories,
-          hours: ibHours,
-        }),
-      });
-      if (res.ok) {
-        setIbSaved(true);
-        setTimeout(() => setIbSaved(false), 2500);
-      }
-    } catch { /* silent */ } finally {
-      setIbSaving(false);
-    }
-  }
 
   async function saveAlertPrefs() {
     setAlertSaving(true);
@@ -735,189 +684,6 @@ export default function ContractorPerformancePage() {
                   }
                 </div>
               </div>
-            </div>
-
-            {/* Instant Book Settings */}
-            <div className="bg-white rounded-2xl border border-border p-6">
-              <div className="flex items-center gap-3 mb-1">
-                <span className="text-2xl">⚡</span>
-                <h2 className="text-base font-bold text-secondary">Instant Book</h2>
-              </div>
-              <p className="text-xs text-muted mb-5">
-                Let consumers hire you immediately without waiting for bids. Set your rate, pick which
-                categories you accept, and choose your availability hours.
-              </p>
-
-              {ibLoading ? (
-                <div className="flex justify-center py-6">
-                  <div className="animate-spin w-5 h-5 border-3 border-primary border-t-transparent rounded-full" />
-                </div>
-              ) : (
-                <div className="space-y-5">
-                  {/* Enable toggle */}
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-semibold text-secondary">Enable Instant Book</p>
-                      <p className="text-xs text-muted">Consumers can book you immediately</p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setIbEnabled(!ibEnabled)}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
-                        ibEnabled ? "bg-primary" : "bg-gray-200"
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow-sm ${
-                          ibEnabled ? "translate-x-6" : "translate-x-1"
-                        }`}
-                      />
-                    </button>
-                  </div>
-
-                  {ibEnabled && (
-                    <>
-                      {/* Instant Book Rate */}
-                      <div>
-                        <label className="block text-xs font-semibold text-muted mb-1">
-                          Instant Book Rate (per job)
-                        </label>
-                        <div className="relative w-40">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted">$</span>
-                          <input
-                            type="number"
-                            value={ibPrice}
-                            onChange={(e) => setIbPrice(e.target.value)}
-                            placeholder="0.00"
-                            min={0}
-                            step={0.01}
-                            className="w-full pl-7 pr-3 py-2 text-sm border border-border rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
-                          />
-                        </div>
-                        <p className="text-[10px] text-muted mt-1">
-                          This is the flat rate consumers will pay when they instant-book you.
-                        </p>
-                      </div>
-
-                      {/* Categories */}
-                      <div>
-                        <label className="block text-xs font-semibold text-muted mb-2">
-                          Categories for Instant Book
-                        </label>
-                        <p className="text-[10px] text-muted mb-2">
-                          Select which service categories you accept instant bookings for. Leave empty to accept all your categories.
-                        </p>
-                        <div className="flex flex-wrap gap-2">
-                          {CATEGORIES.map((cat) => {
-                            const selected = ibCategories.includes(cat.value);
-                            return (
-                              <button
-                                key={cat.value}
-                                type="button"
-                                onClick={() => {
-                                  setIbCategories((prev) =>
-                                    selected
-                                      ? prev.filter((c) => c !== cat.value)
-                                      : [...prev, cat.value]
-                                  );
-                                }}
-                                className={`px-2.5 py-1 rounded-full text-xs border transition-all cursor-pointer ${
-                                  selected
-                                    ? "bg-primary text-white border-primary"
-                                    : "bg-white text-muted border-border hover:border-primary/40"
-                                }`}
-                              >
-                                {cat.label}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      {/* Availability Hours */}
-                      <div>
-                        <label className="block text-xs font-semibold text-muted mb-2">
-                          Availability Hours
-                        </label>
-                        <p className="text-[10px] text-muted mb-3">
-                          Set hours when you are available for instant bookings. Days without hours set are considered unavailable.
-                        </p>
-                        <div className="space-y-2">
-                          {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day) => {
-                            const dayKey = day.toLowerCase();
-                            const isActive = !!ibHours[dayKey];
-                            return (
-                              <div key={day} className="flex items-center gap-3">
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    setIbHours((prev) => {
-                                      const next = { ...prev };
-                                      if (next[dayKey]) {
-                                        delete next[dayKey];
-                                      } else {
-                                        next[dayKey] = { start: "08:00", end: "18:00" };
-                                      }
-                                      return next;
-                                    });
-                                  }}
-                                  className={`w-24 text-xs font-medium px-2.5 py-1.5 rounded-lg border transition-colors cursor-pointer ${
-                                    isActive
-                                      ? "bg-primary/10 text-primary border-primary/30"
-                                      : "bg-gray-50 text-gray-400 border-gray-200"
-                                  }`}
-                                >
-                                  {day.slice(0, 3)}
-                                </button>
-                                {isActive && (
-                                  <div className="flex items-center gap-2">
-                                    <input
-                                      type="time"
-                                      value={ibHours[dayKey]?.start || "08:00"}
-                                      onChange={(e) =>
-                                        setIbHours((prev) => ({
-                                          ...prev,
-                                          [dayKey]: { ...prev[dayKey], start: e.target.value },
-                                        }))
-                                      }
-                                      className="px-2 py-1 text-xs border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
-                                    />
-                                    <span className="text-xs text-muted">to</span>
-                                    <input
-                                      type="time"
-                                      value={ibHours[dayKey]?.end || "18:00"}
-                                      onChange={(e) =>
-                                        setIbHours((prev) => ({
-                                          ...prev,
-                                          [dayKey]: { ...prev[dayKey], end: e.target.value },
-                                        }))
-                                      }
-                                      className="px-2 py-1 text-xs border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
-                                    />
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    </>
-                  )}
-
-                  {/* Save button */}
-                  <button
-                    onClick={saveInstantBook}
-                    disabled={ibSaving}
-                    className={`px-6 py-2 text-sm font-semibold rounded-xl transition-colors ${
-                      ibSaved
-                        ? "bg-emerald-100 text-emerald-700"
-                        : "bg-primary text-white hover:bg-primary/90"
-                    }`}
-                  >
-                    {ibSaving ? "Saving..." : ibSaved ? "Saved!" : "Save Instant Book Settings"}
-                  </button>
-                </div>
-              )}
             </div>
 
             {/* Professional Summary */}

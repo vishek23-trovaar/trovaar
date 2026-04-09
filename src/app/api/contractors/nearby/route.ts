@@ -55,13 +55,11 @@ export async function GET(request: NextRequest) {
   const clientLat = parseFloat(lat ?? "");
   const clientLng = parseFloat(lng ?? "");
   const radiusMiles = miles;
-  const instantBookOnly = searchParams.get("instant_book") === "1";
-  const category = searchParams.get("category");
 
   // If no client coords provided, return platform-wide active contractor count
   if (isNaN(clientLat) || isNaN(clientLng)) {
     const db = getDb();
-  await initializeDatabase();
+    await initializeDatabase();
     const row = await db
       .prepare("SELECT COUNT(*) as count FROM users WHERE role = 'contractor'")
       .get() as { count: number };
@@ -78,54 +76,32 @@ export async function GET(request: NextRequest) {
     location: string | null;
     latitude: number | null;
     longitude: number | null;
-    instant_book_enabled: number;
-    instant_book_price: number | null;
-    instant_book_categories: string;
-    rating: number;
-    profile_photo: string | null;
   }
 
-  let contractorQuery = `
-    SELECT u.id, u.name, u.location, u.latitude, u.longitude,
-      cp.instant_book_enabled, cp.instant_book_price, cp.instant_book_categories,
-      cp.rating, cp.profile_photo
-    FROM users u
-    LEFT JOIN contractor_profiles cp ON u.id = cp.user_id
-    WHERE u.role = 'contractor'
-  `;
-  if (instantBookOnly) {
-    contractorQuery += " AND cp.instant_book_enabled = 1";
-  }
   const contractors = await db
-    .prepare(contractorQuery)
+    .prepare(`
+      SELECT u.id, u.name, u.location, u.latitude, u.longitude
+      FROM users u
+      WHERE u.role = 'contractor'
+    `)
     .all() as ContractorRow[];
 
   let count = 0;
-  const nearbyContractors: Array<{
-    id: string;
-    name: string;
-    distance: number;
-    instant_book_enabled: boolean;
-    instant_book_price: number | null;
-    instant_book_categories: string[];
-    rating: number;
-    profile_photo: string | null;
-  }> = [];
 
   // Geocode and cache in serial to respect Nominatim 1 req/sec limit
   for (const c of contractors) {
-    let lat = c.latitude;
-    let lng = c.longitude;
+    let cLat = c.latitude;
+    let cLng = c.longitude;
 
     // If we don't have coords yet, try to geocode their location text
-    if ((lat === null || lng === null) && c.location?.trim()) {
+    if ((cLat === null || cLng === null) && c.location?.trim()) {
       const coords = await geocodeLocation(c.location.trim());
       if (coords) {
-        [lat, lng] = coords;
+        [cLat, cLng] = coords;
         // Cache back so we don't geocode again
         await db.prepare("UPDATE users SET latitude = ?, longitude = ? WHERE id = ?").run(
-          lat,
-          lng,
+          cLat,
+          cLng,
           c.id
         );
         // Nominatim rate limit: 1 req/sec
@@ -133,42 +109,12 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    if (lat !== null && lng !== null) {
-      const dist = haversine(clientLat, clientLng, lat, lng);
+    if (cLat !== null && cLng !== null) {
+      const dist = haversine(clientLat, clientLng, cLat, cLng);
       if (dist <= radiusMiles) {
         count++;
-
-        // If filtering by instant book, also check category match
-        let ibCategories: string[] = [];
-        try { ibCategories = JSON.parse(c.instant_book_categories || "[]"); } catch { /* silent */ }
-
-        const categoryMatch = !category || ibCategories.length === 0 || ibCategories.includes(category);
-
-        if (instantBookOnly && categoryMatch) {
-          nearbyContractors.push({
-            id: c.id,
-            name: c.name,
-            distance: Math.round(dist * 10) / 10,
-            instant_book_enabled: !!c.instant_book_enabled,
-            instant_book_price: c.instant_book_price,
-            instant_book_categories: ibCategories,
-            rating: c.rating ?? 0,
-            profile_photo: c.profile_photo ?? null,
-          });
-        }
       }
     }
-  }
-
-  if (instantBookOnly) {
-    // Sort by distance
-    nearbyContractors.sort((a, b) => a.distance - b.distance);
-    return NextResponse.json({
-      count: nearbyContractors.length,
-      contractors: nearbyContractors,
-      radiusMiles,
-      fallback: false,
-    });
   }
 
   return NextResponse.json({ count, radiusMiles, fallback: false });

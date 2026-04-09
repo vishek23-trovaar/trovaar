@@ -112,7 +112,6 @@ export interface Job {
   longitude: number | null;
   emergency_fee: number;
   expected_completion_date: string | null;
-  is_instant_book?: number;
   created_at: string;
   updated_at: string;
 }
