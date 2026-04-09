@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { SignJWT } from "jose";
-import { authenticator } from "otplib";
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { authenticator } = require("otplib") as typeof import("otplib");
 import { rateLimit } from "@/lib/rate-limit";
 import { adminLogger as logger } from "@/lib/logger";
 

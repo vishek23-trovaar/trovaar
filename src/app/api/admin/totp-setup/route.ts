@@ -12,7 +12,8 @@
  * In production, remove or disable this endpoint after setup is complete.
  */
 import { NextResponse } from "next/server";
-import { authenticator } from "otplib";
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { authenticator } = require("otplib") as typeof import("otplib");
 
 export async function GET() {
   if (process.env.ADMIN_TOTP_SECRET) {
