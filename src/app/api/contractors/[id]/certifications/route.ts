@@ -12,8 +12,8 @@ export async function GET(
   const db = getDb();
   await initializeDatabase();
 
-  const certifications = db
-    .prepare("SELECT * FROM contractor_certifications WHERE contractor_id = ? ORDER BY year_obtained DESC")
+  const certifications = await db
+    .prepare("SELECT * FROM certifications WHERE contractor_id = ? ORDER BY created_at DESC")
     .all(id);
 
   return NextResponse.json({ certifications });
@@ -34,25 +34,66 @@ export async function POST(
   }
 
   try {
-    const { name, issuer, year_obtained, document_url } = await request.json();
+    const { name, issuer, issue_date, expiry_date, document_url, cert_number } = await request.json();
 
     if (!name || !name.trim()) {
       return NextResponse.json({ error: "Certification name is required" }, { status: 400 });
     }
 
     const db = getDb();
-  await initializeDatabase();
+    await initializeDatabase();
     const certId = crypto.randomUUID();
 
-    db.prepare(`
-      INSERT INTO contractor_certifications (id, contractor_id, name, issuer, year_obtained, verified, document_url)
-      VALUES (?, ?, ?, ?, ?, 0, ?)
-    `).run(certId, id, name.trim(), issuer || null, year_obtained || null, document_url || null);
+    await db.prepare(`
+      INSERT INTO certifications (id, contractor_id, name, issuer, issue_date, expiry_date, document_url, verified)
+      VALUES (?, ?, ?, ?, ?, ?, ?, 0)
+    `).run(certId, id, name.trim(), issuer || null, issue_date || null, expiry_date || null, document_url || null);
 
-    const certification = await db.prepare("SELECT * FROM contractor_certifications WHERE id = ?").get(certId);
+    const certification = await db.prepare("SELECT * FROM certifications WHERE id = ?").get(certId);
     return NextResponse.json({ certification }, { status: 201 });
   } catch (error) {
     logger.error({ err: error }, "Create certification error");
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const payload = getAuthPayload(request.headers);
+  if (!payload) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { id } = await params;
+  if (payload.userId !== id) {
+    return NextResponse.json({ error: "Not authorized" }, { status: 403 });
+  }
+
+  try {
+    const { certId, name, issuer, issue_date, expiry_date, document_url } = await request.json();
+    if (!certId) {
+      return NextResponse.json({ error: "certId is required" }, { status: 400 });
+    }
+
+    const db = getDb();
+    await initializeDatabase();
+
+    await db.prepare(`
+      UPDATE certifications
+      SET name = COALESCE(?, name),
+          issuer = COALESCE(?, issuer),
+          issue_date = COALESCE(?, issue_date),
+          expiry_date = COALESCE(?, expiry_date),
+          document_url = COALESCE(?, document_url)
+      WHERE id = ? AND contractor_id = ?
+    `).run(name || null, issuer || null, issue_date || null, expiry_date || null, document_url || null, certId, id);
+
+    const certification = await db.prepare("SELECT * FROM certifications WHERE id = ?").get(certId);
+    return NextResponse.json({ certification });
+  } catch (error) {
+    logger.error({ err: error }, "Update certification error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -79,7 +120,7 @@ export async function DELETE(
 
   const db = getDb();
   await initializeDatabase();
-  await db.prepare("DELETE FROM contractor_certifications WHERE id = ? AND contractor_id = ?").run(certId, id);
+  await db.prepare("DELETE FROM certifications WHERE id = ? AND contractor_id = ?").run(certId, id);
 
   return NextResponse.json({ success: true });
 }

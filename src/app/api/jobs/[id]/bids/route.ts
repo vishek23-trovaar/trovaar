@@ -268,21 +268,6 @@ export async function POST(
       }
     } catch { /* never block bid creation */ }
 
-    // Feature 24 — Senior Protection: notify family overseer if enabled
-    const jobOwner = await db.prepare(
-      "SELECT family_oversight_enabled, family_overseer_email FROM users WHERE id = ?"
-    ).get(job.consumer_id) as {
-      family_oversight_enabled: number;
-      family_overseer_email: string | null;
-    } | undefined;
-
-    if (jobOwner?.family_oversight_enabled && jobOwner.family_overseer_email) {
-      logger.info(
-        { overseerEmail: jobOwner.family_overseer_email, price, jobTitle: job.title },
-        "Senior Protection — family notification sent"
-      );
-    }
-
     // Feature 26 — SMS Bid Alerts: send SMS to consumer if enabled
     const smsOwner = await db.prepare(
       "SELECT phone_number, sms_alerts_enabled FROM users WHERE id = ?"
@@ -292,7 +277,8 @@ export async function POST(
     } | undefined;
 
     if (smsOwner?.sms_alerts_enabled && smsOwner.phone_number) {
-      const msg = `Trovaar: New bid of $${price} on your job "${job.title}". View bids: ${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3001"}/jobs/${jobId}`;
+      const smsDisplayPrice = Math.round((price / 100) * 1.2);
+      const msg = `Trovaar: New bid of $${smsDisplayPrice} on your job "${job.title}". View bids: ${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3001"}/jobs/${jobId}`;
       sendSMS(smsOwner.phone_number, msg).catch((err) => {
         logger.error({ err }, "Failed to send bid alert SMS");
       });

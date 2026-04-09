@@ -17,6 +17,7 @@ import { CallButton } from "@/components/calls/CallButton";
 import { ReceiptsPanel } from "@/components/jobs/ReceiptsPanel";
 import { CollaborationPanel } from "@/components/jobs/CollaborationPanel";
 import { ConsumerProtectPanel } from "@/components/jobs/ConsumerProtectPanel";
+import { AiPriceEstimate } from "@/components/jobs/AiPriceEstimate";
 import { CallLog } from "@/components/calls/CallLog";
 import GuaranteeBadge from "@/components/GuaranteeBadge";
 import { CATEGORIES, CATEGORY_GROUPS, URGENCY_LEVELS, PLATFORM_MARKUP } from "@/lib/constants";
@@ -122,6 +123,20 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
   const [reportingNoShow, setReportingNoShow] = useState(false);
   const [noShowConfirm, setNoShowConfirm] = useState(false);
 
+  // Instant Book
+  interface InstantBookContractor {
+    id: string;
+    name: string;
+    distance: number;
+    instant_book_price: number | null;
+    instant_book_categories: string[];
+    rating: number;
+    profile_photo: string | null;
+  }
+  const [ibContractors, setIbContractors] = useState<InstantBookContractor[]>([]);
+  const [ibBooking, setIbBooking] = useState<string | null>(null);
+  const [ibError, setIbError] = useState("");
+
   // Feature 20 — Real-time bid stream (hook must be called unconditionally)
   const { bids: liveBids, connected: streamConnected, newBidIds } = useBidStream(id, bidStreamEnabled);
 
@@ -208,6 +223,54 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
       })
       .catch(() => {});
   }, [job, user]);
+
+  // Instant Book — fetch nearby instant-bookable contractors for the job owner
+  useEffect(() => {
+    if (!job || !user || user.id !== job.consumer_id) return;
+    if (!["posted", "bidding"].includes(job.status)) return;
+    const lat = job.latitude ?? userLat;
+    const lng = job.longitude ?? userLng;
+    if (lat == null || lng == null) return;
+    const params = new URLSearchParams({
+      lat: String(lat),
+      lng: String(lng),
+      miles: "50",
+      instant_book: "1",
+      category: job.category,
+    });
+    fetch(`/api/contractors/nearby?${params}`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.contractors) setIbContractors(d.contractors);
+      })
+      .catch(() => {});
+  }, [job, user, userLat, userLng]);
+
+  async function handleInstantBook(contractorId: string) {
+    if (!job) return;
+    setIbBooking(contractorId);
+    setIbError("");
+    try {
+      const res = await fetch("/api/instant-book", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jobId: job.id, contractorId }),
+      });
+      if (res.ok) {
+        // Refresh job to show updated status
+        fetchJob();
+        fetchBids();
+        setIbContractors([]);
+      } else {
+        const data = await res.json();
+        setIbError(data.error || "Failed to instant book");
+      }
+    } catch {
+      setIbError("Network error. Please try again.");
+    } finally {
+      setIbBooking(null);
+    }
+  }
 
   // Fetch messages when tab switches to messages
   useEffect(() => {
@@ -1489,6 +1552,70 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
               );
             })()}
 
+            {/* Instant Book Section */}
+            {isOwner && ["posted", "bidding"].includes(job.status) && ibContractors.length > 0 && (
+              <div className="mb-2">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-lg">⚡</span>
+                  <h2 className="font-semibold text-secondary">Instant Book</h2>
+                  <span className="text-xs text-muted">Skip the wait — hire immediately</span>
+                </div>
+                {ibError && (
+                  <div className="bg-red-50 text-red-700 text-sm p-3 rounded-lg mb-3">{ibError}</div>
+                )}
+                <div className="space-y-2">
+                  {ibContractors.map((c) => (
+                    <div
+                      key={c.id}
+                      className="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl"
+                    >
+                      {/* Avatar */}
+                      <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center overflow-hidden shrink-0">
+                        {c.profile_photo ? (
+                          <img src={c.profile_photo} alt={c.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-sm font-bold text-amber-700">
+                            {c.name.charAt(0).toUpperCase()}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Info */}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-secondary truncate">{c.name}</p>
+                        <div className="flex items-center gap-2 text-xs text-muted">
+                          {c.rating > 0 && (
+                            <span className="flex items-center gap-0.5">
+                              <span className="text-amber-400">★</span> {c.rating.toFixed(1)}
+                            </span>
+                          )}
+                          {c.distance != null && (
+                            <span>{c.distance < 1 ? "< 1 mi" : `${c.distance} mi`}</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Price + Book button */}
+                      <div className="flex items-center gap-3 shrink-0">
+                        {c.instant_book_price != null && (
+                          <p className="text-sm font-bold text-secondary">
+                            ${(c.instant_book_price / 100).toLocaleString("en-US", { minimumFractionDigits: 0 })}
+                          </p>
+                        )}
+                        <button
+                          onClick={() => handleInstantBook(c.id)}
+                          disabled={ibBooking === c.id}
+                          className="px-4 py-2 text-xs font-semibold bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 cursor-pointer"
+                        >
+                          {ibBooking === c.id ? "Booking..." : "⚡ Instant Book"}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Bids Section */}
             <div>
               <div className="flex items-center gap-2 mb-4">
@@ -1670,6 +1797,17 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                 description={job.description ?? ""}
                 location={job.location ?? ""}
                 bids={bids.map((b) => ({ price: b.price, status: b.status }))}
+              />
+            )}
+
+            {/* AI Price Estimate — shown to job owner while job is open */}
+            {isOwner && ["posted", "bidding"].includes(job.status) && (
+              <AiPriceEstimate
+                category={job.category}
+                title={job.title}
+                description={job.description ?? ""}
+                location={job.location ?? ""}
+                photos={photos.length > 0 ? photos : undefined}
               />
             )}
 

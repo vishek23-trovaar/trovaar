@@ -31,6 +31,10 @@ export default function ClientProfilePage() {
   const [deletingAccount, setDeletingAccount] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
+  const [smsAlertsEnabled, setSmsAlertsEnabled] = useState(false);
+  const [smsLoading, setSmsLoading] = useState(false);
+  const [smsMsg, setSmsMsg] = useState("");
+
   useEffect(() => {
     if (user) {
       setName(user.name || "");
@@ -38,6 +42,15 @@ export default function ClientProfilePage() {
       setLocation((user as unknown as { location?: string }).location || "");
     }
   }, [user]);
+
+  useEffect(() => {
+    fetch("/api/user/phone")
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data) setSmsAlertsEnabled(!!data.sms_alerts_enabled);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     fetch("/api/jobs?mine=true")
@@ -78,6 +91,36 @@ export default function ClientProfilePage() {
     } finally {
       setSaving(false);
       setTimeout(() => setSaveMsg(""), 4000);
+    }
+  }
+
+  async function toggleSmsAlerts() {
+    setSmsLoading(true);
+    setSmsMsg("");
+    try {
+      const newValue = !smsAlertsEnabled;
+      // If enabling and no phone number saved, warn the user
+      if (newValue && !phone.trim()) {
+        setSmsMsg("Please add a phone number first, then save your profile.");
+        setSmsLoading(false);
+        return;
+      }
+      const res = await fetch("/api/user/phone", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sms_alerts_enabled: newValue, phone_number: phone.trim() || undefined }),
+      });
+      if (res.ok) {
+        setSmsAlertsEnabled(newValue);
+        setSmsMsg(newValue ? "SMS bid alerts enabled" : "SMS bid alerts disabled");
+      } else {
+        setSmsMsg("Failed to update SMS preferences");
+      }
+    } catch {
+      setSmsMsg("Something went wrong");
+    } finally {
+      setSmsLoading(false);
+      setTimeout(() => setSmsMsg(""), 4000);
     }
   }
 
@@ -226,6 +269,43 @@ export default function ClientProfilePage() {
             {saveMsg && <span className="text-sm">{saveMsg}</span>}
           </div>
         </form>
+      </div>
+
+      {/* SMS Bid Alerts */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <h2 className="text-lg font-semibold text-gray-900 mb-1">SMS Bid Alerts</h2>
+        <p className="text-sm text-gray-500 mb-4">
+          Get a text message on your phone whenever a contractor submits a new bid on one of your jobs.
+        </p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              role="switch"
+              aria-checked={smsAlertsEnabled}
+              disabled={smsLoading}
+              onClick={toggleSmsAlerts}
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-50 ${
+                smsAlertsEnabled ? "bg-emerald-500" : "bg-gray-200"
+              }`}
+            >
+              <span
+                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                  smsAlertsEnabled ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
+            </button>
+            <span className="text-sm font-medium text-gray-700">
+              {smsAlertsEnabled ? "Enabled" : "Disabled"}
+            </span>
+          </div>
+          {smsMsg && <span className="text-sm text-gray-600">{smsMsg}</span>}
+        </div>
+        {smsAlertsEnabled && !phone.trim() && (
+          <p className="mt-3 text-xs text-amber-600 font-medium">
+            Add a phone number above and save your profile to receive SMS alerts.
+          </p>
+        )}
       </div>
 
       {/* Account Security */}

@@ -67,6 +67,47 @@ export async function GET(request: NextRequest) {
       LIMIT 1
     `).get() as { category: string; cnt: number } | undefined;
 
+    // Popular categories (top 6) in last 30 days
+    const popularCategories = await db.prepare(`
+      SELECT category, COUNT(*) as count
+      FROM neighborhood_activity
+      WHERE completed_at >= datetime('now', '-30 days')
+      GROUP BY category
+      ORDER BY count DESC
+      LIMIT 6
+    `).all() as { category: string; count: number }[];
+
+    // Trending contractors — top performers platform-wide in last 30 days
+    const trendingContractors = await db.prepare(`
+      SELECT
+        na.contractor_id,
+        u.name,
+        cp.profile_photo,
+        cp.rating,
+        cp.rating_count,
+        cp.headline,
+        COUNT(*) as jobs_completed,
+        STRING_AGG(DISTINCT na.category, ',') as recent_categories
+      FROM neighborhood_activity na
+      JOIN users u ON u.id = na.contractor_id
+      LEFT JOIN contractor_profiles cp ON cp.user_id = na.contractor_id
+      WHERE na.completed_at >= datetime('now', '-30 days')
+        AND na.contractor_id IS NOT NULL
+      GROUP BY na.contractor_id, u.name, cp.profile_photo, cp.rating, cp.rating_count, cp.headline
+      HAVING COUNT(*) >= 1
+      ORDER BY cp.rating DESC, jobs_completed DESC
+      LIMIT 6
+    `).all() as {
+      contractor_id: string;
+      name: string;
+      profile_photo: string | null;
+      rating: number;
+      rating_count: number;
+      headline: string | null;
+      jobs_completed: number;
+      recent_categories: string | null;
+    }[];
+
     const nearby = rows.map((r) => ({
       category: r.category,
       category_label: getCategoryLabel(r.category),
@@ -83,6 +124,21 @@ export async function GET(request: NextRequest) {
         total_this_week: totalThisWeek,
         top_category: topCategoryRow?.category ?? null,
       },
+      popular_categories: popularCategories.map((c) => ({
+        category: c.category,
+        category_label: getCategoryLabel(c.category),
+        count: c.count,
+      })),
+      trending_contractors: trendingContractors.map((c) => ({
+        id: c.contractor_id,
+        name: c.name,
+        profile_photo: c.profile_photo,
+        rating: c.rating,
+        rating_count: c.rating_count,
+        headline: c.headline,
+        jobs_completed: c.jobs_completed,
+        recent_categories: (c.recent_categories || "").split(",").filter(Boolean).map((cat) => getCategoryLabel(cat)),
+      })),
       platform_wide: true,
     });
   }
@@ -150,6 +206,59 @@ export async function GET(request: NextRequest) {
     lng - lngDelta, lng + lngDelta
   ) as { category: string; cnt: number } | undefined;
 
+  // Popular categories nearby
+  const popularCategories = await db.prepare(`
+    SELECT na.category, COUNT(*) as count
+    FROM neighborhood_activity na
+    JOIN jobs j ON j.id = na.job_id
+    WHERE na.completed_at >= datetime('now', '-30 days')
+      AND j.latitude BETWEEN ? AND ?
+      AND j.longitude BETWEEN ? AND ?
+    GROUP BY na.category
+    ORDER BY count DESC
+    LIMIT 6
+  `).all(
+    lat - latDelta, lat + latDelta,
+    lng - lngDelta, lng + lngDelta
+  ) as { category: string; count: number }[];
+
+  // Trending contractors nearby
+  const trendingContractors = await db.prepare(`
+    SELECT
+      na.contractor_id,
+      u.name,
+      cp.profile_photo,
+      cp.rating,
+      cp.rating_count,
+      cp.headline,
+      COUNT(*) as jobs_completed,
+      STRING_AGG(DISTINCT na.category, ',') as recent_categories
+    FROM neighborhood_activity na
+    JOIN jobs j ON j.id = na.job_id
+    JOIN users u ON u.id = na.contractor_id
+    LEFT JOIN contractor_profiles cp ON cp.user_id = na.contractor_id
+    WHERE na.completed_at >= datetime('now', '-30 days')
+      AND na.contractor_id IS NOT NULL
+      AND j.latitude BETWEEN ? AND ?
+      AND j.longitude BETWEEN ? AND ?
+    GROUP BY na.contractor_id, u.name, cp.profile_photo, cp.rating, cp.rating_count, cp.headline
+    HAVING COUNT(*) >= 1
+    ORDER BY cp.rating DESC, jobs_completed DESC
+    LIMIT 6
+  `).all(
+    lat - latDelta, lat + latDelta,
+    lng - lngDelta, lng + lngDelta
+  ) as {
+    contractor_id: string;
+    name: string;
+    profile_photo: string | null;
+    rating: number;
+    rating_count: number;
+    headline: string | null;
+    jobs_completed: number;
+    recent_categories: string | null;
+  }[];
+
   const nearby = rows.map((r) => ({
     category: r.category,
     category_label: getCategoryLabel(r.category),
@@ -166,6 +275,21 @@ export async function GET(request: NextRequest) {
       total_this_week: totalThisWeek,
       top_category: topCategoryRow?.category ?? null,
     },
+    popular_categories: popularCategories.map((c) => ({
+      category: c.category,
+      category_label: getCategoryLabel(c.category),
+      count: c.count,
+    })),
+    trending_contractors: trendingContractors.map((c) => ({
+      id: c.contractor_id,
+      name: c.name,
+      profile_photo: c.profile_photo,
+      rating: c.rating,
+      rating_count: c.rating_count,
+      headline: c.headline,
+      jobs_completed: c.jobs_completed,
+      recent_categories: (c.recent_categories || "").split(",").filter(Boolean).map((cat) => getCategoryLabel(cat)),
+    })),
     platform_wide: false,
   });
 }

@@ -55,6 +55,8 @@ export async function GET(request: NextRequest) {
   const clientLat = parseFloat(lat ?? "");
   const clientLng = parseFloat(lng ?? "");
   const radiusMiles = miles;
+  const instantBookOnly = searchParams.get("instant_book") === "1";
+  const category = searchParams.get("category");
 
   // If no client coords provided, return platform-wide active contractor count
   if (isNaN(clientLat) || isNaN(clientLng)) {
@@ -72,17 +74,43 @@ export async function GET(request: NextRequest) {
   // Fetch all contractors with their stored coords and location text
   interface ContractorRow {
     id: string;
+    name: string;
     location: string | null;
     latitude: number | null;
     longitude: number | null;
+    instant_book_enabled: number;
+    instant_book_price: number | null;
+    instant_book_categories: string;
+    rating: number;
+    profile_photo: string | null;
+  }
+
+  let contractorQuery = `
+    SELECT u.id, u.name, u.location, u.latitude, u.longitude,
+      cp.instant_book_enabled, cp.instant_book_price, cp.instant_book_categories,
+      cp.rating, cp.profile_photo
+    FROM users u
+    LEFT JOIN contractor_profiles cp ON u.id = cp.user_id
+    WHERE u.role = 'contractor'
+  `;
+  if (instantBookOnly) {
+    contractorQuery += " AND cp.instant_book_enabled = 1";
   }
   const contractors = await db
-    .prepare(
-      "SELECT id, location, latitude, longitude FROM users WHERE role = 'contractor'"
-    )
+    .prepare(contractorQuery)
     .all() as ContractorRow[];
 
   let count = 0;
+  const nearbyContractors: Array<{
+    id: string;
+    name: string;
+    distance: number;
+    instant_book_enabled: boolean;
+    instant_book_price: number | null;
+    instant_book_categories: string[];
+    rating: number;
+    profile_photo: string | null;
+  }> = [];
 
   // Geocode and cache in serial to respect Nominatim 1 req/sec limit
   for (const c of contractors) {
@@ -107,8 +135,40 @@ export async function GET(request: NextRequest) {
 
     if (lat !== null && lng !== null) {
       const dist = haversine(clientLat, clientLng, lat, lng);
-      if (dist <= radiusMiles) count++;
+      if (dist <= radiusMiles) {
+        count++;
+
+        // If filtering by instant book, also check category match
+        let ibCategories: string[] = [];
+        try { ibCategories = JSON.parse(c.instant_book_categories || "[]"); } catch { /* silent */ }
+
+        const categoryMatch = !category || ibCategories.length === 0 || ibCategories.includes(category);
+
+        if (instantBookOnly && categoryMatch) {
+          nearbyContractors.push({
+            id: c.id,
+            name: c.name,
+            distance: Math.round(dist * 10) / 10,
+            instant_book_enabled: !!c.instant_book_enabled,
+            instant_book_price: c.instant_book_price,
+            instant_book_categories: ibCategories,
+            rating: c.rating ?? 0,
+            profile_photo: c.profile_photo ?? null,
+          });
+        }
+      }
     }
+  }
+
+  if (instantBookOnly) {
+    // Sort by distance
+    nearbyContractors.sort((a, b) => a.distance - b.distance);
+    return NextResponse.json({
+      count: nearbyContractors.length,
+      contractors: nearbyContractors,
+      radiusMiles,
+      fallback: false,
+    });
   }
 
   return NextResponse.json({ count, radiusMiles, fallback: false });

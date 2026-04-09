@@ -220,6 +220,8 @@ export async function initializeDatabase(): Promise<void> {
       phone_verify_expires TEXT,
       avatar_url TEXT,
       sms_bid_alerts INTEGER NOT NULL DEFAULT 0,
+      phone_number TEXT,
+      sms_alerts_enabled INTEGER NOT NULL DEFAULT 0,
       senior_mode INTEGER NOT NULL DEFAULT 0,
       emergency_contact_name TEXT,
       emergency_contact_phone TEXT,
@@ -252,6 +254,8 @@ export async function initializeDatabase(): Promise<void> {
       background_check_status TEXT NOT NULL DEFAULT 'none',
       instant_book_enabled INTEGER NOT NULL DEFAULT 0,
       instant_book_price INTEGER,
+      instant_book_categories TEXT NOT NULL DEFAULT '[]',
+      instant_book_hours TEXT NOT NULL DEFAULT '{}',
       license_number TEXT,
       service_radius_miles INTEGER DEFAULT 25,
       id_document_url TEXT,
@@ -909,6 +913,19 @@ export async function initializeDatabase(): Promise<void> {
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       FOREIGN KEY (consumer_id) REFERENCES users(id) ON DELETE CASCADE
     );
+
+    CREATE TABLE IF NOT EXISTS neighborhood_activity (
+      id TEXT PRIMARY KEY,
+      job_id TEXT NOT NULL,
+      contractor_id TEXT,
+      category TEXT NOT NULL,
+      city TEXT,
+      state TEXT,
+      zip_code TEXT,
+      completed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,
+      FOREIGN KEY (contractor_id) REFERENCES users(id)
+    );
   `);
 
   // Create indexes (separate statements for safety)
@@ -940,6 +957,8 @@ export async function initializeDatabase(): Promise<void> {
     "CREATE INDEX IF NOT EXISTS idx_certifications_contractor ON certifications(contractor_id)",
     "CREATE INDEX IF NOT EXISTS idx_work_history_contractor ON work_history(contractor_id)",
     "CREATE INDEX IF NOT EXISTS idx_push_subs_user ON push_subscriptions(user_id)",
+    "CREATE INDEX IF NOT EXISTS idx_neighborhood_zip ON neighborhood_activity(zip_code)",
+    "CREATE INDEX IF NOT EXISTS idx_neighborhood_city ON neighborhood_activity(city)",
     // High-cardinality composite indexes for common query patterns
     "CREATE INDEX IF NOT EXISTS idx_jobs_status_created ON jobs(status, created_at DESC)",
     "CREATE INDEX IF NOT EXISTS idx_jobs_consumer_status ON jobs(consumer_id, status)",
@@ -1235,6 +1254,31 @@ export async function initializeDatabase(): Promise<void> {
        END IF;
        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='tax_records' AND column_name='ein_or_ssn_last4') THEN
          ALTER TABLE tax_records ADD COLUMN ein_or_ssn_last4 TEXT;
+       END IF;
+     END $$`,
+    // Add missing columns to disputes table (resolved_at, resolved_by, filed_by, guarantee_eligible)
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='disputes' AND column_name='resolved_at') THEN
+         ALTER TABLE disputes ADD COLUMN resolved_at TIMESTAMPTZ;
+       END IF;
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='disputes' AND column_name='resolved_by') THEN
+         ALTER TABLE disputes ADD COLUMN resolved_by TEXT;
+       END IF;
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='disputes' AND column_name='filed_by') THEN
+         ALTER TABLE disputes ADD COLUMN filed_by TEXT;
+       END IF;
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='disputes' AND column_name='guarantee_eligible') THEN
+         ALTER TABLE disputes ADD COLUMN guarantee_eligible INTEGER NOT NULL DEFAULT 0;
+       END IF;
+     END $$`,
+
+    // Instant Book — categories + availability hours
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='contractor_profiles' AND column_name='instant_book_categories') THEN
+         ALTER TABLE contractor_profiles ADD COLUMN instant_book_categories TEXT NOT NULL DEFAULT '[]';
+       END IF;
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='contractor_profiles' AND column_name='instant_book_hours') THEN
+         ALTER TABLE contractor_profiles ADD COLUMN instant_book_hours TEXT NOT NULL DEFAULT '{}';
        END IF;
      END $$`,
   ];

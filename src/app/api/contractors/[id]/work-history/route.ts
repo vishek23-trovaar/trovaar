@@ -12,8 +12,8 @@ export async function GET(
   const db = getDb();
   await initializeDatabase();
 
-  const workHistory = db
-    .prepare("SELECT * FROM contractor_work_history WHERE contractor_id = ? ORDER BY start_year DESC")
+  const workHistory = await db
+    .prepare("SELECT * FROM work_history WHERE contractor_id = ? ORDER BY start_date DESC")
     .all(id);
 
   return NextResponse.json({ workHistory });
@@ -34,22 +34,26 @@ export async function POST(
   }
 
   try {
-    const { company_name, role, start_year, end_year } = await request.json();
+    const { company_name, role, start_year, end_year, start_date, end_date } = await request.json();
 
     if (!company_name || !company_name.trim()) {
       return NextResponse.json({ error: "Company name is required" }, { status: 400 });
     }
 
     const db = getDb();
-  await initializeDatabase();
+    await initializeDatabase();
     const entryId = crypto.randomUUID();
 
-    db.prepare(`
-      INSERT INTO contractor_work_history (id, contractor_id, company_name, role, start_year, end_year, verified)
-      VALUES (?, ?, ?, ?, ?, ?, 0)
-    `).run(entryId, id, company_name.trim(), role || null, start_year || null, end_year || null);
+    // Accept start_date/end_date or fall back to start_year/end_year for backwards compat
+    const startVal = start_date || (start_year ? `${start_year}-01-01` : null);
+    const endVal = end_date || (end_year ? `${end_year}-12-31` : null);
 
-    const entry = await db.prepare("SELECT * FROM contractor_work_history WHERE id = ?").get(entryId);
+    await db.prepare(`
+      INSERT INTO work_history (id, contractor_id, company_name, role, start_date, end_date, verified)
+      VALUES (?, ?, ?, ?, ?, ?, 0)
+    `).run(entryId, id, company_name.trim(), role || null, startVal, endVal);
+
+    const entry = await db.prepare("SELECT * FROM work_history WHERE id = ?").get(entryId);
     return NextResponse.json({ entry }, { status: 201 });
   } catch (error) {
     logger.error({ err: error }, "Create work history error");
@@ -79,7 +83,7 @@ export async function DELETE(
 
   const db = getDb();
   await initializeDatabase();
-  await db.prepare("DELETE FROM contractor_work_history WHERE id = ? AND contractor_id = ?").run(entryId, id);
+  await db.prepare("DELETE FROM work_history WHERE id = ? AND contractor_id = ?").run(entryId, id);
 
   return NextResponse.json({ success: true });
 }

@@ -8,6 +8,7 @@ import Input from "@/components/ui/Input";
 import ImageUploader from "@/components/jobs/ImageUploader";
 import { CATEGORY_GROUPS, URGENCY_LEVELS } from "@/lib/constants";
 import { useAuth } from "@/context/AuthContext";
+import { ConsumerSurgeBanner } from "@/components/insights/ConsumerSurgeBanner";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -52,6 +53,13 @@ function PostJobContent() {
   const [aiGenerated, setAiGenerated] = useState(false);
   const [aiNotice, setAiNotice] = useState("");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // AI category suggestion state
+  const [categorySuggestion, setCategorySuggestion] = useState<{
+    category: string; label: string; groupIcon: string; categoryGroup: string;
+  } | null>(null);
+  const [categorySuggestionLoading, setCategorySuggestionLoading] = useState(false);
+  const categoryDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Step 3 — Review + Location + Post
   const [expectedDate, setExpectedDate] = useState("");
@@ -182,6 +190,39 @@ function PostJobContent() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }
+
+  // ── AI category suggestion (re-detect when description changes in step 2) ──
+  useEffect(() => {
+    if (step !== 2 || photos.length === 0) return;
+    if (!description.trim() || description.trim().length < 15) return;
+    if (categoryDebounceRef.current) clearTimeout(categoryDebounceRef.current);
+    categoryDebounceRef.current = setTimeout(async () => {
+      setCategorySuggestionLoading(true);
+      try {
+        const res = await fetch("/api/ai/detect-category", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ photos: photos.slice(0, 2), title, description }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.category && data.category !== category) {
+            setCategorySuggestion({
+              category: data.category,
+              label: data.label,
+              groupIcon: data.groupIcon || "",
+              categoryGroup: data.categoryGroup || "",
+            });
+          } else {
+            setCategorySuggestion(null);
+          }
+        }
+      } catch { /* silent */ }
+      finally { setCategorySuggestionLoading(false); }
+    }, 1200);
+    return () => { if (categoryDebounceRef.current) clearTimeout(categoryDebounceRef.current); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [description, title]);
 
   // ── AI questions (auto-regenerated when category/title/description change on step 2) ──
   useEffect(() => {
@@ -535,6 +576,9 @@ function PostJobContent() {
               </p>
             </div>
 
+            {/* Surge pricing info for selected category */}
+            {category && <ConsumerSurgeBanner category={category} />}
+
             {/* Uploaded photos preview */}
             {photos.length > 0 && (
               <div className="flex gap-2 flex-wrap">
@@ -574,6 +618,46 @@ function PostJobContent() {
                   </optgroup>
                 ))}
               </select>
+
+              {/* AI category suggestion */}
+              {categorySuggestionLoading && (
+                <div className="mt-2 flex items-center gap-2 text-xs text-primary">
+                  <div className="w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                  Re-analyzing category based on your description...
+                </div>
+              )}
+              {categorySuggestion && !categorySuggestionLoading && (
+                <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2.5 flex items-center gap-3">
+                  <span className="text-sm">
+                    {categorySuggestion.groupIcon || "🤖"}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold text-blue-900">
+                      AI suggests: {categorySuggestion.label}
+                    </p>
+                    <p className="text-xs text-blue-600">
+                      Based on your description, this may be a better fit
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      applyCategoryValue(categorySuggestion.category);
+                      setCategorySuggestion(null);
+                    }}
+                    className="px-3 py-1 text-xs font-semibold text-white bg-primary rounded-lg hover:bg-primary/90 transition-colors cursor-pointer shrink-0"
+                  >
+                    Accept
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCategorySuggestion(null)}
+                    className="text-blue-400 hover:text-blue-600 text-lg leading-none cursor-pointer shrink-0"
+                  >
+                    x
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Title */}

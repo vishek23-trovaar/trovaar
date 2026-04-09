@@ -37,8 +37,10 @@ interface CertificationData {
   id: string;
   name: string;
   issuer: string | null;
-  year_obtained: number | null;
+  issue_date: string | null;
+  expiry_date: string | null;
   verified: number;
+  document_url: string | null;
 }
 
 interface WorkHistoryEntry {
@@ -505,26 +507,41 @@ export default function ContractorProfilePage({
           <div className="bg-white rounded-2xl border border-border p-6">
             <h2 className="text-base font-bold text-secondary mb-4">Certifications</h2>
             <div className="space-y-3">
-              {certifications.map((cert) => (
-                <div key={cert.id} className="flex items-center gap-3 py-2">
-                  <div className="w-9 h-9 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-sm shrink-0">
-                    📜
+              {certifications.map((cert) => {
+                const isExpired = cert.expiry_date && new Date(cert.expiry_date).getTime() < Date.now();
+                return (
+                  <div key={cert.id} className="flex items-center gap-3 py-2">
+                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm shrink-0 ${
+                      isExpired ? "bg-red-50 text-red-400" : "bg-purple-50 text-purple-600"
+                    }`}>
+                      {isExpired ? "\u26A0\uFE0F" : "\uD83D\uDCDC"}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-sm font-semibold ${isExpired ? "text-gray-400 line-through" : "text-secondary"}`}>
+                        {cert.name}
+                      </p>
+                      <p className="text-xs text-muted">
+                        {cert.issuer && <span>{cert.issuer}</span>}
+                        {cert.issue_date && <span> · Issued {cert.issue_date}</span>}
+                        {cert.expiry_date && (
+                          <span className={isExpired ? " text-red-500" : ""}>
+                            {" "}· {isExpired ? "Expired" : "Expires"} {cert.expiry_date}
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {isExpired ? (
+                        <span className="text-xs bg-red-50 text-red-600 border border-red-200 px-2.5 py-1 rounded-full font-medium">Expired</span>
+                      ) : cert.verified ? (
+                        <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-full font-semibold">&#10003; Verified</span>
+                      ) : (
+                        <span className="text-xs bg-gray-50 text-gray-500 border border-gray-200 px-2.5 py-1 rounded-full font-medium">Self-reported</span>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-secondary">{cert.name}</p>
-                    <p className="text-xs text-muted">
-                      {cert.issuer && <span>{cert.issuer}</span>}
-                      {cert.issuer && cert.year_obtained && <span> · </span>}
-                      {cert.year_obtained && <span>{cert.year_obtained}</span>}
-                    </p>
-                  </div>
-                  {cert.verified ? (
-                    <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-full font-semibold">✓ Verified</span>
-                  ) : (
-                    <span className="text-xs bg-gray-50 text-gray-500 border border-gray-200 px-2.5 py-1 rounded-full font-medium">Self-reported</span>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}

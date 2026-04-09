@@ -87,9 +87,10 @@ async function migrateUsers() {
         phoneVerifyExpires:     dt(r.phone_verify_expires) ?? undefined,
         phoneNumber:            r.phone_number as string | null ?? undefined,
         smsAlertsEnabled:       bool(r.sms_alerts_enabled),
-        isSeniorAccount:        bool(r.is_senior_account),
-        familyOverseerEmail:    r.family_overseer_email as string | null ?? undefined,
-        familyOversightEnabled: bool(r.family_oversight_enabled),
+        // DISABLED — senior protection feature removed
+        // isSeniorAccount:        bool(r.is_senior_account),
+        // familyOverseerEmail:    r.family_overseer_email as string | null ?? undefined,
+        // familyOversightEnabled: bool(r.family_oversight_enabled),
         accountNumber:          r.account_number as string | null ?? undefined,
         createdAt:              dt(r.created_at) ?? new Date(),
       },
@@ -497,14 +498,15 @@ async function main() {
     completedAt: dt(r.completed_at) ?? new Date(),
   }));
 
-  await migrateSimpleTable("senior_protection", "seniorProtection", (r) => ({
-    id:          r.id as string,
-    consumerId:  r.consumer_id as string,
-    familyEmail: r.family_email as string,
-    familyName:  r.family_name as string | null ?? undefined,
-    enabled:     bool(r.enabled),
-    createdAt:   dt(r.created_at) ?? new Date(),
-  }));
+  // DISABLED — senior protection feature removed
+  // await migrateSimpleTable("senior_protection", "seniorProtection", (r) => ({
+  //   id:          r.id as string,
+  //   consumerId:  r.consumer_id as string,
+  //   familyEmail: r.family_email as string,
+  //   familyName:  r.family_name as string | null ?? undefined,
+  //   enabled:     bool(r.enabled),
+  //   createdAt:   dt(r.created_at) ?? new Date(),
+  // }));
 
   await migrateSimpleTable("admin_categories", "adminCategory", (r) => ({
     id:         r.value as string,  // upsert key alias

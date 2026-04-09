@@ -19,7 +19,8 @@ export async function GET(
       cp.business_established, cp.portfolio_photos,
       cp.contractor_type, cp.qualifications,
       cp.headline, cp.about_me, cp.license_number,
-      cp.insurance_verified, cp.background_check_status
+      cp.insurance_verified, cp.background_check_status,
+      cp.instant_book_enabled, cp.instant_book_price, cp.instant_book_categories
     FROM users u
     LEFT JOIN contractor_profiles cp ON u.id = cp.user_id
     WHERE u.id = ? AND u.role = 'contractor'
@@ -73,12 +74,12 @@ export async function GET(
   }
 
   // Fetch certifications and work history
-  const certifications = db
-    .prepare("SELECT * FROM contractor_certifications WHERE contractor_id = ? ORDER BY year_obtained DESC")
+  const certifications = await db
+    .prepare("SELECT * FROM certifications WHERE contractor_id = ? ORDER BY created_at DESC")
     .all(id);
 
-  const workHistory = db
-    .prepare("SELECT * FROM contractor_work_history WHERE contractor_id = ? ORDER BY start_year DESC")
+  const workHistory = await db
+    .prepare("SELECT * FROM work_history WHERE contractor_id = ? ORDER BY start_date DESC")
     .all(id);
 
   return NextResponse.json({

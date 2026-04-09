@@ -81,6 +81,8 @@ await `
     background_check_status TEXT NOT NULL DEFAULT 'none',
     instant_book_enabled INTEGER NOT NULL DEFAULT 0,
     instant_book_price INTEGER,
+    instant_book_categories TEXT NOT NULL DEFAULT '[]',
+    instant_book_hours TEXT NOT NULL DEFAULT '{}',
     license_number TEXT,
     license_state TEXT,
     id_document_url TEXT,
@@ -158,25 +160,27 @@ await `
     FOREIGN KEY (contractor_id) REFERENCES users(id) ON DELETE CASCADE
   );
 
-  CREATE TABLE IF NOT EXISTS contractor_certifications (
+  CREATE TABLE IF NOT EXISTS certifications (
     id TEXT PRIMARY KEY,
     contractor_id TEXT NOT NULL,
     name TEXT NOT NULL,
     issuer TEXT,
-    year_obtained INTEGER,
+    issue_date TEXT,
+    expiry_date TEXT,
     verified INTEGER NOT NULL DEFAULT 0,
     document_url TEXT,
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
     FOREIGN KEY (contractor_id) REFERENCES users(id) ON DELETE CASCADE
   );
 
-  CREATE TABLE IF NOT EXISTS contractor_work_history (
+  CREATE TABLE IF NOT EXISTS work_history (
     id TEXT PRIMARY KEY,
     contractor_id TEXT NOT NULL,
     company_name TEXT NOT NULL,
     role TEXT,
-    start_year INTEGER,
-    end_year INTEGER,
+    start_date TEXT,
+    end_date TEXT,
+    description TEXT,
     verified INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
     FOREIGN KEY (contractor_id) REFERENCES users(id) ON DELETE CASCADE
@@ -1063,29 +1067,29 @@ console.log("\nTo make a user admin: UPDATE users SET is_admin = 1 WHERE email =
 
 // === CONTRACTOR CERTIFICATIONS & WORK HISTORY (Trust System) ===
 const insertCert = db.prepare(
-  "INSERT INTO contractor_certifications (id, contractor_id, name, issuer, year_obtained, verified) VALUES (?, ?, ?, ?, ?, ?)"
+  "INSERT INTO certifications (id, contractor_id, name, issuer, issue_date, expiry_date, verified) VALUES (?, ?, ?, ?, ?, ?, ?)"
 );
-insertCert.run(uuidv4(), contractor1Id, "EPA Section 608 Universal", "EPA", 2018, 1);
-insertCert.run(uuidv4(), contractor1Id, "ASE Master Technician", "ASE", 2019, 1);
-insertCert.run(uuidv4(), contractor1Id, "OSHA 30-Hour Construction Safety", "OSHA", 2020, 1);
+insertCert.run(uuidv4(), contractor1Id, "EPA Section 608 Universal", "EPA", "2018-03-15", "2028-03-15", 1);
+insertCert.run(uuidv4(), contractor1Id, "ASE Master Technician", "ASE", "2019-06-01", "2024-06-01", 1);
+insertCert.run(uuidv4(), contractor1Id, "OSHA 30-Hour Construction Safety", "OSHA", "2020-01-10", null, 1);
 
 const insertWork = db.prepare(
-  "INSERT INTO contractor_work_history (id, contractor_id, company_name, role, start_year, end_year, verified) VALUES (?, ?, ?, ?, ?, ?, ?)"
+  "INSERT INTO work_history (id, contractor_id, company_name, role, start_date, end_date, verified) VALUES (?, ?, ?, ?, ?, ?, ?)"
 );
-insertWork.run(uuidv4(), contractor1Id, "Honda of Austin", "Lead Technician", 2014, 2022, 1);
-insertWork.run(uuidv4(), contractor1Id, "ServiceMaster Restore", "Field Technician", 2012, 2014, 0);
+insertWork.run(uuidv4(), contractor1Id, "Honda of Austin", "Lead Technician", "2014-01-01", "2022-06-30", 1);
+insertWork.run(uuidv4(), contractor1Id, "ServiceMaster Restore", "Field Technician", "2012-03-01", "2014-01-01", 0);
 
 // Jenny Park certifications
-insertCert.run(uuidv4(), contractor2Id, "Master Electrician License", "Texas TDLR", 2017, 1);
-insertCert.run(uuidv4(), contractor2Id, "NFPA 70E Arc Flash Safety", "NFPA", 2021, 1);
+insertCert.run(uuidv4(), contractor2Id, "Master Electrician License", "Texas TDLR", "2017-05-20", "2027-05-20", 1);
+insertCert.run(uuidv4(), contractor2Id, "NFPA 70E Arc Flash Safety", "NFPA", "2021-08-15", "2024-08-15", 1);
 
-insertWork.run(uuidv4(), contractor2Id, "Mr. Electric", "Senior Electrician", 2015, 2021, 1);
+insertWork.run(uuidv4(), contractor2Id, "Mr. Electric", "Senior Electrician", "2015-01-01", "2021-12-31", 1);
 
 // Marcus Johnson certifications
-insertCert.run(uuidv4(), contractor4Id, "NATE Certified HVAC Technician", "NATE", 2018, 1);
-insertCert.run(uuidv4(), contractor4Id, "EPA Section 608 Universal", "EPA", 2016, 1);
+insertCert.run(uuidv4(), contractor4Id, "NATE Certified HVAC Technician", "NATE", "2018-04-01", "2026-04-01", 1);
+insertCert.run(uuidv4(), contractor4Id, "EPA Section 608 Universal", "EPA", "2016-09-10", "2026-09-10", 1);
 
-insertWork.run(uuidv4(), contractor4Id, "Carrier Factory Authorized", "HVAC Installer", 2016, 2023, 1);
+insertWork.run(uuidv4(), contractor4Id, "Carrier Factory Authorized", "HVAC Installer", "2016-01-01", "2023-06-30", 1);
 
 // Update contractor headlines
 await db.prepare("UPDATE contractor_profiles SET headline = ?, about_me = ?, background_check_status = 'approved' WHERE user_id = ?").run(

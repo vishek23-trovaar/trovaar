@@ -159,9 +159,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         const state = cityStateMatch ? cityStateMatch[2] : null;
         if (city || zip) {
           db.prepare(`
-            INSERT INTO neighborhood_activity (id, job_id, category, city, state, zip_code, completed_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-          `).run(randomUUID(), id, jobFull.category, city, state, zip, now);
+            INSERT INTO neighborhood_activity (id, job_id, contractor_id, category, city, state, zip_code, completed_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+          `).run(randomUUID(), id, job.accepted_contractor_id, jobFull.category, city, state, zip, now);
         }
       }
 

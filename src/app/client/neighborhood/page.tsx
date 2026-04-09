@@ -43,12 +43,31 @@ interface NearbyItem {
   last_completed: string;
 }
 
+interface PopularCategory {
+  category: string;
+  category_label: string;
+  count: number;
+}
+
+interface TrendingContractor {
+  id: string;
+  name: string;
+  profile_photo: string | null;
+  rating: number;
+  rating_count: number;
+  headline: string | null;
+  jobs_completed: number;
+  recent_categories: string[];
+}
+
 interface NeighborhoodData {
   nearby: NearbyItem[];
   summary: {
     total_this_week: number;
     top_category: string | null;
   };
+  popular_categories: PopularCategory[];
+  trending_contractors: TrendingContractor[];
   platform_wide: boolean;
 }
 
@@ -178,6 +197,79 @@ export default function NeighborhoodFeedPage() {
                 </div>
               </div>
             </div>
+
+            {/* Popular categories */}
+            {data.popular_categories && data.popular_categories.length > 0 && (
+              <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+                <h2 className="text-sm font-bold text-gray-900 mb-3">Popular Categories {data.platform_wide ? "" : "Near You"}</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {data.popular_categories.map((cat) => (
+                    <div
+                      key={cat.category}
+                      className="flex items-center gap-2 px-3 py-2.5 bg-gray-50 rounded-lg border border-gray-100 hover:border-emerald-200 hover:bg-emerald-50/50 transition-colors"
+                    >
+                      <span className="text-lg">{getCategoryEmoji(cat.category)}</span>
+                      <div className="min-w-0">
+                        <p className="text-xs font-semibold text-gray-900 truncate">{cat.category_label}</p>
+                        <p className="text-[10px] text-gray-500">{cat.count} job{cat.count !== 1 ? "s" : ""}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Trending contractors */}
+            {data.trending_contractors && data.trending_contractors.length > 0 && (
+              <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+                <h2 className="text-sm font-bold text-gray-900 mb-3">
+                  Trending Contractors {data.platform_wide ? "" : "Nearby"}
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {data.trending_contractors.map((contractor) => (
+                    <Link
+                      key={contractor.id}
+                      href={`/profile/${contractor.id}`}
+                      className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100 hover:border-emerald-200 hover:bg-emerald-50/30 transition-all group"
+                    >
+                      <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center overflow-hidden shrink-0">
+                        {contractor.profile_photo ? (
+                          <img
+                            src={contractor.profile_photo}
+                            alt={contractor.name}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <span className="text-sm font-bold text-emerald-600">
+                            {contractor.name.charAt(0).toUpperCase()}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-gray-900 truncate group-hover:text-emerald-700 transition-colors">
+                          {contractor.name}
+                        </p>
+                        {contractor.headline && (
+                          <p className="text-[10px] text-gray-500 truncate">{contractor.headline}</p>
+                        )}
+                        <div className="flex items-center gap-2 mt-0.5">
+                          {contractor.rating > 0 && (
+                            <span className="flex items-center gap-0.5 text-[10px]">
+                              <span className="text-amber-400">&#9733;</span>
+                              <span className="font-medium text-gray-700">{contractor.rating.toFixed(1)}</span>
+                              <span className="text-gray-400">({contractor.rating_count})</span>
+                            </span>
+                          )}
+                          <span className="text-[10px] text-emerald-600 font-medium">
+                            {contractor.jobs_completed} job{contractor.jobs_completed !== 1 ? "s" : ""} this month
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Feed items */}
             {data.nearby.length === 0 ? (
