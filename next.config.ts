@@ -54,6 +54,13 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   headers: async () => [
     {
+      // HTML pages: always revalidate so deploys are picked up immediately
+      source: "/((?!_next/static|_next/image|favicon\\.ico).*)",
+      headers: [
+        { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
+      ],
+    },
+    {
       source: "/(.*)",
       headers: [
         { key: "X-Frame-Options", value: "DENY" },
