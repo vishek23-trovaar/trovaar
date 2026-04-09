@@ -190,7 +190,7 @@ export default function Navbar() {
                 {/* ── CONTRACTOR tabs ── */}
                 {user.role === "contractor" && (
                   <nav className="hidden sm:flex items-center gap-1">
-                    <NavLink href="/contractor/dashboard" pathname={pathname}>Browse Jobs</NavLink>
+                    <NavLink href="/jobs" pathname={pathname}>Browse Jobs</NavLink>
                     <NavLink href="/contractor/bids" pathname={pathname}>My Bids</NavLink>
                     <NavLink href="/contractor/messages" pathname={pathname}>Messages</NavLink>
                     <NavLink href="/contractor/earnings" pathname={pathname}>Earnings</NavLink>

@@ -17,7 +17,7 @@ function BellIcon() {
 }
 
 const NAV_LINKS = [
-  { label: "Browse Jobs", href: "/contractor/dashboard" },
+  { label: "Browse Jobs", href: "/jobs" },
   { label: "My Bids", href: "/contractor/bids" },
   { label: "Profile", href: "/contractor/profile" },
 ];
