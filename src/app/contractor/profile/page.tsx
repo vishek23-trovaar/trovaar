@@ -183,12 +183,22 @@ export default function ContractorPerformancePage() {
   const [trustSaving, setTrustSaving] = useState(false);
   const [trustSaved, setTrustSaved] = useState(false);
 
+  // Identity Verification
+  const [idVerifyLoading, setIdVerifyLoading] = useState(false);
+
   // Certification form
   const [newCertName, setNewCertName] = useState("");
   const [newCertIssuer, setNewCertIssuer] = useState("");
   const [newCertIssueDate, setNewCertIssueDate] = useState("");
   const [newCertExpiry, setNewCertExpiry] = useState("");
   const [certAdding, setCertAdding] = useState(false);
+
+  // Trade License form
+  const [licenseState, setLicenseState] = useState("");
+  const [licenseType, setLicenseType] = useState("");
+  const [licenseSubmitting, setLicenseSubmitting] = useState(false);
+  const [licenseSubmitted, setLicenseSubmitted] = useState(false);
+  const [licenseSubmissions, setLicenseSubmissions] = useState<{ id: string; name: string; issuer: string; verified: number; document_url: string | null; created_at: string }[]>([]);
 
   // Work history form
   const [newWorkCompany, setNewWorkCompany] = useState("");
@@ -285,10 +295,23 @@ export default function ContractorPerformancePage() {
       }
     }
 
+    async function fetchLicenseInfo() {
+      try {
+        const res = await fetch("/api/license");
+        if (res.ok) {
+          const data = await res.json();
+          setLicenseSubmissions(data.submissions ?? []);
+          if (data.license_number) setLicenseNumber(data.license_number);
+          if (data.license_state) setLicenseState(data.license_state);
+        }
+      } catch { /* silent */ }
+    }
+
     fetchProfile();
     fetchEarnings();
     fetchStripe();
     fetchAlertPrefs();
+    fetchLicenseInfo();
   }, [user]);
 
   async function saveAlertPrefs() {
@@ -334,6 +357,21 @@ export default function ContractorPerformancePage() {
       }
     } catch { /* silent */ } finally {
       setTrustSaving(false);
+    }
+  }
+
+  async function handleIdentityVerification() {
+    setIdVerifyLoading(true);
+    try {
+      const res = await fetch("/api/stripe/identity", { method: "POST" });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.url) {
+          window.location.href = data.url;
+        }
+      }
+    } catch { /* silent */ } finally {
+      setIdVerifyLoading(false);
     }
   }
 
@@ -405,6 +443,61 @@ export default function ContractorPerformancePage() {
       await fetch(`/api/contractors/${user.id}/work-history?entryId=${entryId}`, { method: "DELETE" });
       setWorkHistory((prev) => prev.filter((w) => w.id !== entryId));
     } catch { /* silent */ }
+  }
+
+  async function submitLicense() {
+    if (!user || !licenseNumber.trim() || !licenseState || !licenseType) return;
+    setLicenseSubmitting(true);
+    setLicenseSubmitted(false);
+    try {
+      const res = await fetch("/api/license", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          license_number: licenseNumber.trim(),
+          license_state: licenseState,
+          license_type: licenseType,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setLicenseSubmitted(true);
+        setLicenseSubmissions((prev) => [data.certification, ...prev]);
+        setTimeout(() => setLicenseSubmitted(false), 3000);
+      }
+    } catch { /* silent */ } finally {
+      setLicenseSubmitting(false);
+    }
+  }
+
+  // Background check
+  const [bgCheckRequesting, setBgCheckRequesting] = useState(false);
+  const [bgCheckMessage, setBgCheckMessage] = useState("");
+
+  async function requestBackgroundCheck() {
+    setBgCheckRequesting(true);
+    setBgCheckMessage("");
+    try {
+      const res = await fetch("/api/background-check", { method: "POST" });
+      if (res.ok) {
+        setBgCheckMessage("Background check requested successfully!");
+        // Re-fetch profile to update status
+        if (user) {
+          const profileRes = await fetch(`/api/contractors/${user.id}`);
+          if (profileRes.ok) {
+            const data = await profileRes.json();
+            setProfile(data.profile);
+          }
+        }
+      } else {
+        const data = await res.json();
+        setBgCheckMessage(data.error || "Request failed");
+      }
+    } catch {
+      setBgCheckMessage("Request failed");
+    } finally {
+      setBgCheckRequesting(false);
+    }
   }
 
   // ── Auth loading ────────────────────────────────────────────────────────────
@@ -686,6 +779,101 @@ export default function ContractorPerformancePage() {
               </div>
             </div>
 
+            {/* Background Check */}
+            <div className="bg-white rounded-2xl border border-border p-6">
+              <h2 className="text-base font-bold text-secondary mb-4">Background Check</h2>
+
+              {profile?.background_check_status === "approved" ? (
+                <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                  <span className="text-2xl">&#9989;</span>
+                  <div>
+                    <p className="text-sm font-semibold text-emerald-700">Background Check Passed</p>
+                    <p className="text-xs text-emerald-600">Your background check has been verified. Consumers can see your badge.</p>
+                  </div>
+                </div>
+              ) : profile?.background_check_status === "pending" ? (
+                <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-xl p-4">
+                  <span className="text-2xl">&#9203;</span>
+                  <div>
+                    <p className="text-sm font-semibold text-amber-700">Background check in progress...</p>
+                    <p className="text-xs text-amber-600">Your request is being reviewed. You will be notified when it is complete.</p>
+                  </div>
+                </div>
+              ) : profile?.background_check_status === "rejected" ? (
+                <div className="flex items-center gap-3 bg-red-50 border border-red-200 rounded-xl p-4">
+                  <span className="text-2xl">&#10060;</span>
+                  <div>
+                    <p className="text-sm font-semibold text-red-700">Not passed</p>
+                    <p className="text-xs text-red-600">
+                      Your background check was not approved.{" "}
+                      <a href="/help" className="underline hover:text-red-800">Contact support</a> for more information.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-sm text-muted mb-3">
+                    A background check helps build trust with consumers. Passing a background check adds a verified badge to your profile and can help you win more jobs.
+                  </p>
+                  {bgCheckMessage && (
+                    <div className="mb-3 bg-blue-50 text-blue-800 text-sm p-3 rounded-lg">{bgCheckMessage}</div>
+                  )}
+                  <button
+                    onClick={requestBackgroundCheck}
+                    disabled={bgCheckRequesting}
+                    className="px-5 py-2.5 text-sm font-semibold bg-primary text-white rounded-xl hover:bg-primary/90 transition-colors disabled:opacity-50"
+                  >
+                    {bgCheckRequesting ? "Requesting..." : "Request Background Check"}
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Identity Verification */}
+            <div className="bg-white rounded-2xl border border-border p-6">
+              <h2 className="text-base font-bold text-secondary mb-4">Identity Verification</h2>
+
+              {profile?.verification_status === "approved" ? (
+                <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                  <span className="text-2xl">&#9989;</span>
+                  <div>
+                    <p className="text-sm font-semibold text-emerald-700">ID Verified</p>
+                    <p className="text-xs text-emerald-600">Your identity has been confirmed. Consumers can see your verified badge.</p>
+                  </div>
+                </div>
+              ) : profile?.verification_status === "pending" ? (
+                <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-xl p-4">
+                  <span className="text-2xl">&#9203;</span>
+                  <div>
+                    <p className="text-sm font-semibold text-amber-700">Verification in progress</p>
+                    <p className="text-xs text-amber-600">We&apos;re reviewing your documents. This usually takes a few minutes.</p>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  {profile?.verification_status === "rejected" && (
+                    <div className="flex items-center gap-3 bg-red-50 border border-red-200 rounded-xl p-4 mb-4">
+                      <span className="text-2xl">&#10060;</span>
+                      <div>
+                        <p className="text-sm font-semibold text-red-700">Verification failed</p>
+                        <p className="text-xs text-red-600">Your previous verification attempt could not be completed. Please try again.</p>
+                      </div>
+                    </div>
+                  )}
+                  <p className="text-sm text-muted mb-4">
+                    Verify your identity with a government ID and selfie. Verified contractors appear higher in search results and earn more trust from consumers.
+                  </p>
+                  <button
+                    onClick={handleIdentityVerification}
+                    disabled={idVerifyLoading}
+                    className="px-6 py-2.5 text-sm font-semibold rounded-xl bg-primary text-white hover:bg-primary/90 transition-colors disabled:opacity-50"
+                  >
+                    {idVerifyLoading ? "Starting..." : "Get Verified →"}
+                  </button>
+                </div>
+              )}
+            </div>
+
             {/* Professional Summary */}
             <div className="bg-white rounded-2xl border border-border p-6">
               <h2 className="text-base font-bold text-secondary mb-4">Professional Summary</h2>
@@ -749,6 +937,97 @@ export default function ContractorPerformancePage() {
                   }`}
                 >
                   {trustSaving ? "Saving..." : trustSaved ? "Saved!" : "Save Summary"}
+                </button>
+              </div>
+            </div>
+
+            {/* Trade License Submission */}
+            <div className="bg-white rounded-2xl border border-border p-6">
+              <h2 className="text-base font-bold text-secondary mb-1">Trade License</h2>
+              <p className="text-xs text-muted mb-4">Submit your trade license for verification. Verified licenses appear on your public profile.</p>
+
+              {/* Existing license submissions */}
+              {licenseSubmissions.length > 0 && (
+                <div className="space-y-3 mb-5">
+                  {licenseSubmissions.map((sub) => (
+                    <div
+                      key={sub.id}
+                      className={`flex items-center justify-between p-3 rounded-xl border ${
+                        sub.verified ? "bg-emerald-50 border-emerald-200" : "bg-amber-50 border-amber-200"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-sm shrink-0">
+                          &#128203;
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-secondary truncate">{sub.name}</p>
+                          <p className="text-xs text-muted">{sub.issuer}</p>
+                        </div>
+                      </div>
+                      <div className="shrink-0">
+                        {sub.verified ? (
+                          <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full font-medium">Verified</span>
+                        ) : (
+                          <span className="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full font-medium">Pending Review</span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* License submission form */}
+              <div className="border border-dashed border-gray-200 rounded-xl p-4 bg-gray-50/50">
+                <p className="text-xs font-semibold text-muted mb-3">Submit a Trade License</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                  <div>
+                    <label className="block text-[10px] font-medium text-muted mb-1">License Number</label>
+                    <input
+                      type="text"
+                      value={licenseNumber}
+                      onChange={(e) => setLicenseNumber(e.target.value)}
+                      placeholder="e.g., CFC1234567"
+                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-medium text-muted mb-1">State</label>
+                    <select
+                      value={licenseState}
+                      onChange={(e) => setLicenseState(e.target.value)}
+                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    >
+                      <option value="">Select state...</option>
+                      {["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY","DC"].map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className="block text-[10px] font-medium text-muted mb-1">License Type</label>
+                    <select
+                      value={licenseType}
+                      onChange={(e) => setLicenseType(e.target.value)}
+                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    >
+                      <option value="">Select license type...</option>
+                      {["Plumbing","Electrical","HVAC","General Contractor","Roofing","Painting","Landscaping","Carpentry","Masonry","Welding","Fire Protection","Low Voltage","Solar/PV","Other"].map((t) => (
+                        <option key={t} value={t}>{t}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <button
+                  onClick={submitLicense}
+                  disabled={licenseSubmitting || !licenseNumber.trim() || !licenseState || !licenseType}
+                  className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors disabled:opacity-50 ${
+                    licenseSubmitted
+                      ? "bg-emerald-100 text-emerald-700"
+                      : "bg-primary text-white hover:bg-primary/90"
+                  }`}
+                >
+                  {licenseSubmitting ? "Submitting..." : licenseSubmitted ? "Submitted for Review!" : "Submit License for Verification"}
                 </button>
               </div>
             </div>

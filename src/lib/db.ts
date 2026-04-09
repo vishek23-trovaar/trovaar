@@ -1266,6 +1266,15 @@ export async function initializeDatabase(): Promise<void> {
          ALTER TABLE disputes ADD COLUMN guarantee_eligible INTEGER NOT NULL DEFAULT 0;
        END IF;
      END $$`,
+    // Add background_check_requested_at to contractor_profiles
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='contractor_profiles' AND column_name='background_check_requested_at') THEN
+         ALTER TABLE contractor_profiles ADD COLUMN background_check_requested_at TIMESTAMPTZ;
+       END IF;
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='contractor_profiles' AND column_name='background_check_notes') THEN
+         ALTER TABLE contractor_profiles ADD COLUMN background_check_notes TEXT;
+       END IF;
+     END $$`,
 
   ];
 

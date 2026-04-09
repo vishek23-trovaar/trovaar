@@ -14,6 +14,8 @@ const NAV_ITEMS = [
   { href: "/admin/analytics/events", label: "Event Tracking", icon: "📈", exact: false },
   { href: "/admin/categories", label: "Categories", icon: "🏷", exact: false },
   { href: "/admin/verification", label: "Verifications", icon: "✅", exact: false },
+  { href: "/admin/background-checks", label: "Background Checks", icon: "🔍", exact: false },
+  { href: "/admin/licenses", label: "Licenses", icon: "📋", exact: false },
   { href: "/admin/disputes", label: "Disputes", icon: "⚖️", exact: false },
   { href: "/admin/audit", label: "Audit Log", icon: "📝", exact: false },
   { href: "/admin/notifications", label: "Notifications", icon: "🔔", exact: false },

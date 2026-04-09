@@ -9,7 +9,7 @@ import ImageUploader from "@/components/jobs/ImageUploader";
 import { CATEGORIES, CATEGORY_GROUPS, CONTRACTOR_TYPES } from "@/lib/constants";
 import { ContractorType } from "@/types";
 
-type Step = 1 | 2 | 3;
+type Step = 1 | 2 | 3 | 4;
 
 export default function ContractorOnboarding() {
   const { user, loading: authLoading, refreshUser } = useAuth();
@@ -26,12 +26,23 @@ export default function ContractorOnboarding() {
   const [profilePhoto, setProfilePhoto] = useState<string[]>([]);
   const [contractorType, setContractorType] = useState<ContractorType>("independent");
 
+  // Step 1 — Optional License
+  const [hasLicense, setHasLicense] = useState(false);
+  const [licenseNumber, setLicenseNumber] = useState("");
+  const [licenseState, setLicenseState] = useState("");
+  const [licenseType, setLicenseType] = useState("");
+
   // Step 2 — Services
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   // Step 3 — Stripe (optional)
   const [stripeLoading, setStripeLoading] = useState(false);
   const [acceptedPlatformRules, setAcceptedPlatformRules] = useState(false);
+  const [requestBgCheck, setRequestBgCheck] = useState(false);
+
+  // Step 4 — Identity Verification (optional)
+  const [idVerifyLoading, setIdVerifyLoading] = useState(false);
+  const [verificationStatus, setVerificationStatus] = useState<"none" | "pending" | "approved" | "rejected">("none");
 
   useEffect(() => {
     if (user) setName(user.name);
@@ -77,6 +88,28 @@ export default function ContractorOnboarding() {
         }),
       });
 
+      // If contractor opted in for background check, fire the request
+      if (requestBgCheck) {
+        try {
+          await fetch("/api/background-check", { method: "POST" });
+        } catch { /* non-blocking — they can request it later */ }
+      }
+
+      // If contractor has a trade license, submit it for verification
+      if (hasLicense && licenseNumber.trim() && licenseState && licenseType) {
+        try {
+          await fetch("/api/license", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              license_number: licenseNumber.trim(),
+              license_state: licenseState,
+              license_type: licenseType,
+            }),
+          });
+        } catch { /* non-blocking — they can add it later */ }
+      }
+
       await refreshUser?.();
       setStep(2);
     } catch {
@@ -120,7 +153,42 @@ export default function ContractorOnboarding() {
     }
   }
 
-  function skipStripe() {
+  function skipStripeAndContinue() {
+    setStep(4);
+  }
+
+  async function fetchVerificationStatus() {
+    try {
+      const res = await fetch("/api/stripe/identity");
+      if (res.ok) {
+        const data = await res.json();
+        setVerificationStatus(data.verification_status || "none");
+      }
+    } catch { /* silent */ }
+  }
+
+  useEffect(() => {
+    if (step === 4 && user) {
+      fetchVerificationStatus();
+    }
+  }, [step, user]);
+
+  async function handleIdentityVerification() {
+    setIdVerifyLoading(true);
+    try {
+      const res = await fetch("/api/stripe/identity", { method: "POST" });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.url) {
+          window.location.href = data.url;
+        }
+      }
+    } catch { /* silent */ } finally {
+      setIdVerifyLoading(false);
+    }
+  }
+
+  function skipVerification() {
     router.push("/contractor/dashboard");
   }
 
@@ -132,7 +200,7 @@ export default function ContractorOnboarding() {
     );
   }
 
-  const STEP_LABELS = ["Profile", "Services", "Payments"];
+  const STEP_LABELS = ["Profile", "Services", "Payments", "Verify ID"];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 to-accent/5 flex items-start justify-center pt-12 px-4 pb-20">
@@ -288,6 +356,94 @@ export default function ContractorOnboarding() {
               </label>
             </div>
 
+            {/* Optional Background Check */}
+            <div className="rounded-xl border border-blue-200 bg-blue-50/50 p-5">
+              <div className="flex items-start gap-3 mb-3">
+                <span className="text-2xl shrink-0">🔍</span>
+                <div>
+                  <h3 className="font-semibold text-blue-900 mb-1">Background Check <span className="text-xs font-normal text-blue-600">(optional)</span></h3>
+                  <p className="text-sm text-blue-800 leading-relaxed">
+                    A background check adds a trust badge to your profile, helping you stand out and win more jobs. You can always request one later from your profile page.
+                  </p>
+                </div>
+              </div>
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={requestBgCheck}
+                  onChange={(e) => setRequestBgCheck(e.target.checked)}
+                  className="w-4 h-4 mt-0.5 accent-blue-600"
+                />
+                <span className="text-sm font-medium text-blue-900">
+                  Yes, request a background check for my profile
+                </span>
+              </label>
+            </div>
+
+            {/* Optional Trade License */}
+            <div className="rounded-xl border border-emerald-200 bg-emerald-50/50 p-5">
+              <div className="flex items-start gap-3 mb-3">
+                <span className="text-2xl shrink-0">&#128203;</span>
+                <div>
+                  <h3 className="font-semibold text-emerald-900 mb-1">Trade License <span className="text-xs font-normal text-emerald-600">(optional)</span></h3>
+                  <p className="text-sm text-emerald-800 leading-relaxed">
+                    If you hold a state-issued trade license, adding it earns a verified badge on your profile. You can always add this later.
+                  </p>
+                </div>
+              </div>
+              <label className="flex items-start gap-3 cursor-pointer mb-3">
+                <input
+                  type="checkbox"
+                  checked={hasLicense}
+                  onChange={(e) => setHasLicense(e.target.checked)}
+                  className="w-4 h-4 mt-0.5 accent-emerald-600"
+                />
+                <span className="text-sm font-medium text-emerald-900">
+                  Yes, I have a trade license
+                </span>
+              </label>
+              {hasLicense && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2 pl-7">
+                  <div>
+                    <label className="block text-xs font-medium text-emerald-800 mb-1">License Number</label>
+                    <input
+                      type="text"
+                      value={licenseNumber}
+                      onChange={(e) => setLicenseNumber(e.target.value)}
+                      placeholder="e.g., CFC1234567"
+                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-emerald-800 mb-1">State</label>
+                    <select
+                      value={licenseState}
+                      onChange={(e) => setLicenseState(e.target.value)}
+                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400"
+                    >
+                      <option value="">Select state...</option>
+                      {["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY","DC"].map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className="block text-xs font-medium text-emerald-800 mb-1">License Type</label>
+                    <select
+                      value={licenseType}
+                      onChange={(e) => setLicenseType(e.target.value)}
+                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400"
+                    >
+                      <option value="">Select license type...</option>
+                      {["Plumbing","Electrical","HVAC","General Contractor","Roofing","Painting","Landscaping","Carpentry","Masonry","Welding","Fire Protection","Low Voltage","Solar/PV","Other"].map((t) => (
+                        <option key={t} value={t}>{t}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              )}
+            </div>
+
             {error && <div className="mt-4 bg-red-50 text-red-700 text-sm p-3 rounded-lg">{error}</div>}
 
             {!acceptedPlatformRules && (
@@ -399,11 +555,100 @@ export default function ContractorOnboarding() {
               Connect Stripe →
             </Button>
             <button
-              onClick={skipStripe}
+              onClick={skipStripeAndContinue}
               className="w-full text-sm text-muted hover:text-secondary transition-colors cursor-pointer py-2 underline-offset-2 hover:underline"
             >
               Skip for now — I&apos;ll set this up later
             </button>
+          </Card>
+        )}
+
+        {/* Step 4 — Identity Verification */}
+        {step === 4 && (
+          <Card className="p-8">
+            <div className="text-center mb-6">
+              <div className="text-5xl mb-4">🪪</div>
+              <h1 className="text-2xl font-bold text-secondary mb-2">Verify Your Identity</h1>
+              <p className="text-muted text-sm">
+                Government ID + selfie check. Takes 2 minutes. Verified contractors get more jobs.
+              </p>
+            </div>
+
+            {verificationStatus === "approved" && (
+              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-6 text-center">
+                <span className="text-3xl">&#9989;</span>
+                <p className="text-sm font-semibold text-emerald-700 mt-2">Identity Verified</p>
+                <p className="text-xs text-emerald-600 mt-1">Your identity has been confirmed.</p>
+              </div>
+            )}
+
+            {verificationStatus === "pending" && (
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 text-center">
+                <span className="text-3xl">&#9203;</span>
+                <p className="text-sm font-semibold text-amber-700 mt-2">Verification in progress...</p>
+                <p className="text-xs text-amber-600 mt-1">We&apos;re reviewing your documents. This usually takes a few minutes.</p>
+              </div>
+            )}
+
+            {verificationStatus === "rejected" && (
+              <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 text-center">
+                <span className="text-3xl">&#10060;</span>
+                <p className="text-sm font-semibold text-red-700 mt-2">Verification failed</p>
+                <p className="text-xs text-red-600 mt-1">Please try again with a valid government ID.</p>
+              </div>
+            )}
+
+            <div className="bg-surface rounded-xl p-4 space-y-3 mb-6">
+              <div className="flex items-start gap-3">
+                <span className="text-xl">&#128196;</span>
+                <div>
+                  <p className="text-sm font-medium text-secondary">Government ID required</p>
+                  <p className="text-xs text-muted">Driver&apos;s license, passport, or national ID card.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-xl">&#129331;</span>
+                <div>
+                  <p className="text-sm font-medium text-secondary">Selfie match</p>
+                  <p className="text-xs text-muted">A quick selfie to confirm the ID belongs to you.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-xl">&#128170;</span>
+                <div>
+                  <p className="text-sm font-medium text-secondary">Boost your profile</p>
+                  <p className="text-xs text-muted">Verified contractors appear higher in search and earn consumer trust.</p>
+                </div>
+              </div>
+            </div>
+
+            {verificationStatus !== "approved" && verificationStatus !== "pending" && (
+              <Button
+                onClick={handleIdentityVerification}
+                loading={idVerifyLoading}
+                className="w-full mb-3"
+                size="lg"
+              >
+                Start Verification &rarr;
+              </Button>
+            )}
+
+            {verificationStatus === "approved" ? (
+              <Button
+                onClick={() => router.push("/contractor/dashboard")}
+                className="w-full"
+                size="lg"
+              >
+                Continue to Dashboard &rarr;
+              </Button>
+            ) : (
+              <button
+                onClick={skipVerification}
+                className="w-full text-sm text-muted hover:text-secondary transition-colors cursor-pointer py-2 underline-offset-2 hover:underline"
+              >
+                Skip for now — I&apos;ll do this later
+              </button>
+            )}
           </Card>
         )}
       </div>
