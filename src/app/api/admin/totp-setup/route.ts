@@ -12,8 +12,7 @@
  * In production, remove or disable this endpoint after setup is complete.
  */
 import { NextResponse } from "next/server";
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const { authenticator } = require("otplib") as typeof import("otplib");
+import { generateSecret } from "otplib";
 
 export async function GET() {
   if (process.env.ADMIN_TOTP_SECRET) {
@@ -24,7 +23,7 @@ export async function GET() {
     );
   }
 
-  const secret = authenticator.generateSecret(20); // 160-bit secret (RFC 4226 §4)
+  const secret = generateSecret({ length: 20 }); // 160-bit secret (RFC 4226 §4)
   const issuer = encodeURIComponent("Trovaar Admin");
   const account = encodeURIComponent("admin");
   const otpauthUrl = `otpauth://totp/${issuer}:${account}?secret=${secret}&issuer=${issuer}&algorithm=SHA1&digits=6&period=30`;

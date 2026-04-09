@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
       role: user.role,
       emailVerified: !!user.email_verified,
       isAdmin: !!user.is_admin,
-      tokenVersion: (user as Record<string, unknown>).token_version as number ?? 0,
+      tokenVersion: ((user as unknown) as Record<string, unknown>).token_version as number ?? 0,
     });
 
     const response = NextResponse.json({

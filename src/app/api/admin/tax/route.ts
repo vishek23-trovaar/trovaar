@@ -85,10 +85,8 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const payload = getAuthPayload(request.headers);
-    if (!payload || !payload.isAdmin) {
-      return NextResponse.json({ error: "Admin access required" }, { status: 403 });
-    }
+    const { error: adminError } = await requireAdmin(request);
+    if (adminError) return adminError;
 
     const { contractorId, year } = await request.json();
 

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { SignJWT } from "jose";
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const { authenticator } = require("otplib") as typeof import("otplib");
+import { verify as totpVerify } from "otplib";
 import { rateLimit } from "@/lib/rate-limit";
 import { adminLogger as logger } from "@/lib/logger";
 
@@ -86,7 +85,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const isValidTotp = authenticator.verify({ token: totp, secret: totpSecret });
+    const isValidTotp = totpVerify({ token: totp, secret: totpSecret });
     if (!isValidTotp) {
       logger.warn({ ip }, "Admin login failed: bad TOTP");
       return NextResponse.json({ error: "Invalid TOTP code" }, { status: 401 });

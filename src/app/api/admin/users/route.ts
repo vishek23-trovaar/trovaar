@@ -191,7 +191,7 @@ export async function PATCH(request: NextRequest) {
         return NextResponse.json({ error: "Please enter a valid phone number" }, { status: 400 });
       }
       updates.push("phone = ?");
-      vals.push(normalizedPhone);
+      vals.push(normalizedPhone ?? "");
     }
 
     if (fields.location !== undefined) {
