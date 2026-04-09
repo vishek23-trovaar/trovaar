@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { getAuthPayload } from "@/lib/auth";
+import logger from "@/lib/logger";
 
 export async function POST(
   request: NextRequest,
@@ -49,7 +50,7 @@ export async function POST(
     const updatedProfile = await db.prepare("SELECT * FROM contractor_profiles WHERE user_id = ?").get(id);
     return NextResponse.json({ profile: updatedProfile });
   } catch (error) {
-    console.error("Verification request error:", error);
+    logger.error({ err: error }, "Verification request error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

@@ -6,6 +6,7 @@ import { sendJobCompletedEmail, sendInvoiceEmail } from "@/lib/email";
 import { notifyJobCompleted, notifyPaymentReleased } from "@/lib/notifications";
 import { trackEvent } from "@/lib/analytics";
 import { stripe, PLATFORM_FEE_PERCENT } from "@/lib/stripe";
+import { jobsLogger as logger } from "@/lib/logger";
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -195,7 +196,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       try {
         await stripe.paymentIntents.capture(job.payment_intent_id);
       } catch (captureErr) {
-        console.error("Failed to capture payment intent:", captureErr);
+        logger.error({ err: captureErr }, "Failed to capture payment intent");
         // Don't block job completion — webhook or manual retry can handle it
       }
     }

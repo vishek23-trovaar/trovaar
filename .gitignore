@@ -69,3 +69,5 @@ stop-server.bat
 # video project
 /video/
 /CClaudeServiceRequestvideo/
+
+.vercel

@@ -4,6 +4,7 @@ import { getDb, initializeDatabase } from "@/lib/db";
 import { signToken } from "@/lib/auth";
 import { verifyPendingJwt } from "@/lib/oauth";
 import { UserRole } from "@/types";
+import { authLogger as logger } from "@/lib/logger";
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
@@ -68,7 +69,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     return response;
   } catch (error) {
-    console.error("OAuth complete error:", error);
+    logger.error({ err: error }, "OAuth complete error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

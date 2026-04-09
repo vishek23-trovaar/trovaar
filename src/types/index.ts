@@ -162,6 +162,7 @@ export interface AuthPayload {
   role: UserRole;
   emailVerified: boolean;
   isAdmin: boolean;
+  tokenVersion?: number;
 }
 
 export interface OAuthAccount {

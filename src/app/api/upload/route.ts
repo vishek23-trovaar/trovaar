@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { getAuthPayload } from "@/lib/auth";
 import { MAX_FILE_SIZE, ALLOWED_FILE_TYPES } from "@/lib/constants";
 import { uploadFile } from "@/lib/s3";
+import logger from "@/lib/logger";
 
 export async function POST(request: NextRequest) {
   const payload = getAuthPayload(request.headers);
@@ -19,7 +20,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json({ error: "File too large (max 10MB)" }, { status: 400 });
+      return NextResponse.json({ error: "File too large (max 100MB)" }, { status: 400 });
     }
 
     if (!ALLOWED_FILE_TYPES.includes(file.type)) {
@@ -34,7 +35,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ url });
   } catch (error) {
-    console.error("Upload error:", error);
+    logger.error({ err: error }, "Upload error");
     return NextResponse.json({ error: "Upload failed" }, { status: 500 });
   }
 }

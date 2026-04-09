@@ -4,6 +4,7 @@ import { signToken } from "@/lib/auth";
 import { exchangeFacebookCode, signPendingJwt, clearStateCookie } from "@/lib/oauth";
 import { User, OAuthAccount } from "@/types";
 import { dashboardPath } from "@/lib/portalRoutes";
+import { authLogger as logger } from "@/lib/logger";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3001";
 
@@ -51,7 +52,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (err instanceof Error && err.message === "NO_EMAIL") {
       return NextResponse.redirect(`${BASE_URL}/signup?error=oauth_no_email`);
     }
-    console.error("Facebook OAuth error:", err);
+    logger.error({ err }, "Facebook OAuth error");
     return NextResponse.redirect(`${BASE_URL}/login?error=oauth_failed`);
   }
 }

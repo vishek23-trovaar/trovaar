@@ -8,6 +8,8 @@ import { generateAccountNumber } from "@/lib/accountNumber";
 import { UserRole } from "@/types";
 import { trackEvent } from "@/lib/analytics";
 import { checkRateLimit } from "@/lib/rate-limit-api";
+import { authLogger as logger } from "@/lib/logger";
+import { normalizePhone } from "@/lib/phone";
 
 export async function POST(request: NextRequest) {
   const rl = checkRateLimit(request, { maxRequests: 5, windowMs: 60 * 60 * 1000, keyPrefix: "auth-signup" });
@@ -28,11 +30,9 @@ export async function POST(request: NextRequest) {
     if (!phone || !phone.trim()) {
       return NextResponse.json({ error: "Phone number is required" }, { status: 400 });
     }
-    const rawPhone = phone.trim();
-    // Basic format check — at least 7 digits
-    const digitCount = rawPhone.replace(/\D/g, "").length;
-    if (digitCount < 7) {
-      return NextResponse.json({ error: "Please enter a valid phone number" }, { status: 400 });
+    const rawPhone = normalizePhone(phone);
+    if (!rawPhone) {
+      return NextResponse.json({ error: "Please enter a valid phone number (at least 7 digits)" }, { status: 400 });
     }
 
     const db = getDb();
@@ -46,11 +46,9 @@ export async function POST(request: NextRequest) {
     const password_hash = await hashPassword(password);
     const myReferralCode = generateReferralCode(id, name);
 
-    // Generate phone-based account number if a phone was supplied at signup
+    // Generate phone-based account number from the normalized phone
     let accountNumber: string | null = null;
-    if (rawPhone) {
-      try { accountNumber = generateAccountNumber(id, rawPhone); } catch { /* no valid digits */ }
-    }
+    try { accountNumber = generateAccountNumber(id, rawPhone); } catch { /* digits already validated */ }
 
     // Check phone uniqueness before insert
     const phoneConflict = await db.prepare("SELECT id FROM users WHERE phone = ?").get(rawPhone);
@@ -93,20 +91,23 @@ export async function POST(request: NextRequest) {
           ).run(uuidv4(), referrer.id, id);
         }
       } catch (err) {
-        console.error("Referral processing error (non-fatal):", err);
+        logger.error({ err }, "Referral processing error (non-fatal)");
       }
     }
 
     // Generate and store verification code
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     const codeId = uuidv4();
-    db.prepare(
+    await db.prepare(
       "INSERT INTO verification_codes (id, user_id, code, expires_at) VALUES (?, ?, ?, datetime('now', '+15 minutes'))"
     ).run(codeId, id, code);
 
     // Send verification email (non-blocking — don't fail signup if email fails)
     sendVerificationEmail(email, name, code).catch((err) => {
-      console.error("Failed to send verification email:", err);
+      logger.error({ err }, "Failed to send verification email");
+      if (process.env.NODE_ENV !== "production") {
+        logger.debug({ code, email }, "DEV MODE — Verification code");
+      }
     });
 
     const token = signToken({
@@ -115,6 +116,7 @@ export async function POST(request: NextRequest) {
       role: role as UserRole,
       emailVerified: false,
       isAdmin: false,
+      tokenVersion: 0,
     });
 
     try { trackEvent("user_signup", { userId: id, properties: { role, email } }); } catch {}
@@ -130,7 +132,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error) {
-    console.error("Signup error:", error);
+    logger.error({ err: error }, "Signup error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { AuthPayload } from "@/types";
+import { getDb } from "@/lib/db";
 
 function getJwtSecret(): string {
   const secret = process.env.JWT_SECRET;
@@ -54,4 +55,41 @@ export function getAuthPayload(headers: Headers): AuthPayload | null {
   } catch {
     return null;
   }
+}
+
+/**
+ * Verify auth payload AND check token_version against DB.
+ * Use this for sensitive operations (password change, logout, payments).
+ * Returns null if the token has been revoked (user logged out / password changed).
+ */
+export async function getAuthPayloadVerified(headers: Headers): Promise<AuthPayload | null> {
+  const payload = getAuthPayload(headers);
+  if (!payload) return null;
+
+  try {
+    const db = getDb();
+    const row = await db.prepare(
+      "SELECT token_version FROM users WHERE id = ?"
+    ).get(payload.userId) as { token_version: number } | undefined;
+
+    if (!row) return null;
+    // If payload has no tokenVersion (old token), allow but log
+    if (payload.tokenVersion === undefined) return payload;
+    // Reject tokens issued before the current version
+    if (payload.tokenVersion < row.token_version) return null;
+    return payload;
+  } catch {
+    return payload; // DB failure → don't lock users out, fall back to basic check
+  }
+}
+
+/**
+ * Increment token_version to invalidate all existing tokens for a user.
+ * Call on logout and password change.
+ */
+export async function revokeUserTokens(userId: string): Promise<void> {
+  const db = getDb();
+  await db.prepare(
+    "UPDATE users SET token_version = token_version + 1 WHERE id = ?"
+  ).run(userId);
 }

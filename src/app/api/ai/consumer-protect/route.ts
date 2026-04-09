@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { getAuthPayload } from "@/lib/auth";
+import { aiLogger as logger } from "@/lib/logger";
 
 interface ProtectionReport {
   fair_low: number;
@@ -96,7 +97,7 @@ Base price range on real US labor and parts rates for the described job specific
 
     return NextResponse.json({ report });
   } catch (err) {
-    console.error("consumer-protect error:", err);
+    logger.error({ err }, "consumer-protect error");
     return NextResponse.json({ report: getFallbackReport(category) });
   }
 }

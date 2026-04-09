@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { getAuthPayload } from "@/lib/auth";
+import logger from "@/lib/logger";
 
 export async function POST(request: NextRequest) {
   try {
@@ -38,7 +39,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("[push/subscribe] Error:", error);
+    logger.error({ err: error }, "Push subscribe error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -64,7 +65,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("[push/subscribe] Delete error:", error);
+    logger.error({ err: error }, "Push unsubscribe error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

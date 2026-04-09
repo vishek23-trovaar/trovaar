@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
+import logger from "@/lib/logger";
 
 interface SubscriptionPlan {
   id: string;
@@ -51,7 +52,7 @@ export async function GET() {
 
     return NextResponse.json({ plans, services });
   } catch (err) {
-    console.error("GET /api/subscriptions/plans error:", err);
+    logger.error({ err }, "GET /api/subscriptions/plans error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

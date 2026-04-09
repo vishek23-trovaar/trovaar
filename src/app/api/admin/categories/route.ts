@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
            COUNT(j.id) as job_count
     FROM admin_categories ac
     LEFT JOIN jobs j ON j.category = ac.value
-    GROUP BY ac.value
+    GROUP BY ac.value, ac.label, ac.group_label, ac.icon, ac.active, ac.sort_order
     ORDER BY ac.sort_order ASC, ac.label ASC
   `).all() as Array<{
     value: string; label: string; group_label: string; icon: string;
@@ -82,14 +82,14 @@ export async function PATCH(request: NextRequest) {
   await initializeDatabase();
   await ensureSeeded(db);
 
-  const fields: string[] = ["updated_at = datetime('now')"];
+  const fields: string[] = [];
   const vals: unknown[] = [];
 
   if (active !== undefined) { fields.push("active = ?"); vals.push(active ? 1 : 0); }
   if (label !== undefined) { fields.push("label = ?"); vals.push(label); }
   if (icon !== undefined) { fields.push("icon = ?"); vals.push(icon); }
 
-  if (fields.length === 1) return NextResponse.json({ error: "Nothing to update" }, { status: 400 });
+  if (fields.length === 0) return NextResponse.json({ error: "Nothing to update" }, { status: 400 });
 
   vals.push(value);
   await db.prepare(`UPDATE admin_categories SET ${fields.join(", ")} WHERE value = ?`).run(...vals);

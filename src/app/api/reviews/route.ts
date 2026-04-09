@@ -4,6 +4,7 @@ import { getDb, initializeDatabase } from "@/lib/db";
 import { getAuthPayload } from "@/lib/auth";
 import { notifyReviewReceived } from "@/lib/notifications";
 import { trackEvent } from "@/lib/analytics";
+import logger from "@/lib/logger";
 
 // GET /api/reviews?jobId=xxx — fetch reviews for a specific job
 // Optional: &type=consumer_to_contractor or contractor_to_consumer
@@ -182,7 +183,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ review }, { status: 201 });
     }
   } catch (error) {
-    console.error("Submit review error:", error);
+    logger.error({ err: error }, "Submit review error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

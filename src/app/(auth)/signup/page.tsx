@@ -108,38 +108,47 @@ function SignupForm() {
           const { latitude, longitude } = pos.coords;
           const res = await fetch(
             `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`,
-            { headers: { "Accept-Language": "en-US,en" } }
+            {
+              headers: {
+                "Accept-Language": "en-US,en",
+                "User-Agent": "Trovaar/1.0 (trovaar.com)",
+              },
+            }
           );
           if (res.ok) {
             const data = await res.json();
-            const city =
-              data.address?.city ||
-              data.address?.town ||
-              data.address?.village ||
-              data.address?.county ||
-              "";
-            const state = data.address?.state || "";
+            const addr = data.address ?? {};
+            const city = addr.city || addr.town || addr.village || addr.suburb || addr.county || "";
+            const state = addr.state || addr.region || "";
             if (city && state) {
               setLocation(`${city}, ${state}`);
             } else if (state) {
               setLocation(state);
+            } else if (addr.country) {
+              setLocation(addr.country);
             } else {
-              setGeoError("Could not determine city/state from your location");
+              setGeoError("Could not determine your city — please type it manually");
             }
           } else {
-            setGeoError("Could not look up your location");
+            setGeoError("Location lookup failed — please type your city manually");
           }
         } catch {
-          setGeoError("Could not determine your location");
+          setGeoError("Could not determine your location — please type it manually");
         } finally {
           setGeoLoading(false);
         }
       },
-      () => {
-        setGeoError("Location access denied — please type your city manually");
+      (err) => {
+        if (err.code === 1) {
+          setGeoError("Location access denied — please type your city manually");
+        } else if (err.code === 3) {
+          setGeoError("Location request timed out — please type your city manually");
+        } else {
+          setGeoError("Could not get location — please type your city manually");
+        }
         setGeoLoading(false);
       },
-      { timeout: 8000 }
+      { timeout: 10000, maximumAge: 60000 }
     );
   }
 

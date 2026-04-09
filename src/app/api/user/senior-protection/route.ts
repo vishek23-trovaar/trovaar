@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { getAuthPayload } from "@/lib/auth";
+import logger from "@/lib/logger";
 
 // GET /api/user/senior-protection — returns current senior protection settings
 export async function GET(request: NextRequest) {
@@ -77,15 +78,14 @@ export async function POST(request: NextRequest) {
 
     // Notify family member (log if no email service configured)
     const user = await db.prepare("SELECT name FROM users WHERE id = ?").get(payload.userId) as { name: string } | undefined;
-    console.log(
-      `[Senior Protection] Family oversight enabled. Notification sent to ${family_email}: ` +
-      `${family_name || "A family member"} has added you as a family overseer for ${user?.name || "their"} Trovaar account. ` +
-      `You will be cc'd on all new bids and messages.`
+    logger.info(
+      { familyEmail: family_email, familyName: family_name, userName: user?.name },
+      "Senior Protection — family oversight enabled, notification sent to overseer"
     );
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Senior protection POST error:", error);
+    logger.error({ err: error }, "Senior protection POST error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

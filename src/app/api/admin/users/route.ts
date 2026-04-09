@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { requireAdmin } from "@/lib/admin";
 import { logAdminAction } from "@/lib/auditLog";
+import { adminLogger as logger } from "@/lib/logger";
+import { normalizePhone } from "@/lib/phone";
 
 const ALLOWED_SORT_COLS: Record<string, string> = {
   name: "u.name",
@@ -17,6 +19,7 @@ export async function GET(request: NextRequest) {
   const { error } = await requireAdmin(request);
   if (error) return error;
 
+  try {
   const { searchParams } = new URL(request.url);
   const role = searchParams.get("role"); // "consumer" | "contractor" | null (all)
   const search = searchParams.get("search") ?? "";
@@ -113,6 +116,10 @@ export async function GET(request: NextRequest) {
     users, total, page, pages, limit,
     counts: { all: allCount, contractors: contractorCount, clients: clientCount, flagged: flaggedCount },
   });
+  } catch (err) {
+    logger.error({ err }, "GET /admin/users error");
+    return NextResponse.json({ error: "Internal server error", detail: String(err) }, { status: 500 });
+  }
 }
 
 export async function PATCH(request: NextRequest) {
@@ -179,8 +186,12 @@ export async function PATCH(request: NextRequest) {
       if (typeof fields.phone !== "string") {
         return NextResponse.json({ error: "Phone must be a string" }, { status: 400 });
       }
+      const normalizedPhone = fields.phone.trim() ? normalizePhone(fields.phone) : null;
+      if (fields.phone.trim() && !normalizedPhone) {
+        return NextResponse.json({ error: "Please enter a valid phone number" }, { status: 400 });
+      }
       updates.push("phone = ?");
-      vals.push(fields.phone.trim());
+      vals.push(normalizedPhone);
     }
 
     if (fields.location !== undefined) {

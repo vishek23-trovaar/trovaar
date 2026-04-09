@@ -6,6 +6,7 @@ import { geocodeLocation, haversineDistanceMiles } from "@/lib/geocode";
 import { sendEmergencyAlert } from "@/lib/email";
 import { sanitizeText, sanitizeDescription } from "@/lib/sanitize";
 import { trackEvent } from "@/lib/analytics";
+import { jobsLogger as logger } from "@/lib/logger";
 
 const VALID_URGENCIES = ['low', 'medium', 'high', 'emergency'];
 
@@ -246,7 +247,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Only consumers can post jobs" }, { status: 403 });
   }
   try {
-    const { title, description, category, photos, location, urgency, expected_completion_date, ai_questions, reference_links, inspiration_photos, budget_range } = await request.json();
+    const { title, description, category, photos, videos, location, urgency, expected_completion_date, ai_questions, reference_links, inspiration_photos, budget_range } = await request.json();
 
     if (!title || !category || !location || !urgency) {
       return NextResponse.json({ error: "Title, category, location, and urgency are required" }, { status: 400 });
@@ -284,14 +285,15 @@ export async function POST(request: NextRequest) {
     const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
 
     const photosArray: string[] = photos || [];
+    const videosArray: string[] = videos || [];
     const beforePhotoUrl = photosArray.length > 0 ? photosArray[0] : null;
 
     await db.prepare(
-      `INSERT INTO jobs (id, consumer_id, title, description, category, photos, location, urgency, emergency_fee, expected_completion_date, expires_at, ai_questions, reference_links, inspiration_photos, before_photo_url, budget_range)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      `INSERT INTO jobs (id, consumer_id, title, description, category, photos, videos, location, urgency, emergency_fee, expected_completion_date, expires_at, ai_questions, reference_links, inspiration_photos, before_photo_url, budget_range)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     ).run(
       id, payload.userId, sanitizedTitle, sanitizedDescription, category,
-      JSON.stringify(photosArray), sanitizedLocation, urgency, emergencyFee,
+      JSON.stringify(photosArray), JSON.stringify(videosArray), sanitizedLocation, urgency, emergencyFee,
       expected_completion_date || null, expiresAt,
       ai_questions ? JSON.stringify(ai_questions) : null,
       reference_links && reference_links.length > 0 ? JSON.stringify(reference_links) : null,
@@ -335,13 +337,13 @@ export async function POST(request: NextRequest) {
               );
 
               sendEmergencyAlert(contractor.email, contractor.name, title, location, id).catch((err) => {
-                console.error(`Failed to send emergency alert to ${contractor.email}:`, err);
+                logger.error({ err, email: contractor.email }, "Failed to send emergency alert");
               });
             }
           }
         }
       } catch (err) {
-        console.error("Geocode error:", err);
+        logger.error({ err }, "Geocode error");
       }
     });
 
@@ -391,7 +393,7 @@ export async function POST(request: NextRequest) {
         }
       } catch (groupErr) {
         // Non-blocking: group buying logic should not fail the job creation
-        console.error("Group buying check error:", groupErr);
+        logger.error({ err: groupErr }, "Group buying check error");
       }
     }
 
@@ -431,7 +433,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ job }, { status: 201 });
   } catch (error) {
-    console.error("Create job error:", error);
+    logger.error({ err: error }, "Create job error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

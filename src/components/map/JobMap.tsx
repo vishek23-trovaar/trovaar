@@ -96,6 +96,17 @@ export default function JobMap({
   const containerRef = useRef<HTMLDivElement>(null);
   const [mapReady, setMapReady] = useState(false);
 
+  // Invalidate map size when container resizes (handles mobile layout shifts)
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const ro = new ResizeObserver(() => {
+      mapRef.current?.invalidateSize();
+    });
+    ro.observe(container);
+    return () => ro.disconnect();
+  }, []);
+
   // Init map once
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -115,10 +126,11 @@ export default function JobMap({
       wheelPxPerZoomLevel: 80,
     });
 
-    // Smooth tile layer with crossOrigin for faster loading
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      maxZoom: 19,
+    // CartoDB Voyager — premium-looking tiles, free, no API key required
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: "abcd",
+      maxZoom: 20,
       keepBuffer: 4,
     }).addTo(map);
 

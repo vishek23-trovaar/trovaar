@@ -18,11 +18,11 @@ export async function GET(request: NextRequest) {
   // Monthly retention: users who posted jobs in both the previous and current month
   const retentionRows = await db.prepare(`
     SELECT
-      strftime('%Y-%m', created_at) as month,
+      TO_CHAR(created_at, 'YYYY-MM') as month,
       COUNT(DISTINCT consumer_id) as active_clients
     FROM jobs
-    WHERE created_at >= datetime('now', '-6 months')
-    GROUP BY month
+    WHERE created_at >= (NOW() - INTERVAL '6 months')
+    GROUP BY TO_CHAR(created_at, 'YYYY-MM')
     ORDER BY month ASC
   `).all() as Array<{month: string; active_clients: number}>;
 
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
     LEFT JOIN bids b ON b.contractor_id = u.id AND b.status = 'accepted'
     LEFT JOIN contractor_profiles cp ON cp.user_id = u.id
     WHERE u.role = 'contractor'
-    GROUP BY u.id
+    GROUP BY u.id, u.name, cp.rating
     ORDER BY earned_cents DESC
     LIMIT 10
   `).all() as Array<{name:string; id:string; earned_cents:number; jobs_won:number; rating:number}>;

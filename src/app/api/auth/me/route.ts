@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { getAuthPayload } from "@/lib/auth";
 import { generateAccountNumber } from "@/lib/accountNumber";
+import { normalizePhone } from "@/lib/phone";
 
 const USER_SELECT =
   "SELECT id, email, name, role, phone, phone_verified, location, email_verified, referral_code, credit_balance_cents, created_at, is_admin, account_number FROM users WHERE id = ?";
@@ -28,18 +29,24 @@ export async function PATCH(request: NextRequest) {
   }
 
   if (body.phone !== undefined) {
-    const phone = (body.phone as string).trim();
+    const normalized = body.phone ? normalizePhone(body.phone as string) : null;
+    if (body.phone && !normalized) {
+      return NextResponse.json(
+        { error: "Please enter a valid phone number (at least 7 digits)" },
+        { status: 400 }
+      );
+    }
     updates.push("phone = ?");
-    values.push(phone || null);
+    values.push(normalized);
 
     // Generate / update account_number whenever a valid phone is saved
-    if (phone) {
+    if (normalized) {
       try {
-        const acctNum = generateAccountNumber(payload.userId, phone);
+        const acctNum = generateAccountNumber(payload.userId, normalized);
         updates.push("account_number = ?");
         values.push(acctNum);
       } catch {
-        // Phone had no usable digits — leave account_number unchanged
+        // Shouldn't happen — normalized phone is guaranteed to have digits
       }
     }
   }

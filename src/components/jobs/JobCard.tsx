@@ -31,6 +31,18 @@ export default function JobCard({ job, userLat, userLng }: JobCardProps) {
       : null;
   const photos = (() => { try { return JSON.parse(job.photos || "[]") as string[]; } catch { return [] as string[]; } })();
   const [imgError, setImgError] = useState(false);
+  const [photoIndex, setPhotoIndex] = useState(0);
+
+  function prevPhoto(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setPhotoIndex((i) => (i - 1 + photos.length) % photos.length);
+  }
+  function nextPhoto(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setPhotoIndex((i) => (i + 1) % photos.length);
+  }
 
   const isCollab = !!job.is_collab;
   const collabPay = isCollab && job.collab_pay_cents
@@ -59,15 +71,72 @@ export default function JobCard({ job, userLat, userLng }: JobCardProps) {
   return (
     <Link href={`/jobs/${job.id}${isCollab ? "?tab=crew" : ""}`}>
       <Card hover className="overflow-hidden">
-        {/* Photo / gradient header */}
+        {/* Photo / video carousel */}
         {photos.length > 0 && !imgError ? (
-          <div className="h-48 bg-surface-dark overflow-hidden relative">
-            <img
-              src={photos[0]}
-              alt={job.title}
-              className="w-full h-full object-cover"
-              onError={() => setImgError(true)}
-            />
+          <div className="h-48 bg-gray-900 overflow-hidden relative group">
+            {/\.(mp4|mov|webm|avi|mkv|wmv|3gp|3g2|m4v)$/i.test(photos[photoIndex]) ? (
+              <video
+                src={photos[photoIndex]}
+                className="w-full h-full object-cover"
+                autoPlay
+                muted
+                loop
+                playsInline
+              />
+            ) : (
+              <img
+                src={photos[photoIndex]}
+                alt={job.title}
+                className="w-full h-full object-cover transition-opacity duration-300"
+                onError={() => setImgError(true)}
+              />
+            )}
+            {/* Video badge */}
+            {/\.(mp4|mov|webm|avi|mkv|wmv|3gp|3g2|m4v)$/i.test(photos[photoIndex]) && (
+              <div className="absolute bottom-8 left-2 flex items-center gap-1 bg-black/60 text-white text-xs font-medium px-2 py-0.5 rounded-full">
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                Video
+              </div>
+            )}
+            {/* Dark gradient overlay at bottom */}
+            <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
+
+            {/* Prev / Next arrows — visible on hover */}
+            {photos.length > 1 && (
+              <>
+                <button
+                  onClick={prevPhoto}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={nextPhoto}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+                {/* Dot indicators */}
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                  {photos.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); setPhotoIndex(i); }}
+                      className={`w-1.5 h-1.5 rounded-full transition-all ${i === photoIndex ? "bg-white scale-125" : "bg-white/50"}`}
+                    />
+                  ))}
+                </div>
+                {/* Count badge */}
+                <div className="absolute top-2 right-2 bg-black/50 text-white text-xs font-medium px-2 py-0.5 rounded-full">
+                  {photoIndex + 1}/{photos.length}
+                </div>
+              </>
+            )}
+
             {isCollab && (
               <div className="absolute top-2 left-2 flex items-center gap-1.5 bg-indigo-600/90 backdrop-blur-sm text-white text-xs font-semibold px-2.5 py-1 rounded-full shadow">
                 🤝 Collaboration

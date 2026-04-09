@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { getAuthPayload } from "@/lib/auth";
+import logger from "@/lib/logger";
 
 export async function GET(request: NextRequest) {
   try {
@@ -95,7 +96,7 @@ export async function GET(request: NextRequest) {
       } : null,
     });
   } catch (error) {
-    console.error("[contractor/tax] Error:", error);
+    logger.error({ err: error }, "GET /contractor/tax error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -136,7 +137,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("[contractor/tax] PUT error:", error);
+    logger.error({ err: error }, "PUT /contractor/tax error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

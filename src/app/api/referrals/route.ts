@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { getAuthPayload } from "@/lib/auth";
+import logger from "@/lib/logger";
 
 // GET /api/referrals — Return user's referral code, total referrals, total earned, pending rewards
 export async function GET(request: NextRequest) {
@@ -82,7 +83,7 @@ export async function GET(request: NextRequest) {
       referrals: referralList,
     });
   } catch (error) {
-    console.error("Referral GET error:", error);
+    logger.error({ err: error }, "Referral GET error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -149,7 +150,7 @@ export async function POST(request: NextRequest) {
       referrerName: referrer.name,
     }, { status: 201 });
   } catch (error) {
-    console.error("Referral POST error:", error);
+    logger.error({ err: error }, "Referral POST error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

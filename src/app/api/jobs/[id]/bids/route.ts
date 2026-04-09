@@ -8,6 +8,7 @@ import { checkSuspension } from "@/lib/strikes";
 import { sendNewBidEmail, sendBidAcceptedEmail, sendJobCompletedEmail, sendInvoiceEmail } from "@/lib/email";
 import { notifyNewBid } from "@/lib/notifications";
 import { trackEvent } from "@/lib/analytics";
+import { jobsLogger as logger } from "@/lib/logger";
 
 // Simple in-memory rate limiter: max 10 bids per contractor per hour
 const bidRateLimit = new Map<string, { count: number; resetAt: number }>();
@@ -27,6 +28,7 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  try {
   const { id: jobId } = await params;
   const db = getDb();
   await initializeDatabase();
@@ -45,7 +47,7 @@ export async function GET(
         cp.qualifications as contractor_qualifications,
         cp.background_check_status as contractor_background_check,
         cp.headline as contractor_headline,
-        cs.avg_response_hours as avg_response_hours,
+        cs.avg_response_minutes as avg_response_hours,
         (
           SELECT COUNT(*) FROM bids b2
           JOIN jobs j ON b2.job_id = j.id
@@ -66,10 +68,10 @@ export async function GET(
           WHERE b4.contractor_id = b.contractor_id AND b4.status = 'accepted'
         ) as contractor_total_accepted,
         (
-          SELECT GROUP_CONCAT(cc.name, '||') FROM contractor_certifications cc
-          WHERE cc.contractor_id = b.contractor_id
-          ORDER BY cc.verified DESC
-          LIMIT 3
+          SELECT STRING_AGG(cc.name, '||') FROM (
+            SELECT name FROM certifications WHERE contractor_id = b.contractor_id
+            ORDER BY verified DESC LIMIT 3
+          ) cc
         ) as contractor_certifications_list
       FROM bids b
       JOIN users u ON b.contractor_id = u.id
@@ -93,7 +95,7 @@ export async function GET(
       cp.qualifications as contractor_qualifications,
       cp.background_check_status as contractor_background_check,
       cp.headline as contractor_headline,
-      cs.avg_response_hours as avg_response_hours,
+      cs.avg_response_minutes as avg_response_hours,
       (
         SELECT COUNT(*) FROM bids b2
         JOIN jobs j ON b2.job_id = j.id
@@ -114,10 +116,10 @@ export async function GET(
         WHERE b4.contractor_id = b.contractor_id AND b4.status = 'accepted'
       ) as contractor_total_accepted,
       (
-        SELECT GROUP_CONCAT(cc.name, '||') FROM contractor_certifications cc
-        WHERE cc.contractor_id = b.contractor_id
-        ORDER BY cc.verified DESC
-        LIMIT 3
+        SELECT STRING_AGG(cc.name, '||') FROM (
+          SELECT name FROM certifications WHERE contractor_id = b.contractor_id
+          ORDER BY verified DESC LIMIT 3
+        ) cc
       ) as contractor_certifications_list
     FROM bids b
     JOIN users u ON b.contractor_id = u.id
@@ -135,6 +137,10 @@ export async function GET(
   }));
 
   return NextResponse.json({ bids });
+  } catch (err) {
+    logger.error({ err }, "GET bids error");
+    return NextResponse.json({ error: "Internal server error", detail: String(err) }, { status: 500 });
+  }
 }
 
 export async function POST(
@@ -271,9 +277,9 @@ export async function POST(
     } | undefined;
 
     if (jobOwner?.family_oversight_enabled && jobOwner.family_overseer_email) {
-      console.log(
-        `[Senior Protection] Family notification sent to ${jobOwner.family_overseer_email}: ` +
-        `New bid of $${price} on job "${job.title}"`
+      logger.info(
+        { overseerEmail: jobOwner.family_overseer_email, price, jobTitle: job.title },
+        "Senior Protection — family notification sent"
       );
     }
 
@@ -288,7 +294,7 @@ export async function POST(
     if (smsOwner?.sms_alerts_enabled && smsOwner.phone_number) {
       const msg = `Trovaar: New bid of $${price} on your job "${job.title}". View bids: ${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3001"}/jobs/${jobId}`;
       sendSMS(smsOwner.phone_number, msg).catch((err) => {
-        console.error("[SMS] Failed to send bid alert:", err);
+        logger.error({ err }, "Failed to send bid alert SMS");
       });
     }
 
@@ -296,7 +302,7 @@ export async function POST(
 
     return NextResponse.json({ bid }, { status: 201 });
   } catch (error) {
-    console.error("Create bid error:", error);
+    logger.error({ err: error }, "Create bid error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

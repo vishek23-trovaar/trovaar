@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { verifyTwilioWebhook } from "@/lib/twilio";
+import logger from "@/lib/logger";
 
 export async function POST(request: NextRequest) {
   const webhookError = await verifyTwilioWebhook(request);
@@ -18,9 +19,7 @@ export async function POST(request: NextRequest) {
       `UPDATE call_logs SET transcript = ? WHERE twilio_call_sid = ?`
     ).run(transcriptionText, callSid);
 
-    console.log(
-      `[VOICE] Transcript saved for call ${callSid}: ${transcriptionText.slice(0, 100)}...`
-    );
+    logger.info({ callSid, preview: transcriptionText.slice(0, 100) }, "Transcript saved for call");
   }
 
   return new NextResponse("OK", { status: 200 });

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { getAuthPayload } from "@/lib/auth";
+import logger from "@/lib/logger";
 
 interface UserSubscription {
   id: string;
@@ -75,7 +76,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (err) {
-    console.error("GET /api/subscriptions error:", err);
+    logger.error({ err }, "GET /api/subscriptions error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -134,7 +135,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, subscriptionId });
   } catch (err) {
-    console.error("POST /api/subscriptions error:", err);
+    logger.error({ err }, "POST /api/subscriptions error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -164,7 +165,7 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error("DELETE /api/subscriptions error:", err);
+    logger.error({ err }, "DELETE /api/subscriptions error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

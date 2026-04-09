@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
     WHERE b.contractor_id = ?
       AND b.status = 'accepted'
       AND j.status = 'completed'
-    GROUP BY u.id
+    GROUP BY u.id, u.name, u.email, u.location, cc.notes, cc.is_favorite, cc.id
     ORDER BY MAX(j.completed_at) DESC
   `).all(payload.userId, payload.userId) as Array<Record<string, unknown>>;
 

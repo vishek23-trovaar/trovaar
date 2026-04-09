@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { getAuthPayload } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rate-limit-api";
+import { aiLogger as logger } from "@/lib/logger";
 
 interface PriceEstimate {
   low: number;
@@ -90,7 +91,7 @@ Base your estimate on real US labor rates. Do NOT include $ signs in the number 
 
     return NextResponse.json({ estimate });
   } catch (err) {
-    console.error("AI price estimate error:", err);
+    logger.error({ err }, "AI price estimate error");
     return NextResponse.json({ estimate: getFallbackEstimate(category) });
   }
 }

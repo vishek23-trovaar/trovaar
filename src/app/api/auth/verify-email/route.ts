@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { getAuthPayload, signToken } from "@/lib/auth";
 import { VerificationCode } from "@/types";
+import { authLogger as logger } from "@/lib/logger";
 
 export async function POST(request: NextRequest) {
   try {
@@ -53,7 +54,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error) {
-    console.error("Verify email error:", error);
+    logger.error({ err: error }, "Verify email error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

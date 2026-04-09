@@ -32,11 +32,14 @@ export async function GET(
       FROM contractor_profiles WHERE user_id = ?
     `).get(id) as Record<string, unknown> | undefined;
 
-    // Stats
+    // Stats - use contractor_profiles for counts, contractor_stats for response times
     const stats = await db.prepare(`
-      SELECT total_bids, accepted_bids, avg_response_hours,
-             cancellation_count, no_show_count, completion_count
-      FROM contractor_stats WHERE contractor_id = ?
+      SELECT cp.acceptance_count as accepted_bids,
+             cp.cancellation_count, cp.no_show_count, cp.completion_count,
+             cs.total_bids, cs.avg_response_minutes as avg_response_hours
+      FROM contractor_profiles cp
+      LEFT JOIN contractor_stats cs ON cs.contractor_id = cp.user_id
+      WHERE cp.user_id = ?
     `).get(id) as Record<string, unknown> | undefined;
 
     // Earnings (contractor-side prices, platform keeps 20%)

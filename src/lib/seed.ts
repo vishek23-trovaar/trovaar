@@ -335,46 +335,155 @@ db.prepare(
   JSON.stringify([])
 );
 
-// === PHOTO HELPER ===
-const PHOTOS: Record<string, string[]> = {
-  auto_repair: [
+// === UNIQUE PHOTOS PER JOB ===
+// Each job gets its own distinct set of Unsplash images — no repeats.
+// A handful of jobs include a sample video as the first media item.
+
+const J: Record<string, string[]> = {
+  // Job 1 — Honda Civic brake pads (auto repair) — includes video
+  j1: [
+    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+    "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=800&q=80",
+    "https://images.unsplash.com/photo-1611859266238-4b98091d9d9b?w=800&q=80",
+  ],
+  // Job 2 — Kitchen faucet leak (plumbing)
+  j2: [
+    "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=800&q=80",
+    "https://images.unsplash.com/photo-1585771723403-88b9c6ebb4f6?w=800&q=80",
+    "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800&q=80",
+  ],
+  // Job 3 — Electrical panel upgrade
+  j3: [
+    "https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=800&q=80",
+    "https://images.unsplash.com/photo-1558449907-7e54d63527ef?w=800&q=80",
+    "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800&q=80",
+  ],
+  // Job 4 — Fence repair (fencing) — includes video
+  j4: [
+    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+    "https://images.unsplash.com/photo-1558618047-f4e70e59e3b7?w=800&q=80",
+    "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80",
+  ],
+  // Job 5 — Oil change / completed (auto)
+  j5: [
     "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&q=80",
     "https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=800&q=80",
   ],
-  plumbing: [
-    "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=800&q=80",
-    "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800&q=80",
-  ],
-  electrical: [
-    "https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=800&q=80",
-    "https://images.unsplash.com/photo-1558449907-7e54d63527ef?w=800&q=80",
-  ],
-  handyman: [
-    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
-    "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80",
-  ],
-  landscaping: [
+  // Job 6 — Backyard sod + garden beds (landscaping)
+  j6: [
     "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&q=80",
     "https://images.unsplash.com/photo-1558904541-efa843a96f01?w=800&q=80",
+    "https://images.unsplash.com/photo-1585004607434-e7c1e3e96c3a?w=800&q=80",
   ],
-  roofing: [
+  // Job 7 — Hail damage roof repair
+  j7: [
     "https://images.unsplash.com/photo-1632823471565-1ecdf5c6da12?w=800&q=80",
     "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=800&q=80",
+    "https://images.unsplash.com/photo-1565182999561-18d7dc61c393?w=800&q=80",
   ],
-  hvac: [
+  // Job 8 — AC unit replacement (HVAC)
+  j8: [
     "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=800&q=80",
     "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=800&q=80",
+    "https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=800&q=80",
   ],
-  painting: [
+  // Job 9 — Interior painting
+  j9: [
     "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=800&q=80",
     "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800&q=80",
+    "https://images.unsplash.com/photo-1600607686527-6fb886090705?w=800&q=80",
   ],
-  cleaning: [
+  // Job 10 — Deep clean before sale (cleaning) — includes video
+  j10: [
+    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
     "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&q=80",
     "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=800&q=80",
   ],
+  // Job 11 — AC tune-up completed (HVAC)
+  j11: [
+    "https://images.unsplash.com/photo-1536939459926-301728717817?w=800&q=80",
+    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
+  ],
+  // Job 12 — Living room paint completed
+  j12: [
+    "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&q=80",
+    "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=800&q=80",
+  ],
+  // Job 13 — Lawn mowing completed
+  j13: [
+    "https://images.unsplash.com/photo-1589923188651-268a9765e432?w=800&q=80",
+    "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&q=80",
+  ],
+  // Transaction lifecycle jobs
+  txj1: [
+    "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=800&q=80",
+    "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=800&q=80",
+  ],
+  txj2: [
+    "https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=800&q=80",
+    "https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=800&q=80",
+  ],
+  txj3: [
+    "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=800&q=80",
+    "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=80",
+  ],
+  txj4: [
+    "https://images.unsplash.com/photo-1558449907-7e54d63527ef?w=800&q=80",
+    "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800&q=80",
+  ],
+  txj5: [
+    "https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=800&q=80",
+    "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=800&q=80",
+  ],
+  txj6: [
+    "https://images.unsplash.com/photo-1600607686527-6fb886090705?w=800&q=80",
+    "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
+  ],
+  // Transaction lifecycle jobs 2–7
+  txj2: [
+    "https://images.unsplash.com/photo-1565182999561-18d7dc61c393?w=800&q=80",
+    "https://images.unsplash.com/photo-1632823471565-1ecdf5c6da12?w=800&q=80",
+  ],
+  txj3: [
+    "https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=800&q=80",
+    "https://images.unsplash.com/photo-1536939459926-301728717817?w=800&q=80",
+  ],
+  txj4: [
+    "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=800&q=80",
+    "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&q=80",
+  ],
+  txj5: [
+    "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=800&q=80",
+    "https://images.unsplash.com/photo-1582735689369-4fe89db7114c?w=800&q=80",
+  ],
+  txj7: [
+    "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800&q=80",
+    "https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=800&q=80",
+  ],
+  // Carlos completed jobs (historical earnings)
+  cj1: [
+    "https://images.unsplash.com/photo-1611859266238-4b98091d9d9b?w=800&q=80",
+    "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=800&q=80",
+  ],
+  cj2: [
+    "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800&q=80",
+    "https://images.unsplash.com/photo-1585771723403-88b9c6ebb4f6?w=800&q=80",
+  ],
+  cj3: [
+    "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=800&q=80",
+    "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=800&q=80",
+  ],
+  cj4: [
+    "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&q=80",
+    "https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=800&q=80",
+  ],
+  cj5: [
+    "https://images.unsplash.com/photo-1558449907-7e54d63527ef?w=800&q=80",
+    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
+  ],
 };
-function ph(cat: string): string { return JSON.stringify(PHOTOS[cat] ?? []); }
+
+function ph(key: string): string { return JSON.stringify(J[key] ?? []); }
 
 // === JOBS ===
 const job1Id = uuidv4();
@@ -389,7 +498,7 @@ db.prepare(
   job1Id, consumer1Id,
   "Honda Civic Brake Pads + Valve Replacement - Dealership wants $1,800!",
   "Took my 2019 Honda Civic to the dealership for an oil change. They came back with a $1,800 estimate for front brake pads ($450) and a valve cover gasket replacement ($1,350). I know this is way overpriced. Looking for an honest mechanic who can do this for a fair price.",
-  "auto_repair", ph("auto_repair"), "Austin, TX", "high", "bidding", 30.2672, -97.7431, "2026-03-22"
+  "auto_repair", ph("j1"), "Austin, TX", "high", "bidding", 30.2672, -97.7431, "2026-03-22"
 );
 
 db.prepare(
@@ -398,7 +507,7 @@ db.prepare(
   job2Id, consumer1Id,
   "Kitchen Faucet Leaking - Constant Drip",
   "My kitchen faucet has been dripping non-stop for 2 days. I tried tightening it but no luck. Might need a new faucet or cartridge. Water is pooling under the sink too.",
-  "plumbing", ph("plumbing"), "Austin, TX", "medium", "posted", 30.2672, -97.7431, "2026-03-20"
+  "plumbing", ph("j2"), "Austin, TX", "medium", "posted", 30.2672, -97.7431, "2026-03-20"
 );
 
 db.prepare(
@@ -407,7 +516,7 @@ db.prepare(
   job3Id, consumer2Id,
   "Electrical Panel Upgrade - 100A to 200A",
   "Need to upgrade my home electrical panel from 100 amps to 200 amps. House was built in 1985 and we keep tripping breakers with modern appliances. Need a licensed electrician.",
-  "electrical", ph("electrical"), "Dallas, TX", "low", "posted", 32.7767, -96.7970, "2026-04-15"
+  "electrical", ph("j3"), "Dallas, TX", "low", "posted", 32.7767, -96.7970, "2026-04-15"
 );
 
 db.prepare(
@@ -416,7 +525,7 @@ db.prepare(
   job4Id, consumer2Id,
   "Fence Repair + Gate Installation",
   "Storm knocked down a 20-foot section of my wooden privacy fence. Also need a new gate installed. Looking for someone who can match the existing fence style.",
-  "fencing", ph("handyman"), "Dallas, TX", "high", "bidding", 32.7767, -96.7970, "2026-03-19"
+  "fencing", ph("j4"), "Dallas, TX", "high", "bidding", 32.7767, -96.7970, "2026-03-19"
 );
 
 // A completed job for demo review data
@@ -426,7 +535,7 @@ db.prepare(
   job5Id, consumer1Id,
   "Oil Change + Tire Rotation",
   "Standard oil change (synthetic) and tire rotation for a 2020 Toyota Camry.",
-  "auto_repair", ph("auto_repair"), "Austin, TX", "low", "completed", 30.2672, -97.7431, null, "2026-03-05"
+  "auto_repair", ph("j5"), "Austin, TX", "low", "completed", 30.2672, -97.7431, null, "2026-03-05"
 );
 
 // === BIDS ===
@@ -588,35 +697,35 @@ insertJob.run(
   job6Id, consumer3Id,
   "Backyard Landscaping Overhaul — Sod + Garden Beds",
   "My backyard is mostly dead grass and weeds after the drought. I want about 800 sq ft of new sod (St. Augustine or Bermuda) and two raised garden beds built along the back fence. Also need the existing beds edged and mulched.",
-  "landscaping", ph("landscaping"), "San Antonio, TX", "low", "bidding", 29.4241, -98.4936, "2026-04-30", null
+  "landscaping", ph("j6"), "San Antonio, TX", "low", "bidding", 29.4241, -98.4936, "2026-04-30", null
 );
 
 insertJob.run(
   job7Id, consumer4Id,
   "Roof Inspection + Hail Damage Repair After Last Week's Storm",
   "We had a major hail storm last Tuesday. I can see missing shingles from the ground and my neighbor already filed an insurance claim. I need a licensed roofer to do a proper inspection and give me a written estimate I can submit to my insurer.",
-  "roofing", ph("roofing"), "Houston, TX", "high", "bidding", 29.7604, -95.3698, "2026-03-25", null
+  "roofing", ph("j7"), "Houston, TX", "high", "bidding", 29.7604, -95.3698, "2026-03-25", null
 );
 
 insertJob.run(
   job8Id, consumer5Id,
   "Central AC Unit Replacement — 3 Ton, Carrier or Trane",
   "Our 2008 Carrier unit finally gave out. Two HVAC companies quoted us $7,200 and $8,400 for a 3-ton Trane unit with installation. Looking for a certified tech who can beat that price with comparable equipment. House is 1,800 sq ft single story.",
-  "hvac", ph("hvac"), "Phoenix, AZ", "medium", "posted", 33.4484, -112.0740, "2026-04-10", null
+  "hvac", ph("j8"), "Phoenix, AZ", "medium", "posted", 33.4484, -112.0740, "2026-04-10", null
 );
 
 insertJob.run(
   job9Id, consumer6Id,
   "Interior Painting — 3 Bedroom House, All Common Areas",
   "Moving into a new house and want everything painted before furniture arrives. 3 bedrooms, living room, hallway, and dining room. About 1,400 sq ft total. I'll supply the paint (Benjamin Moore Regal Select). Just need labor and prep work.",
-  "painting", ph("painting"), "Denver, CO", "low", "bidding", 39.7392, -104.9903, "2026-04-20", null
+  "painting", ph("j9"), "Denver, CO", "low", "bidding", 39.7392, -104.9903, "2026-04-20", null
 );
 
 insertJob.run(
   job10Id, consumer7Id,
   "Full Deep Clean Before Home Sale (4BR / 2BA)",
   "Listing my home in 2 weeks and want it spotless for showings. 4 bed, 2 bath, roughly 2,000 sq ft. I need every surface cleaned including inside cabinets, oven, fridge, baseboards, and windows. The house is empty — no furniture.",
-  "cleaning", ph("cleaning"), "Chicago, IL", "medium", "posted", 41.8781, -87.6298, "2026-03-28", null
+  "cleaning", ph("j10"), "Chicago, IL", "medium", "posted", 41.8781, -87.6298, "2026-03-28", null
 );
 
 // === BIDS ON NEW JOBS ===
@@ -663,21 +772,21 @@ insertJob.run(
   job11Id, consumer5Id,
   "AC Tune-Up + Refrigerant Recharge",
   "Annual tune-up and refrigerant top-off on a 5-year-old Trane unit.",
-  "hvac", ph("hvac"), "Phoenix, AZ", "low", "completed", 33.4484, -112.0740, null, "2026-02-20"
+  "hvac", ph("j11"), "Phoenix, AZ", "low", "completed", 33.4484, -112.0740, null, "2026-02-20"
 );
 
 insertJob.run(
   job12Id, consumer6Id,
   "Living Room + Dining Room Paint — Two Accent Walls",
   "Paint living room and dining room, two accent walls in a bold color.",
-  "painting", ph("painting"), "Denver, CO", "low", "completed", 39.7392, -104.9903, null, "2026-01-25"
+  "painting", ph("j12"), "Denver, CO", "low", "completed", 39.7392, -104.9903, null, "2026-01-25"
 );
 
 insertJob.run(
   job13Id, consumer3Id,
   "Weekly Lawn Mowing + Edge Trimming — April",
   "Four weekly visits for mow and edge on a 6,000 sq ft corner lot.",
-  "landscaping", ph("landscaping"), "San Antonio, TX", "low", "completed", 29.4241, -98.4936, null, "2026-03-10"
+  "landscaping", ph("j13"), "San Antonio, TX", "low", "completed", 29.4241, -98.4936, null, "2026-03-10"
 );
 
 const completedBid2Id = uuidv4();
@@ -731,7 +840,7 @@ insertJob.run(
   txJob1Id, consumer3Id,
   "Lawn Aeration, Overseeding + Spring Cleanup",
   "My front and back yard need a full spring refresh — aeration, overseeding with Bermuda grass, raking out thatch, and edging the beds. About 5,000 sq ft total. Also need the winter leaves cleared from the beds along the fence.",
-  "landscaping", ph("landscaping"), "San Antonio, TX", "low", "accepted", 29.4241, -98.4936, "2026-04-05", null
+  "landscaping", ph("txj1"), "San Antonio, TX", "low", "accepted", 29.4241, -98.4936, "2026-04-05", null
 );
 insertBid.run(txBid1aId, txJob1Id, contractor7Id, 62000, 2, "2026-04-01",
   "Aeration, overseeding, thatch rake, and bed cleanup for 5,000 sq ft — $620. I'll bring the aerator and seed. Can be there April 1st and finish in two days.", "accepted");
@@ -746,7 +855,7 @@ insertJob.run(
   txJob2Id, consumer4Id,
   "Full Roof Replacement — 2,200 sq ft Ranch Home",
   "My 1998 roof is at end of life. Insurance adjuster confirmed full replacement after the hail storm. Need a licensed AZ/TX roofer who can work with my insurer (State Farm). House is 2,200 sq ft single story, 4:12 pitch. Prefer Owens Corning Duration shingles.",
-  "roofing", ph("roofing"), "Houston, TX", "high", "in_progress", 29.7604, -95.3698, "2026-03-30", null
+  "roofing", ph("txj2"), "Houston, TX", "high", "in_progress", 29.7604, -95.3698, "2026-03-30", null
 );
 insertBid.run(txBid2aId, txJob2Id, contractor6Id, 1140000, 3, "2026-03-20",
   "Full replacement on a 2,200 sq ft ranch — tear-off, new underlayment, Owens Corning Duration shingles, new flashing, and cleanup — $11,400. I've worked with State Farm dozens of times and will handle the supplement paperwork. Can start March 20.", "accepted");
@@ -761,7 +870,7 @@ insertJob.run(
   txJob3Id, consumer5Id,
   "Mini-Split Installation — Master Bedroom + Home Office",
   "Adding two 12,000 BTU mini-splits to a master bedroom and home office that aren't connected to the central system. Mitsubishi or Daikin preferred. Need a certified HVAC tech who can pull permits and handle the electrical tie-in.",
-  "hvac", ph("hvac"), "Phoenix, AZ", "medium", "in_progress", 33.4484, -112.0740, "2026-03-28", null
+  "hvac", ph("txj3"), "Phoenix, AZ", "medium", "in_progress", 33.4484, -112.0740, "2026-03-28", null
 );
 insertBid.run(txBid3aId, txJob3Id, contractor4Id, 430000, 2, "2026-03-18",
   "Two 12,000 BTU Mitsubishi mini-splits installed, permitted, and running — $4,300 parts and labor. I handle the electrical tie-in and all permit paperwork. EPA certified, NATE certified. Can start March 18th.", "accepted");
@@ -776,7 +885,7 @@ insertJob.run(
   txJob4Id, consumer6Id,
   "Full Exterior Paint — 2-Story Colonial, ~2,800 sq ft",
   "My house hasn't been painted in 12 years and the paint is chipping on the south and west sides. 2-story colonial, roughly 2,800 sq ft of paintable surface. Need full prep (scrape, sand, prime bare spots), caulk windows, and two coats exterior acrylic. I'll pick the colors.",
-  "painting", ph("painting"), "Denver, CO", "medium", "completed", 39.7392, -104.9903, null, "2026-03-08"
+  "painting", ph("txj4"), "Denver, CO", "medium", "completed", 39.7392, -104.9903, null, "2026-03-08"
 );
 insertBid.run(txBid4aId, txJob4Id, contractor5Id, 520000, 5, "2026-03-01",
   "Exterior paint on a 2-story colonial — full scrape, sand, spot prime, caulk, and two coats of Sherwin-Williams Emerald Exterior — $5,200. I'll handle all the prep properly so it lasts. Can start March 1st and finish in 5 days weather permitting.", "accepted");
@@ -793,7 +902,7 @@ insertJob.run(
   txJob5Id, consumer7Id,
   "Post-Renovation Deep Clean — Kitchen + 2 Bathrooms Gutted",
   "Just finished a kitchen and two bathroom gut renovation. Construction dust is everywhere — cabinets, floors, vents, windows, grout lines. Need a crew or experienced cleaner who has done post-construction cleans before. About 1,600 sq ft of active work area.",
-  "cleaning", ph("cleaning"), "Chicago, IL", "medium", "completed", 41.8781, -87.6298, null, "2026-03-10"
+  "cleaning", ph("txj5"), "Chicago, IL", "medium", "completed", 41.8781, -87.6298, null, "2026-03-10"
 );
 insertBid.run(txBid5aId, txJob5Id, contractor8Id, 58000, 1, "2026-03-05",
   "Post-construction deep clean on 1,600 sq ft with kitchen and 2 baths — $580. I specialize in these. I bring my own HEPA vacuum, microfiber system, and grout cleaning tools. Can have it done in one long day. Available March 5th.", "accepted");
@@ -809,7 +918,7 @@ insertJob.run(
   txJob6Id, consumer1Id,
   "2019 Honda Civic — Full Tune-Up + AC Recharge",
   "My Civic is due for spark plugs, air filter, cabin filter, and the AC has been blowing warm. Dealership quoted $680. Looking for an honest mechanic who can do all of it at a fair price. Happy to drop the car off.",
-  "auto_repair", ph("auto_repair"), "Austin, TX", "medium", "in_progress", 30.2672, -97.7431, "2026-03-22", null
+  "auto_repair", ph("txj6"), "Austin, TX", "medium", "in_progress", 30.2672, -97.7431, "2026-03-22", null
 );
 insertBid.run(txBid6aId, txJob6Id, contractor1Id, 28000, 1, "2026-03-17",
   "Spark plugs (NGK iridium), air and cabin filters, and full AC service including refrigerant recharge — $280 parts and labor. I was a Honda tech for 8 years. Can do it this Monday.", "accepted");
@@ -822,7 +931,7 @@ insertJob.run(
   txJob7Id, consumer2Id,
   "Recessed Lighting — Living Room + Kitchen (12 cans total)",
   "Want to add recessed lighting to my living room (8 cans) and kitchen (4 cans). House is single story with attic access. Need a licensed electrician who can tie into the existing panel — I have a 200A service that was upgraded last year.",
-  "electrical", ph("electrical"), "Dallas, TX", "low", "completed", 32.7767, -96.7970, null, "2026-03-01"
+  "electrical", ph("txj7"), "Dallas, TX", "low", "completed", 32.7767, -96.7970, null, "2026-03-01"
 );
 insertBid.run(txBid7aId, txJob7Id, contractor2Id, 240000, 2, "2026-02-20",
   "12 recessed LED cans (6-inch Halo, dimmable), new dimmer switches, all wiring and trim — $2,400. With attic access this is a clean job. I'm licensed and insured. Can start Feb 20th and finish in 2 days.", "accepted");
@@ -842,7 +951,7 @@ insertJob.run(
   cJob1Id, consumer1Id,
   "Brake Pads + Rotors — 2017 Toyota RAV4",
   "Brakes are squealing really bad, especially the front. Dealership wants $800 for pads and rotors. Car has 68k miles. Need someone who can do it for a fair price and use decent parts.",
-  "auto_repair", ph("auto_repair"), "Austin, TX", "high", "completed", 30.2672, -97.7431, null, "2026-01-12"
+  "auto_repair", ph("cj1"), "Austin, TX", "high", "completed", 30.2672, -97.7431, null, "2026-01-12"
 );
 insertBid.run(uuidv4(), cJob1Id, contractor1Id, 35000, 1, "2026-01-10",
   "Front brake pads and rotors on a RAV4 — straightforward job. $350 covers OEM-equivalent pads, premium rotors, and labor. About 90 minutes start to finish. Can do it Saturday morning.", "accepted");
@@ -853,7 +962,7 @@ insertJob.run(
   cJob2Id, consumer2Id,
   "Garbage Disposal Replacement — InSinkErator",
   "Our garbage disposal died — it just hums but the blades don't spin. It's an old 1/3 HP unit. Want to upgrade to a 3/4 HP InSinkErator. Need someone to remove the old one and install the new one. I can buy the unit.",
-  "plumbing", ph("plumbing"), "Dallas, TX", "medium", "completed", 32.7767, -96.7970, null, "2026-01-24"
+  "plumbing", ph("cj2"), "Dallas, TX", "medium", "completed", 32.7767, -96.7970, null, "2026-01-24"
 );
 insertBid.run(uuidv4(), cJob2Id, contractor1Id, 17500, 1, "2026-01-22",
   "Disposal swap is quick — disconnect old, mount new InSinkErator, test connections. $175 labor. Takes about 45 minutes. I can come by this Wednesday.", "accepted");
@@ -864,7 +973,7 @@ insertJob.run(
   cJob3Id, consumer1Id,
   "Water Heater Flush + Anode Rod Replacement",
   "Our hot water has been rusty colored lately. Water heater is a 50 gal Rheem, about 6 years old. Pretty sure it needs a flush and new anode rod. Never had it maintained since we moved in.",
-  "plumbing", ph("plumbing"), "Austin, TX", "medium", "completed", 30.2672, -97.7431, null, "2026-02-08"
+  "plumbing", ph("cj3"), "Austin, TX", "medium", "completed", 30.2672, -97.7431, null, "2026-02-08"
 );
 insertBid.run(uuidv4(), cJob3Id, contractor1Id, 22000, 1, "2026-02-05",
   "Full drain and flush plus magnesium anode rod replacement — $220 including the rod. This will clear up that rusty water and add years to the tank. Can do it this weekend.", "accepted");
@@ -875,7 +984,7 @@ insertJob.run(
   cJob4Id, consumer2Id,
   "AC Compressor Replacement — 2016 Honda Accord",
   "AC blows warm air. Mechanic friend says it's the compressor. Car has 92k miles. Dealership quoted $1,400. Looking for someone who actually knows Honda AC systems.",
-  "auto_repair", ph("auto_repair"), "Dallas, TX", "high", "completed", 32.7767, -96.7970, null, "2026-02-22"
+  "auto_repair", ph("cj4"), "Dallas, TX", "high", "completed", 32.7767, -96.7970, null, "2026-02-22"
 );
 insertBid.run(uuidv4(), cJob4Id, contractor1Id, 65000, 1, "2026-02-18",
   "AC compressor replacement on a 2016 Accord — $650 for a new Denso compressor (OEM supplier), receiver/drier, expansion valve, and full system recharge. I do these all the time. Available this Saturday.", "accepted");
@@ -886,7 +995,7 @@ insertJob.run(
   cJob5Id, consumer1Id,
   "Bathroom Faucet Replacement + Running Toilet Fix",
   "Need two things done: bathroom sink faucet is corroded and needs replacing (I bought a new Moen faucet), and the toilet in the same bathroom runs constantly. Probably needs a new flapper or fill valve.",
-  "plumbing", ph("plumbing"), "Austin, TX", "low", "completed", 30.2672, -97.7431, null, "2026-03-04"
+  "plumbing", ph("cj5"), "Austin, TX", "low", "completed", 30.2672, -97.7431, null, "2026-03-04"
 );
 insertBid.run(uuidv4(), cJob5Id, contractor1Id, 18500, 1, "2026-03-02",
   "Faucet swap with customer-supplied fixture plus toilet rebuild kit — $185 total. I'll replace the fill valve and flapper so it's fully sorted. Can be there Saturday afternoon.", "accepted");

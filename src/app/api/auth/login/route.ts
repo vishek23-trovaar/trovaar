@@ -4,6 +4,7 @@ import { verifyPassword, signToken } from "@/lib/auth";
 import { User } from "@/types";
 import { trackEvent } from "@/lib/analytics";
 import { checkRateLimit } from "@/lib/rate-limit-api";
+import { authLogger as logger } from "@/lib/logger";
 
 interface UserWithAdmin extends User {
   is_admin: number;
@@ -78,6 +79,7 @@ export async function POST(request: NextRequest) {
       role: user.role,
       emailVerified: !!user.email_verified,
       isAdmin: !!user.is_admin,
+      tokenVersion: (user as Record<string, unknown>).token_version as number ?? 0,
     });
 
     const response = NextResponse.json({
@@ -94,7 +96,7 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error) {
-    console.error("Login error:", error);
+    logger.error({ err: error }, "Login error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

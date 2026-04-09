@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { getAuthPayload } from "@/lib/auth";
 import { getTwilioClient, TWILIO_PHONE, generateVerifyCode } from "@/lib/twilio";
+import { authLogger as logger } from "@/lib/logger";
 
 // POST /api/auth/phone/send — send SMS verification code
 export async function POST(request: NextRequest) {
@@ -31,12 +32,12 @@ export async function POST(request: NextRequest) {
         to: phone,
       });
     } catch (err) {
-      console.error("Twilio send error:", err);
+      logger.error({ err }, "Twilio send error");
       return NextResponse.json({ error: "Failed to send SMS" }, { status: 500 });
     }
   } else {
-    // Dev mode — log code to console
-    console.log(`[DEV] Phone verification code for ${phone}: ${code}`);
+    // Dev mode — log code
+    logger.debug({ phone, code }, "DEV MODE — Phone verification code");
   }
 
   return NextResponse.json({ sent: true });

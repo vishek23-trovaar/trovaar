@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { getAuthPayload } from "@/lib/auth";
+import logger from "@/lib/logger";
 
 export async function GET(
   request: NextRequest,
@@ -133,7 +134,7 @@ export async function PUT(
     const profile = await db.prepare("SELECT * FROM contractor_profiles WHERE user_id = ?").get(id);
     return NextResponse.json({ profile });
   } catch (error) {
-    console.error("Update profile error:", error);
+    logger.error({ err: error }, "Update profile error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -222,7 +223,7 @@ export async function PATCH(
     const profile = await db.prepare("SELECT * FROM contractor_profiles WHERE user_id = ?").get(id);
     return NextResponse.json({ profile });
   } catch (error) {
-    console.error("Patch profile error:", error);
+    logger.error({ err: error }, "Patch profile error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

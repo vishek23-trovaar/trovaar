@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
 import crypto from "crypto";
 import { checkRateLimit } from "@/lib/rate-limit-api";
+import { authLogger as logger } from "@/lib/logger";
 
 export async function POST(request: NextRequest) {
   const rl = checkRateLimit(request, { maxRequests: 3, windowMs: 60 * 60 * 1000, keyPrefix: "auth-forgot" });
@@ -96,7 +97,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("Forgot password error:", error);
+    logger.error({ err: error }, "Forgot password error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

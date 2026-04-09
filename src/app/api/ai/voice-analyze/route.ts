@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthPayload } from "@/lib/auth";
+import { aiLogger as logger } from "@/lib/logger";
 
 // Increase body size limit for video uploads
 export const maxDuration = 60;
@@ -43,7 +44,7 @@ export async function POST(request: NextRequest) {
 
     if (!uploadRes.ok) {
       const errText = await uploadRes.text();
-      console.error("Gemini upload error:", errText);
+      logger.error({ body: errText }, "Gemini upload error");
       return NextResponse.json({ error: "Failed to upload video to AI" }, { status: 502 });
     }
 
@@ -108,7 +109,7 @@ Respond with ONLY valid JSON (no markdown, no code blocks):
 
     if (!analyzeRes.ok) {
       const errText = await analyzeRes.text();
-      console.error("Gemini analyze error:", errText);
+      logger.error({ body: errText }, "Gemini analyze error");
       return NextResponse.json({ error: "AI analysis failed" }, { status: 502 });
     }
 
@@ -122,7 +123,7 @@ Respond with ONLY valid JSON (no markdown, no code blocks):
 
     return NextResponse.json(parsed);
   } catch (err) {
-    console.error("Video analyze error:", err);
+    logger.error({ err }, "Video analyze error");
     return NextResponse.json({ error: "Failed to analyze video" }, { status: 500 });
   }
 }

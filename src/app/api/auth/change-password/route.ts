@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
-import { getAuthPayload, verifyPassword, hashPassword } from "@/lib/auth";
+import { getAuthPayload, verifyPassword, hashPassword, revokeUserTokens, signToken } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   const payload = getAuthPayload(request.headers);
@@ -36,7 +36,36 @@ export async function POST(request: NextRequest) {
   }
 
   const newHash = await hashPassword(newPassword);
-  await db.prepare("UPDATE users SET password_hash = ? WHERE id = ?").run(newHash, payload.userId);
+  await db.prepare(
+    "UPDATE users SET password_hash = ?, last_password_change = NOW() WHERE id = ?"
+  ).run(newHash, payload.userId);
 
-  return NextResponse.json({ success: true });
+  // Revoke all existing tokens so any stolen session is immediately invalidated
+  await revokeUserTokens(payload.userId);
+
+  // Issue a fresh token for the current session (so user isn't logged out)
+  const row = await db.prepare(
+    "SELECT token_version, role, email, email_verified, is_admin FROM users WHERE id = ?"
+  ).get(payload.userId) as { token_version: number; role: string; email: string; email_verified: number; is_admin: number } | undefined;
+
+  if (!row) return NextResponse.json({ success: true });
+
+  const newToken = signToken({
+    userId: payload.userId,
+    email: row.email,
+    role: row.role as import("@/types").UserRole,
+    emailVerified: !!row.email_verified,
+    isAdmin: !!row.is_admin,
+    tokenVersion: row.token_version,
+  });
+
+  const response = NextResponse.json({ success: true, token: newToken });
+  response.cookies.set("token", newToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 60 * 60 * 24 * 7,
+    path: "/",
+  });
+  return response;
 }

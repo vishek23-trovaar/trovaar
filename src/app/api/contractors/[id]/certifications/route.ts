@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { getAuthPayload } from "@/lib/auth";
 import crypto from "crypto";
+import logger from "@/lib/logger";
 
 export async function GET(
   request: NextRequest,
@@ -51,7 +52,7 @@ export async function POST(
     const certification = await db.prepare("SELECT * FROM contractor_certifications WHERE id = ?").get(certId);
     return NextResponse.json({ certification }, { status: 201 });
   } catch (error) {
-    console.error("Create certification error:", error);
+    logger.error({ err: error }, "Create certification error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

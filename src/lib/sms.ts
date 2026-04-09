@@ -1,3 +1,5 @@
+import { smsLogger as logger } from "@/lib/logger";
+
 export async function sendSMS(to: string, message: string): Promise<void> {
   const accountSid = process.env.TWILIO_ACCOUNT_SID;
   const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -5,7 +7,7 @@ export async function sendSMS(to: string, message: string): Promise<void> {
 
   if (!accountSid || !authToken || !fromNumber) {
     // Twilio not configured — log for development
-    console.log(`[SMS] To: ${to} | Message: ${message}`);
+    logger.debug({ to, message }, "SMS not sent (Twilio not configured)");
     return;
   }
 
@@ -24,6 +26,6 @@ export async function sendSMS(to: string, message: string): Promise<void> {
 
   if (!response.ok) {
     const err = await response.text();
-    console.error("[SMS] Failed:", err);
+    logger.error({ err }, "SMS send failed");
   }
 }

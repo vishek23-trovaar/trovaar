@@ -15,9 +15,10 @@ export default function VerifyEmailPage() {
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
   const [resendSuccess, setResendSuccess] = useState(false);
+  const [devCode, setDevCode] = useState("");
   const [cooldown, setCooldown] = useState(0);
 
-  // Fetch current user email for display
+  // Fetch current user email for display, then auto-trigger a code send
   useEffect(() => {
     fetch("/api/auth/me")
       .then((r) => r.json())
@@ -25,6 +26,20 @@ export default function VerifyEmailPage() {
         if (data.user?.email) setEmail(data.user.email);
       })
       .catch(() => {});
+
+    // Auto-send a fresh code on page load so dev code surfaces immediately
+    // if Resend isn't configured. This is a no-op if a valid code already exists.
+    fetch("/api/auth/resend-verification", { method: "POST" })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.devCode) {
+          setDevCode(data.devCode);
+          setCode(data.devCode);
+        }
+        if (data.success) setCooldown(60);
+      })
+      .catch(() => {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Cooldown timer for resend button
@@ -65,6 +80,11 @@ export default function VerifyEmailPage() {
       if (!res.ok) throw new Error(data.error || "Failed to resend");
       setResendSuccess(true);
       setCooldown(60);
+      // Dev mode: server couldn't send email but returned the code directly
+      if (data.devCode) {
+        setDevCode(data.devCode);
+        setCode(data.devCode);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to resend code");
     } finally {
@@ -101,7 +121,12 @@ export default function VerifyEmailPage() {
           {error && (
             <div className="bg-red-50 text-danger text-sm p-3 rounded-lg">{error}</div>
           )}
-          {resendSuccess && (
+          {devCode && (
+            <div className="bg-amber-50 border border-amber-200 text-amber-800 text-sm p-3 rounded-lg">
+              <span className="font-semibold">Dev mode</span> — email not configured. Your code has been auto-filled: <span className="font-mono font-bold">{devCode}</span>
+            </div>
+          )}
+          {resendSuccess && !devCode && (
             <div className="bg-green-50 text-green-700 text-sm p-3 rounded-lg">
               A new code has been sent to your email.
             </div>
@@ -129,7 +154,7 @@ export default function VerifyEmailPage() {
           <p className="text-sm text-muted mb-3">Didn&apos;t receive a code?</p>
           <Button
             type="button"
-            variant="ghost"
+            variant="outline"
             size="sm"
             loading={resendLoading}
             disabled={cooldown > 0}

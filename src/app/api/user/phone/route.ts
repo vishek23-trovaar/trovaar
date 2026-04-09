@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { getAuthPayload } from "@/lib/auth";
+import logger from "@/lib/logger";
 
 // GET /api/user/phone — returns current phone_number and sms_alerts_enabled
 export async function GET(request: NextRequest) {
@@ -57,7 +58,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Phone settings POST error:", error);
+    logger.error({ err: error }, "Phone settings POST error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

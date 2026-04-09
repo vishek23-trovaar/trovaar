@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { stripe, STRIPE_WEBHOOK_SECRET } from "@/lib/stripe";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { v4 as uuidv4 } from "uuid";
+import { stripeLogger as logger } from "@/lib/logger";
 
 export async function POST(request: NextRequest) {
   const body = await request.text();
@@ -9,10 +10,10 @@ export async function POST(request: NextRequest) {
 
   if (!STRIPE_WEBHOOK_SECRET) {
     if (process.env.NODE_ENV === "production") {
-      console.error("STRIPE_WEBHOOK_SECRET not set in production — rejecting webhook");
+      logger.error("STRIPE_WEBHOOK_SECRET not set in production — rejecting webhook");
       return NextResponse.json({ error: "Server misconfiguration" }, { status: 500 });
     }
-    console.warn("STRIPE_WEBHOOK_SECRET not set — skipping webhook signature verification in development");
+    logger.warn("STRIPE_WEBHOOK_SECRET not set — skipping webhook signature verification in development");
     return NextResponse.json({ received: true });
   }
 
@@ -20,7 +21,7 @@ export async function POST(request: NextRequest) {
   try {
     event = stripe.webhooks.constructEvent(body, sig, STRIPE_WEBHOOK_SECRET);
   } catch (err) {
-    console.error("Webhook signature verification failed:", err);
+    logger.error({ err }, "Webhook signature verification failed");
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 

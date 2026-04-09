@@ -11,16 +11,31 @@ const ADMIN_SECRET = () => getSecret(
   process.env.JWT_SECRET || "admin-dev-secret"
 );
 
+// Mutating methods that require CSRF origin checks
+const MUTATING_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
+
+// Paths exempt from CSRF checks (webhooks / OAuth callbacks receive cross-origin POSTs legitimately)
+const CSRF_EXEMPT_PREFIXES = [
+  "/api/stripe/webhook",
+  "/api/calls/twiml",
+  "/api/calls/recording-webhook",
+  "/api/calls/transcription-webhook",
+  "/api/auth/oauth/",
+];
+
+function isCsrfExempt(pathname: string): boolean {
+  return CSRF_EXEMPT_PREFIXES.some((p) => pathname.startsWith(p));
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const isProd = process.env.NODE_ENV === "production";
 
-  // ── CORS for API routes ──
+  // ── CORS + CSRF for API routes ──────────────────────────────────────────────
   if (pathname.startsWith("/api/")) {
-    const origin = request.headers.get("origin") || "";
-    const isProd = process.env.NODE_ENV === "production";
+    const origin = request.headers.get("origin") ?? "";
+    const referer = request.headers.get("referer") ?? "";
 
-    // Production: only allow the real domain + configured origins
-    // Development: also allow localhost and Expo origins
     const prodOrigins = [
       "https://trovaar.com",
       "https://www.trovaar.com",
@@ -35,19 +50,50 @@ export async function middleware(request: NextRequest) {
 
     const allowedOrigins = isProd ? prodOrigins : [...prodOrigins, ...devOrigins];
 
-    // In dev, also allow any LAN IP (so network-connected devices work without touching .env)
-    const isLocalNetwork = !isProd && /^http:\/\/(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(origin);
+    // Allow LAN IPs in dev so phones on the same network can connect
+    const isLocalNetwork =
+      !isProd && /^http:\/\/(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(origin);
 
-    const isAllowed =
+    const isAllowedOrigin =
+      !origin ||                             // same-origin (no Origin header)
       allowedOrigins.includes(origin) ||
       isLocalNetwork ||
       (!isProd && (origin.includes("exp.direct") || origin.includes("expo.dev")));
 
+    // ── CSRF: reject mutating browser requests from unexpected origins ────────
+    // Bearer-token requests (mobile / API clients) carry an Authorization header
+    // and are NOT subject to CSRF because they can't be triggered by a third-party
+    // page without the token.
+    if (
+      MUTATING_METHODS.has(request.method) &&
+      !isCsrfExempt(pathname) &&
+      origin &&                              // only browsers send Origin
+      !request.headers.get("authorization") // bearer-token callers are exempt
+    ) {
+      const baseUrl =
+        process.env.NEXT_PUBLIC_BASE_URL ??
+        (isProd ? "https://trovaar.com" : "http://localhost:3001");
+
+      const refererAllowed =
+        !referer ||
+        referer.startsWith(baseUrl) ||
+        allowedOrigins.some((o) => referer.startsWith(o)) ||
+        (!isProd && (referer.includes("localhost") || isLocalNetwork));
+
+      if (!isAllowedOrigin && !refererAllowed) {
+        return NextResponse.json(
+          { error: "Forbidden: CSRF origin mismatch" },
+          { status: 403 }
+        );
+      }
+    }
+
+    // ── Preflight ─────────────────────────────────────────────────────────────
     if (request.method === "OPTIONS") {
       return new NextResponse(null, {
         status: 200,
         headers: {
-          "Access-Control-Allow-Origin": isAllowed ? origin : "",
+          "Access-Control-Allow-Origin": isAllowedOrigin && origin ? origin : "",
           "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
           "Access-Control-Allow-Headers": "Content-Type, Authorization",
           "Access-Control-Max-Age": "86400",
@@ -56,7 +102,7 @@ export async function middleware(request: NextRequest) {
     }
 
     const response = NextResponse.next();
-    if (isAllowed) {
+    if (isAllowedOrigin && origin) {
       response.headers.set("Access-Control-Allow-Origin", origin);
       response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
       response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -64,7 +110,7 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  // ── Admin auth protection ──
+  // ── Admin auth protection ───────────────────────────────────────────────────
   if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
     const adminToken = request.cookies.get("admin_token")?.value;
 
@@ -75,14 +121,13 @@ export async function middleware(request: NextRequest) {
     try {
       await jwtVerify(adminToken, ADMIN_SECRET());
     } catch {
-      // Invalid or expired token — clear cookie and redirect to login
       const response = NextResponse.redirect(new URL("/admin/login", request.url));
       response.cookies.delete("admin_token");
       return response;
     }
   }
 
-  // ── Role-based redirects for authenticated users ──
+  // ── Role-based redirects for authenticated users ────────────────────────────
   if (pathname.startsWith("/client") || pathname.startsWith("/contractor")) {
     const token = request.cookies.get("token")?.value;
     if (!token) {
@@ -92,11 +137,9 @@ export async function middleware(request: NextRequest) {
     try {
       const { payload } = await jwtVerify(token, JWT_SECRET());
       const role = (payload as { role?: string }).role;
-      // Redirect consumer trying to access contractor pages
       if (pathname.startsWith("/contractor") && role === "consumer") {
         return NextResponse.redirect(new URL("/client/dashboard", request.url));
       }
-      // Redirect contractor trying to access client pages
       if (pathname.startsWith("/client") && role === "contractor") {
         return NextResponse.redirect(new URL("/contractor/dashboard", request.url));
       }

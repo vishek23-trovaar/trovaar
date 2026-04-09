@@ -106,13 +106,13 @@ export default function ImageUploader({ images, onImagesChange, maxImages = 5, l
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/*,video/mp4"
+        accept="image/*,video/mp4,video/quicktime,video/x-msvideo,video/x-matroska,video/webm,video/x-ms-wmv,video/3gpp,video/3gpp2,video/x-m4v"
         multiple
         onChange={handleUpload}
         className="hidden"
       />
       <p className="mt-2 text-xs text-muted">
-        {hint ?? `Upload up to ${maxImages} photos or videos. Snap the problem or an estimate you received.`}
+        {hint ?? `Upload up to ${maxImages} photos or videos. Supports JPG, PNG, HEIC, MP4, MOV, AVI, MKV, WebM and more. Max 100MB per file.`}
       </p>
     </div>
   );

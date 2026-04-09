@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { getAuthPayload } from "@/lib/auth";
+import logger from "@/lib/logger";
 
 interface GroupJob {
   id: string;
@@ -102,7 +103,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, group: updatedGroup }, { status: 201 });
   } catch (error) {
-    console.error("Group jobs POST error:", error);
+    logger.error({ err: error }, "Group jobs POST error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

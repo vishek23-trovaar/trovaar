@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthPayload } from "@/lib/auth";
+import { aiLogger as logger } from "@/lib/logger";
 
 const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
 
@@ -59,7 +60,7 @@ Example: ["Question 1?", "Question 2?"]`;
     });
 
     if (!res.ok) {
-      console.error("Gemini job-questions error:", await res.text());
+      logger.error({ body: await res.text() }, "Gemini job-questions error");
       return NextResponse.json({ questions: getFallbackQuestions(category) });
     }
 
@@ -74,7 +75,7 @@ Example: ["Question 1?", "Question 2?"]`;
 
     return NextResponse.json({ questions });
   } catch (err) {
-    console.error("AI job questions error:", err);
+    logger.error({ err }, "AI job questions error");
     return NextResponse.json({ questions: getFallbackQuestions(category) });
   }
 }

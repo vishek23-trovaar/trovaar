@@ -242,8 +242,16 @@ export const JOB_STATUSES = [
   "posted", "bidding", "accepted", "in_progress", "completed", "cancelled",
 ] as const;
 
-export const MAX_FILE_SIZE = 10 * 1024 * 1024;
-export const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/webp", "video/mp4", "application/pdf"];
+export const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB to support video uploads
+export const ALLOWED_FILE_TYPES = [
+  // Images
+  "image/jpeg", "image/png", "image/webp", "image/gif", "image/heic", "image/heif",
+  // Videos — all common formats
+  "video/mp4", "video/quicktime", "video/x-msvideo", "video/x-matroska",
+  "video/webm", "video/x-ms-wmv", "video/3gpp", "video/3gpp2", "video/x-m4v",
+  // Documents
+  "application/pdf",
+];
 export const MAX_FILES_PER_JOB = 5;
 
 export const CONTRACTOR_TYPES = [

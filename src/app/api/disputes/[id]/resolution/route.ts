@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { getAuthPayload } from "@/lib/auth";
 import { stripe } from "@/lib/stripe";
+import logger from "@/lib/logger";
 
 interface DisputeResolutionRow {
   id: string;
@@ -153,7 +154,7 @@ export async function PATCH(
           });
         }
       } catch (refundErr) {
-        console.error("Failed to issue Stripe refund for dispute:", refundErr);
+        logger.error({ err: refundErr }, "Failed to issue Stripe refund for dispute");
         // Don't block resolution — admin can manually refund
       }
     }

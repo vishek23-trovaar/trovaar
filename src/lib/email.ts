@@ -1,3 +1,6 @@
+import nodemailer from "nodemailer";
+import { emailLogger as logger } from "@/lib/logger";
+
 const BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL ||
   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3001");
@@ -23,9 +26,33 @@ function ctaButton(text: string, url: string): string {
 }
 
 async function sendEmail(to: string, subject: string, html: string): Promise<void> {
+  // Primary: Brevo API
+  const brevoKey = process.env.BREVO_API_KEY;
+  if (brevoKey) {
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: { "api-key": brevoKey, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sender: {
+          name: process.env.BREVO_FROM_NAME || "Trovaar",
+          email: process.env.BREVO_FROM_EMAIL || "vishek23@gmail.com",
+        },
+        to: [{ email: to }],
+        subject,
+        htmlContent: html,
+      }),
+    });
+    if (!res.ok) {
+      const body = await res.text();
+      throw new Error(`Brevo API error ${res.status}: ${body}`);
+    }
+    return;
+  }
+
+  // Fallback: Resend
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    console.warn("RESEND_API_KEY not set — skipping email send");
+    logger.warn("No email transport configured (BREVO_API_KEY or RESEND_API_KEY) — skipping email send");
     return;
   }
   const res = await fetch("https://api.resend.com/emails", {
@@ -35,7 +62,7 @@ async function sendEmail(to: string, subject: string, html: string): Promise<voi
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: "Trovaar <noreply@trovaar.com>",
+      from: process.env.RESEND_FROM_EMAIL || "Trovaar <onboarding@resend.dev>",
       to,
       subject,
       html,
@@ -65,7 +92,7 @@ export async function sendNewBidEmail(params: {
       ctaButton("Review Bids", jobUrl);
     await sendEmail(toEmail, `💼 New bid on "${jobTitle}"`, emailWrapper("New bid received", body));
   } catch (err) {
-    console.error("[email] sendNewBidEmail failed:", err);
+    logger.error({ err }, "sendNewBidEmail failed");
   }
 }
 
@@ -88,7 +115,7 @@ export async function sendBidAcceptedEmail(params: {
       ctaButton("View Job", jobUrl);
     await sendEmail(toEmail, `🎉 Your bid was accepted — "${jobTitle}"`, emailWrapper("Bid accepted", body));
   } catch (err) {
-    console.error("[email] sendBidAcceptedEmail failed:", err);
+    logger.error({ err }, "sendBidAcceptedEmail failed");
   }
 }
 
@@ -115,7 +142,7 @@ export async function sendJobCompletedEmail(params: {
       ctaButton(ctaText, ctaUrl);
     await sendEmail(toEmail, `✅ Job completed — "${jobTitle}"`, emailWrapper("Job complete", body));
   } catch (err) {
-    console.error("[email] sendJobCompletedEmail failed:", err);
+    logger.error({ err }, "sendJobCompletedEmail failed");
   }
 }
 
@@ -134,7 +161,7 @@ export async function sendDisputeOpenedEmail(params: {
       `<p style="font-size:15px;color:#475569;margin:0 0 24px;">Our team will review the situation and reach out within 24 hours. Please do not attempt to contact the other party directly.</p>`;
     await sendEmail(toEmail, `⚠️ Dispute opened — "${jobTitle}"`, emailWrapper("Dispute opened", body));
   } catch (err) {
-    console.error("[email] sendDisputeOpenedEmail failed:", err);
+    logger.error({ err }, "sendDisputeOpenedEmail failed");
   }
 }
 
@@ -158,7 +185,7 @@ export async function sendDisputeResolvedEmail(params: {
       refundLine;
     await sendEmail(toEmail, `✅ Dispute resolved — "${jobTitle}"`, emailWrapper("Dispute resolved", body));
   } catch (err) {
-    console.error("[email] sendDisputeResolvedEmail failed:", err);
+    logger.error({ err }, "sendDisputeResolvedEmail failed");
   }
 }
 
@@ -198,8 +225,38 @@ export async function sendInvoiceEmail(params: {
       feeNote;
     await sendEmail(toEmail, `🧾 Invoice — "${jobTitle}"`, emailWrapper("Invoice", body));
   } catch (err) {
-    console.error("[email] sendInvoiceEmail failed:", err);
+    logger.error({ err }, "sendInvoiceEmail failed");
   }
+}
+
+function buildVerificationHtml(name: string, code: string): string {
+  return `<!DOCTYPE html>
+<html>
+  <head><meta charset="utf-8" /><title>Verify your email</title></head>
+  <body style="margin:0;padding:0;background:#f4f4f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:40px 0;">
+      <tr><td align="center">
+        <table width="480" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+          <tr><td style="background:#2563eb;padding:32px;text-align:center;">
+            <p style="margin:0;color:#ffffff;font-size:22px;font-weight:700;">⚡ Trovaar</p>
+          </td></tr>
+          <tr><td style="padding:40px 40px 24px;">
+            <p style="margin:0 0 8px;font-size:24px;font-weight:700;color:#111827;">Verify your email</p>
+            <p style="margin:0 0 32px;font-size:15px;color:#6b7280;">Hi ${name}, enter the code below to confirm your email address.</p>
+            <div style="background:#f9fafb;border:2px solid #e5e7eb;border-radius:12px;padding:24px;text-align:center;margin-bottom:32px;">
+              <p style="margin:0 0 4px;font-size:12px;font-weight:600;color:#6b7280;letter-spacing:0.05em;text-transform:uppercase;">Verification Code</p>
+              <p style="margin:0;font-size:40px;font-weight:800;letter-spacing:0.15em;color:#111827;font-family:'Courier New',monospace;">${code}</p>
+            </div>
+            <p style="margin:0;font-size:13px;color:#9ca3af;text-align:center;">This code expires in <strong>15 minutes</strong>. If you didn&apos;t create an account, you can ignore this email.</p>
+          </td></tr>
+          <tr><td style="padding:24px 40px;border-top:1px solid #f3f4f6;">
+            <p style="margin:0;font-size:12px;color:#9ca3af;text-align:center;">Trovaar &mdash; Get competitive bids from skilled pros</p>
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+  </body>
+</html>`;
 }
 
 export async function sendVerificationEmail(
@@ -207,71 +264,67 @@ export async function sendVerificationEmail(
   name: string,
   code: string
 ): Promise<void> {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    console.warn("RESEND_API_KEY not set — skipping email send");
+  const subject = `${code} — Your Trovaar verification code`;
+  const html = buildVerificationHtml(name, code);
+
+  // Primary: Brevo API (300 emails/day free, great deliverability to all providers)
+  const brevoKey = process.env.BREVO_API_KEY;
+  if (brevoKey) {
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        "api-key": brevoKey,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        sender: {
+          name: process.env.BREVO_FROM_NAME || "Trovaar",
+          email: process.env.BREVO_FROM_EMAIL || "vishek23@gmail.com",
+        },
+        to: [{ email: to, name }],
+        subject,
+        htmlContent: html,
+      }),
+    });
+    if (!res.ok) {
+      const body = await res.text();
+      throw new Error(`Brevo API error ${res.status}: ${body}`);
+    }
     return;
   }
 
-  const html = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8" />
-        <title>Verify your email</title>
-      </head>
-      <body style="margin:0;padding:0;background:#f4f4f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
-        <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:40px 0;">
-          <tr>
-            <td align="center">
-              <table width="480" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
-                <!-- Header -->
-                <tr>
-                  <td style="background:#2563eb;padding:32px;text-align:center;">
-                    <p style="margin:0;color:#ffffff;font-size:22px;font-weight:700;">⚡ Trovaar</p>
-                  </td>
-                </tr>
-                <!-- Body -->
-                <tr>
-                  <td style="padding:40px 40px 24px;">
-                    <p style="margin:0 0 8px;font-size:24px;font-weight:700;color:#111827;">Verify your email</p>
-                    <p style="margin:0 0 32px;font-size:15px;color:#6b7280;">Hi ${name}, enter the code below to confirm your email address.</p>
-                    <!-- Code box -->
-                    <div style="background:#f9fafb;border:2px solid #e5e7eb;border-radius:12px;padding:24px;text-align:center;margin-bottom:32px;">
-                      <p style="margin:0 0 4px;font-size:12px;font-weight:600;color:#6b7280;letter-spacing:0.05em;text-transform:uppercase;">Verification Code</p>
-                      <p style="margin:0;font-size:40px;font-weight:800;letter-spacing:0.15em;color:#111827;font-family:'Courier New',monospace;">${code}</p>
-                    </div>
-                    <p style="margin:0;font-size:13px;color:#9ca3af;text-align:center;">This code expires in <strong>15 minutes</strong>. If you didn&apos;t create an account, you can ignore this email.</p>
-                  </td>
-                </tr>
-                <!-- Footer -->
-                <tr>
-                  <td style="padding:24px 40px;border-top:1px solid #f3f4f6;">
-                    <p style="margin:0;font-size:12px;color:#9ca3af;text-align:center;">Trovaar &mdash; Get competitive bids from skilled pros</p>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </body>
-    </html>
-  `;
+  // Fallback: Gmail SMTP
+  const gmailUser = process.env.GMAIL_USER;
+  const gmailPass = process.env.GMAIL_APP_PASSWORD;
+  if (gmailUser && gmailPass) {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: { user: gmailUser, pass: gmailPass },
+    });
+    await transporter.sendMail({
+      from: `"Trovaar" <${gmailUser}>`,
+      to,
+      subject,
+      html,
+    });
+    return;
+  }
 
+  // Last resort: Resend API (only works if a verified domain is configured)
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    throw new Error("No email transport configured (set BREVO_API_KEY)");
+  }
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
+    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      from: "Trovaar <noreply@trovaar.com>",
+      from: process.env.RESEND_FROM_EMAIL || "Trovaar <onboarding@resend.dev>",
       to,
-      subject: `${code} — Your Trovaar verification code`,
+      subject,
       html,
     }),
   });
-
   if (!res.ok) {
     const body = await res.text();
     throw new Error(`Resend API error ${res.status}: ${body}`);
@@ -285,12 +338,6 @@ export async function sendEmergencyAlert(
   location: string,
   jobId: string
 ): Promise<void> {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    console.warn("RESEND_API_KEY not set — skipping emergency alert email");
-    return;
-  }
-
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
     || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3001");
   const jobUrl = `${baseUrl}/jobs/${jobId}`;
@@ -334,22 +381,10 @@ export async function sendEmergencyAlert(
     </html>
   `;
 
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: "Trovaar <noreply@trovaar.com>",
-      to,
-      subject: `⚡ Emergency Job Near You: ${jobTitle}`,
-      html,
-    }),
-  });
-
-  if (!res.ok) {
-    const body = await res.text();
-    throw new Error(`Resend API error ${res.status}: ${body}`);
+  const subject = `⚡ Emergency Job Near You: ${jobTitle}`;
+  try {
+    await sendEmail(to, subject, html);
+  } catch (err) {
+    logger.error({ err }, "sendEmergencyAlert failed");
   }
 }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { getAuthPayload } from "@/lib/auth";
 import crypto from "crypto";
+import logger from "@/lib/logger";
 
 export async function GET(
   request: NextRequest,
@@ -51,7 +52,7 @@ export async function POST(
     const entry = await db.prepare("SELECT * FROM contractor_work_history WHERE id = ?").get(entryId);
     return NextResponse.json({ entry }, { status: 201 });
   } catch (error) {
-    console.error("Create work history error:", error);
+    logger.error({ err: error }, "Create work history error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

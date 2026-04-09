@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
-import { getAuthPayload } from "@/lib/auth";
+import { requireAdmin } from "@/lib/admin";
+import { adminLogger as logger } from "@/lib/logger";
 
 export async function GET(request: NextRequest) {
-  const payload = getAuthPayload(request.headers);
-  if (!payload || !payload.isAdmin) {
-    return NextResponse.json({ error: "Admin access required" }, { status: 403 });
-  }
+  const { error: adminError } = await requireAdmin(request);
+  if (adminError) return adminError;
 
   const db = getDb();
   await initializeDatabase();
@@ -32,10 +31,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const payload = getAuthPayload(request.headers);
-  if (!payload || !payload.isAdmin) {
-    return NextResponse.json({ error: "Admin access required" }, { status: 403 });
-  }
+  const { error: adminError } = await requireAdmin(request);
+  if (adminError) return adminError;
 
   try {
     const { contractorId, type, action } = await request.json();
@@ -71,7 +68,7 @@ export async function POST(request: NextRequest) {
     const updatedProfile = await db.prepare("SELECT * FROM contractor_profiles WHERE user_id = ?").get(contractorId);
     return NextResponse.json({ success: true, profile: updatedProfile });
   } catch (error) {
-    console.error("Admin verification error:", error);
+    logger.error({ err: error }, "Admin verification error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

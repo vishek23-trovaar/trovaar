@@ -4,6 +4,7 @@ import { CATEGORY_GROUPS } from "@/lib/constants";
 import { checkRateLimit } from "@/lib/rate-limit-api";
 import fs from "fs";
 import path from "path";
+import { aiLogger as logger } from "@/lib/logger";
 
 type MediaType = "image/jpeg" | "image/png" | "image/webp" | "image/gif";
 
@@ -167,7 +168,7 @@ Return only the category key (the part before " — ").`,
       groupIcon: matchedGroup.icon,
     });
   } catch (err) {
-    console.error("detect-category error:", err);
+    logger.error({ err }, "detect-category error");
     return NextResponse.json({ category: null, categoryGroup: null, label: null, groupIcon: null });
   }
 }

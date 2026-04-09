@@ -4,6 +4,7 @@ import { getDb, initializeDatabase } from "@/lib/db";
 import { getAuthPayload } from "@/lib/auth";
 import { sendVerificationEmail } from "@/lib/email";
 import { User } from "@/types";
+import { authLogger as logger } from "@/lib/logger";
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,7 +14,7 @@ export async function POST(request: NextRequest) {
     }
 
     const db = getDb();
-  await initializeDatabase();
+    await initializeDatabase();
 
     // Check user isn't already verified
     const user = await db.prepare("SELECT * FROM users WHERE id = ?").get(payload.userId) as User | undefined;
@@ -25,13 +26,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Rate limit: max 5 codes per hour
-    const recentCount = (
-      await db.prepare(
-        `SELECT COUNT(*) as count FROM verification_codes
-         WHERE user_id = ? AND created_at > datetime('now', '-1 hour')`
-      ).get(payload.userId) as { count: number }
-    ).count;
+    const recentRow = await db.prepare(
+      `SELECT COUNT(*) as count FROM verification_codes
+       WHERE user_id = ? AND created_at > datetime('now', '-1 hour')`
+    ).get(payload.userId) as { count: number | string } | undefined;
 
+    const recentCount = Number(recentRow?.count ?? 0);
     if (recentCount >= 5) {
       return NextResponse.json(
         { error: "Too many attempts. Please wait before requesting another code." },
@@ -49,11 +49,21 @@ export async function POST(request: NextRequest) {
       "INSERT INTO verification_codes (id, user_id, code, expires_at) VALUES (?, ?, ?, datetime('now', '+15 minutes'))"
     ).run(codeId, payload.userId, code);
 
-    await sendVerificationEmail(user.email, user.name, code);
+    // Send verification code via email
+    try {
+      await sendVerificationEmail(user.email, user.name, code);
+    } catch (emailErr) {
+      logger.error({ err: emailErr }, "Email send failed");
+      if (process.env.NODE_ENV !== "production") {
+        logger.debug({ code, email: user.email }, "DEV MODE — Verification code");
+        return NextResponse.json({ success: true, devCode: code });
+      }
+      return NextResponse.json({ error: "Failed to send verification email. Please try again." }, { status: 500 });
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Resend verification error:", error);
-    return NextResponse.json({ error: "Failed to send verification email" }, { status: 500 });
+    logger.error({ err: error }, "Resend verification error");
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

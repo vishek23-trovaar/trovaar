@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { requireAdmin } from "@/lib/admin";
+import { adminLogger as logger } from "@/lib/logger";
 
 interface PlanRow {
   id: string;
@@ -88,7 +89,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (err) {
-    console.error("GET /api/admin/subscriptions error:", err);
+    logger.error({ err }, "GET /api/admin/subscriptions error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -140,7 +141,7 @@ export async function PATCH(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error("PATCH /api/admin/subscriptions error:", err);
+    logger.error({ err }, "PATCH /api/admin/subscriptions error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

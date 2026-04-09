@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
-import { getAuthPayload } from "@/lib/auth";
+import { requireAdmin } from "@/lib/admin";
+import { adminLogger as logger } from "@/lib/logger";
 
 export async function GET(request: NextRequest) {
   try {
-    const payload = getAuthPayload(request.headers);
-    if (!payload || !payload.isAdmin) {
-      return NextResponse.json({ error: "Admin access required" }, { status: 403 });
-    }
+    const { error: adminError } = await requireAdmin(request);
+    if (adminError) return adminError;
 
     const url = new URL(request.url);
     const year = parseInt(url.searchParams.get("year") || String(new Date().getFullYear()), 10);
@@ -30,11 +29,11 @@ export async function GET(request: NextRequest) {
         tr.ein_or_ssn_last4
       FROM users u
       JOIN bids b ON b.contractor_id = u.id AND b.status = 'accepted'
-      JOIN jobs j ON j.id = b.job_id AND j.status = 'completed' AND strftime('%Y', j.completed_at) = ?
+      JOIN jobs j ON j.id = b.job_id AND j.status = 'completed' AND TO_CHAR(j.completed_at, 'YYYY') = ?
       LEFT JOIN tax_records tr ON tr.contractor_id = u.id AND tr.tax_year = ?
       WHERE u.role = 'contractor'
-      GROUP BY u.id
-      HAVING gross_earned_cents >= 60000
+      GROUP BY u.id, u.name, u.email, tr.form_generated, tr.form_generated_at, tr.contractor_name, tr.contractor_address, tr.ein_or_ssn_last4
+      HAVING COALESCE(SUM(b.price), 0) >= 60000
       ORDER BY gross_earned_cents DESC
     `).all(String(year), year) as Array<{
       contractor_id: string;
@@ -79,7 +78,7 @@ export async function GET(request: NextRequest) {
       })),
     });
   } catch (error) {
-    console.error("[admin/tax] Error:", error);
+    logger.error({ err: error }, "GET /admin/tax error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -133,7 +132,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("[admin/tax] POST error:", error);
+    logger.error({ err: error }, "POST /admin/tax error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

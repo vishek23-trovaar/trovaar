@@ -12,7 +12,7 @@ interface ClientStats {
 }
 
 export default function ClientProfilePage() {
-  const { user, refreshUser } = useAuth();
+  const { user, refreshUser, logout } = useAuth();
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -27,6 +27,9 @@ export default function ClientProfilePage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [pwSaving, setPwSaving] = useState(false);
   const [pwMsg, setPwMsg] = useState("");
+
+  const [deletingAccount, setDeletingAccount] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -102,6 +105,25 @@ export default function ClientProfilePage() {
     } finally {
       setPwSaving(false);
       setTimeout(() => setPwMsg(""), 4000);
+    }
+  }
+
+  async function deleteAccount() {
+    setDeletingAccount(true);
+    try {
+      const res = await fetch("/api/auth/delete-account", { method: "DELETE" });
+      const data = await res.json();
+      if (res.ok) {
+        // logout clears user state and redirects to /
+        await logout();
+      } else {
+        alert(data.error || "Failed to delete account");
+        setShowDeleteConfirm(false);
+      }
+    } catch {
+      alert("Something went wrong");
+    } finally {
+      setDeletingAccount(false);
     }
   }
 
@@ -293,9 +315,33 @@ export default function ClientProfilePage() {
       <div className="bg-white rounded-xl shadow-sm border border-red-100 p-6">
         <h2 className="text-lg font-semibold text-red-700 mb-1">Danger Zone</h2>
         <p className="text-sm text-gray-500 mb-4">Permanently delete your account and all associated data. This cannot be undone.</p>
-        <button className="px-5 py-2 border border-red-300 text-red-600 text-sm font-medium rounded-lg hover:bg-red-50 transition-colors">
-          Delete Account
-        </button>
+        {!showDeleteConfirm ? (
+          <button
+            onClick={() => setShowDeleteConfirm(true)}
+            className="px-5 py-2 border border-red-300 text-red-600 text-sm font-medium rounded-lg hover:bg-red-50 transition-colors"
+          >
+            Delete Account
+          </button>
+        ) : (
+          <div className="space-y-3">
+            <p className="text-sm font-medium text-red-700">Are you sure? This will permanently delete your account and all your data.</p>
+            <div className="flex gap-3">
+              <button
+                onClick={deleteAccount}
+                disabled={deletingAccount}
+                className="px-5 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
+              >
+                {deletingAccount ? "Deleting…" : "Yes, delete my account"}
+              </button>
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="px-5 py-2 border border-gray-300 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
     </div>

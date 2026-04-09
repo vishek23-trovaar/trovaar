@@ -4,6 +4,7 @@ import { signToken } from "@/lib/auth";
 import { generateAppleClientSecret, exchangeAppleCode, signPendingJwt, clearStateCookie } from "@/lib/oauth";
 import { User, OAuthAccount } from "@/types";
 import { dashboardPath } from "@/lib/portalRoutes";
+import { authLogger as logger } from "@/lib/logger";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3001";
 
@@ -58,7 +59,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     response.cookies.set("oauth_pending", pendingJwt, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", maxAge: 900, path: "/" });
     return response;
   } catch (err) {
-    console.error("Apple OAuth error:", err);
+    logger.error({ err }, "Apple OAuth error");
     return NextResponse.redirect(`${BASE_URL}/login?error=oauth_failed`);
   }
 }

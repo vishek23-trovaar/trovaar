@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
-import { hashPassword } from "@/lib/auth";
+import { hashPassword, revokeUserTokens } from "@/lib/auth";
+import { authLogger as logger } from "@/lib/logger";
 
 export async function POST(request: NextRequest) {
   try {
@@ -41,14 +42,18 @@ export async function POST(request: NextRequest) {
     // Hash the new password and update the user
     const passwordHash = await hashPassword(password);
 
-    await db.prepare("UPDATE users SET password_hash = ? WHERE id = ?").run(passwordHash, resetToken.user_id);
+    await db.prepare(
+      "UPDATE users SET password_hash = ?, last_password_change = NOW() WHERE id = ?"
+    ).run(passwordHash, resetToken.user_id);
+    // Revoke all existing sessions so stolen tokens can't be reused after a reset
+    await revokeUserTokens(resetToken.user_id);
 
     // Mark the token as used
     await db.prepare("UPDATE password_reset_tokens SET used = 1 WHERE id = ?").run(resetToken.id);
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error("Reset password error:", error);
+    logger.error({ err: error }, "Reset password error");
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
