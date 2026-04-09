@@ -54,10 +54,14 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   headers: async () => [
     {
-      // HTML pages: always revalidate so deploys are picked up immediately
+      // HTML pages: always revalidate so deploys are picked up immediately.
+      // CDN-Cache-Control tells Vercel's Edge Network not to cache (browser
+      // Cache-Control alone is not enough — Vercel CDN ignores it).
       source: "/((?!_next/static|_next/image|favicon\\.ico).*)",
       headers: [
         { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
+        { key: "CDN-Cache-Control", value: "no-store" },
+        { key: "Vercel-CDN-Cache-Control", value: "no-store" },
       ],
     },
     {
