@@ -123,6 +123,11 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
   const [reportingNoShow, setReportingNoShow] = useState(false);
   const [noShowConfirm, setNoShowConfirm] = useState(false);
 
+  // AI Match Scores
+  const [matchScores, setMatchScores] = useState<Record<string, { score: number; reasoning: string; highlights: string[]; concerns: string[] }>>({});
+  const [matchScoresLoading, setMatchScoresLoading] = useState(false);
+  const [bidSortMode, setBidSortMode] = useState<"price" | "match">("price");
+
   // Feature 20 — Real-time bid stream (hook must be called unconditionally)
   const { bids: liveBids, connected: streamConnected, newBidIds } = useBidStream(id, bidStreamEnabled);
 
@@ -138,6 +143,13 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
     fetchBids();
     fetchChangeOrders();
   }, [id]);
+
+  // Fetch AI match scores when job owner views bids
+  useEffect(() => {
+    if (!user || !job || user.id !== job.consumer_id) return;
+    if (bids.length === 0) return;
+    fetchMatchScores();
+  }, [user, job?.id, bids.length]);
 
   useEffect(() => {
     if (!user || user.role !== "consumer") return;
@@ -247,6 +259,22 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
       }
     } catch (err) {
       console.error("Failed to fetch bids:", err);
+    }
+  }
+
+  async function fetchMatchScores() {
+    if (!user || user.role !== "consumer") return;
+    setMatchScoresLoading(true);
+    try {
+      const res = await fetch(`/api/ai/match-scores?jobId=${id}`);
+      if (res.ok) {
+        const data = await res.json();
+        setMatchScores(data.scores || {});
+      }
+    } catch (err) {
+      console.error("Failed to fetch match scores:", err);
+    } finally {
+      setMatchScoresLoading(false);
     }
   }
 
@@ -567,14 +595,28 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
     ? Math.ceil((new Date(job.expected_completion_date + "T12:00:00").getTime() - Date.now()) / (1000 * 60 * 60 * 24))
     : null;
 
-  // Sort bids by price
-  const sortedBids = [...bids].sort((a, b) => a.price - b.price);
+  // Sort bids by price or match score
+  const sortedBids = [...bids].sort((a, b) => {
+    if (bidSortMode === "match" && isOwner && Object.keys(matchScores).length > 0) {
+      const scoreA = matchScores[a.contractor_id]?.score ?? 0;
+      const scoreB = matchScores[b.contractor_id]?.score ?? 0;
+      return scoreB - scoreA; // highest match first
+    }
+    return a.price - b.price;
+  });
   const minPrice = sortedBids.length > 0 ? sortedBids[0].price : 0;
   const maxPrice = sortedBids.length > 0 ? sortedBids[sortedBids.length - 1].price : 0;
 
-  // Use live bids from SSE stream when available (by price), fall back to fetched sorted bids
+  // Use live bids from SSE stream when available, fall back to fetched sorted bids
   const displayBids = liveBids.length > 0
-    ? [...liveBids].sort((a, b) => (a.price ?? 0) - (b.price ?? 0))
+    ? [...liveBids].sort((a, b) => {
+        if (bidSortMode === "match" && isOwner && Object.keys(matchScores).length > 0) {
+          const scoreA = matchScores[a.contractor_id]?.score ?? 0;
+          const scoreB = matchScores[b.contractor_id]?.score ?? 0;
+          return scoreB - scoreA;
+        }
+        return (a.price ?? 0) - (b.price ?? 0);
+      })
     : sortedBids;
 
   // Feature B — reveal logic: accepted bid is revealed once job moves past bidding
@@ -1500,8 +1542,38 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                     Live
                   </span>
                 )}
+                {matchScoresLoading && isOwner && (
+                  <span className="inline-flex items-center gap-1.5 text-xs text-blue-600 font-medium">
+                    <span className="w-3 h-3 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
+                    Computing match scores...
+                  </span>
+                )}
                 {displayBids.length > 1 && (
-                  <span className="text-xs text-muted ml-auto">Sorted by price ↑</span>
+                  <div className="flex items-center gap-2 ml-auto">
+                    {isOwner && Object.keys(matchScores).length > 0 && (
+                      <div className="flex gap-1 bg-gray-100 p-0.5 rounded-lg">
+                        <button
+                          onClick={() => setBidSortMode("price")}
+                          className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer ${
+                            bidSortMode === "price" ? "bg-white shadow-sm text-gray-900" : "text-gray-500 hover:text-gray-700"
+                          }`}
+                        >
+                          Sort by Price
+                        </button>
+                        <button
+                          onClick={() => setBidSortMode("match")}
+                          className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer ${
+                            bidSortMode === "match" ? "bg-white shadow-sm text-gray-900" : "text-gray-500 hover:text-gray-700"
+                          }`}
+                        >
+                          Sort by Match
+                        </button>
+                      </div>
+                    )}
+                    {!isOwner && (
+                      <span className="text-xs text-muted">Sorted by price ↑</span>
+                    )}
+                  </div>
                 )}
               </div>
               {displayBids.length === 0 ? (
@@ -1534,6 +1606,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                           onReject={(bidId) => handleBidAction(bidId, "rejected")}
                           revealed={bidIsRevealed(bid as BidWithContractor)}
                           bidIndex={bidIdx + 1}
+                          matchScore={isOwner ? matchScores[bid.contractor_id] || null : null}
                         />
                       </div>
                     );

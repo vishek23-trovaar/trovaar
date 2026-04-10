@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
@@ -7,6 +8,13 @@ import Button from "@/components/ui/Button";
 import { BidWithContractor, Qualification } from "@/types";
 import { CONTRACTOR_TYPES, QUALIFICATION_TYPES, getPlatformTier, PLATFORM_MARKUP } from "@/lib/constants";
 import { ResponseTimeBadge } from "@/components/contractor/ResponseTimeBadge";
+
+interface MatchScore {
+  score: number;
+  reasoning: string;
+  highlights: string[];
+  concerns: string[];
+}
 
 interface BidCardProps {
   bid: BidWithContractor;
@@ -16,9 +24,11 @@ interface BidCardProps {
   onReject?: (bidId: string) => void;
   revealed?: boolean;   // true after bid accepted and job paid
   bidIndex?: number;    // used for "Pro #1", "Pro #2" numbering
+  matchScore?: MatchScore | null;
 }
 
-export default function BidCard({ bid, isConsumer, isEmergency, onAccept, onReject, revealed, bidIndex }: BidCardProps) {
+export default function BidCard({ bid, isConsumer, isEmergency, onAccept, onReject, revealed, bidIndex, matchScore }: BidCardProps) {
+  const [showMatchDetails, setShowMatchDetails] = useState(false);
   // Consumers see a marked-up price; contractors see their own original bid.
   const displayCents = isConsumer ? Math.round(bid.price * (1 + PLATFORM_MARKUP)) : bid.price;
   const price = (displayCents / 100).toFixed(2);
@@ -222,6 +232,61 @@ export default function BidCard({ bid, isConsumer, isEmergency, onAccept, onReje
           <p className="text-xs text-muted">{bid.timeline_days} day{bid.timeline_days !== 1 ? "s" : ""}</p>
         </div>
       </div>
+
+      {/* AI Match Score Badge — only shown to consumers */}
+      {isConsumer && matchScore && matchScore.score > 0 && (
+        <div className="mt-3">
+          <button
+            onClick={() => setShowMatchDetails(!showMatchDetails)}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold transition-colors cursor-pointer ${
+              matchScore.score >= 80
+                ? "bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100"
+                : matchScore.score >= 60
+                ? "bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100"
+                : "bg-gray-50 text-gray-600 border border-gray-200 hover:bg-gray-100"
+            }`}
+          >
+            <span>🎯</span>
+            <span>{matchScore.score}% Match</span>
+            <svg
+              className={`w-3.5 h-3.5 transition-transform ${showMatchDetails ? "rotate-180" : ""}`}
+              fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {showMatchDetails && (
+            <div className={`mt-2 rounded-lg border p-3 text-sm ${
+              matchScore.score >= 80
+                ? "bg-emerald-50/50 border-emerald-200"
+                : matchScore.score >= 60
+                ? "bg-amber-50/50 border-amber-200"
+                : "bg-gray-50/50 border-gray-200"
+            }`}>
+              <p className="text-secondary mb-2">{matchScore.reasoning}</p>
+              {matchScore.highlights.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mb-2">
+                  {matchScore.highlights.map((h, i) => (
+                    <span key={i} className="inline-flex items-center gap-1 text-xs bg-white px-2 py-1 rounded-full border border-emerald-200 text-emerald-700">
+                      <span>✓</span> {h}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {matchScore.concerns.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {matchScore.concerns.map((c, i) => (
+                    <span key={i} className="inline-flex items-center gap-1 text-xs bg-white px-2 py-1 rounded-full border border-orange-200 text-orange-600">
+                      <span>!</span> {c}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Itemized materials breakdown */}
       {hasMaterials && materials.length > 0 && (

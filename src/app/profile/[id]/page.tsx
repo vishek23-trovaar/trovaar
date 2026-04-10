@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from "react";
 import PortfolioManager from "@/components/portfolio/PortfolioManager";
 import { CATEGORIES, CONTRACTOR_TYPES, QUALIFICATION_TYPES, getPlatformTier } from "@/lib/constants";
+import { QUIZ_CATEGORIES } from "@/lib/quiz-questions";
 import { Qualification } from "@/types";
 import { useAuth } from "@/context/AuthContext";
 
@@ -121,6 +122,8 @@ export default function ContractorProfilePage({
   const [stats, setStats] = useState<ContractorStats | null>(null);
   const [certifications, setCertifications] = useState<CertificationData[]>([]);
   const [workHistory, setWorkHistory] = useState<WorkHistoryEntry[]>([]);
+  const [portfolioPhotos, setPortfolioPhotos] = useState<{ url: string; caption: string | null; project_type: string | null; uploaded_at: string }[]>([]);
+  const [quizScores, setQuizScores] = useState<{ category: string; percentage: number; completed_at: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [saved, setSaved] = useState(false);
   const [savePending, setSavePending] = useState(false);
@@ -128,10 +131,12 @@ export default function ContractorProfilePage({
   useEffect(() => {
     async function fetchAll() {
       try {
-        const [profileRes, reviewsRes, statsRes] = await Promise.all([
+        const [profileRes, reviewsRes, statsRes, portfolioRes, quizRes] = await Promise.all([
           fetch(`/api/contractors/${id}`),
           fetch(`/api/reviews/contractor/${id}`),
           fetch(`/api/contractors/${id}/stats`),
+          fetch(`/api/contractors/${id}/portfolio`),
+          fetch(`/api/quiz/scores/${id}`),
         ]);
         if (profileRes.ok) {
           const data = await profileRes.json();
@@ -147,6 +152,14 @@ export default function ContractorProfilePage({
         if (statsRes.ok) {
           const data = await statsRes.json();
           setStats(data.stats);
+        }
+        if (portfolioRes.ok) {
+          const data = await portfolioRes.json();
+          setPortfolioPhotos(data.photos ?? []);
+        }
+        if (quizRes.ok) {
+          const data = await quizRes.json();
+          setQuizScores((data.scores ?? []).filter((s: { percentage: number }) => s.percentage >= 70));
         }
       } catch (err) {
         console.error("Failed to fetch profile:", err);
@@ -502,6 +515,43 @@ export default function ContractorProfilePage({
           </div>
         </div>
 
+        {/* ── Skills Assessment Scores ───────────────────────────────────── */}
+        {quizScores.length > 0 && (
+          <div className="bg-white rounded-2xl border border-border p-6">
+            <h2 className="text-base font-bold text-secondary mb-4">Skills Assessment</h2>
+            <div className="flex flex-wrap gap-3">
+              {quizScores.map((s) => (
+                <div
+                  key={s.category}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-xl border ${
+                    s.percentage >= 90
+                      ? "bg-emerald-50 border-emerald-200"
+                      : s.percentage >= 80
+                      ? "bg-blue-50 border-blue-200"
+                      : "bg-slate-50 border-slate-200"
+                  }`}
+                >
+                  <span className="text-sm">🧠</span>
+                  <span className="text-sm font-semibold text-secondary">
+                    {QUIZ_CATEGORIES[s.category] ?? s.category}
+                  </span>
+                  <span
+                    className={`text-sm font-bold ${
+                      s.percentage >= 90
+                        ? "text-emerald-600"
+                        : s.percentage >= 80
+                        ? "text-blue-600"
+                        : "text-slate-600"
+                    }`}
+                  >
+                    {s.percentage}%
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* ── 3b. Certifications ─────────────────────────────────────────── */}
         {certifications.length > 0 && (
           <div className="bg-white rounded-2xl border border-border p-6">
@@ -603,6 +653,44 @@ export default function ContractorProfilePage({
           <h2 className="text-base font-bold text-secondary mb-1">Work Portfolio</h2>
           <p className="text-sm text-muted mb-5">Before &amp; after photos from completed projects.</p>
           <PortfolioManager contractorId={id} editable={false} />
+
+          {/* Portfolio photos (quick uploads) */}
+          {portfolioPhotos.length > 0 && (
+            <div className="mt-6 pt-6 border-t border-border">
+              <h3 className="text-sm font-semibold text-secondary mb-3">Additional Work Photos</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {portfolioPhotos.map((photo, i) => {
+                  const typeLabels: Record<string, string> = {
+                    before_after: "Before & After",
+                    completed_work: "Completed Work",
+                    in_progress: "In Progress",
+                    team_equipment: "Team / Equipment",
+                  };
+                  return (
+                    <div key={i} className="group">
+                      <div className="aspect-square rounded-xl overflow-hidden border border-border">
+                        <img
+                          src={photo.url}
+                          alt={photo.caption || `Work photo ${i + 1}`}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        />
+                      </div>
+                      <div className="mt-1.5">
+                        {photo.caption && (
+                          <p className="text-xs font-medium text-secondary truncate">{photo.caption}</p>
+                        )}
+                        {photo.project_type && (
+                          <p className="text-[10px] text-muted">
+                            {typeLabels[photo.project_type] || photo.project_type}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* ── 6. Reviews ────────────────────────────────────────────────────── */}

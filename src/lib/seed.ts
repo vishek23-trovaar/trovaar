@@ -239,6 +239,21 @@ await `
   CREATE INDEX IF NOT EXISTS idx_reviews_contractor ON reviews(contractor_id);
   CREATE INDEX IF NOT EXISTS idx_reviews_job ON reviews(job_id);
   CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id);
+
+  CREATE TABLE IF NOT EXISTS skill_assessments (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    category TEXT NOT NULL,
+    score INTEGER NOT NULL,
+    total_questions INTEGER NOT NULL,
+    percentage INTEGER NOT NULL,
+    completed_at TEXT NOT NULL DEFAULT (datetime('now')),
+    answers TEXT NOT NULL DEFAULT '[]',
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_skill_assessments_user ON skill_assessments(user_id);
+  CREATE INDEX IF NOT EXISTS idx_skill_assessments_user_category ON skill_assessments(user_id, category);
 `);
 
 // Password: "password123" for all demo users — all seed users are pre-verified
@@ -1102,5 +1117,20 @@ await db.prepare("UPDATE contractor_profiles SET headline = ?, about_me = ?, bac
   "Carrier factory-trained HVAC technician. I handle everything from tune-ups to full system replacements. EPA certified, NATE certified, and insured. Fair pricing with no hidden fees.",
   contractor4Id
 );
+
+// ── Match Score Cache ────────────────────────────────────────────────────────
+db.exec(`
+  CREATE TABLE IF NOT EXISTS match_score_cache (
+    id TEXT PRIMARY KEY,
+    job_id TEXT NOT NULL,
+    contractor_id TEXT NOT NULL,
+    score INTEGER NOT NULL,
+    reasoning TEXT,
+    highlights TEXT NOT NULL DEFAULT '[]',
+    concerns TEXT NOT NULL DEFAULT '[]',
+    computed_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(job_id, contractor_id)
+  )
+`);
 
 db.close();

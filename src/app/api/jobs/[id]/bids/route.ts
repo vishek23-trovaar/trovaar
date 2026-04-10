@@ -167,6 +167,39 @@ export async function POST(
 
   const { id: jobId } = await params;
 
+  // Portfolio check — contractors must have at least 3 portfolio photos to bid
+  try {
+    const db = getDb();
+    await initializeDatabase();
+
+    // Count portfolio_items (before/after projects)
+    const portfolioItemCount = await db
+      .prepare("SELECT COUNT(*) as count FROM portfolio_items WHERE contractor_id = ?")
+      .get(payload.userId) as { count: number };
+
+    // Count portfolio_photos JSON entries on contractor_profiles
+    const profileRow = await db
+      .prepare("SELECT portfolio_photos FROM contractor_profiles WHERE user_id = ?")
+      .get(payload.userId) as { portfolio_photos: string } | undefined;
+
+    let photoCount = portfolioItemCount.count;
+    if (profileRow?.portfolio_photos) {
+      try {
+        const photos = JSON.parse(profileRow.portfolio_photos);
+        if (Array.isArray(photos)) photoCount += photos.length;
+      } catch { /* ignore parse errors */ }
+    }
+
+    if (photoCount < 3) {
+      return NextResponse.json({
+        error: "You need at least 3 portfolio photos before you can bid. Go to your profile to add work photos.",
+      }, { status: 403 });
+    }
+  } catch (err) {
+    logger.error({ err }, "Portfolio check error during bid submission");
+    // Don't block bids if portfolio check itself fails
+  }
+
   try {
     const body = await request.json();
     let { price } = body;

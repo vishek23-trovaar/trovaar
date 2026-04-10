@@ -32,6 +32,12 @@ export default function ContractorOnboarding() {
   const [licenseState, setLicenseState] = useState("");
   const [licenseType, setLicenseType] = useState("");
 
+  // Step 1 — Portfolio Photos
+  const [portfolioUrls, setPortfolioUrls] = useState<{ url: string; caption: string; project_type: string }[]>([]);
+  const [newPhotoUrl, setNewPhotoUrl] = useState("");
+  const [newPhotoCaption, setNewPhotoCaption] = useState("");
+  const [newPhotoType, setNewPhotoType] = useState("completed_work");
+
   // Step 2 — Services
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
@@ -93,6 +99,23 @@ export default function ContractorOnboarding() {
         try {
           await fetch("/api/background-check", { method: "POST" });
         } catch { /* non-blocking — they can request it later */ }
+      }
+
+      // Save portfolio photos if any were added
+      if (portfolioUrls.length > 0 && user?.id) {
+        for (const photo of portfolioUrls) {
+          try {
+            await fetch(`/api/contractors/${user.id}/portfolio`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                photo_url: photo.url,
+                caption: photo.caption || undefined,
+                project_type: photo.project_type || undefined,
+              }),
+            });
+          } catch { /* non-blocking */ }
+        }
       }
 
       // If contractor has a trade license, submit it for verification
@@ -378,6 +401,122 @@ export default function ContractorOnboarding() {
                   Yes, request a background check for my profile
                 </span>
               </label>
+            </div>
+
+            {/* Portfolio Photos */}
+            <div className="rounded-xl border-2 border-blue-200 bg-blue-50/50 p-5">
+              <div className="flex items-start gap-3 mb-4">
+                <span className="text-2xl shrink-0">&#128247;</span>
+                <div>
+                  <h3 className="font-semibold text-blue-900 mb-1">Work Photos <span className="text-xs font-normal text-blue-600">(required to bid)</span></h3>
+                  <p className="text-sm text-blue-800 leading-relaxed">
+                    Upload at least 3 photos of your work to get started. Homeowners want to see the quality of your craftsmanship.
+                  </p>
+                </div>
+              </div>
+
+              {/* Progress */}
+              <div className="flex items-center gap-2 mb-4">
+                <div className="flex-1 h-2 bg-blue-200 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-blue-500 rounded-full transition-all"
+                    style={{ width: `${Math.min((portfolioUrls.length / 3) * 100, 100)}%` }}
+                  />
+                </div>
+                <span className={`text-sm font-semibold ${portfolioUrls.length >= 3 ? "text-emerald-700" : "text-blue-800"}`}>
+                  {portfolioUrls.length >= 3 ? `${portfolioUrls.length}/3 ✓ Ready to bid!` : `${portfolioUrls.length}/3 photos`}
+                </span>
+              </div>
+
+              {/* Photo grid */}
+              {portfolioUrls.length > 0 && (
+                <div className="grid grid-cols-3 gap-2 mb-4">
+                  {portfolioUrls.map((photo, i) => (
+                    <div key={i} className="relative group">
+                      <img
+                        src={photo.url}
+                        alt={photo.caption || `Work photo ${i + 1}`}
+                        className="w-full aspect-square object-cover rounded-lg border border-border"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setPortfolioUrls((prev) => prev.filter((_, idx) => idx !== i))}
+                        className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer flex items-center justify-center"
+                      >
+                        &#215;
+                      </button>
+                      {photo.caption && (
+                        <p className="text-[10px] text-blue-700 mt-0.5 truncate">{photo.caption}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Add photo form */}
+              <div className="space-y-2">
+                <div>
+                  <label className="block text-xs font-medium text-blue-800 mb-1">Photo URL</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="url"
+                      value={newPhotoUrl}
+                      onChange={(e) => setNewPhotoUrl(e.target.value)}
+                      placeholder="https://example.com/my-work-photo.jpg"
+                      className="flex-1 px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (newPhotoUrl.trim()) {
+                          setPortfolioUrls((prev) => [
+                            ...prev,
+                            { url: newPhotoUrl.trim(), caption: newPhotoCaption.trim(), project_type: newPhotoType },
+                          ]);
+                          setNewPhotoUrl("");
+                          setNewPhotoCaption("");
+                          setNewPhotoType("completed_work");
+                        }
+                      }}
+                      disabled={!newPhotoUrl.trim()}
+                      className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-40 transition-colors cursor-pointer"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-xs font-medium text-blue-800 mb-1">Caption <span className="text-blue-500 font-normal">(optional)</span></label>
+                    <input
+                      type="text"
+                      value={newPhotoCaption}
+                      onChange={(e) => setNewPhotoCaption(e.target.value)}
+                      placeholder="e.g. Kitchen remodel"
+                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-blue-800 mb-1">Project Type</label>
+                    <select
+                      value={newPhotoType}
+                      onChange={(e) => setNewPhotoType(e.target.value)}
+                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
+                    >
+                      <option value="before_after">Before &amp; After</option>
+                      <option value="completed_work">Completed Work</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="team_equipment">Team / Equipment</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {portfolioUrls.length === 0 && (
+                <p className="text-xs text-blue-600 mt-3 text-center">
+                  You can skip this and add photos later, but you won&apos;t be able to bid on jobs until you have at least 3 work photos.
+                </p>
+              )}
             </div>
 
             {/* Optional Trade License */}

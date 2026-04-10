@@ -142,6 +142,11 @@ export default function ContractorPerformancePage() {
   const [earnings, setEarnings] = useState<EarningsData | null>(null);
   const [stripeStatus, setStripeStatus] = useState<StripeStatus | null>(null);
 
+  const [portfolioPhotoCount, setPortfolioPhotoCount] = useState(0);
+
+  // Quiz scores
+  const [quizScores, setQuizScores] = useState<{ category: string; best_percentage: number; best_score: number; total_questions: number; last_taken: string }[]>([]);
+
   const [profileLoading, setProfileLoading] = useState(true);
   const [earningsLoading, setEarningsLoading] = useState(true);
   const [stripeLoading, setStripeLoading] = useState(true);
@@ -182,6 +187,17 @@ export default function ContractorPerformancePage() {
   const [licenseNumber, setLicenseNumber] = useState("");
   const [trustSaving, setTrustSaving] = useState(false);
   const [trustSaved, setTrustSaved] = useState(false);
+
+  // AI Profile Analysis
+  interface AiProfileAnalysis {
+    specialties: Array<{ category: string; level: string; years: number }>;
+    strengths: string[];
+    certifications_summary: string;
+    experience_tier: "entry" | "mid" | "senior" | "master";
+  }
+  const [aiAnalysis, setAiAnalysis] = useState<AiProfileAnalysis | null>(null);
+  const [aiAnalysisLoading, setAiAnalysisLoading] = useState(false);
+  const [aiAnalysisError, setAiAnalysisError] = useState("");
 
   // Identity Verification
   const [idVerifyLoading, setIdVerifyLoading] = useState(false);
@@ -235,6 +251,12 @@ export default function ContractorPerformancePage() {
           setHeadline(data.profile?.headline ?? "");
           setAboutMe(data.profile?.about_me ?? "");
           setLicenseNumber(data.profile?.license_number ?? "");
+          // Load existing AI profile analysis if available
+          if (data.profile?.ai_profile_summary) {
+            try {
+              setAiAnalysis(JSON.parse(data.profile.ai_profile_summary));
+            } catch { /* ignore parse errors */ }
+          }
         }
         if (statsRes.ok) {
           const data = await statsRes.json();
@@ -307,11 +329,44 @@ export default function ContractorPerformancePage() {
       } catch { /* silent */ }
     }
 
+    async function fetchPortfolioCount() {
+      if (!user) return;
+      try {
+        // Count portfolio_items
+        const itemsRes = await fetch(`/api/portfolio?contractorId=${user.id}`);
+        let count = 0;
+        if (itemsRes.ok) {
+          const data = await itemsRes.json();
+          count += (data.items || []).length;
+        }
+        // Count portfolio_photos from contractor profile
+        const photosRes = await fetch(`/api/contractors/${user.id}/portfolio`);
+        if (photosRes.ok) {
+          const data = await photosRes.json();
+          count += (data.photos || []).length;
+        }
+        setPortfolioPhotoCount(count);
+      } catch { /* silent */ }
+    }
+
+    async function fetchQuizScores() {
+      if (!user) return;
+      try {
+        const res = await fetch(`/api/quiz/scores/${user.id}`);
+        if (res.ok) {
+          const data = await res.json();
+          setQuizScores(data.scores ?? []);
+        }
+      } catch { /* silent */ }
+    }
+
     fetchProfile();
     fetchEarnings();
     fetchStripe();
     fetchAlertPrefs();
     fetchLicenseInfo();
+    fetchPortfolioCount();
+    fetchQuizScores();
   }, [user]);
 
   async function saveAlertPrefs() {
@@ -685,8 +740,41 @@ export default function ContractorPerformancePage() {
 
         {/* ── Portfolio tab ────────────────────────────────────────────── */}
         {activeTab === "portfolio" && (
-          <div className="bg-white rounded-2xl border border-border p-6">
-            <PortfolioManager contractorId={user.id} editable={true} />
+          <div className="space-y-4">
+            {/* Portfolio photo requirement warning */}
+            {portfolioPhotoCount < 3 && (
+              <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-2xl p-4">
+                <span className="text-xl shrink-0">&#9888;&#65039;</span>
+                <div>
+                  <p className="font-bold text-amber-800">You need at least 3 work photos to start bidding on jobs</p>
+                  <p className="text-sm text-amber-700 mt-1">
+                    Upload photos of your completed projects to build credibility with homeowners.
+                  </p>
+                  <div className="flex items-center gap-2 mt-2">
+                    <div className="flex-1 max-w-[200px] h-2 bg-amber-200 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-amber-500 rounded-full transition-all"
+                        style={{ width: `${Math.min((portfolioPhotoCount / 3) * 100, 100)}%` }}
+                      />
+                    </div>
+                    <span className="text-sm font-semibold text-amber-800">
+                      {portfolioPhotoCount}/3 photos uploaded
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+            {portfolioPhotoCount >= 3 && (
+              <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
+                <span className="text-xl">&#9989;</span>
+                <p className="font-semibold text-emerald-800">
+                  {portfolioPhotoCount} portfolio photos uploaded &mdash; you&apos;re ready to bid!
+                </p>
+              </div>
+            )}
+            <div className="bg-white rounded-2xl border border-border p-6">
+              <PortfolioManager contractorId={user.id} editable={true} />
+            </div>
           </div>
         )}
 
@@ -1315,6 +1403,127 @@ export default function ContractorPerformancePage() {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* ── Main content ─────────────────────────────────────────────── */}
           <div className="flex-1 min-w-0 space-y-6">
+
+            {/* AI Profile Analysis */}
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-5">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-base font-bold text-secondary flex items-center gap-2">
+                  <span>🤖</span> AI Profile Analysis
+                </h2>
+                <button
+                  onClick={async () => {
+                    if (!user) return;
+                    setAiAnalysisLoading(true);
+                    setAiAnalysisError("");
+                    try {
+                      const res = await fetch("/api/ai/analyze-profile", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ contractorId: user.id }),
+                      });
+                      if (res.ok) {
+                        const data = await res.json();
+                        setAiAnalysis(data.analysis);
+                      } else {
+                        const data = await res.json();
+                        setAiAnalysisError(data.error || "Analysis failed");
+                      }
+                    } catch {
+                      setAiAnalysisError("Failed to analyze profile");
+                    } finally {
+                      setAiAnalysisLoading(false);
+                    }
+                  }}
+                  disabled={aiAnalysisLoading}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors cursor-pointer"
+                >
+                  {aiAnalysisLoading ? (
+                    <>
+                      <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Analyzing...
+                    </>
+                  ) : (
+                    <>
+                      <span>✨</span>
+                      {aiAnalysis ? "Re-analyze" : "Analyze My Profile"}
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {aiAnalysisError && (
+                <div className="bg-red-50 text-red-700 text-sm p-3 rounded-lg mb-3">{aiAnalysisError}</div>
+              )}
+
+              {aiAnalysis ? (
+                <div className="space-y-4">
+                  {/* Experience Tier */}
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-medium text-muted uppercase tracking-wide">Experience Tier:</span>
+                    <span className={`text-sm font-bold px-2.5 py-0.5 rounded-full ${
+                      aiAnalysis.experience_tier === "master" ? "bg-purple-100 text-purple-700" :
+                      aiAnalysis.experience_tier === "senior" ? "bg-blue-100 text-blue-700" :
+                      aiAnalysis.experience_tier === "mid" ? "bg-emerald-100 text-emerald-700" :
+                      "bg-gray-100 text-gray-700"
+                    }`}>
+                      {aiAnalysis.experience_tier.charAt(0).toUpperCase() + aiAnalysis.experience_tier.slice(1)}
+                    </span>
+                  </div>
+
+                  {/* Specialties */}
+                  {aiAnalysis.specialties.length > 0 && (
+                    <div>
+                      <p className="text-xs font-medium text-muted uppercase tracking-wide mb-2">Specialties</p>
+                      <div className="space-y-1.5">
+                        {aiAnalysis.specialties.map((s, i) => (
+                          <div key={i} className="flex items-center gap-2 bg-white rounded-lg px-3 py-2 border border-blue-100">
+                            <span className="text-sm font-medium text-secondary flex-1">{s.category}</span>
+                            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                              s.level === "expert" ? "bg-emerald-100 text-emerald-700" :
+                              s.level === "intermediate" ? "bg-blue-100 text-blue-700" :
+                              "bg-gray-100 text-gray-600"
+                            }`}>
+                              {s.level}
+                            </span>
+                            {s.years > 0 && (
+                              <span className="text-xs text-muted">{s.years} yrs</span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Strengths */}
+                  {aiAnalysis.strengths.length > 0 && (
+                    <div>
+                      <p className="text-xs font-medium text-muted uppercase tracking-wide mb-2">Key Strengths</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {aiAnalysis.strengths.map((s, i) => (
+                          <span key={i} className="inline-flex items-center gap-1 text-xs bg-white px-2.5 py-1.5 rounded-full border border-emerald-200 text-emerald-700 font-medium">
+                            <span>✓</span> {s}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Certifications Summary */}
+                  {aiAnalysis.certifications_summary && (
+                    <div>
+                      <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">Certifications</p>
+                      <p className="text-sm text-secondary bg-white rounded-lg px-3 py-2 border border-blue-100">
+                        {aiAnalysis.certifications_summary}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <p className="text-sm text-muted">
+                  Click &ldquo;Analyze My Profile&rdquo; to get AI-powered insights about your professional strengths and how you appear to homeowners.
+                </p>
+              )}
+            </div>
 
             {/* Performance Stats */}
             {profileLoading ? (

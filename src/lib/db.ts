@@ -921,6 +921,18 @@ export async function initializeDatabase(): Promise<void> {
       FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,
       FOREIGN KEY (contractor_id) REFERENCES users(id)
     );
+
+    CREATE TABLE IF NOT EXISTS skill_assessments (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      category TEXT NOT NULL,
+      score INTEGER NOT NULL,
+      total_questions INTEGER NOT NULL,
+      percentage INTEGER NOT NULL,
+      completed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      answers TEXT NOT NULL DEFAULT '[]',
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    );
   `);
 
   // Create indexes (separate statements for safety)
@@ -984,6 +996,11 @@ export async function initializeDatabase(): Promise<void> {
     "CREATE INDEX IF NOT EXISTS idx_invoices_contractor ON invoices(contractor_id)",
     "CREATE INDEX IF NOT EXISTS idx_invoices_status ON invoices(status)",
     "CREATE INDEX IF NOT EXISTS idx_job_templates_consumer ON job_templates(consumer_id)",
+    "CREATE INDEX IF NOT EXISTS idx_match_score_cache_job ON match_score_cache(job_id)",
+    "CREATE INDEX IF NOT EXISTS idx_match_score_cache_contractor ON match_score_cache(contractor_id)",
+    "CREATE INDEX IF NOT EXISTS idx_match_score_cache_job_contractor ON match_score_cache(job_id, contractor_id)",
+    "CREATE INDEX IF NOT EXISTS idx_skill_assessments_user ON skill_assessments(user_id)",
+    "CREATE INDEX IF NOT EXISTS idx_skill_assessments_user_category ON skill_assessments(user_id, category)",
   ];
 
   for (const idx of indexes) {
@@ -1275,6 +1292,24 @@ export async function initializeDatabase(): Promise<void> {
          ALTER TABLE contractor_profiles ADD COLUMN background_check_notes TEXT;
        END IF;
      END $$`,
+    // Add ai_profile_summary column to contractor_profiles for AI analysis caching
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='contractor_profiles' AND column_name='ai_profile_summary') THEN
+         ALTER TABLE contractor_profiles ADD COLUMN ai_profile_summary TEXT;
+       END IF;
+     END $$`,
+    // Create match_score_cache table for AI job-contractor match scoring
+    `CREATE TABLE IF NOT EXISTS match_score_cache (
+       id TEXT PRIMARY KEY,
+       job_id TEXT NOT NULL,
+       contractor_id TEXT NOT NULL,
+       score INTEGER NOT NULL,
+       reasoning TEXT,
+       highlights TEXT NOT NULL DEFAULT '[]',
+       concerns TEXT NOT NULL DEFAULT '[]',
+       computed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+       UNIQUE(job_id, contractor_id)
+     )`,
 
   ];
 
