@@ -158,16 +158,11 @@ function PostJobContent() {
     setAiLoading(true);
     setStepError("");
     try {
-      // Build a transcript-like description from photos context
-      // The parse-job endpoint expects a transcript; we send a description of what was uploaded
-      const transcript = photos.length > 0
-        ? `User uploaded ${photos.length} photo(s)/video(s) of their project. Please analyze and determine the service category, generate a title, description, and urgency level.`
-        : "User needs help with a home service project.";
-
+      // Send photos directly — the API now uses Gemini Vision to analyze them
       const res = await fetch("/api/ai/parse-job", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ transcript, photos: photos.slice(0, 3) }),
+        body: JSON.stringify({ photos: photos.slice(0, 4) }),
       });
 
       if (res.ok) {

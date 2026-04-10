@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthPayload } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rate-limit-api";
+import { aiLogger as logger } from "@/lib/logger";
 
 const CATEGORIES = [
   "plumbing", "electrical", "hvac", "roofing", "painting", "landscaping",
@@ -9,122 +10,177 @@ const CATEGORIES = [
   "locksmith", "security_cameras", "smart_home_install", "computer_repair",
   "it_networking", "photography", "videography", "personal_training",
   "dog_walking", "pet_sitting", "pet_grooming", "event_setup", "welding",
-  "pressure_washing", "window_cleaning", "gutter_cleaning", "general_handyman"
+  "pressure_washing", "window_cleaning", "gutter_cleaning", "general_handyman",
+  "boat_repair", "jetski_repair", "marine_fiberglass", "marine_upholstery",
+  "marine_electrical", "marine_detailing", "marine_trailer",
+  "auto_glass", "commercial_glass", "shower_glass", "mirror_install",
+  "errands", "grocery_shopping", "waiting_in_line", "personal_assistant",
+  "furniture_assembly", "organizing", "event_staffing", "massage_therapy",
+  "nutrition_coaching", "yoga_instruction", "personal_training",
+  "commercial_cleaning", "commercial_electrical", "commercial_plumbing",
+  "commercial_hvac", "irrigation", "fencing", "concrete", "demolition"
 ];
 
-function generateQuestions(category: string, transcript: string): string[] {
-  const lower = transcript.toLowerCase();
+// ── Convert photo URL to Gemini inline data ────────────────────────────────
+type MediaType = "image/jpeg" | "image/png" | "image/webp" | "image/gif";
 
-  const questionMap: Record<string, string[]> = {
-    plumbing: [
-      "Is this a repair or a new installation?",
-      "How many fixtures are affected?",
-      "Do you know where the main water shut-off valve is?",
-      "Is there any visible water damage already?",
-    ],
-    electrical: [
-      "Is this indoor or outdoor electrical work?",
-      "Do you know your panel's current amperage (100A or 200A)?",
-      "Will permits be required for this work?",
-      "Are there any existing wiring issues you're aware of?",
-    ],
-    hvac: [
-      "Is this a repair or full replacement?",
-      "How old is your current system?",
-      "What is the square footage of the area to be cooled/heated?",
-      "When was the last time the system was serviced?",
-    ],
-    roofing: [
-      "How old is your current roof?",
-      "Is this a repair or full replacement?",
-      "What type of roofing material do you currently have?",
-      "How many square feet is the roof approximately?",
-    ],
-    painting: [
-      "Is this interior or exterior painting?",
-      "How many rooms or square feet need to be painted?",
-      "Do you already have paint colors selected?",
-      "Is there any prep work needed (patching, priming)?",
-    ],
-    landscaping: [
-      "How large is the area to be landscaped (sq ft)?",
-      "Is this a one-time job or ongoing maintenance?",
-      "Do you have irrigation/sprinklers already installed?",
-      "Are there any specific plants or styles you have in mind?",
-    ],
-    moving: [
-      "How many rooms are you moving?",
-      "Are there any large/heavy items like pianos or safes?",
-      "Is there elevator access at both locations?",
-      "How far is the move (same city or long distance)?",
-    ],
-    cleaning: [
-      "How many square feet is the space?",
-      "Is this a one-time deep clean or regular maintenance?",
-      "Are there any pets in the home?",
-      "Do you need supplies provided or will you supply them?",
-    ],
-    carpentry: [
-      "Do you have existing materials or do you need them sourced?",
-      "Is this custom built-in work or standard installation?",
-      "Do you have measurements or drawings ready?",
-      "What type of wood or finish are you looking for?",
-    ],
-    flooring: [
-      "How many square feet need to be done?",
-      "What type of flooring material are you looking for?",
-      "Does existing flooring need to be removed first?",
-      "Are there stairs involved?",
-    ],
-    auto_repair: [
-      "What is the year, make, and model of the vehicle?",
-      "Have you had a diagnostic run already?",
-      "Is the vehicle currently drivable?",
-      "Is this covered under any warranty?",
-    ],
-    auto_detailing: [
-      "What size is the vehicle (sedan, SUV, truck)?",
-      "Is this interior, exterior, or full detail?",
-      "Are there any specific stains or issues to address?",
-      "Has the vehicle been detailed recently?",
-    ],
-    pest_control: [
-      "What type of pest are you dealing with?",
-      "How long have you been experiencing this issue?",
-      "Is this a residential or commercial property?",
-      "Have you tried any treatments already?",
-    ],
-    tree_service: [
-      "How many trees need work?",
-      "Approximately how tall are the trees?",
-      "Is there overhead power lines near the trees?",
-      "Do you need the debris hauled away?",
-    ],
-    general_handyman: [
-      "How many separate tasks need to be done?",
-      "Do you have any materials already purchased?",
-      "Is there a specific deadline for this work?",
-      "Are there any areas of the home that are difficult to access?",
-    ],
-  };
-
-  // suppress unused variable warning — lower is available for future use
-  void lower;
-
-  const questions = questionMap[category] || questionMap["general_handyman"];
-  // Return max 3 most relevant questions
-  return questions.slice(0, 3);
+async function photoToInlineData(url: string): Promise<{ mimeType: MediaType; data: string } | null> {
+  try {
+    if (url.startsWith("http")) {
+      const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
+      if (!res.ok) return null;
+      const buf = await res.arrayBuffer();
+      const ct = res.headers.get("content-type") ?? "image/jpeg";
+      const mimeType: MediaType =
+        ct.includes("png") ? "image/png" :
+        ct.includes("webp") ? "image/webp" :
+        ct.includes("gif") ? "image/gif" : "image/jpeg";
+      return { mimeType, data: Buffer.from(buf).toString("base64") };
+    }
+    // Local file path fallback (dev)
+    if (url.startsWith("/")) {
+      const fs = await import("fs");
+      const path = await import("path");
+      const filePath = path.join(process.cwd(), "public", url);
+      if (!fs.existsSync(filePath)) return null;
+      const buffer = fs.readFileSync(filePath);
+      const ext = path.extname(url).toLowerCase();
+      const mimeType: MediaType =
+        ext === ".png" ? "image/png" :
+        ext === ".webp" ? "image/webp" :
+        ext === ".gif" ? "image/gif" : "image/jpeg";
+      return { mimeType, data: buffer.toString("base64") };
+    }
+    return null;
+  } catch {
+    return null;
+  }
 }
 
+// ── Gemini vision analysis ─────────────────────────────────────────────────
+async function analyzeWithVision(
+  apiKey: string,
+  photos: string[],
+  transcript?: string
+): Promise<{ title: string; description: string; category: string; urgency: string; questions: string[] } | null> {
+  // Convert up to 4 photos to inline data
+  const inlineResults = await Promise.all(photos.slice(0, 4).map(photoToInlineData));
+  const imageParts = inlineResults
+    .filter((r): r is { mimeType: MediaType; data: string } => r !== null)
+    .map((r) => ({ inlineData: { mimeType: r.mimeType, data: r.data } }));
+
+  if (imageParts.length === 0 && !transcript?.trim()) return null;
+
+  const contextNote = transcript?.trim() && !transcript.includes("User uploaded")
+    ? `\n\nThe customer also said: "${transcript}"`
+    : "";
+
+  const prompt = `You are an expert job analysis AI for a home services & trades marketplace.
+${imageParts.length > 0 ? "Carefully examine the photo(s) provided." : ""}${contextNote}
+
+Your task:
+1. **Identify** exactly what service or repair is needed based on what you SEE in the image(s)
+2. **Generate** a clear, specific job title (max 60 chars)
+3. **Write** a professional 2-3 sentence description a contractor would find useful
+4. **Classify** into the single best category from this list: ${CATEGORIES.join(", ")}
+5. **Assess** urgency: low / medium / high / emergency
+6. **Generate** 3-4 specific follow-up questions a contractor would need answered to give an accurate bid
+
+Be specific about what you observe — mention visible damage, materials, fixtures, vehicle details, etc.
+If the image is unclear, make your best assessment and note uncertainty in the description.
+
+Respond with ONLY valid JSON (no markdown, no code blocks):
+{"title":"...","description":"...","category":"...","urgency":"...","questions":["...","...","..."]}`;
+
+  const parts = [
+    ...imageParts,
+    { text: prompt },
+  ];
+
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts }],
+        generationConfig: {
+          temperature: 0.2,
+          maxOutputTokens: 600,
+        },
+      }),
+    }
+  );
+
+  if (!res.ok) {
+    logger.error({ status: res.status, body: await res.text() }, "Gemini vision error");
+    return null;
+  }
+
+  const aiData = await res.json() as { candidates: Array<{ content: { parts: Array<{ text: string }> } }> };
+  const text = aiData.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
+    .replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+
+  if (!text) return null;
+
+  const parsed = JSON.parse(text);
+  // Validate category
+  if (!CATEGORIES.includes(parsed.category)) {
+    parsed.category = "general_handyman";
+  }
+  return parsed;
+}
+
+// ── Text-only Gemini analysis (no photos) ──────────────────────────────────
+async function analyzeWithText(
+  apiKey: string,
+  transcript: string
+): Promise<{ title: string; description: string; category: string; urgency: string; questions: string[] } | null> {
+  const prompt = `You are a job classification AI for a home services marketplace. Analyze this description and extract structured job info.
+
+Description: "${transcript}"
+
+Available categories: ${CATEGORIES.join(", ")}
+
+Generate 3-4 specific follow-up questions a contractor would need answered.
+
+Respond with ONLY valid JSON (no markdown, no code blocks):
+{"title":"Short job title (max 60 chars)","description":"Cleaned up description (2-3 sentences)","category":"one of the available categories","urgency":"low or medium or high or emergency","questions":["...","...","..."]}`;
+
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.1, maxOutputTokens: 500 },
+      }),
+    }
+  );
+
+  if (!res.ok) return null;
+
+  const aiData = await res.json() as { candidates: Array<{ content: { parts: Array<{ text: string }> } }> };
+  const text = aiData.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
+    .replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+  if (!text) return null;
+
+  const parsed = JSON.parse(text);
+  if (!CATEGORIES.includes(parsed.category)) parsed.category = "general_handyman";
+  return parsed;
+}
+
+// ── Keyword fallback (no AI available) ─────────────────────────────────────
 function parseWithKeywords(transcript: string): {
   title: string;
   description: string;
   category: string;
   urgency: string;
+  questions: string[];
 } {
   const lower = transcript.toLowerCase();
 
-  // Category detection
   let category = "general_handyman";
   const categoryMap: Record<string, string[]> = {
     plumbing: ["pipe", "leak", "drain", "toilet", "faucet", "water", "plumb", "sink"],
@@ -155,7 +211,6 @@ function parseWithKeywords(transcript: string): {
     }
   }
 
-  // Urgency detection
   let urgency = "medium";
   if (lower.includes("emergency") || lower.includes("asap") || lower.includes("urgent") || lower.includes("right now") || lower.includes("today")) {
     urgency = "emergency";
@@ -165,7 +220,6 @@ function parseWithKeywords(transcript: string): {
     urgency = "low";
   }
 
-  // Generate title (capitalize first 8 words)
   const words = transcript.trim().split(" ").slice(0, 8);
   const title = words.join(" ").replace(/[.!?].*$/, "").trim();
   const capitalizedTitle = title.charAt(0).toUpperCase() + title.slice(1);
@@ -175,9 +229,15 @@ function parseWithKeywords(transcript: string): {
     description: transcript.trim(),
     category,
     urgency,
+    questions: [
+      "Can you describe the current condition in more detail?",
+      "Do you have a preferred timeline for completion?",
+      "Are there any access restrictions at the job site?",
+    ],
   };
 }
 
+// ── POST handler ───────────────────────────────────────────────────────────
 export async function POST(request: NextRequest) {
   const payload = getAuthPayload(request.headers);
   if (!payload) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -185,50 +245,31 @@ export async function POST(request: NextRequest) {
   const rl = checkRateLimit(request, { maxRequests: 20, windowMs: 60 * 60 * 1000, keyPrefix: "ai-parse" });
   if (rl) return rl;
 
-  const { transcript } = await request.json() as { transcript: string };
+  const { transcript, photos } = await request.json() as { transcript?: string; photos?: string[] };
 
-  if (!transcript?.trim()) {
-    return NextResponse.json({ error: "Transcript required" }, { status: 400 });
+  const geminiKey = process.env.GEMINI_API_KEY;
+
+  // ── Strategy 1: Photos available → use Gemini Vision ─────────────────────
+  if (geminiKey && photos?.length) {
+    try {
+      const result = await analyzeWithVision(geminiKey, photos, transcript);
+      if (result) return NextResponse.json(result);
+    } catch (err) {
+      logger.error({ err }, "Vision analysis failed, falling back");
+    }
   }
 
-  // Try Gemini API if key available
-  const geminiKey = process.env.GEMINI_API_KEY;
-  if (geminiKey) {
+  // ── Strategy 2: Text-only with Gemini ────────────────────────────────────
+  if (geminiKey && transcript?.trim()) {
     try {
-      const prompt = `You are a job classification AI for a home services marketplace. Analyze this voice transcript and extract structured job info.
-
-Transcript: "${transcript}"
-
-Available categories: ${CATEGORIES.join(", ")}
-
-Respond with ONLY valid JSON (no markdown, no code blocks):
-{"title":"Short job title (max 60 chars)","description":"Cleaned up description (2-3 sentences)","category":"one of the available categories","urgency":"low or medium or high or emergency"}`;
-
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { temperature: 0.1, maxOutputTokens: 300 },
-          }),
-        }
-      );
-
-      if (res.ok) {
-        const aiData = await res.json() as { candidates: Array<{ content: { parts: Array<{ text: string }> } }> };
-        const text = aiData.candidates[0].content.parts[0].text.trim()
-          .replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-        const parsed = JSON.parse(text) as { title: string; description: string; category: string; urgency: string };
-        return NextResponse.json({ ...parsed, questions: generateQuestions(parsed.category, transcript) });
-      }
+      const result = await analyzeWithText(geminiKey, transcript);
+      if (result) return NextResponse.json(result);
     } catch {
       // Fall through to keyword matching
     }
   }
 
-  // Fallback: keyword-based parsing
-  const parsed = parseWithKeywords(transcript);
-  return NextResponse.json({ ...parsed, questions: generateQuestions(parsed.category, transcript) });
+  // ── Strategy 3: Keyword fallback ─────────────────────────────────────────
+  const fallbackText = transcript?.trim() || "Home service project";
+  return NextResponse.json(parseWithKeywords(fallbackText));
 }
