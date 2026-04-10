@@ -17,7 +17,8 @@ function getS3Client(): S3Client | null {
 }
 
 /**
- * Upload a buffer to S3 if configured, otherwise save locally.
+ * Upload a buffer to storage.
+ * Priority: S3 → Vercel Blob → Local filesystem (dev only)
  * Returns a public URL.
  */
 export async function uploadFile(
@@ -28,6 +29,7 @@ export async function uploadFile(
   const ext = originalName.split(".").pop() || "jpg";
   const key = `uploads/${uuidv4()}.${ext}`;
 
+  // Option 1: AWS S3
   const s3 = getS3Client();
   if (s3 && process.env.AWS_S3_BUCKET) {
     await s3.send(new PutObjectCommand({
@@ -41,7 +43,17 @@ export async function uploadFile(
     return `https://${process.env.AWS_S3_BUCKET}.s3.${region}.amazonaws.com/${key}`;
   }
 
-  // Local fallback
+  // Option 2: Vercel Blob (works on Vercel serverless)
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    const { put } = await import("@vercel/blob");
+    const blob = await put(key, buffer, {
+      access: "public",
+      contentType: mimeType,
+    });
+    return blob.url;
+  }
+
+  // Option 3: Local fallback (dev only — Vercel filesystem is read-only)
   const { writeFile, mkdir } = await import("fs/promises");
   const path = await import("path");
   const uploadDir = path.join(process.cwd(), "public", "uploads");
