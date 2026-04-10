@@ -17,7 +17,6 @@ import { CallButton } from "@/components/calls/CallButton";
 import { ReceiptsPanel } from "@/components/jobs/ReceiptsPanel";
 import { CollaborationPanel } from "@/components/jobs/CollaborationPanel";
 import { ConsumerProtectPanel } from "@/components/jobs/ConsumerProtectPanel";
-import { AiPriceEstimate } from "@/components/jobs/AiPriceEstimate";
 import { CallLog } from "@/components/calls/CallLog";
 import GuaranteeBadge from "@/components/GuaranteeBadge";
 import { CATEGORIES, CATEGORY_GROUPS, URGENCY_LEVELS, PLATFORM_MARKUP } from "@/lib/constants";
@@ -1744,17 +1743,6 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                 description={job.description ?? ""}
                 location={job.location ?? ""}
                 bids={bids.map((b) => ({ price: b.price, status: b.status }))}
-              />
-            )}
-
-            {/* AI Price Estimate — shown to job owner while job is open */}
-            {isOwner && ["posted", "bidding"].includes(job.status) && (
-              <AiPriceEstimate
-                category={job.category}
-                title={job.title}
-                description={job.description ?? ""}
-                location={job.location ?? ""}
-                photos={photos.length > 0 ? photos : undefined}
               />
             )}
 
