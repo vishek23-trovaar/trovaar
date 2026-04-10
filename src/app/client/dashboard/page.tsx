@@ -129,7 +129,7 @@ export default function ClientDashboard() {
   }
 
   const totalPosted = jobs.length;
-  const activeBidsReceived = jobs.reduce((sum, j) => sum + j.bid_count, 0);
+  const activeBidsReceived = jobs.reduce((sum, j) => sum + (Number(j.bid_count) || 0), 0);
   const completed = jobs.filter((j) => j.status === "completed").length;
   const inProgress = jobs.filter((j) => ["accepted", "in_progress"].includes(j.status)).length;
 

@@ -57,9 +57,37 @@ export default function SubmitBidPage({ params }: { params: Promise<{ id: string
     { name: "", status: "own" },
   ]);
 
+  // Portfolio gate — block bid form if fewer than 3 photos
+  const [portfolioCount, setPortfolioCount] = useState<number | null>(null);
+  const [portfolioLoading, setPortfolioLoading] = useState(true);
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const today = new Date().toISOString().split("T")[0];
+
+  // Check portfolio count for the logged-in contractor
+  useEffect(() => {
+    if (!user || user.role !== "contractor") {
+      setPortfolioLoading(false);
+      return;
+    }
+    (async () => {
+      try {
+        const res = await fetch(`/api/contractors/${user.id}/portfolio`);
+        if (res.ok) {
+          const data = await res.json();
+          const items = Array.isArray(data.portfolio) ? data.portfolio : [];
+          setPortfolioCount(items.length);
+        } else {
+          setPortfolioCount(0);
+        }
+      } catch {
+        setPortfolioCount(0);
+      } finally {
+        setPortfolioLoading(false);
+      }
+    })();
+  }, [user]);
 
   useEffect(() => {
     fetch(`/api/jobs/${id}`)
@@ -229,6 +257,32 @@ export default function SubmitBidPage({ params }: { params: Promise<{ id: string
           <p className="text-lg font-semibold text-secondary mb-2">Cannot Bid on Your Own Job</p>
           <p className="text-sm text-muted mb-4">You cannot submit a bid on a job you created.</p>
           <Button onClick={() => router.push(`/jobs/${id}`)}>Back to Job</Button>
+        </Card>
+      </div>
+    );
+  }
+
+  // Portfolio gate: require 3+ portfolio photos before bidding
+  if (!portfolioLoading && portfolioCount !== null && portfolioCount < 3) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-8 text-center">
+        <Card className="p-8">
+          <div className="text-4xl mb-4">📸</div>
+          <p className="text-lg font-semibold text-secondary mb-2">Portfolio Required</p>
+          <p className="text-sm text-muted mb-2">
+            You need at least <strong>3 portfolio photos</strong> before you can bid on jobs.
+          </p>
+          <p className="text-sm text-muted mb-6">
+            You currently have <strong>{portfolioCount}</strong> photo{portfolioCount !== 1 ? "s" : ""}. Upload examples of your past work to build trust with clients.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button onClick={() => router.push("/contractor/profile?tab=portfolio")}>
+              📷 Add Portfolio Photos
+            </Button>
+            <Button variant="outline" onClick={() => router.push(`/jobs/${id}`)}>
+              Back to Job
+            </Button>
+          </div>
         </Card>
       </div>
     );

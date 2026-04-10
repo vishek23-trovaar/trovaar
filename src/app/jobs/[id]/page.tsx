@@ -1887,7 +1887,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
             )}
 
             {/* Completion confirmation — consumer side */}
-            {isOwner && (job as any).contractor_confirmed && !((job as any).consumer_confirmed) && job.status !== "completed" && (
+            {isOwner && !!(job as any).contractor_confirmed && !((job as any).consumer_confirmed) && job.status !== "completed" && (
               <Card className="p-6 border-green-200 bg-green-50">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xl">🎉</span>

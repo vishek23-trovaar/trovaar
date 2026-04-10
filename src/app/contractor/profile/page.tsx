@@ -264,7 +264,7 @@ export default function ContractorPerformancePage() {
         }
         if (reviewsRes.ok) {
           const data = await reviewsRes.json();
-          setReviews(data.reviews ?? []);
+          setReviews(Array.isArray(data.reviews) ? data.reviews : []);
         }
       } catch (err) {
         console.error("Failed to fetch contractor profile:", err);
@@ -591,7 +591,7 @@ export default function ContractorPerformancePage() {
 
   const ratingDist = [5, 4, 3, 2, 1].map((star) => ({
     star,
-    count: reviews.filter((r) => r.rating === star).length,
+    count: (Array.isArray(reviews) ? reviews : []).filter((r) => r.rating === star).length,
   }));
 
   const isSuspended = contractorStats?.is_suspended === 1;

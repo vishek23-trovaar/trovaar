@@ -10,7 +10,7 @@ export async function GET(
   const db = getDb();
   await initializeDatabase();
 
-  const reviews = db.prepare(`
+  const reviews = await db.prepare(`
     SELECT r.id, r.job_id, r.rating, r.comment, r.photos, r.created_at,
       substr(u.name, 1, instr(u.name || ' ', ' ') - 1) as reviewer_first_name
     FROM reviews r
@@ -19,5 +19,5 @@ export async function GET(
     ORDER BY r.created_at DESC
   `).all(id);
 
-  return NextResponse.json({ reviews });
+  return NextResponse.json({ reviews: Array.isArray(reviews) ? reviews : [] });
 }
