@@ -16,50 +16,33 @@ import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/api";
 import { Job } from "@/lib/types";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getUrgencyColor, getCategoryIcon } from '../../lib/theme';
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-const COLORS = {
-  primary: "#1e40af",
-  primaryLight: "#3b82f6",
-  primaryBg: "#eff6ff",
-  secondary: "#0f172a",
-  muted: "#64748b",
-  mutedLight: "#94a3b8",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  white: "#ffffff",
-  success: "#059669",
-  successBg: "#f0fdf4",
-  warning: "#d97706",
-  warningBg: "#fffbeb",
-  danger: "#dc2626",
-  dangerBg: "#fef2f2",
-  purple: "#7c3aed",
-  purpleBg: "#f5f3ff",
+const URGENCY_LABELS: Record<string, string> = {
+  low: "Low",
+  medium: "Medium",
+  high: "High",
+  emergency: "Urgent",
 };
 
-const URGENCY_COLORS: Record<string, { bg: string; text: string; label: string }> = {
-  low: { bg: "#f1f5f9", text: "#64748b", label: "Low" },
-  medium: { bg: "#eff6ff", text: "#2563eb", label: "Medium" },
-  high: { bg: "#fffbeb", text: "#d97706", label: "High" },
-  emergency: { bg: "#fef2f2", text: "#dc2626", label: "Urgent" },
+const STATUS_ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
+  posted: "megaphone-outline",
+  bidding: "pricetag-outline",
+  accepted: "checkmark-circle-outline",
+  in_progress: "hammer-outline",
+  completed: "trophy-outline",
+  cancelled: "close-circle-outline",
 };
 
-const STATUS_CONFIG: Record<string, { bg: string; text: string; label: string; icon: keyof typeof Ionicons.glyphMap }> = {
-  posted: { bg: "#eff6ff", text: "#2563eb", label: "Posted", icon: "megaphone-outline" },
-  bidding: { bg: "#f5f3ff", text: "#7c3aed", label: "Bidding", icon: "pricetag-outline" },
-  accepted: { bg: "#f0fdf4", text: "#059669", label: "Accepted", icon: "checkmark-circle-outline" },
-  in_progress: { bg: "#fffbeb", text: "#d97706", label: "In Progress", icon: "hammer-outline" },
-  completed: { bg: "#f0fdf4", text: "#16a34a", label: "Completed", icon: "trophy-outline" },
-  cancelled: { bg: "#fef2f2", text: "#dc2626", label: "Cancelled", icon: "close-circle-outline" },
-};
-
-const CATEGORY_EMOJIS: Record<string, string> = {
-  plumbing: "\u{1F527}", electrical: "\u26A1", hvac: "\u{1F321}\uFE0F",
-  roofing: "\u{1F3E0}", landscaping: "\u{1F33F}", painting: "\u{1F3A8}",
-  cleaning: "\u{1F9F9}", moving: "\u{1F4E6}", auto_repair: "\u{1F697}",
-  general_handyman: "\u{1F528}", handyman: "\u{1F528}", other: "\u2795",
+const STATUS_LABELS: Record<string, string> = {
+  posted: "Posted",
+  bidding: "Bidding",
+  accepted: "Accepted",
+  in_progress: "In Progress",
+  completed: "Completed",
+  cancelled: "Cancelled",
 };
 
 function getGreeting(): string {
@@ -83,8 +66,7 @@ function timeAgo(dateStr: string): string {
 }
 
 function getCategoryEmoji(category: string): string {
-  const key = category?.toLowerCase().replace(/[\s-]/g, "_") || "other";
-  return CATEGORY_EMOJIS[key] || "\u{1F4CB}";
+  return getCategoryIcon(category?.replace(/_/g, " ") || "");
 }
 
 // Skeleton pulse
@@ -102,7 +84,7 @@ function SkeletonPulse({ width, height, borderRadius = 8, style }: {
   }, [animValue]);
   return (
     <Animated.View
-      style={[{ width: width as number, height, borderRadius, backgroundColor: "#e2e8f0", opacity: animValue }, style]}
+      style={[{ width: width as number, height, borderRadius, backgroundColor: colors.border, opacity: animValue }, style]}
     />
   );
 }
@@ -168,7 +150,7 @@ export default function ClientDashboard() {
       );
       setJobs((data.jobs || []).filter((j) => j.consumer_id === user?.id));
     } catch (err) {
-      console.error("[ClientDashboard] error:", err);
+      if (__DEV__) console.error("[ClientDashboard] error:", err);
     }
     setLoading(false);
   }, [user?.id]);
@@ -207,7 +189,7 @@ export default function ClientDashboard() {
         data={activeJobs}
         keyExtractor={(j) => j.id}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.primary} colors={[COLORS.primary]} />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} colors={[colors.primary]} />
         }
         ListHeaderComponent={
           <View>
@@ -224,24 +206,24 @@ export default function ClientDashboard() {
                   <Text style={styles.nameText}>{firstName}</Text>
                 </View>
                 <TouchableOpacity style={styles.notifBtn} onPress={() => router.push("/(client)/messages")}>
-                  <Ionicons name="notifications-outline" size={22} color={COLORS.secondary} />
+                  <Ionicons name="notifications-outline" size={22} color={colors.text} />
                 </TouchableOpacity>
               </View>
 
               {/* Mini Stats */}
               <View style={styles.miniStatsRow}>
                 <View style={styles.miniStat}>
-                  <Text style={[styles.miniStatValue, { color: COLORS.primaryLight }]}>{biddingJobs.length}</Text>
+                  <Text style={[styles.miniStatValue, { color: colors.primaryLight }]}>{biddingJobs.length}</Text>
                   <Text style={styles.miniStatLabel}>Awaiting Bids</Text>
                 </View>
                 <View style={styles.miniStatDivider} />
                 <View style={styles.miniStat}>
-                  <Text style={[styles.miniStatValue, { color: COLORS.warning }]}>{inProgressJobs.length}</Text>
+                  <Text style={[styles.miniStatValue, { color: colors.warning }]}>{inProgressJobs.length}</Text>
                   <Text style={styles.miniStatLabel}>In Progress</Text>
                 </View>
                 <View style={styles.miniStatDivider} />
                 <View style={styles.miniStat}>
-                  <Text style={[styles.miniStatValue, { color: COLORS.success }]}>{completedJobs.length}</Text>
+                  <Text style={[styles.miniStatValue, { color: colors.success }]}>{completedJobs.length}</Text>
                   <Text style={styles.miniStatLabel}>Completed</Text>
                 </View>
               </View>
@@ -252,29 +234,29 @@ export default function ClientDashboard() {
               <QuickAction
                 icon="add-circle-outline"
                 label="Post Job"
-                color={COLORS.primary}
-                bgColor={COLORS.primaryBg}
+                color={colors.primary}
+                bgColor={"#DBEAFE"}
                 onPress={() => router.push("/(client)/post-job")}
               />
               <QuickAction
                 icon="chatbubbles-outline"
                 label="Messages"
-                color={COLORS.purple}
-                bgColor={COLORS.purpleBg}
+                color={"#7c3aed"}
+                bgColor={"#f5f3ff"}
                 onPress={() => router.push("/(client)/messages")}
               />
               <QuickAction
                 icon="person-outline"
                 label="Profile"
-                color={COLORS.success}
-                bgColor={COLORS.successBg}
+                color={colors.success}
+                bgColor={"#D1FAE5"}
                 onPress={() => router.push("/(client)/profile")}
               />
               <QuickAction
                 icon="help-circle-outline"
                 label="Support"
-                color={COLORS.warning}
-                bgColor={COLORS.warningBg}
+                color={colors.warning}
+                bgColor={"#FEF3C7"}
                 onPress={() => {}}
               />
             </View>
@@ -299,13 +281,13 @@ export default function ClientDashboard() {
               activeOpacity={0.8}
             >
               <View style={styles.referralLeft}>
-                <Ionicons name="gift-outline" size={22} color={COLORS.primary} />
+                <Ionicons name="gift-outline" size={22} color={colors.primary} />
                 <View>
                   <Text style={styles.referralTitle}>Invite a Friend, Earn $25</Text>
                   <Text style={styles.referralSub}>Share your referral code and both of you save</Text>
                 </View>
               </View>
-              <Ionicons name="chevron-forward" size={18} color={COLORS.mutedLight} />
+              <Ionicons name="chevron-forward" size={18} color={colors.muted} />
             </TouchableOpacity>
 
             {/* ── Active Jobs Header ── */}
@@ -318,8 +300,11 @@ export default function ClientDashboard() {
           </View>
         }
         renderItem={({ item }) => {
-          const status = STATUS_CONFIG[item.status] || STATUS_CONFIG.posted;
-          const urgency = URGENCY_COLORS[item.urgency] || URGENCY_COLORS.medium;
+          const statusColor = getStatusColor(item.status);
+          const urgencyColor = getUrgencyColor(item.urgency);
+          const statusIcon = STATUS_ICONS[item.status] || STATUS_ICONS.posted;
+          const statusLabel = STATUS_LABELS[item.status] || STATUS_LABELS.posted;
+          const urgencyLabel = URGENCY_LABELS[item.urgency] || "Medium";
 
           return (
             <TouchableOpacity
@@ -333,9 +318,9 @@ export default function ClientDashboard() {
                   <Text style={styles.cardEmoji}>{getCategoryEmoji(item.category)}</Text>
                   <Text style={styles.cardCategory}>{item.category?.replace(/_/g, " ")}</Text>
                 </View>
-                <View style={[styles.statusBadge, { backgroundColor: status.bg }]}>
-                  <Ionicons name={status.icon} size={12} color={status.text} />
-                  <Text style={[styles.statusText, { color: status.text }]}>{status.label}</Text>
+                <View style={[styles.statusBadge, { backgroundColor: statusColor.bg }]}>
+                  <Ionicons name={statusIcon} size={12} color={statusColor.text} />
+                  <Text style={[styles.statusText, { color: statusColor.text }]}>{statusLabel}</Text>
                 </View>
               </View>
 
@@ -349,13 +334,13 @@ export default function ClientDashboard() {
 
               {/* Card footer */}
               <View style={styles.cardBottom}>
-                <View style={[styles.urgencyPill, { backgroundColor: urgency.bg }]}>
-                  <View style={[styles.urgencyDot, { backgroundColor: urgency.text }]} />
-                  <Text style={[styles.urgencyText, { color: urgency.text }]}>{urgency.label}</Text>
+                <View style={[styles.urgencyPill, { backgroundColor: urgencyColor.bg }]}>
+                  <View style={[styles.urgencyDot, { backgroundColor: urgencyColor.text }]} />
+                  <Text style={[styles.urgencyText, { color: urgencyColor.text }]}>{urgencyLabel}</Text>
                 </View>
 
                 <View style={styles.metaItem}>
-                  <Ionicons name="people-outline" size={13} color={COLORS.mutedLight} />
+                  <Ionicons name="people-outline" size={13} color={colors.muted} />
                   <Text style={styles.metaText}>{Number(item.bid_count) || 0} bids</Text>
                 </View>
 
@@ -372,7 +357,7 @@ export default function ClientDashboard() {
               <View style={styles.emptyCircle1} />
               <View style={styles.emptyCircle2} />
               <View style={styles.emptyIconWrap}>
-                <Ionicons name="briefcase-outline" size={40} color={COLORS.primary} />
+                <Ionicons name="briefcase-outline" size={40} color={colors.primary} />
               </View>
             </View>
             <Text style={styles.emptyTitle}>No jobs yet</Text>
@@ -384,7 +369,7 @@ export default function ClientDashboard() {
               onPress={() => router.push("/(client)/post-job")}
               activeOpacity={0.85}
             >
-              <Ionicons name="add-outline" size={22} color={COLORS.white} />
+              <Ionicons name="add-outline" size={22} color={colors.white} />
               <Text style={styles.emptyBtnText}>Post Your First Job</Text>
             </TouchableOpacity>
           </View>
@@ -400,7 +385,7 @@ export default function ClientDashboard() {
           onPress={() => router.push("/(client)/post-job")}
           activeOpacity={0.85}
         >
-          <Ionicons name="add" size={28} color={COLORS.white} />
+          <Ionicons name="add" size={28} color={colors.white} />
         </TouchableOpacity>
       )}
     </View>
@@ -408,19 +393,17 @@ export default function ClientDashboard() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: COLORS.surface },
+  screen: { flex: 1, backgroundColor: colors.surface },
 
   // Hero
   heroCard: {
-    backgroundColor: COLORS.white,
-    borderRadius: 20,
-    padding: 20,
-    marginBottom: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 12,
-    elevation: 3,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
+    padding: spacing['2xl'],
+    marginBottom: spacing.xl,
+    borderWidth: 1,
+    borderColor: colors.border,
+    ...shadows.md,
   },
   heroTop: {
     flexDirection: "row",
@@ -431,18 +414,18 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     justifyContent: "center",
     alignItems: "center",
   },
-  avatarLetter: { fontSize: 22, fontWeight: "700", color: COLORS.white },
-  greetingText: { fontSize: 14, color: COLORS.muted, fontWeight: "500" },
-  nameText: { fontSize: 24, fontWeight: "800", color: COLORS.secondary, marginTop: 2 },
+  avatarLetter: { fontSize: 22, fontWeight: "700", color: colors.white },
+  greetingText: { fontSize: 14, color: colors.muted, fontWeight: "500" },
+  nameText: { fontSize: 24, fontWeight: "800", color: colors.text, marginTop: 2 },
   notifBtn: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -451,15 +434,15 @@ const styles = StyleSheet.create({
   miniStatsRow: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     borderRadius: 14,
     paddingVertical: 14,
     paddingHorizontal: 8,
   },
   miniStat: { flex: 1, alignItems: "center" },
   miniStatValue: { fontSize: 22, fontWeight: "800" },
-  miniStatLabel: { fontSize: 11, color: COLORS.muted, marginTop: 2, fontWeight: "500" },
-  miniStatDivider: { width: 1, height: 30, backgroundColor: COLORS.border },
+  miniStatLabel: { fontSize: 11, color: colors.muted, marginTop: 2, fontWeight: "500" },
+  miniStatDivider: { width: 1, height: 30, backgroundColor: colors.border },
 
   // Quick Actions
   quickActionsRow: {
@@ -476,7 +459,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  quickActionLabel: { fontSize: 11, fontWeight: "600", color: COLORS.muted },
+  quickActionLabel: { fontSize: 11, fontWeight: "600", color: colors.muted },
 
   // Section
   sectionHeader: {
@@ -485,12 +468,12 @@ const styles = StyleSheet.create({
     marginBottom: 14,
     gap: 8,
   },
-  sectionTitle: { fontSize: 18, fontWeight: "700", color: COLORS.secondary },
+  sectionTitle: { fontSize: 18, fontWeight: "700", color: colors.text },
   sectionCount: {
     fontSize: 12,
     fontWeight: "700",
-    color: COLORS.primary,
-    backgroundColor: COLORS.primaryBg,
+    color: colors.primary,
+    backgroundColor: "#DBEAFE",
     paddingHorizontal: 10,
     paddingVertical: 3,
     borderRadius: 10,
@@ -499,15 +482,13 @@ const styles = StyleSheet.create({
 
   // Job Card
   card: {
-    backgroundColor: COLORS.white,
-    borderRadius: 18,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
     padding: 18,
-    marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 3,
+    marginBottom: spacing.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+    ...shadows.sm,
   },
   cardTop: {
     flexDirection: "row",
@@ -519,7 +500,7 @@ const styles = StyleSheet.create({
   cardEmoji: { fontSize: 16 },
   cardCategory: {
     fontSize: 12,
-    color: COLORS.muted,
+    color: colors.muted,
     fontWeight: "600",
     textTransform: "capitalize",
   },
@@ -535,13 +516,13 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 17,
     fontWeight: "700",
-    color: COLORS.secondary,
+    color: colors.text,
     marginBottom: 4,
     lineHeight: 23,
   },
   cardDesc: {
     fontSize: 13,
-    color: COLORS.muted,
+    color: colors.muted,
     lineHeight: 19,
     marginBottom: 12,
   },
@@ -552,7 +533,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: COLORS.border,
+    borderTopColor: colors.border,
   },
   urgencyPill: {
     flexDirection: "row",
@@ -565,8 +546,8 @@ const styles = StyleSheet.create({
   urgencyDot: { width: 6, height: 6, borderRadius: 3 },
   urgencyText: { fontSize: 11, fontWeight: "600" },
   metaItem: { flexDirection: "row", alignItems: "center", gap: 4 },
-  metaText: { fontSize: 12, color: COLORS.mutedLight },
-  timeText: { fontSize: 11, color: COLORS.mutedLight },
+  metaText: { fontSize: 12, color: colors.muted },
+  timeText: { fontSize: 11, color: colors.muted },
 
   // Empty State
   empty: { alignItems: "center", paddingVertical: 48, paddingHorizontal: 32 },
@@ -582,25 +563,25 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: COLORS.primaryBg,
+    backgroundColor: "#DBEAFE",
   },
   emptyCircle2: {
     position: "absolute",
     width: 90,
     height: 90,
     borderRadius: 45,
-    backgroundColor: COLORS.primary + "15",
+    backgroundColor: colors.primary + "15",
   },
   emptyIconWrap: { zIndex: 1 },
   emptyTitle: {
     fontSize: 22,
     fontWeight: "800",
-    color: COLORS.secondary,
+    color: colors.text,
     marginBottom: 8,
   },
   emptySub: {
     fontSize: 15,
-    color: COLORS.muted,
+    color: colors.muted,
     textAlign: "center",
     lineHeight: 22,
     marginBottom: 28,
@@ -608,18 +589,14 @@ const styles = StyleSheet.create({
   emptyBtn: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingHorizontal: 28,
     paddingVertical: 16,
-    borderRadius: 16,
+    borderRadius: radius.md,
     gap: 8,
-    shadowColor: COLORS.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
+    ...shadows.md,
   },
-  emptyBtnText: { color: COLORS.white, fontSize: 16, fontWeight: "700" },
+  emptyBtnText: { color: colors.white, fontSize: 16, fontWeight: "700" },
 
   // Surge Banner
   surgeBanner: {
@@ -653,7 +630,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.white,
     borderRadius: 14,
     padding: 14,
     marginBottom: 16,
@@ -669,11 +646,11 @@ const styles = StyleSheet.create({
   referralTitle: {
     fontSize: 14,
     fontWeight: "700",
-    color: COLORS.secondary,
+    color: colors.text,
   },
   referralSub: {
     fontSize: 12,
-    color: COLORS.muted,
+    color: colors.muted,
     marginTop: 1,
   },
 
@@ -685,10 +662,10 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: COLORS.primary,
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.35,
     shadowRadius: 12,

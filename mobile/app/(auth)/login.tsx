@@ -15,6 +15,7 @@ import { useAuth } from "@/lib/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { Button, Input } from "@/components/ui";
+import { colors, typography, spacing, radius, shadows } from "../../lib/theme";
 
 export default function LoginScreen() {
   const { login } = useAuth();
@@ -45,10 +46,6 @@ export default function LoginScreen() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSocial = (provider: string) => {
-    Alert.alert("Coming Soon", `${provider} login will be available soon.`);
   };
 
   return (
@@ -117,31 +114,6 @@ export default function LoginScreen() {
             />
           </View>
 
-          {/* Divider */}
-          <View style={styles.divider}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>or continue with</Text>
-            <View style={styles.dividerLine} />
-          </View>
-
-          {/* Social Buttons */}
-          <View style={styles.socialRow}>
-            <Pressable
-              style={styles.socialBtn}
-              onPress={() => handleSocial("Google")}
-            >
-              <Ionicons name="logo-google" size={22} color="#0f172a" />
-              <Text style={styles.socialText}>Google</Text>
-            </Pressable>
-            <Pressable
-              style={styles.socialBtn}
-              onPress={() => handleSocial("Apple")}
-            >
-              <Ionicons name="logo-apple" size={22} color="#0f172a" />
-              <Text style={styles.socialText}>Apple</Text>
-            </Pressable>
-          </View>
-
           {/* Sign Up Link */}
           <View style={styles.footer}>
             <Text style={styles.footerText}>Don't have an account? </Text>
@@ -158,27 +130,27 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.white,
   },
   container: {
     flexGrow: 1,
     justifyContent: "center",
-    paddingHorizontal: 24,
-    paddingVertical: 32,
+    paddingHorizontal: spacing["3xl"],
+    paddingVertical: spacing["4xl"],
   },
   logoBox: {
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 28,
+    marginBottom: spacing["3xl"],
   },
   logoIcon: {
     width: 64,
     height: 64,
-    borderRadius: 18,
-    backgroundColor: "#1e3a8a",
+    borderRadius: radius.xl,
+    backgroundColor: colors.secondary,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#1e3a8a",
+    shadowColor: colors.secondary,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.3,
     shadowRadius: 12,
@@ -187,78 +159,41 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: "800",
-    color: "#0f172a",
+    color: colors.secondary,
     textAlign: "center",
     letterSpacing: -0.5,
   },
   subtitle: {
-    fontSize: 15,
-    color: "#64748b",
+    ...typography.body,
+    color: colors.muted,
     textAlign: "center",
-    marginTop: 8,
-    marginBottom: 36,
+    marginTop: spacing.md,
+    marginBottom: spacing["4xl"],
   },
   form: {
-    gap: 8,
+    gap: spacing.md,
   },
   forgotRow: {
     alignSelf: "flex-end",
-    marginBottom: 8,
+    marginBottom: spacing.md,
   },
   forgotText: {
     fontSize: 14,
-    color: "#1e40af",
+    color: colors.primary,
     fontWeight: "600",
-  },
-  divider: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 28,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: "#e2e8f0",
-  },
-  dividerText: {
-    marginHorizontal: 16,
-    fontSize: 13,
-    color: "#94a3b8",
-    fontWeight: "500",
-  },
-  socialRow: {
-    flexDirection: "row",
-    gap: 12,
-  },
-  socialBtn: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 14,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: "#e2e8f0",
-    backgroundColor: "#ffffff",
-    gap: 8,
-  },
-  socialText: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: "#0f172a",
   },
   footer: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: 32,
+    marginTop: spacing["4xl"],
   },
   footerText: {
     fontSize: 14,
-    color: "#64748b",
+    color: colors.muted,
   },
   footerLink: {
     fontSize: 14,
-    color: "#1e40af",
+    color: colors.primary,
     fontWeight: "700",
   },
 });

@@ -16,22 +16,23 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "@/lib/auth";
-import { api } from "@/lib/api";
+import { api, getToken, API_URL } from "@/lib/api";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from "../../lib/theme";
 
 const COLORS = {
-  primary: "#1e40af",
-  primaryLight: "#3b82f6",
-  secondary: "#0f172a",
-  muted: "#64748b",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  success: "#059669",
+  primary: colors.primary,
+  primaryLight: colors.primaryLight,
+  secondary: colors.text,
+  muted: colors.muted,
+  surface: colors.surface,
+  border: colors.border,
+  success: colors.success,
   successLight: "#ecfdf5",
-  danger: "#dc2626",
-  white: "#ffffff",
-  pro: "#059669",
+  danger: colors.danger,
+  white: colors.white,
+  pro: colors.success,
   proBg: "#ecfdf5",
-  warning: "#d97706",
+  warning: colors.warning,
   warningBg: "#fffbeb",
 };
 
@@ -437,6 +438,51 @@ export default function ContractorProfile() {
 
   const comingSoon = (feature: string) => () =>
     Alert.alert(feature, "Coming soon");
+
+  const [uploading, setUploading] = useState<string | null>(null);
+
+  const pickAndUploadDocument = async (endpoint: string, docType: string, fieldName: string = 'file') => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Permission needed", "Please allow access to your photo library.");
+      return;
+    }
+    setUploading(docType);
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        quality: 0.8,
+      });
+      if (result.canceled) {
+        setUploading(null);
+        return;
+      }
+      const uri = result.assets[0].uri;
+      const token = await getToken();
+      const formData = new FormData();
+      formData.append(fieldName, {
+        uri,
+        type: 'image/jpeg',
+        name: 'upload.jpg',
+      } as any);
+      if (endpoint.includes('/documents')) {
+        formData.append('type', docType);
+      }
+      const res = await fetch(`${API_URL}${endpoint}`, {
+        method: 'POST',
+        headers: {
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        },
+        body: formData,
+      });
+      if (!res.ok) throw new Error(`Upload failed (${res.status})`);
+      Alert.alert("Success", `${docType.replace(/_/g, ' ')} uploaded successfully.`);
+      refreshUser();
+    } catch (err: unknown) {
+      Alert.alert("Upload Error", (err as Error).message || "Upload failed. Please try again.");
+    }
+    setUploading(null);
+  };
 
   const handleDeleteAccount = () => {
     Alert.alert(
@@ -1040,8 +1086,9 @@ export default function ContractorProfile() {
         <View style={styles.settingsCard}>
           <TouchableOpacity
             style={[styles.settingsRow, styles.settingsRowBorder]}
-            onPress={comingSoon("Upload coming soon")}
+            onPress={() => pickAndUploadDocument('/api/contractors/documents', 'background_check')}
             activeOpacity={0.6}
+            disabled={uploading === 'background_check'}
           >
             <View style={styles.settingsRowLeft}>
               <View style={styles.settingsIconWrap}>
@@ -1054,18 +1101,25 @@ export default function ContractorProfile() {
               <Text style={styles.settingsLabel}>ID Verification</Text>
             </View>
             <View style={styles.verificationRight}>
-              <VerificationBadge status="Not Submitted" />
-              <Ionicons
-                name="chevron-forward"
-                size={18}
-                color={COLORS.border}
-              />
+              {uploading === 'background_check' ? (
+                <ActivityIndicator size="small" color={COLORS.primary} />
+              ) : (
+                <>
+                  <VerificationBadge status="Not Submitted" />
+                  <Ionicons
+                    name="cloud-upload-outline"
+                    size={18}
+                    color={COLORS.primaryLight}
+                  />
+                </>
+              )}
             </View>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.settingsRow, styles.settingsRowBorder]}
-            onPress={comingSoon("Upload coming soon")}
+            onPress={() => pickAndUploadDocument('/api/contractors/documents', 'insurance')}
             activeOpacity={0.6}
+            disabled={uploading === 'insurance'}
           >
             <View style={styles.settingsRowLeft}>
               <View style={styles.settingsIconWrap}>
@@ -1078,18 +1132,25 @@ export default function ContractorProfile() {
               <Text style={styles.settingsLabel}>Insurance</Text>
             </View>
             <View style={styles.verificationRight}>
-              <VerificationBadge status="Pending" />
-              <Ionicons
-                name="chevron-forward"
-                size={18}
-                color={COLORS.border}
-              />
+              {uploading === 'insurance' ? (
+                <ActivityIndicator size="small" color={COLORS.primary} />
+              ) : (
+                <>
+                  <VerificationBadge status="Pending" />
+                  <Ionicons
+                    name="cloud-upload-outline"
+                    size={18}
+                    color={COLORS.primaryLight}
+                  />
+                </>
+              )}
             </View>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.settingsRow}
-            onPress={comingSoon("Upload coming soon")}
+            onPress={() => pickAndUploadDocument('/api/contractors/documents', 'license')}
             activeOpacity={0.6}
+            disabled={uploading === 'license'}
           >
             <View style={styles.settingsRowLeft}>
               <View style={styles.settingsIconWrap}>
@@ -1102,12 +1163,18 @@ export default function ContractorProfile() {
               <Text style={styles.settingsLabel}>License</Text>
             </View>
             <View style={styles.verificationRight}>
-              <VerificationBadge status="Verified" />
-              <Ionicons
-                name="chevron-forward"
-                size={18}
-                color={COLORS.border}
-              />
+              {uploading === 'license' ? (
+                <ActivityIndicator size="small" color={COLORS.primary} />
+              ) : (
+                <>
+                  <VerificationBadge status="Verified" />
+                  <Ionicons
+                    name="cloud-upload-outline"
+                    size={18}
+                    color={COLORS.primaryLight}
+                  />
+                </>
+              )}
             </View>
           </TouchableOpacity>
         </View>
@@ -1380,20 +1447,14 @@ const styles = StyleSheet.create({
 
   // Stats Card
   statsCard: {
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.white,
     marginHorizontal: 16,
     marginTop: 16,
-    borderRadius: 16,
+    borderRadius: radius.lg,
     padding: 20,
-    ...Platform.select({
-      ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
-        shadowRadius: 8,
-      },
-      android: { elevation: 3 },
-    }),
+    borderWidth: 1,
+    borderColor: colors.border,
+    ...shadows.md,
   },
   statsRow: {
     flexDirection: "row",
@@ -1459,12 +1520,12 @@ const styles = StyleSheet.create({
   },
   certCard: {
     flexDirection: "row",
-    backgroundColor: COLORS.white,
-    borderRadius: 14,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
     padding: 16,
     gap: 12,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
   },
   certIconWrap: {
     width: 40,
@@ -1602,19 +1663,13 @@ const styles = StyleSheet.create({
 
   // Settings Card
   settingsCard: {
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.white,
     marginHorizontal: 16,
-    borderRadius: 12,
+    borderRadius: radius.lg,
     overflow: "hidden",
-    ...Platform.select({
-      ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.05,
-        shadowRadius: 4,
-      },
-      android: { elevation: 1 },
-    }),
+    borderWidth: 1,
+    borderColor: colors.border,
+    ...shadows.sm,
   },
   settingsRow: {
     flexDirection: "row",

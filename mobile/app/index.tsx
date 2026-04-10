@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Animated, Image } from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/lib/auth";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { colors, typography, spacing, radius, shadows } from "../lib/theme";
 
 export default function Index() {
   const { user, loading } = useAuth();
@@ -93,7 +94,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.secondary,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -104,16 +105,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 14,
-    marginBottom: 16,
+    marginBottom: spacing.xl,
   },
   iconBadge: {
     width: 56,
     height: 56,
-    borderRadius: 16,
-    backgroundColor: "#1e3a8a",
+    borderRadius: radius.xl,
+    backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#1e3a8a",
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.35,
     shadowRadius: 12,
@@ -126,12 +127,12 @@ const styles = StyleSheet.create({
   brand: {
     fontSize: 44,
     fontWeight: "900",
-    color: "#0f172a",
+    color: colors.white,
     letterSpacing: -1.5,
   },
   tagline: {
-    fontSize: 15,
-    color: "#94a3b8",
+    ...typography.body,
+    color: colors.muted,
     fontWeight: "500",
     letterSpacing: 0.3,
   },
@@ -141,16 +142,16 @@ const styles = StyleSheet.create({
   },
   dots: {
     flexDirection: "row",
-    gap: 8,
+    gap: spacing.md,
   },
   dot: {
     width: 8,
     height: 8,
-    borderRadius: 4,
-    backgroundColor: "#e5e7eb",
+    borderRadius: radius.full,
+    backgroundColor: "rgba(255,255,255,0.2)",
   },
   dotActive: {
     width: 24,
-    backgroundColor: "#2563eb",
+    backgroundColor: colors.primary,
   },
 });

@@ -13,6 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
 import { Button, Input } from "@/components/ui";
+import { colors, typography, spacing, radius, shadows } from "../../lib/theme";
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
@@ -63,12 +64,12 @@ export default function ForgotPasswordScreen() {
         >
           {/* Back button */}
           <Pressable style={styles.backBtn} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={22} color="#1e293b" />
+            <Ionicons name="arrow-back" size={22} color={colors.secondary} />
           </Pressable>
 
           {/* Icon */}
           <View style={styles.iconBox}>
-            <Ionicons name="lock-open-outline" size={36} color="#2563eb" />
+            <Ionicons name="lock-open-outline" size={36} color={colors.primary} />
           </View>
 
           {/* Header */}
@@ -84,7 +85,7 @@ export default function ForgotPasswordScreen() {
               <Ionicons
                 name="checkmark-circle"
                 size={48}
-                color="#2563eb"
+                color={colors.primary}
                 style={styles.successIcon}
               />
               <Text style={styles.successTitle}>Check your email</Text>
@@ -108,7 +109,7 @@ export default function ForgotPasswordScreen() {
                   <Ionicons
                     name="alert-circle-outline"
                     size={18}
-                    color="#dc2626"
+                    color={colors.danger}
                   />
                   <Text style={styles.errorBannerText}>{errors.general}</Text>
                 </View>
@@ -141,7 +142,7 @@ export default function ForgotPasswordScreen() {
                 style={styles.backToLoginRow}
                 onPress={() => router.back()}
               >
-                <Ionicons name="arrow-back-outline" size={16} color="#2563eb" />
+                <Ionicons name="arrow-back-outline" size={16} color={colors.primary} />
                 <Text style={styles.backToLoginText}>Back to Login</Text>
               </Pressable>
             </View>
@@ -155,110 +156,109 @@ export default function ForgotPasswordScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.white,
   },
   container: {
     flexGrow: 1,
-    paddingHorizontal: 24,
-    paddingVertical: 32,
+    paddingHorizontal: spacing["3xl"],
+    paddingVertical: spacing["4xl"],
   },
   backBtn: {
     width: 40,
     height: 40,
-    borderRadius: 10,
-    backgroundColor: "#f8fafc",
+    borderRadius: radius.md,
+    backgroundColor: colors.surface,
     borderWidth: 1.5,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 32,
+    marginBottom: spacing["4xl"],
   },
   iconBox: {
     width: 72,
     height: 72,
-    borderRadius: 20,
-    backgroundColor: "#eff6ff",
+    borderRadius: radius.xl,
+    backgroundColor: "#EFF6FF",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 24,
+    marginBottom: spacing["3xl"],
     alignSelf: "center",
   },
   title: {
-    fontSize: 28,
-    fontWeight: "800",
-    color: "#0f172a",
+    ...typography.h1,
+    color: colors.secondary,
     textAlign: "center",
     letterSpacing: -0.5,
-    marginBottom: 12,
+    marginBottom: spacing.lg,
   },
   subtitle: {
-    fontSize: 15,
-    color: "#64748b",
+    ...typography.body,
+    color: colors.muted,
     textAlign: "center",
     lineHeight: 22,
-    marginBottom: 36,
-    paddingHorizontal: 8,
+    marginBottom: spacing["4xl"],
+    paddingHorizontal: spacing.md,
   },
   form: {
-    gap: 8,
+    gap: spacing.md,
   },
   errorBanner: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fef2f2",
+    backgroundColor: "#FEF2F2",
     borderWidth: 1,
-    borderColor: "#fecaca",
-    borderRadius: 10,
+    borderColor: "#FECACA",
+    borderRadius: radius.md,
     paddingHorizontal: 14,
-    paddingVertical: 12,
-    gap: 8,
-    marginBottom: 4,
+    paddingVertical: spacing.lg,
+    gap: spacing.md,
+    marginBottom: spacing.sm,
   },
   errorBannerText: {
     flex: 1,
     fontSize: 14,
-    color: "#dc2626",
+    color: colors.danger,
     fontWeight: "500",
   },
   submitBtn: {
-    marginTop: 8,
+    marginTop: spacing.md,
   },
   backToLoginRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 6,
-    marginTop: 20,
+    gap: spacing.smd,
+    marginTop: spacing["2xl"],
   },
   backToLoginText: {
     fontSize: 14,
-    color: "#2563eb",
+    color: colors.primary,
     fontWeight: "600",
   },
   successBox: {
     alignItems: "center",
-    paddingTop: 8,
+    paddingTop: spacing.md,
   },
   successIcon: {
-    marginBottom: 16,
+    marginBottom: spacing.xl,
   },
   successTitle: {
     fontSize: 22,
     fontWeight: "800",
-    color: "#0f172a",
-    marginBottom: 12,
+    color: colors.secondary,
+    marginBottom: spacing.lg,
     letterSpacing: -0.3,
   },
   successText: {
-    fontSize: 15,
-    color: "#64748b",
+    ...typography.body,
+    color: colors.muted,
     textAlign: "center",
     lineHeight: 22,
-    marginBottom: 32,
-    paddingHorizontal: 8,
+    marginBottom: spacing["4xl"],
+    paddingHorizontal: spacing.md,
   },
   successEmail: {
-    color: "#1e293b",
+    color: colors.secondary,
     fontWeight: "600",
   },
   backToLoginBtn: {

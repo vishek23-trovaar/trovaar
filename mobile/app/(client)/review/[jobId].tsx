@@ -12,22 +12,8 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from '../../../lib/theme';
 
-const COLORS = {
-  primary: "#1e40af",
-  primaryLight: "#3b82f6",
-  primaryBg: "#eff6ff",
-  secondary: "#0f172a",
-  muted: "#64748b",
-  mutedLight: "#94a3b8",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  white: "#ffffff",
-  success: "#059669",
-  successLight: "#ecfdf5",
-  warning: "#d97706",
-  purple: "#7c3aed",
-};
 
 const RATING_LABELS = ["", "Poor", "Fair", "Good", "Very Good", "Excellent"];
 
@@ -118,7 +104,7 @@ export default function ReviewScreen() {
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color={COLORS.primary} />
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
@@ -128,7 +114,7 @@ export default function ReviewScreen() {
       <View style={styles.center}>
         <View style={styles.successContainer}>
           <View style={styles.successCircle}>
-            <Ionicons name="checkmark-circle" size={72} color={COLORS.success} />
+            <Ionicons name="checkmark-circle" size={72} color={colors.success} />
           </View>
           <Text style={styles.successTitle}>Thank You!</Text>
           <Text style={styles.successSubtitle}>
@@ -176,7 +162,7 @@ export default function ReviewScreen() {
         {/* Job Info */}
         {job && (
           <View style={styles.jobInfoCard}>
-            <Ionicons name="briefcase-outline" size={16} color={COLORS.muted} />
+            <Ionicons name="briefcase-outline" size={16} color={colors.muted} />
             <Text style={styles.jobInfoText} numberOfLines={1}>{job.title}</Text>
           </View>
         )}
@@ -231,7 +217,7 @@ export default function ReviewScreen() {
           <TextInput
             style={styles.commentInput}
             placeholder="Tell us about your experience..."
-            placeholderTextColor={COLORS.mutedLight}
+            placeholderTextColor={colors.muted}
             value={comment}
             onChangeText={setComment}
             multiline
@@ -254,10 +240,10 @@ export default function ReviewScreen() {
           activeOpacity={0.85}
         >
           {submitting ? (
-            <ActivityIndicator color={COLORS.white} />
+            <ActivityIndicator color={colors.white} />
           ) : (
             <>
-              <Ionicons name="send" size={18} color={COLORS.white} />
+              <Ionicons name="send" size={18} color={colors.white} />
               <Text style={styles.submitBtnText}>Submit Review</Text>
             </>
           )}
@@ -268,81 +254,81 @@ export default function ReviewScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: COLORS.surface },
-  center: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: COLORS.surface, paddingHorizontal: 24 },
+  screen: { flex: 1, backgroundColor: colors.surface },
+  center: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: colors.surface, paddingHorizontal: 24 },
   scrollContent: { padding: 20 },
 
   // Header
   headerSection: { alignItems: "center", marginBottom: 24, paddingTop: 8 },
-  headerTitle: { fontSize: 24, fontWeight: "800", color: COLORS.secondary, marginBottom: 6 },
-  headerSubtitle: { fontSize: 15, color: COLORS.muted, textAlign: "center", lineHeight: 22 },
+  headerTitle: { fontSize: 24, fontWeight: "800", color: colors.text, marginBottom: 6 },
+  headerSubtitle: { fontSize: 15, color: colors.muted, textAlign: "center", lineHeight: 22 },
 
   // Job info
   jobInfoCard: {
     flexDirection: "row", alignItems: "center", gap: 8,
-    backgroundColor: COLORS.white, borderRadius: 12, padding: 14, marginBottom: 16,
-    borderWidth: 1, borderColor: COLORS.border,
+    backgroundColor: colors.white, borderRadius: radius.lg, padding: 14, marginBottom: 16,
+    borderWidth: 1, borderColor: colors.border,
   },
-  jobInfoText: { fontSize: 14, color: COLORS.secondary, fontWeight: "500", flex: 1 },
+  jobInfoText: { fontSize: 14, color: colors.text, fontWeight: "500", flex: 1 },
 
   // Contractor
   contractorCard: {
-    alignItems: "center", backgroundColor: COLORS.white, borderRadius: 16, padding: 24, marginBottom: 24,
+    alignItems: "center", backgroundColor: colors.white, borderRadius: radius.xl, padding: 24, marginBottom: 24,
     shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
   },
   contractorAvatar: {
-    width: 64, height: 64, borderRadius: 32, backgroundColor: COLORS.primaryBg,
+    width: 64, height: 64, borderRadius: 32, backgroundColor: "#DBEAFE",
     justifyContent: "center", alignItems: "center", marginBottom: 12,
   },
-  contractorAvatarText: { fontSize: 26, fontWeight: "700", color: COLORS.primary },
-  contractorName: { fontSize: 18, fontWeight: "700", color: COLORS.secondary, marginBottom: 4 },
+  contractorAvatarText: { fontSize: 26, fontWeight: "700", color: colors.primary },
+  contractorName: { fontSize: 18, fontWeight: "700", color: colors.text, marginBottom: 4 },
   existingRating: { flexDirection: "row", alignItems: "center", gap: 4 },
-  existingRatingText: { fontSize: 13, color: COLORS.muted },
+  existingRatingText: { fontSize: 13, color: colors.muted },
 
   // Rating
   ratingSection: { alignItems: "center", marginBottom: 28 },
-  ratingLabel: { fontSize: 14, fontWeight: "600", color: COLORS.muted, marginBottom: 16 },
+  ratingLabel: { fontSize: 14, fontWeight: "600", color: colors.muted, marginBottom: 16 },
   starsRow: { flexDirection: "row", gap: 8, marginBottom: 8 },
   starTouchable: { padding: 4 },
-  ratingText: { fontSize: 16, fontWeight: "700", color: COLORS.warning, marginTop: 4 },
+  ratingText: { fontSize: 16, fontWeight: "700", color: colors.warning, marginTop: 4 },
 
   // Comment
   commentSection: { marginBottom: 20 },
-  commentLabel: { fontSize: 14, fontWeight: "600", color: COLORS.secondary, marginBottom: 10 },
+  commentLabel: { fontSize: 14, fontWeight: "600", color: colors.text, marginBottom: 10 },
   commentInput: {
-    backgroundColor: COLORS.white, borderWidth: 1, borderColor: COLORS.border,
-    borderRadius: 14, padding: 16, fontSize: 15, color: COLORS.secondary,
+    backgroundColor: colors.white, borderWidth: 1, borderColor: colors.border,
+    borderRadius: radius.lg, padding: 16, fontSize: 15, color: colors.text,
     minHeight: 120, lineHeight: 22,
   },
-  charCount: { fontSize: 12, color: COLORS.mutedLight, textAlign: "right", marginTop: 6 },
+  charCount: { fontSize: 12, color: colors.muted, textAlign: "right", marginTop: 6 },
 
   // Submit
   stickyBottom: {
     position: "absolute", bottom: 0, left: 0, right: 0,
     paddingHorizontal: 20, paddingBottom: 34, paddingTop: 12,
-    backgroundColor: COLORS.white, borderTopWidth: 1, borderTopColor: COLORS.border,
+    backgroundColor: colors.white, borderTopWidth: 1, borderTopColor: colors.border,
   },
   submitBtn: {
     flexDirection: "row", alignItems: "center", justifyContent: "center",
-    backgroundColor: COLORS.primary, paddingVertical: 18, borderRadius: 14, gap: 8,
-    shadowColor: COLORS.primary, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 6,
+    backgroundColor: colors.primary, paddingVertical: 18, borderRadius: radius.lg, gap: 8,
+    shadowColor: colors.primary, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 6,
   },
-  submitBtnText: { color: COLORS.white, fontSize: 17, fontWeight: "800" },
+  submitBtnText: { color: colors.white, fontSize: 17, fontWeight: "800" },
 
   // Success state
   successContainer: { alignItems: "center", paddingHorizontal: 16 },
   successCircle: { marginBottom: 20 },
-  successTitle: { fontSize: 28, fontWeight: "800", color: COLORS.success, marginBottom: 8 },
-  successSubtitle: { fontSize: 15, color: COLORS.muted, textAlign: "center", lineHeight: 22, marginBottom: 20 },
+  successTitle: { fontSize: 28, fontWeight: "800", color: colors.success, marginBottom: 8 },
+  successSubtitle: { fontSize: 15, color: colors.muted, textAlign: "center", lineHeight: 22, marginBottom: 20 },
   successStars: { flexDirection: "row", gap: 6, marginBottom: 20 },
   successCommentCard: {
-    backgroundColor: COLORS.white, borderRadius: 14, padding: 16, width: "100%",
-    marginBottom: 28, borderWidth: 1, borderColor: COLORS.border,
+    backgroundColor: colors.white, borderRadius: radius.lg, padding: 16, width: "100%",
+    marginBottom: 28, borderWidth: 1, borderColor: colors.border,
   },
-  successCommentLabel: { fontSize: 12, color: COLORS.muted, marginBottom: 6, fontWeight: "500" },
-  successCommentText: { fontSize: 15, color: COLORS.secondary, fontStyle: "italic", lineHeight: 22 },
+  successCommentLabel: { fontSize: 12, color: colors.muted, marginBottom: 6, fontWeight: "500" },
+  successCommentText: { fontSize: 15, color: colors.text, fontStyle: "italic", lineHeight: 22 },
   doneBtn: {
-    backgroundColor: COLORS.primary, paddingHorizontal: 40, paddingVertical: 16, borderRadius: 14,
+    backgroundColor: colors.primary, paddingHorizontal: 40, paddingVertical: 16, borderRadius: radius.lg,
   },
-  doneBtnText: { color: COLORS.white, fontSize: 16, fontWeight: "700" },
+  doneBtnText: { color: colors.white, fontSize: 16, fontWeight: "700" },
 });

@@ -14,17 +14,8 @@ import {
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from '../../../lib/theme';
 
-const COLORS = {
-  primary: "#2563eb",
-  background: "#ffffff",
-  surface: "#f8fafc",
-  text: "#1e293b",
-  muted: "#64748b",
-  border: "#e2e8f0",
-  success: "#16a34a",
-  danger: "#dc2626",
-};
 
 const TIME_PREFERENCES = [
   {
@@ -192,7 +183,7 @@ export default function RescheduleScreen() {
           onPress={() => router.back()}
           activeOpacity={0.7}
         >
-          <Ionicons name="arrow-back" size={24} color={COLORS.text} />
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Reschedule Job</Text>
         <View style={styles.headerSpacer} />
@@ -206,13 +197,13 @@ export default function RescheduleScreen() {
         {/* Current Date */}
         {loadingJob ? (
           <View style={styles.loadingRow}>
-            <ActivityIndicator size="small" color={COLORS.primary} />
+            <ActivityIndicator size="small" color={colors.primary} />
             <Text style={styles.loadingText}>Loading job details...</Text>
           </View>
         ) : (
           <View style={styles.currentDateCard}>
             <View style={styles.currentDateIcon}>
-              <Ionicons name="calendar" size={20} color={COLORS.primary} />
+              <Ionicons name="calendar" size={20} color={colors.primary} />
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.currentDateLabel}>Currently scheduled</Text>
@@ -289,7 +280,7 @@ export default function RescheduleScreen() {
             <Ionicons
               name="checkmark-circle"
               size={16}
-              color={COLORS.success}
+              color={colors.success}
             />
             <Text style={styles.selectedDateBannerText}>
               {formatReadableDate(selectedDate)}
@@ -317,7 +308,7 @@ export default function RescheduleScreen() {
                 <Ionicons
                   name={pref.icon}
                   size={22}
-                  color={active ? COLORS.primary : COLORS.muted}
+                  color={active ? colors.primary : colors.muted}
                 />
                 <Text
                   style={[
@@ -384,7 +375,7 @@ export default function RescheduleScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: colors.white,
   },
 
   // Header
@@ -395,8 +386,8 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === "ios" ? 56 : 16,
     paddingBottom: 12,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: COLORS.border,
-    backgroundColor: COLORS.background,
+    borderBottomColor: colors.border,
+    backgroundColor: colors.white,
   },
   backBtn: {
     padding: 4,
@@ -405,7 +396,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: COLORS.text,
+    color: colors.text,
     flex: 1,
     textAlign: "center",
   },
@@ -428,25 +419,25 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 14,
-    color: COLORS.muted,
+    color: colors.muted,
   },
 
   // Current date card
   currentDateCard: {
     flexDirection: "row",
     alignItems: "flex-start",
-    backgroundColor: COLORS.surface,
-    borderRadius: 14,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
     padding: 16,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
     marginBottom: 24,
     gap: 12,
   },
   currentDateIcon: {
     width: 40,
     height: 40,
-    borderRadius: 10,
+    borderRadius: radius.md,
     backgroundColor: "#eff6ff",
     alignItems: "center",
     justifyContent: "center",
@@ -455,7 +446,7 @@ const styles = StyleSheet.create({
   currentDateLabel: {
     fontSize: 11,
     fontWeight: "600",
-    color: COLORS.muted,
+    color: colors.muted,
     textTransform: "uppercase",
     letterSpacing: 0.5,
     marginBottom: 3,
@@ -463,25 +454,25 @@ const styles = StyleSheet.create({
   currentDateValue: {
     fontSize: 16,
     fontWeight: "700",
-    color: COLORS.text,
+    color: colors.text,
     marginBottom: 2,
   },
   currentDateJob: {
     fontSize: 13,
-    color: COLORS.muted,
+    color: colors.muted,
   },
 
   // Section label
   sectionLabel: {
     fontSize: 14,
     fontWeight: "600",
-    color: COLORS.text,
+    color: colors.text,
     marginBottom: 12,
   },
   optionalTag: {
     fontSize: 13,
     fontWeight: "400",
-    color: COLORS.muted,
+    color: colors.muted,
   },
 
   // Date chips
@@ -495,15 +486,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: 60,
     paddingVertical: 12,
-    borderRadius: 12,
+    borderRadius: radius.lg,
     borderWidth: 1.5,
-    borderColor: COLORS.border,
-    backgroundColor: COLORS.surface,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     gap: 2,
   },
   dateChipSelected: {
-    borderColor: COLORS.primary,
-    backgroundColor: COLORS.primary,
+    borderColor: colors.primary,
+    backgroundColor: colors.primary,
   },
   dateChipWeekend: {
     borderColor: "#e2e8f0",
@@ -512,20 +503,20 @@ const styles = StyleSheet.create({
   dateChipDay: {
     fontSize: 11,
     fontWeight: "600",
-    color: COLORS.muted,
+    color: colors.muted,
     textTransform: "uppercase",
     letterSpacing: 0.3,
   },
   dateChipNum: {
     fontSize: 20,
     fontWeight: "800",
-    color: COLORS.text,
+    color: colors.text,
     lineHeight: 24,
   },
   dateChipMonth: {
     fontSize: 11,
     fontWeight: "500",
-    color: COLORS.muted,
+    color: colors.muted,
   },
   dateChipTextSelected: {
     color: "#ffffff",
@@ -545,7 +536,7 @@ const styles = StyleSheet.create({
   selectedDateBannerText: {
     fontSize: 14,
     fontWeight: "600",
-    color: COLORS.success,
+    color: colors.success,
   },
 
   // Time preferences
@@ -557,23 +548,23 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingVertical: 14,
-    borderRadius: 14,
+    borderRadius: radius.lg,
     borderWidth: 1.5,
-    borderColor: COLORS.border,
-    backgroundColor: COLORS.surface,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     gap: 4,
   },
   timePrefChipActive: {
-    borderColor: COLORS.primary,
+    borderColor: colors.primary,
     backgroundColor: "#eff6ff",
   },
   timePrefLabel: {
     fontSize: 13,
     fontWeight: "700",
-    color: COLORS.muted,
+    color: colors.muted,
   },
   timePrefLabelActive: {
-    color: COLORS.primary,
+    color: colors.primary,
   },
   timePrefSub: {
     fontSize: 11,
@@ -586,14 +577,14 @@ const styles = StyleSheet.create({
 
   // Notes
   notesInput: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     borderWidth: 1.5,
-    borderColor: COLORS.border,
-    borderRadius: 12,
+    borderColor: colors.border,
+    borderRadius: radius.lg,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 16,
-    color: COLORS.text,
+    color: colors.text,
     minHeight: 90,
     textAlignVertical: "top",
   },
@@ -603,12 +594,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingVertical: 17,
-    borderRadius: 14,
+    borderRadius: radius.lg,
     gap: 8,
     marginTop: 28,
-    shadowColor: COLORS.primary,
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 8,

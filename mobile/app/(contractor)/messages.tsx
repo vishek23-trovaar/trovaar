@@ -13,17 +13,18 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
 import { Conversation } from "@/lib/types";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from "../../lib/theme";
 
 const COLORS = {
-  primary: "#1e40af",
-  primaryLight: "#3b82f6",
-  secondary: "#0f172a",
-  muted: "#64748b",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  success: "#059669",
-  warning: "#d97706",
-  danger: "#dc2626",
+  primary: colors.primary,
+  primaryLight: colors.primaryLight,
+  secondary: colors.text,
+  muted: colors.muted,
+  surface: colors.surface,
+  border: colors.border,
+  success: colors.success,
+  warning: colors.warning,
+  danger: colors.danger,
 };
 
 function timeAgo(dateStr: string): string {
@@ -79,7 +80,7 @@ export default function ContractorMessages() {
       setError(null);
     } catch (err) {
       setError('Failed to load messages');
-      console.error(err);
+      if (__DEV__) console.error(err);
     }
     setLoading(false);
   }, []);
@@ -216,7 +217,7 @@ export default function ContractorMessages() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: "#fff" },
+  screen: { flex: 1, backgroundColor: colors.white },
 
   searchContainer: {
     paddingHorizontal: 16,
@@ -250,12 +251,12 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: "#eff6ff",
+    backgroundColor: "#DBEAFE",
     justifyContent: "center",
     alignItems: "center",
   },
   avatarUnread: {
-    backgroundColor: "#dbeafe",
+    backgroundColor: "#BFDBFE",
   },
   avatarText: {
     fontSize: 20,

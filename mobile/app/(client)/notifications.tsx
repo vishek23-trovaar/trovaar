@@ -11,27 +11,8 @@ import {
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from '../../lib/theme';
 
-const COLORS = {
-  primary: "#1e40af",
-  primaryLight: "#3b82f6",
-  primaryBg: "#eff6ff",
-  secondary: "#0f172a",
-  muted: "#64748b",
-  mutedLight: "#94a3b8",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  white: "#ffffff",
-  success: "#059669",
-  successBg: "#f0fdf4",
-  warning: "#d97706",
-  warningBg: "#fffbeb",
-  danger: "#dc2626",
-  dangerBg: "#fef2f2",
-  purple: "#7c3aed",
-  purpleBg: "#f5f3ff",
-  unreadBg: "#eff6ff",
-};
 
 interface Notification {
   id: string;
@@ -44,17 +25,17 @@ interface Notification {
 }
 
 const NOTIF_ICONS: Record<string, { name: keyof typeof Ionicons.glyphMap; color: string; bg: string }> = {
-  new_bid: { name: "pricetag-outline", color: COLORS.purple, bg: COLORS.purpleBg },
-  bid_accepted: { name: "checkmark-circle-outline", color: COLORS.success, bg: COLORS.successBg },
-  job_completed: { name: "trophy-outline", color: COLORS.success, bg: COLORS.successBg },
-  payment_released: { name: "wallet-outline", color: COLORS.success, bg: COLORS.successBg },
-  dispute_opened: { name: "warning-outline", color: COLORS.danger, bg: COLORS.dangerBg },
-  message_received: { name: "chatbubble-outline", color: COLORS.primaryLight, bg: COLORS.primaryBg },
-  review_received: { name: "star-outline", color: COLORS.warning, bg: COLORS.warningBg },
+  new_bid: { name: "pricetag-outline", color: "#7c3aed", bg: "#f5f3ff" },
+  bid_accepted: { name: "checkmark-circle-outline", color: colors.success, bg: "#D1FAE5" },
+  job_completed: { name: "trophy-outline", color: colors.success, bg: "#D1FAE5" },
+  payment_released: { name: "wallet-outline", color: colors.success, bg: "#D1FAE5" },
+  dispute_opened: { name: "warning-outline", color: colors.danger, bg: "#FEE2E2" },
+  message_received: { name: "chatbubble-outline", color: colors.primaryLight, bg: "#DBEAFE" },
+  review_received: { name: "star-outline", color: colors.warning, bg: "#FEF3C7" },
 };
 
 function getNotifIcon(type: string) {
-  return NOTIF_ICONS[type] || { name: "notifications-outline" as keyof typeof Ionicons.glyphMap, color: COLORS.muted, bg: COLORS.surface };
+  return NOTIF_ICONS[type] || { name: "notifications-outline" as keyof typeof Ionicons.glyphMap, color: colors.muted, bg: colors.surface };
 }
 
 function timeAgo(dateStr: string): string {
@@ -82,7 +63,7 @@ export default function ClientNotifications() {
       const { data } = await api<{ notifications: Notification[]; unreadCount: number }>("/api/notifications");
       setNotifications(data.notifications || []);
     } catch (err) {
-      console.error("[Notifications] fetch error:", err);
+      if (__DEV__) console.error("[Notifications] fetch error:", err);
     }
     setLoading(false);
   }, []);
@@ -106,7 +87,7 @@ export default function ClientNotifications() {
       });
       setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
     } catch (err) {
-      console.error("[Notifications] mark read error:", err);
+      if (__DEV__) console.error("[Notifications] mark read error:", err);
     }
     setMarkingRead(false);
   };
@@ -122,7 +103,7 @@ export default function ClientNotifications() {
   if (loading) {
     return (
       <View style={[styles.screen, styles.center]}>
-        <ActivityIndicator size="large" color={COLORS.primary} />
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
@@ -136,8 +117,8 @@ export default function ClientNotifications() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            tintColor={COLORS.primary}
-            colors={[COLORS.primary]}
+            tintColor={colors.primary}
+            colors={[colors.primary]}
           />
         }
         ListHeaderComponent={
@@ -184,7 +165,7 @@ export default function ClientNotifications() {
         ListEmptyComponent={
           <View style={styles.empty}>
             <View style={styles.emptyIconWrap}>
-              <Ionicons name="notifications-outline" size={36} color={COLORS.primaryLight} />
+              <Ionicons name="notifications-outline" size={36} color={colors.primaryLight} />
             </View>
             <Text style={styles.emptyTitle}>No notifications</Text>
             <Text style={styles.emptySub}>
@@ -202,7 +183,7 @@ export default function ClientNotifications() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.white,
   },
   center: {
     justifyContent: "center",
@@ -215,17 +196,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: colors.border,
   },
   headerText: {
     fontSize: 14,
     fontWeight: "600",
-    color: COLORS.muted,
+    color: colors.muted,
   },
   markReadText: {
     fontSize: 14,
     fontWeight: "600",
-    color: COLORS.primaryLight,
+    color: colors.primaryLight,
   },
   row: {
     flexDirection: "row",
@@ -235,7 +216,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   rowUnread: {
-    backgroundColor: COLORS.unreadBg,
+    backgroundColor: "#DBEAFE",
   },
   iconCircle: {
     width: 44,
@@ -250,7 +231,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 15,
     fontWeight: "500",
-    color: COLORS.secondary,
+    color: colors.text,
     marginBottom: 2,
   },
   titleUnread: {
@@ -258,19 +239,19 @@ const styles = StyleSheet.create({
   },
   message: {
     fontSize: 13,
-    color: COLORS.muted,
+    color: colors.muted,
     lineHeight: 18,
     marginBottom: 4,
   },
   time: {
     fontSize: 12,
-    color: COLORS.mutedLight,
+    color: colors.muted,
   },
   unreadDot: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: COLORS.primaryLight,
+    backgroundColor: colors.primaryLight,
     marginTop: 6,
   },
   separator: {
@@ -289,7 +270,7 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: 36,
-    backgroundColor: COLORS.primaryBg,
+    backgroundColor: "#DBEAFE",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 16,
@@ -297,12 +278,12 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: COLORS.secondary,
+    color: colors.text,
     marginBottom: 8,
   },
   emptySub: {
     fontSize: 14,
-    color: COLORS.muted,
+    color: colors.muted,
     textAlign: "center",
     lineHeight: 20,
   },

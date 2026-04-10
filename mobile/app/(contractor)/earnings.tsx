@@ -10,17 +10,18 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from "../../lib/theme";
 
 const COLORS = {
-  primary: "#1e40af",
-  primaryLight: "#3b82f6",
-  secondary: "#0f172a",
-  muted: "#64748b",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  success: "#059669",
-  warning: "#d97706",
-  danger: "#dc2626",
+  primary: colors.primary,
+  primaryLight: colors.primaryLight,
+  secondary: colors.text,
+  muted: colors.muted,
+  surface: colors.surface,
+  border: colors.border,
+  success: colors.success,
+  warning: colors.warning,
+  danger: colors.danger,
 };
 
 interface EarningItem {
@@ -134,7 +135,7 @@ export default function Earnings() {
       setError(null);
     } catch (err) {
       setError('Failed to load earnings');
-      console.error(err);
+      if (__DEV__) console.error(err);
     }
     setLoading(false);
   }, []);
@@ -296,11 +297,11 @@ const styles = StyleSheet.create({
 
   heroCard: {
     margin: 16,
-    borderRadius: 20,
+    borderRadius: radius.xl,
     overflow: "hidden",
   },
   heroGradient: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     padding: 28,
     alignItems: "center",
   },
@@ -329,16 +330,16 @@ const styles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    backgroundColor: "#fff",
-    borderRadius: 14,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
     padding: 14,
     alignItems: "center",
     borderWidth: 1.5,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
   },
   statCardActive: {
-    borderColor: COLORS.primary,
-    backgroundColor: "#eff6ff",
+    borderColor: colors.primary,
+    backgroundColor: "#DBEAFE",
   },
   statLabel: {
     fontSize: 11,
@@ -355,16 +356,14 @@ const styles = StyleSheet.create({
   statValueActive: { color: COLORS.primary },
 
   chartContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.white,
     marginHorizontal: 16,
-    borderRadius: 16,
+    borderRadius: radius.lg,
     padding: 20,
     marginBottom: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.04,
-    shadowRadius: 4,
-    elevation: 2,
+    borderWidth: 1,
+    borderColor: colors.border,
+    ...shadows.sm,
   },
   chartTitle: {
     fontSize: 14,

@@ -13,20 +13,8 @@ import {
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from '../../../lib/theme';
 
-const COLORS = {
-  primary: "#2563eb",
-  background: "#ffffff",
-  surface: "#f8fafc",
-  text: "#1e293b",
-  muted: "#64748b",
-  border: "#e2e8f0",
-  success: "#16a34a",
-  danger: "#dc2626",
-  infoBlue: "#eff6ff",
-  infoBorder: "#bfdbfe",
-  infoText: "#1d4ed8",
-};
 
 const DISPUTE_REASONS = [
   { value: "work_not_completed", label: "Work not completed as agreed" },
@@ -117,7 +105,7 @@ export default function DisputeScreen() {
       <View style={styles.screen}>
         <View style={styles.successContainer}>
           <View style={styles.successIconWrap}>
-            <Ionicons name="shield-checkmark" size={56} color={COLORS.success} />
+            <Ionicons name="shield-checkmark" size={56} color={colors.success} />
           </View>
           <Text style={styles.successTitle}>Dispute Filed</Text>
           <Text style={styles.successSubtitle}>
@@ -145,7 +133,7 @@ export default function DisputeScreen() {
           onPress={() => router.back()}
           activeOpacity={0.7}
         >
-          <Ionicons name="arrow-back" size={24} color={COLORS.text} />
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>File a Dispute</Text>
         <View style={styles.headerSpacer} />
@@ -159,7 +147,7 @@ export default function DisputeScreen() {
         {/* Job Summary */}
         <View style={styles.jobSummaryCard}>
           {loadingJob ? (
-            <ActivityIndicator size="small" color={COLORS.primary} />
+            <ActivityIndicator size="small" color={colors.primary} />
           ) : jobError ? (
             <Text style={styles.errorText}>{jobError}</Text>
           ) : job ? (
@@ -171,7 +159,7 @@ export default function DisputeScreen() {
                   <Ionicons
                     name="person-outline"
                     size={15}
-                    color={COLORS.muted}
+                    color={colors.muted}
                   />
                   <Text style={styles.jobSummaryMeta}>{contractorName}</Text>
                 </View>
@@ -180,7 +168,7 @@ export default function DisputeScreen() {
                     <Ionicons
                       name="card-outline"
                       size={15}
-                      color={COLORS.muted}
+                      color={colors.muted}
                     />
                     <Text style={styles.jobSummaryMeta}>
                       ${amountPaid.toFixed(2)} paid
@@ -253,7 +241,7 @@ export default function DisputeScreen() {
           )}
           {descriptionValid && (
             <Text style={styles.charCountOk}>
-              <Ionicons name="checkmark-circle" size={13} color={COLORS.success} />{" "}
+              <Ionicons name="checkmark-circle" size={13} color={colors.success} />{" "}
               Looks good
             </Text>
           )}
@@ -264,7 +252,7 @@ export default function DisputeScreen() {
           <Ionicons
             name="information-circle-outline"
             size={20}
-            color={COLORS.infoText}
+            color={colors.primaryDark}
             style={{ marginTop: 1 }}
           />
           <Text style={styles.infoBoxText}>
@@ -300,7 +288,7 @@ export default function DisputeScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: colors.white,
   },
 
   // Header
@@ -311,8 +299,8 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === "ios" ? 56 : 16,
     paddingBottom: 12,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: COLORS.border,
-    backgroundColor: COLORS.background,
+    borderBottomColor: colors.border,
+    backgroundColor: colors.white,
   },
   backBtn: {
     padding: 4,
@@ -321,7 +309,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: COLORS.text,
+    color: colors.text,
     flex: 1,
     textAlign: "center",
   },
@@ -337,11 +325,11 @@ const styles = StyleSheet.create({
 
   // Job Summary
   jobSummaryCard: {
-    backgroundColor: COLORS.surface,
-    borderRadius: 14,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
     padding: 16,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
     marginBottom: 24,
     minHeight: 60,
     justifyContent: "center",
@@ -349,7 +337,7 @@ const styles = StyleSheet.create({
   jobSummaryLabel: {
     fontSize: 11,
     fontWeight: "600",
-    color: COLORS.muted,
+    color: colors.muted,
     textTransform: "uppercase",
     letterSpacing: 0.5,
     marginBottom: 4,
@@ -357,7 +345,7 @@ const styles = StyleSheet.create({
   jobSummaryTitle: {
     fontSize: 17,
     fontWeight: "700",
-    color: COLORS.text,
+    color: colors.text,
     marginBottom: 8,
   },
   jobSummaryRow: {
@@ -371,27 +359,27 @@ const styles = StyleSheet.create({
   },
   jobSummaryMeta: {
     fontSize: 14,
-    color: COLORS.muted,
+    color: colors.muted,
   },
   errorText: {
     fontSize: 14,
-    color: COLORS.danger,
+    color: colors.danger,
   },
 
   // Section label
   sectionLabel: {
     fontSize: 14,
     fontWeight: "600",
-    color: COLORS.text,
+    color: colors.text,
     marginBottom: 12,
   },
 
   // Radio reasons
   reasonList: {
-    backgroundColor: COLORS.surface,
-    borderRadius: 14,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
     marginBottom: 24,
     overflow: "hidden",
   },
@@ -401,7 +389,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: colors.border,
     gap: 12,
   },
   reasonRowSelected: {
@@ -410,46 +398,46 @@ const styles = StyleSheet.create({
   radioOuter: {
     width: 20,
     height: 20,
-    borderRadius: 10,
+    borderRadius: radius.md,
     borderWidth: 2,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
     alignItems: "center",
     justifyContent: "center",
   },
   radioOuterSelected: {
-    borderColor: COLORS.primary,
+    borderColor: colors.primary,
   },
   radioInner: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
   },
   reasonLabel: {
     fontSize: 15,
-    color: COLORS.text,
+    color: colors.text,
     flex: 1,
   },
   reasonLabelSelected: {
-    color: COLORS.primary,
+    color: colors.primary,
     fontWeight: "600",
   },
 
   // Text area
   textArea: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     borderWidth: 1.5,
-    borderColor: COLORS.border,
-    borderRadius: 12,
+    borderColor: colors.border,
+    borderRadius: radius.lg,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 16,
-    color: COLORS.text,
+    color: colors.text,
     minHeight: 120,
     textAlignVertical: "top",
   },
   textAreaError: {
-    borderColor: COLORS.danger,
+    borderColor: colors.danger,
   },
   charCountRow: {
     minHeight: 20,
@@ -458,28 +446,28 @@ const styles = StyleSheet.create({
   },
   charCountError: {
     fontSize: 12,
-    color: COLORS.danger,
+    color: colors.danger,
   },
   charCountOk: {
     fontSize: 12,
-    color: COLORS.success,
+    color: colors.success,
     fontWeight: "500",
   },
 
   // Info box
   infoBox: {
     flexDirection: "row",
-    backgroundColor: COLORS.infoBlue,
-    borderRadius: 12,
+    backgroundColor: "#DBEAFE",
+    borderRadius: radius.lg,
     padding: 14,
     borderWidth: 1,
-    borderColor: COLORS.infoBorder,
+    borderColor: "#93C5FD",
     gap: 10,
     marginBottom: 28,
   },
   infoBoxText: {
     fontSize: 14,
-    color: COLORS.infoText,
+    color: colors.primaryDark,
     flex: 1,
     lineHeight: 20,
   },
@@ -489,11 +477,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.danger,
+    backgroundColor: colors.danger,
     paddingVertical: 17,
-    borderRadius: 14,
+    borderRadius: radius.lg,
     gap: 8,
-    shadowColor: COLORS.danger,
+    shadowColor: colors.danger,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 8,
@@ -529,22 +517,22 @@ const styles = StyleSheet.create({
   successTitle: {
     fontSize: 26,
     fontWeight: "800",
-    color: COLORS.text,
+    color: colors.text,
     marginBottom: 12,
     textAlign: "center",
   },
   successSubtitle: {
     fontSize: 16,
-    color: COLORS.muted,
+    color: colors.muted,
     textAlign: "center",
     lineHeight: 24,
     marginBottom: 36,
   },
   okButton: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingVertical: 16,
     paddingHorizontal: 48,
-    borderRadius: 14,
+    borderRadius: radius.lg,
   },
   okButtonText: {
     color: "#ffffff",

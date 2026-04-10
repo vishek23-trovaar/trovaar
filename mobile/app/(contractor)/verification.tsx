@@ -17,20 +17,21 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/api";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from "../../lib/theme";
 
 const COLORS = {
-  primary: "#3b82f6",
-  primaryDark: "#1e40af",
-  secondary: "#1e293b",
-  muted: "#64748b",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  success: "#059669",
+  primary: colors.primary,
+  primaryDark: colors.primaryDark,
+  secondary: colors.text,
+  muted: colors.muted,
+  surface: colors.surface,
+  border: colors.border,
+  success: colors.success,
   successLight: "#ecfdf5",
-  danger: "#dc2626",
+  danger: colors.danger,
   dangerLight: "#fef2f2",
-  white: "#ffffff",
-  warning: "#d97706",
+  white: colors.white,
+  warning: colors.warning,
   warningBg: "#fffbeb",
 };
 
@@ -659,22 +660,14 @@ const styles = StyleSheet.create({
   // Trust Score
   trustScoreCard: {
     flexDirection: "row",
-    backgroundColor: COLORS.white,
-    borderRadius: 16,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
     padding: 20,
     marginBottom: 24,
     gap: 16,
     borderWidth: 1,
-    borderColor: COLORS.border,
-    ...Platform.select({
-      ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
-        shadowRadius: 8,
-      },
-      android: { elevation: 3 },
-    }),
+    borderColor: colors.border,
+    ...shadows.md,
   },
   trustScoreLeft: { flexDirection: "row", alignItems: "baseline" },
   trustScoreValue: {
@@ -719,20 +712,12 @@ const styles = StyleSheet.create({
   badgeCard: {
     width: "47%",
     flexGrow: 1,
-    backgroundColor: COLORS.white,
-    borderRadius: 16,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
     padding: 16,
     alignItems: "center",
     borderWidth: 1.5,
-    ...Platform.select({
-      ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.05,
-        shadowRadius: 4,
-      },
-      android: { elevation: 1 },
-    }),
+    ...shadows.sm,
   },
   badgeIconWrap: {
     width: 48,
@@ -758,21 +743,13 @@ const styles = StyleSheet.create({
 
   // Action Cards
   actionCard: {
-    backgroundColor: COLORS.white,
-    borderRadius: 16,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
     padding: 20,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: COLORS.border,
-    ...Platform.select({
-      ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.05,
-        shadowRadius: 4,
-      },
-      android: { elevation: 1 },
-    }),
+    borderColor: colors.border,
+    ...shadows.sm,
   },
   actionCardHeader: {
     flexDirection: "row",
@@ -795,9 +772,9 @@ const styles = StyleSheet.create({
   actionCardDesc: { fontSize: 13, color: COLORS.muted, marginTop: 2 },
   actionBtn: {
     flexDirection: "row",
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: radius.md,
     alignItems: "center",
     justifyContent: "center",
     gap: 8,

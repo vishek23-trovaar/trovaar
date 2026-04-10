@@ -11,17 +11,18 @@ import {
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from "../../lib/theme";
 
 const COLORS = {
-  primary: "#1e40af",
-  primaryLight: "#3b82f6",
-  secondary: "#0f172a",
-  muted: "#64748b",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  success: "#059669",
-  warning: "#d97706",
-  danger: "#dc2626",
+  primary: colors.primary,
+  primaryLight: colors.primaryLight,
+  secondary: colors.text,
+  muted: colors.muted,
+  surface: colors.surface,
+  border: colors.border,
+  success: colors.success,
+  warning: colors.warning,
+  danger: colors.danger,
 };
 
 interface BidItem {
@@ -156,7 +157,7 @@ export default function MyBids() {
       }));
       setBids(allBids);
     } catch (err) {
-      console.error('[Bids] error:', err);
+      if (__DEV__) console.error('[Bids] error:', err);
     }
     setLoading(false);
   }, []);
@@ -358,15 +359,13 @@ const styles = StyleSheet.create({
   tabBadgeTextActive: { color: "#fff" },
 
   card: {
-    backgroundColor: "#fff",
-    borderRadius: 16,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
     padding: 16,
     marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: colors.border,
+    ...shadows.md,
   },
   cardTopRow: {
     flexDirection: "row",

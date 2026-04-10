@@ -13,16 +13,8 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
 import { Conversation } from "@/lib/types";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from '../../lib/theme';
 
-const COLORS = {
-  primary: "#1e40af",
-  primaryLight: "#3b82f6",
-  secondary: "#0f172a",
-  muted: "#64748b",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  white: "#ffffff",
-};
 
 function timeAgo(dateStr: string): string {
   if (!dateStr) return "";
@@ -73,7 +65,7 @@ function SkeletonPulse({ width, height, borderRadius = 8, style }: {
   }, [animValue]);
   return (
     <Animated.View
-      style={[{ width: width as number, height, borderRadius, backgroundColor: "#e2e8f0", opacity: animValue }, style]}
+      style={[{ width: width as number, height, borderRadius, backgroundColor: colors.border, opacity: animValue }, style]}
     />
   );
 }
@@ -112,7 +104,7 @@ export default function ClientMessages() {
       setError(null);
     } catch (err) {
       setError('Failed to load messages');
-      console.error(err);
+      if (__DEV__) console.error(err);
     }
     setLoading(false);
   }, []);
@@ -161,14 +153,14 @@ export default function ClientMessages() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            tintColor={COLORS.primary}
-            colors={[COLORS.primary]}
+            tintColor={colors.primary}
+            colors={[colors.primary]}
           />
         }
         ListHeaderComponent={
           <View style={styles.searchContainer}>
             <View style={styles.searchBar}>
-              <Ionicons name="search" size={18} color={COLORS.muted} />
+              <Ionicons name="search" size={18} color={colors.muted} />
               <TextInput
                 style={styles.searchInput}
                 placeholder="Search conversations..."
@@ -239,7 +231,7 @@ export default function ClientMessages() {
         ListEmptyComponent={
           <View style={styles.empty}>
             <View style={styles.emptyIconWrap}>
-              <Ionicons name="chatbubbles-outline" size={36} color={COLORS.primaryLight} />
+              <Ionicons name="chatbubbles-outline" size={36} color={colors.primaryLight} />
             </View>
             <Text style={styles.emptyTitle}>No messages yet</Text>
             <Text style={styles.emptySub}>
@@ -264,7 +256,7 @@ export default function ClientMessages() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.white,
   },
 
   // Search
@@ -275,8 +267,8 @@ const styles = StyleSheet.create({
   searchBar: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: COLORS.surface,
-    borderRadius: 12,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
     paddingHorizontal: 14,
     paddingVertical: 10,
     gap: 10,
@@ -284,7 +276,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 15,
-    color: COLORS.secondary,
+    color: colors.text,
     padding: 0,
   },
 
@@ -319,7 +311,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: "500",
-    color: COLORS.secondary,
+    color: colors.text,
     flex: 1,
     marginRight: 8,
   },
@@ -331,12 +323,12 @@ const styles = StyleSheet.create({
     color: "#94a3b8",
   },
   timeTextUnread: {
-    color: COLORS.primary,
+    color: colors.primary,
     fontWeight: "600",
   },
   jobTitle: {
     fontSize: 12,
-    color: COLORS.muted,
+    color: colors.muted,
     marginBottom: 3,
   },
   bottomRow: {
@@ -351,11 +343,11 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   previewUnread: {
-    color: COLORS.secondary,
+    color: colors.text,
     fontWeight: "500",
   },
   unreadBadge: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     borderRadius: 11,
     minWidth: 22,
     height: 22,
@@ -364,7 +356,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   unreadText: {
-    color: COLORS.white,
+    color: colors.white,
     fontSize: 11,
     fontWeight: "700",
   },
@@ -396,12 +388,12 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: COLORS.secondary,
+    color: colors.text,
     marginBottom: 8,
   },
   emptySub: {
     fontSize: 14,
-    color: COLORS.muted,
+    color: colors.muted,
     textAlign: "center",
     lineHeight: 20,
   },

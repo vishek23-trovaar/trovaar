@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
+import { colors } from "../lib/theme";
 
 interface Props {
   size?: number;
@@ -28,10 +29,10 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   iconBadge: {
-    backgroundColor: "#1e3a8a",
+    backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#1e3a8a",
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 8,
@@ -40,7 +41,7 @@ const styles = StyleSheet.create({
   brand: {
     fontSize: 28,
     fontWeight: "900",
-    color: "#0f172a",
+    color: colors.text,
     letterSpacing: -1,
   },
 });

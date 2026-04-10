@@ -72,7 +72,7 @@ export async function api<T = unknown>(
   }
 
   const url = `${API_URL}${path}`;
-  console.log(`[API] ${options.method || "GET"} ${url}`);
+  if (__DEV__) console.log(`[API] ${options.method || "GET"} ${url}`);
 
   let res: Response;
   try {
@@ -93,7 +93,10 @@ export async function api<T = unknown>(
     throw new ApiError(`Server returned invalid response (${res.status})`, res.status, null);
   }
 
-  console.log(`[API] ${res.status} ${path}`);
+  if (__DEV__) console.log(`[API] ${res.status} ${path}`);
+  if (res.status === 401) {
+    throw new ApiError("Unauthorized. Please log in again.", 401, data);
+  }
   if (!res.ok) {
     throw new ApiError((data as Record<string, string>).error || "Request failed", res.status, data);
   }

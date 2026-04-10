@@ -11,26 +11,27 @@ import {
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from "../../lib/theme";
 
 const COLORS = {
-  primary: "#1e40af",
-  primaryLight: "#3b82f6",
-  primaryBg: "#eff6ff",
-  secondary: "#0f172a",
-  muted: "#64748b",
+  primary: colors.primary,
+  primaryLight: colors.primaryLight,
+  primaryBg: "#DBEAFE",
+  secondary: colors.text,
+  muted: colors.muted,
   mutedLight: "#94a3b8",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  white: "#ffffff",
-  success: "#059669",
+  surface: colors.surface,
+  border: colors.border,
+  white: colors.white,
+  success: colors.success,
   successBg: "#f0fdf4",
-  warning: "#d97706",
+  warning: colors.warning,
   warningBg: "#fffbeb",
-  danger: "#dc2626",
+  danger: colors.danger,
   dangerBg: "#fef2f2",
   purple: "#7c3aed",
   purpleBg: "#f5f3ff",
-  unreadBg: "#eff6ff",
+  unreadBg: "#DBEAFE",
 };
 
 interface Notification {
@@ -82,7 +83,7 @@ export default function ContractorNotifications() {
       const { data } = await api<{ notifications: Notification[]; unreadCount: number }>("/api/notifications");
       setNotifications(data.notifications || []);
     } catch (err) {
-      console.error("[Notifications] fetch error:", err);
+      if (__DEV__) console.error("[Notifications] fetch error:", err);
     }
     setLoading(false);
   }, []);
@@ -106,7 +107,7 @@ export default function ContractorNotifications() {
       });
       setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
     } catch (err) {
-      console.error("[Notifications] mark read error:", err);
+      if (__DEV__) console.error("[Notifications] mark read error:", err);
     }
     setMarkingRead(false);
   };

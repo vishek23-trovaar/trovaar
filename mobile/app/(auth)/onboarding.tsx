@@ -12,6 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import TrovaarLogo from "@/components/TrovaarLogo";
 import { Button } from "@/components/ui";
+import { colors, typography, spacing, radius, shadows } from "../../lib/theme";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -129,14 +130,14 @@ export default function OnboardingScreen() {
               style={styles.roleCard}
               onPress={() => setMode("client")}
             >
-              <View style={[styles.roleIconBox, { backgroundColor: "#eff6ff" }]}>
-                <Ionicons name="home" size={30} color="#3b82f6" />
+              <View style={[styles.roleIconBox, { backgroundColor: "#EFF6FF" }]}>
+                <Ionicons name="home" size={30} color={colors.primaryLight} />
               </View>
               <View style={styles.roleTextBox}>
                 <Text style={styles.roleTitle}>Hire a professional</Text>
                 <Text style={styles.roleNote}>Post jobs that need to be performed</Text>
               </View>
-              <Ionicons name="chevron-forward" size={22} color="#94a3b8" />
+              <Ionicons name="chevron-forward" size={22} color={colors.muted} />
             </Pressable>
 
             <Pressable
@@ -150,7 +151,7 @@ export default function OnboardingScreen() {
                 <Text style={styles.roleTitle}>Find work</Text>
                 <Text style={styles.roleNote}>I have skills to get the job done</Text>
               </View>
-              <Ionicons name="chevron-forward" size={22} color="#94a3b8" />
+              <Ionicons name="chevron-forward" size={22} color={colors.muted} />
             </Pressable>
           </View>
 
@@ -173,7 +174,7 @@ export default function OnboardingScreen() {
       {/* Header */}
       <View style={styles.header}>
         <Pressable onPress={() => setMode(null)} style={styles.backBtn}>
-          <Ionicons name="arrow-back" size={22} color="#0f172a" />
+          <Ionicons name="arrow-back" size={22} color={colors.secondary} />
         </Pressable>
         <Pressable onPress={goToLogin}>
           <Text style={styles.skipText}>Skip</Text>
@@ -186,14 +187,14 @@ export default function OnboardingScreen() {
           style={[styles.tab, mode === "client" && styles.tabActive]}
           onPress={() => setMode("client")}
         >
-          <Ionicons name="home-outline" size={16} color={mode === "client" ? "#ffffff" : "#64748b"} />
+          <Ionicons name="home-outline" size={16} color={mode === "client" ? colors.white : colors.muted} />
           <Text style={[styles.tabText, mode === "client" && styles.tabTextActive]}>For Clients</Text>
         </Pressable>
         <Pressable
           style={[styles.tab, mode === "pro" && styles.tabActivePro]}
           onPress={() => setMode("pro")}
         >
-          <Ionicons name="construct-outline" size={16} color={mode === "pro" ? "#ffffff" : "#64748b"} />
+          <Ionicons name="construct-outline" size={16} color={mode === "pro" ? colors.white : colors.muted} />
           <Text style={[styles.tabText, mode === "pro" && styles.tabTextActive]}>For Pros</Text>
         </Pressable>
       </View>
@@ -239,33 +240,33 @@ export default function OnboardingScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.white,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 24,
-    paddingVertical: 12,
+    paddingHorizontal: spacing["3xl"],
+    paddingVertical: spacing.lg,
   },
   backBtn: {
     width: 40,
     height: 40,
-    borderRadius: 12,
-    backgroundColor: "#f1f5f9",
+    borderRadius: radius.lg,
+    backgroundColor: colors.surfaceDark,
     alignItems: "center",
     justifyContent: "center",
   },
   skipText: {
-    fontSize: 15,
-    color: "#64748b",
+    ...typography.body,
+    color: colors.muted,
     fontWeight: "600",
   },
 
   // ── Role Picker ──
   pickerScreen: {
     flex: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: spacing["3xl"],
   },
   logoCentered: {
     alignItems: "center",
@@ -273,12 +274,12 @@ const styles = StyleSheet.create({
   logoBig: {
     width: 80,
     height: 80,
-    borderRadius: 24,
-    backgroundColor: "#ffffff",
+    borderRadius: spacing["3xl"],
+    backgroundColor: colors.white,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 16,
-    shadowColor: "#1e40af",
+    marginBottom: spacing.xl,
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.3,
     shadowRadius: 16,
@@ -287,13 +288,13 @@ const styles = StyleSheet.create({
   logoTextBig: {
     fontSize: 38,
     fontWeight: "900",
-    color: "#0f172a",
+    color: colors.secondary,
     letterSpacing: -1,
-    marginBottom: 6,
+    marginBottom: spacing.smd,
   },
   logoTagline: {
-    fontSize: 15,
-    color: "#64748b",
+    ...typography.body,
+    color: colors.muted,
     fontWeight: "500",
     letterSpacing: 0.2,
   },
@@ -301,39 +302,38 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
   },
   pickerQuestion: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#0f172a",
-    marginBottom: 16,
+    ...typography.h3,
+    color: colors.secondary,
+    marginBottom: spacing.xl,
   },
   pickerBottom: {
     flex: 0.8,
     justifyContent: "flex-end",
-    paddingBottom: 32,
+    paddingBottom: spacing["4xl"],
     alignItems: "center",
   },
   sloganText: {
-    fontSize: 12,
-    color: "#94a3b8",
+    ...typography.caption,
+    color: "#94A3B8",
     textAlign: "center",
-    marginTop: 16,
+    marginTop: spacing.xl,
     lineHeight: 18,
-    paddingHorizontal: 20,
+    paddingHorizontal: spacing["2xl"],
   },
   roleCard: {
     flexDirection: "row",
     alignItems: "center",
     padding: 18,
     borderWidth: 1.5,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
     borderRadius: 18,
-    marginBottom: 16,
+    marginBottom: spacing.xl,
     gap: 14,
   },
   roleIconBox: {
     width: 56,
     height: 56,
-    borderRadius: 16,
+    borderRadius: radius.xl,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -343,51 +343,51 @@ const styles = StyleSheet.create({
   roleTitle: {
     fontSize: 17,
     fontWeight: "700",
-    color: "#0f172a",
+    color: colors.secondary,
     marginBottom: 3,
   },
   roleNote: {
-    fontSize: 13,
-    color: "#64748b",
+    ...typography.bodySmall,
+    color: colors.muted,
     lineHeight: 18,
   },
   pickerContainer: {
     flex: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: spacing["3xl"],
     justifyContent: "center",
   },
 
   // ── Tabs ──
   tabRow: {
     flexDirection: "row",
-    marginHorizontal: 24,
-    marginBottom: 16,
-    backgroundColor: "#f1f5f9",
+    marginHorizontal: spacing["3xl"],
+    marginBottom: spacing.xl,
+    backgroundColor: colors.surfaceDark,
     borderRadius: 14,
-    padding: 4,
+    padding: spacing.sm,
   },
   tab: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 6,
-    paddingVertical: 12,
+    gap: spacing.smd,
+    paddingVertical: spacing.lg,
     borderRadius: 11,
   },
   tabActive: {
-    backgroundColor: "#1e40af",
+    backgroundColor: colors.primary,
   },
   tabActivePro: {
-    backgroundColor: "#7c3aed",
+    backgroundColor: "#7C3AED",
   },
   tabText: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#64748b",
+    color: colors.muted,
   },
   tabTextActive: {
-    color: "#ffffff",
+    color: colors.white,
   },
 
   // ── Feature Cards ──
@@ -395,24 +395,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cardScrollContent: {
-    paddingHorizontal: 24,
-    paddingBottom: 16,
+    paddingHorizontal: spacing["3xl"],
+    paddingBottom: spacing.xl,
   },
   featureCard: {
     flexDirection: "row",
     alignItems: "flex-start",
     padding: 18,
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.white,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
-    borderRadius: 16,
-    marginBottom: 12,
+    borderColor: colors.border,
+    borderRadius: radius.lg,
+    marginBottom: spacing.lg,
     gap: 14,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 2,
+    ...shadows.sm,
   },
   featureIcon: {
     width: 48,
@@ -427,51 +423,51 @@ const styles = StyleSheet.create({
   featureTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#0f172a",
-    marginBottom: 4,
+    color: colors.secondary,
+    marginBottom: spacing.sm,
   },
   featureDesc: {
-    fontSize: 13,
-    color: "#64748b",
+    ...typography.bodySmall,
+    color: colors.muted,
     lineHeight: 20,
   },
 
   // ── Bottom ──
   bottom: {
-    paddingHorizontal: 24,
-    paddingBottom: 16,
+    paddingHorizontal: spacing["3xl"],
+    paddingBottom: spacing.xl,
   },
   dotsRow: {
     flexDirection: "row",
     justifyContent: "center",
-    gap: 8,
-    marginBottom: 28,
+    gap: spacing.md,
+    marginBottom: spacing["3xl"],
   },
   dot: {
     width: 8,
     height: 8,
-    borderRadius: 4,
-    backgroundColor: "#e2e8f0",
+    borderRadius: radius.full,
+    backgroundColor: colors.border,
   },
   dotActive: {
     width: 24,
-    backgroundColor: "#1e40af",
+    backgroundColor: colors.primary,
   },
   buttonArea: {
-    marginBottom: 16,
+    marginBottom: spacing.xl,
   },
   loginRow: {
     flexDirection: "row",
     justifyContent: "center",
-    paddingVertical: 8,
+    paddingVertical: spacing.md,
   },
   loginText: {
     fontSize: 14,
-    color: "#64748b",
+    color: colors.muted,
   },
   loginLink: {
     fontSize: 14,
-    color: "#1e40af",
+    color: colors.primary,
     fontWeight: "700",
   },
 });

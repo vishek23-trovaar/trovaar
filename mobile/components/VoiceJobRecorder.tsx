@@ -15,6 +15,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { api } from "@/lib/api";
+import { colors, radius } from "../lib/theme";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -147,7 +148,7 @@ export default function VoiceJobRecorder({ onComplete, onCancel }: Props) {
           video.srcObject = stream;
         })
         .catch((err) => {
-          console.warn("Camera access error:", err);
+          if (__DEV__) console.warn("Camera access error:", err);
           // Try again without specific facingMode
           navigator.mediaDevices
             .getUserMedia({ video: true, audio: true })
@@ -282,7 +283,7 @@ export default function VoiceJobRecorder({ onComplete, onCancel }: Props) {
         stopRecording();
       }, MAX_RECORD_SECONDS * 1000);
     } catch (err) {
-      console.error("Camera/mic error:", err);
+      if (__DEV__) console.error("Camera/mic error:", err);
       Alert.alert(
         "Camera Access Required",
         "Please allow camera and microphone access in your browser to record a video job."
@@ -369,7 +370,7 @@ export default function VoiceJobRecorder({ onComplete, onCancel }: Props) {
       setAnswers({});
       setPhase("review");
     } catch (err) {
-      console.error("Video analyze error:", err);
+      if (__DEV__) console.error("Video analyze error:", err);
       Alert.alert(
         "Analysis Failed",
         "Could not analyze your video. Please try again or type your job manually."
@@ -582,7 +583,7 @@ export default function VoiceJobRecorder({ onComplete, onCancel }: Props) {
         {/* Header */}
         <View style={styles.reviewHeader}>
           <Pressable onPress={() => setPhase("preview")} style={styles.backBtn}>
-            <Ionicons name="arrow-back" size={22} color="#0f172a" />
+            <Ionicons name="arrow-back" size={22} color={colors.text} />
           </Pressable>
           <Text style={styles.reviewTitle}>Review & Edit</Text>
           <View style={{ width: 40 }} />
@@ -621,7 +622,7 @@ export default function VoiceJobRecorder({ onComplete, onCancel }: Props) {
             value={editTitle}
             onChangeText={setEditTitle}
             placeholder="What needs to be done?"
-            placeholderTextColor="#94a3b8"
+            placeholderTextColor={colors.muted}
           />
 
           {/* Description */}
@@ -633,14 +634,14 @@ export default function VoiceJobRecorder({ onComplete, onCancel }: Props) {
             multiline
             numberOfLines={4}
             placeholder="Describe the job in detail..."
-            placeholderTextColor="#94a3b8"
+            placeholderTextColor={colors.muted}
             textAlignVertical="top"
           />
 
           {/* Category */}
           <Text style={styles.fieldLabel}>Category</Text>
           <View style={styles.categoryPill}>
-            <Ionicons name="pricetag-outline" size={16} color="#3b82f6" />
+            <Ionicons name="pricetag-outline" size={16} color={colors.primaryLight} />
             <Text style={styles.categoryText}>{CATEGORY_LABELS[editCategory] || editCategory}</Text>
           </View>
 
@@ -659,7 +660,7 @@ export default function VoiceJobRecorder({ onComplete, onCancel }: Props) {
                 <Text
                   style={[
                     styles.urgencyChipText,
-                    editUrgency === opt.value && { color: "#fff" },
+                    editUrgency === opt.value && { color: colors.white },
                   ]}
                 >
                   {opt.label}
@@ -683,7 +684,7 @@ export default function VoiceJobRecorder({ onComplete, onCancel }: Props) {
                   <TextInput
                     style={styles.questionInput}
                     placeholder="Your answer..."
-                    placeholderTextColor="#94a3b8"
+                    placeholderTextColor={colors.muted}
                     value={answers[idx] || ""}
                     onChangeText={(text) => setAnswers((prev) => ({ ...prev, [idx]: text }))}
                   />
@@ -696,11 +697,11 @@ export default function VoiceJobRecorder({ onComplete, onCancel }: Props) {
         {/* Footer */}
         <View style={styles.reviewFooter}>
           <Pressable style={styles.confirmBtn} onPress={handleConfirm}>
-            <Ionicons name="checkmark-circle" size={20} color="#fff" />
+            <Ionicons name="checkmark-circle" size={20} color={colors.white} />
             <Text style={styles.confirmBtnText}>Use This Job</Text>
           </Pressable>
           <Pressable style={styles.rerecordBtnLight} onPress={resetToRecord}>
-            <Ionicons name="videocam-outline" size={18} color="#64748b" />
+            <Ionicons name="videocam-outline" size={18} color={colors.muted} />
             <Text style={styles.rerecordBtnLightText}>Record Again</Text>
           </Pressable>
         </View>
@@ -813,18 +814,18 @@ const styles = StyleSheet.create({
   // ── Review phase ──
   reviewScreen: {
     position: "absolute", top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: "#fff", zIndex: 999,
+    backgroundColor: colors.white, zIndex: 999,
   },
   reviewHeader: {
     flexDirection: "row", alignItems: "center", justifyContent: "space-between",
     paddingHorizontal: 20, paddingVertical: 16,
-    borderBottomWidth: 1, borderBottomColor: "#f1f5f9",
+    borderBottomWidth: 1, borderBottomColor: colors.surfaceDark,
   },
   backBtn: {
-    width: 40, height: 40, borderRadius: 12,
-    backgroundColor: "#f8fafc", alignItems: "center", justifyContent: "center",
+    width: 40, height: 40, borderRadius: radius.lg,
+    backgroundColor: colors.surface, alignItems: "center", justifyContent: "center",
   },
-  reviewTitle: { fontSize: 18, fontWeight: "700", color: "#0f172a" },
+  reviewTitle: { fontSize: 18, fontWeight: "700", color: colors.text },
   reviewScroll: { flex: 1 },
   aiBadge: {
     flexDirection: "row", alignItems: "center", gap: 6,
@@ -833,20 +834,20 @@ const styles = StyleSheet.create({
   },
   aiBadgeText: { color: "#7c3aed", fontSize: 13, fontWeight: "600" },
   infoCard: {
-    backgroundColor: "#f8fafc", borderRadius: 12, padding: 14, marginBottom: 12,
+    backgroundColor: colors.surface, borderRadius: radius.lg, padding: 14, marginBottom: 12,
     borderLeftWidth: 3, borderLeftColor: "#7c3aed",
   },
   infoCardVisual: { backgroundColor: "#faf5ff", borderLeftColor: "#a78bfa" },
   infoCardLabelRow: { flexDirection: "row", alignItems: "center", gap: 5, marginBottom: 4 },
   infoCardLabel: {
-    fontSize: 11, fontWeight: "700", color: "#94a3b8",
+    fontSize: 11, fontWeight: "700", color: colors.muted,
     textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 5,
   },
   infoCardText: { fontSize: 14, color: "#475569", lineHeight: 20, fontStyle: "italic" },
-  fieldLabel: { fontSize: 14, fontWeight: "600", color: "#0f172a", marginBottom: 8, marginTop: 16 },
+  fieldLabel: { fontSize: 14, fontWeight: "600", color: colors.text, marginBottom: 8, marginTop: 16 },
   fieldInput: {
-    borderWidth: 1.5, borderColor: "#e2e8f0", borderRadius: 12,
-    padding: 14, fontSize: 15, color: "#0f172a", backgroundColor: "#fff",
+    borderWidth: 1.5, borderColor: colors.border, borderRadius: radius.lg,
+    padding: 14, fontSize: 15, color: colors.text, backgroundColor: colors.white,
   },
   fieldMultiline: { height: 110, textAlignVertical: "top" },
   categoryPill: {
@@ -854,13 +855,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#eff6ff", paddingHorizontal: 14, paddingVertical: 12,
     borderRadius: 12, alignSelf: "flex-start",
   },
-  categoryText: { color: "#1e40af", fontSize: 15, fontWeight: "700" },
+  categoryText: { color: colors.primary, fontSize: 15, fontWeight: "700" },
   urgencyRow: { flexDirection: "row", gap: 10, flexWrap: "wrap", marginTop: 4 },
   urgencyChip: {
-    paddingHorizontal: 18, paddingVertical: 10, borderRadius: 10,
-    borderWidth: 1.5, borderColor: "#e2e8f0", backgroundColor: "#fff",
+    paddingHorizontal: 18, paddingVertical: 10, borderRadius: radius.sm,
+    borderWidth: 1.5, borderColor: colors.border, backgroundColor: colors.white,
   },
-  urgencyChipText: { fontSize: 14, fontWeight: "600", color: "#64748b" },
+  urgencyChipText: { fontSize: 14, fontWeight: "600", color: colors.muted },
   questionsSection: {
     marginTop: 24, padding: 16,
     backgroundColor: "#f0fdf4", borderRadius: 16,
@@ -868,27 +869,27 @@ const styles = StyleSheet.create({
   },
   questionsSectionHeader: { flexDirection: "row", alignItems: "center", gap: 6, marginBottom: 4 },
   questionsSectionTitle: { fontSize: 15, fontWeight: "700", color: "#059669" },
-  questionsOptional: { fontSize: 12, color: "#94a3b8", marginLeft: 4 },
-  questionsSubtitle: { fontSize: 13, color: "#64748b", marginBottom: 16 },
+  questionsOptional: { fontSize: 12, color: colors.muted, marginLeft: 4 },
+  questionsSubtitle: { fontSize: 13, color: colors.muted, marginBottom: 16 },
   questionItem: { marginBottom: 16 },
-  questionText: { fontSize: 14, fontWeight: "600", color: "#0f172a", marginBottom: 6 },
+  questionText: { fontSize: 14, fontWeight: "600", color: colors.text, marginBottom: 6 },
   questionInput: {
-    borderWidth: 1.5, borderColor: "#d1fae5", borderRadius: 10,
-    padding: 12, fontSize: 14, color: "#0f172a", backgroundColor: "#fff",
+    borderWidth: 1.5, borderColor: "#d1fae5", borderRadius: radius.sm,
+    padding: 12, fontSize: 14, color: colors.text, backgroundColor: colors.white,
   },
-  reviewFooter: { padding: 20, gap: 10, borderTopWidth: 1, borderTopColor: "#f1f5f9" },
+  reviewFooter: { padding: 20, gap: 10, borderTopWidth: 1, borderTopColor: colors.surfaceDark },
   confirmBtn: {
     flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8,
-    backgroundColor: "#1e40af", paddingVertical: 16, borderRadius: 14,
-    shadowColor: "#1e40af", shadowOffset: { width: 0, height: 4 },
+    backgroundColor: colors.primary, paddingVertical: 16, borderRadius: 14,
+    shadowColor: colors.primary, shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3, shadowRadius: 8, elevation: 8,
   },
-  confirmBtnText: { color: "#fff", fontSize: 17, fontWeight: "700" },
+  confirmBtnText: { color: colors.white, fontSize: 17, fontWeight: "700" },
   rerecordBtnLight: {
     flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6,
-    paddingVertical: 12, borderWidth: 1.5, borderColor: "#e2e8f0", borderRadius: 14,
+    paddingVertical: 12, borderWidth: 1.5, borderColor: colors.border, borderRadius: 14,
   },
-  rerecordBtnLightText: { color: "#64748b", fontSize: 15, fontWeight: "600" },
+  rerecordBtnLightText: { color: colors.muted, fontSize: 15, fontWeight: "600" },
 
   // ── Native fallback ──
   nativeTitle: { fontSize: 22, fontWeight: "800", color: "#fff", marginTop: 16, marginBottom: 10 },

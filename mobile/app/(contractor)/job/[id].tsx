@@ -17,19 +17,20 @@ import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/api";
 import { Job, Bid } from "@/lib/types";
 import * as ImagePicker from "expo-image-picker";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from "../../../lib/theme";
 
 const COLORS = {
-  primary: "#1e40af",
-  primaryLight: "#3b82f6",
-  secondary: "#0f172a",
-  muted: "#64748b",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  success: "#059669",
+  primary: colors.primary,
+  primaryLight: colors.primaryLight,
+  secondary: colors.text,
+  muted: colors.muted,
+  surface: colors.surface,
+  border: colors.border,
+  success: colors.success,
   successLight: "#ecfdf5",
-  warning: "#d97706",
-  danger: "#dc2626",
-  white: "#ffffff",
+  warning: colors.warning,
+  danger: colors.danger,
+  white: colors.white,
 };
 
 const CATEGORY_EMOJIS: Record<string, string> = {
@@ -1082,13 +1083,13 @@ export default function ContractorJobDetail() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: "#fff" },
+  screen: { flex: 1, backgroundColor: colors.white },
   container: { padding: 20 },
   centerScreen: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: colors.white,
     gap: 12,
   },
   notFoundText: { fontSize: 16, color: "#94a3b8", fontWeight: "500" },
@@ -1221,11 +1222,11 @@ const styles = StyleSheet.create({
 
   // Active Job Card
   activeJobCard: {
-    backgroundColor: COLORS.surface,
-    borderRadius: 16,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
     padding: 20,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
     marginBottom: 16,
   },
   activeJobTitle: {
@@ -1254,9 +1255,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.warning,
+    backgroundColor: colors.warning,
     paddingVertical: 16,
-    borderRadius: 14,
+    borderRadius: radius.md,
     gap: 8,
   },
   inProgressBtnText: {
@@ -1268,15 +1269,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.success,
+    backgroundColor: colors.success,
     paddingVertical: 16,
-    borderRadius: 14,
+    borderRadius: radius.md,
     gap: 8,
-    shadowColor: "#059669",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
+    ...shadows.md,
   },
   completeBtnText: {
     color: COLORS.white,
@@ -1530,11 +1527,11 @@ const styles = StyleSheet.create({
   itemizedTotalValue: { fontSize: 22, fontWeight: "800", color: COLORS.success },
 
   bidForm: {
-    backgroundColor: COLORS.surface,
-    borderRadius: 16,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
     padding: 20,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
   },
   formTitle: {
     fontSize: 20,
@@ -1587,23 +1584,23 @@ const styles = StyleSheet.create({
   },
   submitBtn: {
     flexDirection: "row",
-    backgroundColor: COLORS.success,
+    backgroundColor: colors.primary,
     paddingVertical: 16,
-    borderRadius: 14,
+    borderRadius: radius.md,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 24,
     gap: 8,
   },
-  submitBtnText: { color: "#fff", fontSize: 16, fontWeight: "700" },
+  submitBtnText: { color: colors.white, fontSize: 16, fontWeight: "600" },
 
   clientCard: {
-    backgroundColor: COLORS.surface,
-    borderRadius: 16,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
     padding: 20,
     marginTop: 16,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
   },
   clientCardTitle: {
     fontSize: 16,

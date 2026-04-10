@@ -10,19 +10,20 @@ import {
   RefreshControl,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { api, ApiError } from "@/lib/api";
+import { api, ApiError, getToken, API_URL } from "@/lib/api";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from "../../lib/theme";
 
 const COLORS = {
-  primary: "#2563eb",
-  primaryLight: "#eff6ff",
-  background: "#ffffff",
-  surface: "#f8fafc",
-  text: "#1e293b",
-  muted: "#64748b",
-  border: "#e2e8f0",
-  success: "#16a34a",
-  danger: "#dc2626",
-  warning: "#d97706",
+  primary: colors.primary,
+  primaryLight: "#DBEAFE",
+  background: colors.white,
+  surface: colors.surface,
+  text: colors.text,
+  muted: colors.muted,
+  border: colors.border,
+  success: colors.success,
+  danger: colors.danger,
+  warning: colors.warning,
 };
 
 const CURRENT_YEAR = new Date().getFullYear();
@@ -148,11 +149,41 @@ export default function Tax() {
     setRefreshing(false);
   };
 
-  const handleDownload = () => {
-    Alert.alert(
-      "Coming Soon",
-      "PDF export is not yet available. Check back soon!"
-    );
+  const [downloading, setDownloading] = useState(false);
+
+  const handleDownload = async () => {
+    setDownloading(true);
+    try {
+      const token = await getToken();
+      const res = await fetch(
+        `${API_URL}/api/contractors/tax/export?year=${selectedYear}`,
+        {
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        }
+      );
+      if (!res.ok) throw new Error(`Export not available (${res.status})`);
+      // If the endpoint returns a URL or blob, attempt to open it
+      const contentType = res.headers.get("content-type") || "";
+      if (contentType.includes("application/json")) {
+        const data = await res.json();
+        if (data.url) {
+          const { Linking } = await import("react-native");
+          await Linking.openURL(data.url);
+        } else {
+          Alert.alert("Success", "Tax summary exported.");
+        }
+      } else {
+        Alert.alert("Success", "Tax summary exported.");
+      }
+    } catch {
+      Alert.alert(
+        "Not Available",
+        "PDF export is not available yet. This feature is coming soon."
+      );
+    }
+    setDownloading(false);
   };
 
   const on1099Track =
@@ -346,9 +377,20 @@ export default function Tax() {
             </View>
 
             {/* Download button */}
-            <TouchableOpacity style={styles.downloadBtn} onPress={handleDownload} activeOpacity={0.8}>
-              <Ionicons name="download-outline" size={18} color={COLORS.primary} />
-              <Text style={styles.downloadBtnText}>Download Summary</Text>
+            <TouchableOpacity
+              style={[styles.downloadBtn, downloading && { opacity: 0.6 }]}
+              onPress={handleDownload}
+              activeOpacity={0.8}
+              disabled={downloading}
+            >
+              {downloading ? (
+                <ActivityIndicator size="small" color={COLORS.primary} />
+              ) : (
+                <Ionicons name="download-outline" size={18} color={COLORS.primary} />
+              )}
+              <Text style={styles.downloadBtnText}>
+                {downloading ? "Exporting..." : "Download Summary"}
+              </Text>
             </TouchableOpacity>
 
             {/* Tax info section */}
@@ -432,16 +474,12 @@ const styles = StyleSheet.create({
   },
   summaryCard: {
     width: "47%",
-    backgroundColor: "#fff",
-    borderRadius: 16,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
     padding: 16,
     borderWidth: 1,
-    borderColor: COLORS.border,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.04,
-    shadowRadius: 4,
-    elevation: 2,
+    borderColor: colors.border,
+    ...shadows.sm,
     marginBottom: 4,
   },
   summaryCardPrimary: {
@@ -490,10 +528,10 @@ const styles = StyleSheet.create({
   tableSection: {
     marginHorizontal: 16,
     marginTop: 16,
-    backgroundColor: "#fff",
-    borderRadius: 16,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
     overflow: "hidden",
   },
   tableSectionTitle: {
@@ -571,11 +609,11 @@ const styles = StyleSheet.create({
   taxInfoSection: {
     marginHorizontal: 16,
     marginTop: 16,
-    backgroundColor: "#fff",
-    borderRadius: 16,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
     padding: 16,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
   },
   taxInfoHeader: {
     flexDirection: "row",

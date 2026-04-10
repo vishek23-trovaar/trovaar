@@ -19,22 +19,8 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/api";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from '../../lib/theme';
 
-const COLORS = {
-  primary: "#2563eb",
-  primaryLight: "#3b82f6",
-  primaryBg: "#eff6ff",
-  secondary: "#1e293b",
-  muted: "#64748b",
-  mutedLight: "#94a3b8",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  white: "#ffffff",
-  success: "#16a34a",
-  successBg: "#f0fdf4",
-  danger: "#dc2626",
-  dangerBg: "#fef2f2",
-};
 
 const CATEGORIES = [
   "Plumbing",
@@ -120,7 +106,7 @@ function SkeletonPulse({
           width: width as number,
           height,
           borderRadius,
-          backgroundColor: "#e2e8f0",
+          backgroundColor: colors.border,
           opacity: animValue,
         },
         style,
@@ -136,8 +122,8 @@ function LoadingSkeleton() {
         <View
           key={i}
           style={{
-            backgroundColor: COLORS.white,
-            borderRadius: 16,
+            backgroundColor: colors.white,
+            borderRadius: radius.xl,
             padding: 18,
             gap: 10,
             shadowColor: "#000",
@@ -186,7 +172,7 @@ function LabeledInput({
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor={COLORS.mutedLight}
+        placeholderTextColor={colors.muted}
         keyboardType={keyboardType ?? "default"}
         multiline={multiline}
       />
@@ -353,7 +339,7 @@ export default function TemplatesScreen() {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Job Templates</Text>
         <TouchableOpacity style={styles.addBtn} onPress={openCreate} activeOpacity={0.8}>
-          <Ionicons name="add" size={22} color={COLORS.white} />
+          <Ionicons name="add" size={22} color={colors.white} />
         </TouchableOpacity>
       </View>
 
@@ -364,8 +350,8 @@ export default function TemplatesScreen() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            tintColor={COLORS.primary}
-            colors={[COLORS.primary]}
+            tintColor={colors.primary}
+            colors={[colors.primary]}
           />
         }
         contentContainerStyle={[
@@ -389,10 +375,10 @@ export default function TemplatesScreen() {
                 <View
                   style={[
                     styles.categoryBadge,
-                    { backgroundColor: COLORS.primaryBg },
+                    { backgroundColor: "#DBEAFE" },
                   ]}
                 >
-                  <Text style={[styles.categoryBadgeText, { color: COLORS.primary }]}>
+                  <Text style={[styles.categoryBadgeText, { color: colors.primary }]}>
                     {item.category}
                   </Text>
                 </View>
@@ -402,7 +388,7 @@ export default function TemplatesScreen() {
                 style={styles.deleteIconBtn}
                 hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
               >
-                <Ionicons name="trash-outline" size={16} color={COLORS.mutedLight} />
+                <Ionicons name="trash-outline" size={16} color={colors.muted} />
               </TouchableOpacity>
             </View>
 
@@ -420,7 +406,7 @@ export default function TemplatesScreen() {
 
             {/* Budget */}
             <View style={styles.budgetRow}>
-              <Ionicons name="cash-outline" size={14} color={COLORS.muted} />
+              <Ionicons name="cash-outline" size={14} color={colors.muted} />
               <Text style={styles.budgetText}>
                 {formatBudget(item.budget_min, item.budget_max)}
               </Text>
@@ -433,7 +419,7 @@ export default function TemplatesScreen() {
                 onPress={() => openEdit(item)}
                 activeOpacity={0.7}
               >
-                <Ionicons name="create-outline" size={15} color={COLORS.primary} />
+                <Ionicons name="create-outline" size={15} color={colors.primary} />
                 <Text style={styles.editBtnText}>Edit</Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -441,7 +427,7 @@ export default function TemplatesScreen() {
                 onPress={() => handleUse(item)}
                 activeOpacity={0.8}
               >
-                <Ionicons name="flash-outline" size={15} color={COLORS.white} />
+                <Ionicons name="flash-outline" size={15} color={colors.white} />
                 <Text style={styles.useBtnText}>Use Template</Text>
               </TouchableOpacity>
             </View>
@@ -450,14 +436,14 @@ export default function TemplatesScreen() {
         ListEmptyComponent={
           <View style={styles.emptyWrap}>
             <View style={styles.emptyIconCircle}>
-              <Ionicons name="document-text-outline" size={40} color={COLORS.primary} />
+              <Ionicons name="document-text-outline" size={40} color={colors.primary} />
             </View>
             <Text style={styles.emptyTitle}>No templates yet</Text>
             <Text style={styles.emptySub}>
               Save job templates to quickly post recurring services without re-entering details.
             </Text>
             <TouchableOpacity style={styles.emptyCreateBtn} onPress={openCreate} activeOpacity={0.8}>
-              <Ionicons name="add-outline" size={20} color={COLORS.white} />
+              <Ionicons name="add-outline" size={20} color={colors.white} />
               <Text style={styles.emptyCreateBtnText}>Create First Template</Text>
             </TouchableOpacity>
           </View>
@@ -479,7 +465,7 @@ export default function TemplatesScreen() {
             {/* Modal Header */}
             <View style={styles.modalHeader}>
               <TouchableOpacity onPress={closeModal} style={styles.modalCloseBtn}>
-                <Ionicons name="close" size={22} color={COLORS.muted} />
+                <Ionicons name="close" size={22} color={colors.muted} />
               </TouchableOpacity>
               <Text style={styles.modalTitle}>
                 {editingTemplate ? "Edit Template" : "New Template"}
@@ -490,7 +476,7 @@ export default function TemplatesScreen() {
                 disabled={saving}
               >
                 {saving ? (
-                  <ActivityIndicator size="small" color={COLORS.white} />
+                  <ActivityIndicator size="small" color={colors.white} />
                 ) : (
                   <Text style={styles.modalSaveBtnText}>Save</Text>
                 )}
@@ -520,7 +506,7 @@ export default function TemplatesScreen() {
                   <Text
                     style={[
                       styles.pickerValue,
-                      !form.category && { color: COLORS.mutedLight },
+                      !form.category && { color: colors.muted },
                     ]}
                   >
                     {form.category || "Select a category"}
@@ -528,7 +514,7 @@ export default function TemplatesScreen() {
                   <Ionicons
                     name={categoryPickerOpen ? "chevron-up" : "chevron-down"}
                     size={16}
-                    color={COLORS.muted}
+                    color={colors.muted}
                   />
                 </TouchableOpacity>
                 {categoryPickerOpen && (
@@ -551,13 +537,13 @@ export default function TemplatesScreen() {
                         <Text
                           style={[
                             styles.pickerOptionText,
-                            form.category === cat && { color: COLORS.primary, fontWeight: "700" },
+                            form.category === cat && { color: colors.primary, fontWeight: "700" },
                           ]}
                         >
                           {cat}
                         </Text>
                         {form.category === cat && (
-                          <Ionicons name="checkmark" size={16} color={COLORS.primary} />
+                          <Ionicons name="checkmark" size={16} color={colors.primary} />
                         )}
                       </TouchableOpacity>
                     ))}
@@ -605,7 +591,7 @@ export default function TemplatesScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: COLORS.surface },
+  screen: { flex: 1, backgroundColor: colors.surface },
 
   header: {
     flexDirection: "row",
@@ -614,23 +600,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: Platform.OS === "ios" ? 60 : 20,
     paddingBottom: 16,
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.white,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: colors.border,
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: "800",
-    color: COLORS.secondary,
+    color: colors.text,
   },
   addBtn: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: COLORS.primary,
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
@@ -645,8 +631,8 @@ const styles = StyleSheet.create({
 
   // Template Card
   card: {
-    backgroundColor: COLORS.white,
-    borderRadius: 16,
+    backgroundColor: colors.white,
+    borderRadius: radius.xl,
     padding: 18,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -669,7 +655,7 @@ const styles = StyleSheet.create({
   categoryBadge: {
     paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 10,
+    borderRadius: radius.md,
   },
   categoryBadgeText: { fontSize: 12, fontWeight: "600" },
   deleteIconBtn: {
@@ -678,13 +664,13 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 17,
     fontWeight: "700",
-    color: COLORS.secondary,
+    color: colors.text,
     marginBottom: 6,
     lineHeight: 23,
   },
   cardDescription: {
     fontSize: 13,
-    color: COLORS.muted,
+    color: colors.muted,
     lineHeight: 19,
     marginBottom: 10,
   },
@@ -696,14 +682,14 @@ const styles = StyleSheet.create({
   },
   budgetText: {
     fontSize: 13,
-    color: COLORS.muted,
+    color: colors.muted,
     fontWeight: "500",
   },
   cardActions: {
     flexDirection: "row",
     gap: 10,
     borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: COLORS.border,
+    borderTopColor: colors.border,
     paddingTop: 14,
   },
   editBtn: {
@@ -713,15 +699,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 6,
     paddingVertical: 10,
-    borderRadius: 10,
+    borderRadius: radius.md,
     borderWidth: 1.5,
-    borderColor: COLORS.primary,
-    backgroundColor: COLORS.primaryBg,
+    borderColor: colors.primary,
+    backgroundColor: "#DBEAFE",
   },
   editBtnText: {
     fontSize: 14,
     fontWeight: "600",
-    color: COLORS.primary,
+    color: colors.primary,
   },
   useBtn: {
     flex: 2,
@@ -730,13 +716,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 6,
     paddingVertical: 10,
-    borderRadius: 10,
-    backgroundColor: COLORS.primary,
+    borderRadius: radius.md,
+    backgroundColor: colors.primary,
   },
   useBtnText: {
     fontSize: 14,
     fontWeight: "700",
-    color: COLORS.white,
+    color: colors.white,
   },
 
   // Empty state
@@ -751,7 +737,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: COLORS.primaryBg,
+    backgroundColor: "#DBEAFE",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 24,
@@ -759,12 +745,12 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 22,
     fontWeight: "800",
-    color: COLORS.secondary,
+    color: colors.text,
     marginBottom: 10,
   },
   emptySub: {
     fontSize: 15,
-    color: COLORS.muted,
+    color: colors.muted,
     textAlign: "center",
     lineHeight: 22,
     marginBottom: 28,
@@ -773,18 +759,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingHorizontal: 28,
     paddingVertical: 14,
-    borderRadius: 14,
-    shadowColor: COLORS.primary,
+    borderRadius: radius.lg,
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 5,
   },
   emptyCreateBtnText: {
-    color: COLORS.white,
+    color: colors.white,
     fontSize: 16,
     fontWeight: "700",
   },
@@ -792,7 +778,7 @@ const styles = StyleSheet.create({
   // Modal
   modalContainer: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.white,
   },
   modalHeader: {
     flexDirection: "row",
@@ -802,31 +788,31 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === "ios" ? 16 : 20,
     paddingBottom: 16,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: colors.border,
   },
   modalCloseBtn: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     justifyContent: "center",
     alignItems: "center",
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: COLORS.secondary,
+    color: colors.text,
   },
   modalSaveBtn: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingHorizontal: 20,
     paddingVertical: 8,
-    borderRadius: 10,
+    borderRadius: radius.md,
     minWidth: 64,
     alignItems: "center",
   },
   modalSaveBtnText: {
-    color: COLORS.white,
+    color: colors.white,
     fontSize: 15,
     fontWeight: "700",
   },
@@ -842,34 +828,34 @@ const styles = StyleSheet.create({
   fieldLabel: {
     fontSize: 13,
     fontWeight: "600",
-    color: COLORS.muted,
+    color: colors.muted,
     marginBottom: 6,
     textTransform: "uppercase",
     letterSpacing: 0.4,
   },
   fieldInput: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     borderWidth: 1.5,
-    borderColor: COLORS.border,
-    borderRadius: 12,
+    borderColor: colors.border,
+    borderRadius: radius.lg,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 16,
-    color: COLORS.secondary,
+    color: colors.text,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
   pickerValue: {
     fontSize: 16,
-    color: COLORS.secondary,
+    color: colors.text,
     flex: 1,
   },
   pickerDropdown: {
-    backgroundColor: COLORS.white,
-    borderRadius: 12,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
     borderWidth: 1.5,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
     marginTop: 4,
     overflow: "hidden",
     shadowColor: "#000",
@@ -885,15 +871,15 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     gap: 10,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: colors.border,
   },
   pickerOptionActive: {
-    backgroundColor: COLORS.primaryBg,
+    backgroundColor: "#DBEAFE",
   },
   pickerOptionEmoji: { fontSize: 16 },
   pickerOptionText: {
     fontSize: 15,
-    color: COLORS.secondary,
+    color: colors.text,
     flex: 1,
   },
   budgetRow2: {

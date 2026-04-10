@@ -14,20 +14,21 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/api";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from "../../lib/theme";
 
 const COLORS = {
-  primary: "#3b82f6",
-  primaryDark: "#1e40af",
-  secondary: "#1e293b",
-  muted: "#64748b",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  success: "#059669",
+  primary: colors.primary,
+  primaryDark: colors.primaryDark,
+  secondary: colors.text,
+  muted: colors.muted,
+  surface: colors.surface,
+  border: colors.border,
+  success: colors.success,
   successLight: "#ecfdf5",
-  danger: "#dc2626",
+  danger: colors.danger,
   dangerLight: "#fef2f2",
-  white: "#ffffff",
-  warning: "#d97706",
+  white: colors.white,
+  warning: colors.warning,
   warningBg: "#fffbeb",
 };
 
@@ -476,16 +477,13 @@ const styles = StyleSheet.create({
   categoryCard: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: COLORS.white,
-    borderRadius: 16,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
     padding: 16,
     gap: 14,
     borderWidth: 1,
-    borderColor: COLORS.border,
-    ...Platform.select({
-      ios: { shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4 },
-      android: { elevation: 1 },
-    }),
+    borderColor: colors.border,
+    ...shadows.sm,
   },
   categoryIconWrap: {
     width: 48,
@@ -574,15 +572,15 @@ const styles = StyleSheet.create({
   },
   nextBtn: {
     flexDirection: "row",
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingVertical: 16,
-    borderRadius: 14,
+    borderRadius: radius.md,
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
   },
   nextBtnDisabled: { backgroundColor: COLORS.surface },
-  nextBtnText: { color: COLORS.white, fontSize: 16, fontWeight: "700" },
+  nextBtnText: { color: colors.white, fontSize: 16, fontWeight: "600" },
   nextBtnTextDisabled: { color: COLORS.muted },
 
   // Results screen
@@ -654,16 +652,13 @@ const styles = StyleSheet.create({
 
   backToCategoriesBtn: {
     flexDirection: "row",
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingHorizontal: 28,
     paddingVertical: 16,
-    borderRadius: 14,
+    borderRadius: radius.md,
     alignItems: "center",
     gap: 8,
-    ...Platform.select({
-      ios: { shadowColor: COLORS.primary, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8 },
-      android: { elevation: 6 },
-    }),
+    ...shadows.md,
   },
-  backToCategoriesBtnText: { color: COLORS.white, fontSize: 16, fontWeight: "700" },
+  backToCategoriesBtnText: { color: colors.white, fontSize: 16, fontWeight: "600" },
 });

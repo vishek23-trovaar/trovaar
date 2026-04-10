@@ -15,18 +15,19 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { api, ApiError } from "@/lib/api";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from "../../lib/theme";
 
 const COLORS = {
-  primary: "#2563eb",
-  primaryLight: "#eff6ff",
-  background: "#ffffff",
-  surface: "#f8fafc",
-  text: "#1e293b",
-  muted: "#64748b",
-  border: "#e2e8f0",
-  success: "#16a34a",
-  danger: "#dc2626",
-  warning: "#d97706",
+  primary: colors.primary,
+  primaryLight: "#DBEAFE",
+  background: colors.white,
+  surface: colors.surface,
+  text: colors.text,
+  muted: colors.muted,
+  border: colors.border,
+  success: colors.success,
+  danger: colors.danger,
+  warning: colors.warning,
   star: "#f59e0b",
 };
 
@@ -600,18 +601,16 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: "#fff",
-    borderRadius: 16,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
     padding: 16,
     marginBottom: 10,
     flexDirection: "row",
     alignItems: "center",
     gap: 14,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: colors.border,
+    ...shadows.md,
   },
   avatar: {
     width: 48,
@@ -818,16 +817,12 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
   },
   saveNoteBtn: {
-    backgroundColor: COLORS.primary,
-    borderRadius: 12,
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
     paddingVertical: 13,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: COLORS.primary,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-    elevation: 3,
+    ...shadows.md,
   },
   saveNoteBtnText: {
     fontSize: 15,

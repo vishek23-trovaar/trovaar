@@ -55,6 +55,8 @@ interface Subscription {
   status: "active" | "cancelled" | "expired";
 }
 
+// Fallback plans that match the API response from /api/subscriptions/plans.
+// Used when the API is unreachable so the UI still renders correctly.
 const HARDCODED_PLANS: Plan[] = [
   {
     id: "basic",

@@ -15,19 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { Message } from "@/lib/types";
-
-const COLORS = {
-  primary: "#1e40af",
-  primaryLight: "#3b82f6",
-  secondary: "#0f172a",
-  muted: "#64748b",
-  mutedLight: "#94a3b8",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  white: "#ffffff",
-  bubbleMine: "#1e40af",
-  bubbleTheirs: "#f1f5f9",
-};
+import { colors, radius } from "../../../lib/theme";
 
 function formatTime(dateStr: string): string {
   if (!dateStr) return "";
@@ -57,7 +45,7 @@ export default function ChatThread() {
       const msgs = Array.isArray(data) ? data : [];
       setMessages(msgs);
     } catch (err) {
-      console.error("[Chat] fetch error:", err);
+      if (__DEV__) console.error("[Chat] fetch error:", err);
     }
     setLoading(false);
   }, [jobId]);
@@ -114,7 +102,7 @@ export default function ChatThread() {
       // Refetch to get server-confirmed message
       await fetchMessages();
     } catch (err) {
-      console.error("[Chat] send error:", err);
+      if (__DEV__) console.error("[Chat] send error:", err);
       // Remove optimistic message on failure
       setMessages((prev) => prev.filter((m) => m.id !== optimisticMsg.id));
       setInputText(content); // Restore the text
@@ -144,7 +132,7 @@ export default function ChatThread() {
   if (loading) {
     return (
       <View style={[styles.screen, styles.center]}>
-        <ActivityIndicator size="large" color={COLORS.primary} />
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
@@ -177,7 +165,7 @@ export default function ChatThread() {
         }}
         ListEmptyComponent={
           <View style={styles.emptyChat}>
-            <Ionicons name="chatbubbles-outline" size={48} color={COLORS.border} />
+            <Ionicons name="chatbubbles-outline" size={48} color={colors.border} />
             <Text style={styles.emptyChatText}>No messages yet</Text>
             <Text style={styles.emptyChatSub}>Send a message to start the conversation</Text>
           </View>
@@ -190,7 +178,7 @@ export default function ChatThread() {
         <TextInput
           style={styles.textInput}
           placeholder="Type a message..."
-          placeholderTextColor={COLORS.mutedLight}
+          placeholderTextColor={colors.muted}
           value={inputText}
           onChangeText={setInputText}
           multiline
@@ -204,9 +192,9 @@ export default function ChatThread() {
           activeOpacity={0.7}
         >
           {sending ? (
-            <ActivityIndicator size="small" color={COLORS.white} />
+            <ActivityIndicator size="small" color={colors.white} />
           ) : (
-            <Ionicons name="send" size={20} color={COLORS.white} />
+            <Ionicons name="send" size={20} color={colors.white} />
           )}
         </TouchableOpacity>
       </View>
@@ -217,7 +205,7 @@ export default function ChatThread() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.white,
   },
   center: {
     justifyContent: "center",
@@ -245,17 +233,17 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   bubbleMine: {
-    backgroundColor: COLORS.bubbleMine,
+    backgroundColor: colors.primary,
     borderBottomRightRadius: 4,
   },
   bubbleTheirs: {
-    backgroundColor: COLORS.bubbleTheirs,
+    backgroundColor: colors.surface,
     borderBottomLeftRadius: 4,
   },
   senderName: {
     fontSize: 12,
     fontWeight: "600",
-    color: COLORS.primaryLight,
+    color: colors.primaryLight,
     marginBottom: 2,
   },
   bubbleText: {
@@ -263,10 +251,10 @@ const styles = StyleSheet.create({
     lineHeight: 21,
   },
   bubbleTextMine: {
-    color: COLORS.white,
+    color: colors.white,
   },
   bubbleTextTheirs: {
-    color: COLORS.secondary,
+    color: colors.text,
   },
   bubbleTime: {
     fontSize: 11,
@@ -277,7 +265,7 @@ const styles = StyleSheet.create({
     textAlign: "right",
   },
   bubbleTimeTheirs: {
-    color: COLORS.mutedLight,
+    color: colors.muted,
   },
   emptyChat: {
     alignItems: "center",
@@ -286,12 +274,12 @@ const styles = StyleSheet.create({
   emptyChatText: {
     fontSize: 16,
     fontWeight: "600",
-    color: COLORS.muted,
+    color: colors.muted,
     marginTop: 12,
   },
   emptyChatSub: {
     fontSize: 13,
-    color: COLORS.mutedLight,
+    color: colors.muted,
     marginTop: 4,
   },
   inputBar: {
@@ -300,18 +288,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderTopWidth: 1,
-    borderTopColor: COLORS.border,
-    backgroundColor: COLORS.white,
+    borderTopColor: colors.border,
+    backgroundColor: colors.white,
     gap: 8,
   },
   textInput: {
     flex: 1,
-    backgroundColor: COLORS.surface,
-    borderRadius: 20,
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
     paddingHorizontal: 16,
     paddingVertical: Platform.OS === "ios" ? 10 : 8,
     fontSize: 15,
-    color: COLORS.secondary,
+    color: colors.text,
     maxHeight: 100,
     minHeight: 40,
   },
@@ -319,11 +309,11 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     justifyContent: "center",
     alignItems: "center",
   },
   sendBtnDisabled: {
-    backgroundColor: COLORS.border,
+    backgroundColor: colors.border,
   },
 });

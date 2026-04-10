@@ -14,20 +14,8 @@ import {
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from '../../../lib/theme';
 
-const COLORS = {
-  primary: "#2563eb",
-  background: "#ffffff",
-  surface: "#f8fafc",
-  text: "#1e293b",
-  muted: "#64748b",
-  border: "#e2e8f0",
-  success: "#16a34a",
-  danger: "#dc2626",
-  infoBlue: "#eff6ff",
-  infoBorder: "#bfdbfe",
-  infoText: "#1d4ed8",
-};
 
 type Urgency = "normal" | "urgent";
 
@@ -135,7 +123,7 @@ export default function ChangeOrderScreen() {
           onPress={() => router.back()}
           activeOpacity={0.7}
         >
-          <Ionicons name="arrow-back" size={24} color={COLORS.text} />
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Request Change Order</Text>
         <View style={styles.headerSpacer} />
@@ -151,7 +139,7 @@ export default function ChangeOrderScreen() {
           <Ionicons
             name="information-circle-outline"
             size={20}
-            color={COLORS.infoText}
+            color={colors.primaryDark}
             style={{ marginTop: 1 }}
           />
           <Text style={styles.infoBoxText}>
@@ -163,7 +151,7 @@ export default function ChangeOrderScreen() {
         {/* Current Job Summary */}
         <View style={styles.jobSummaryCard}>
           {loadingJob ? (
-            <ActivityIndicator size="small" color={COLORS.primary} />
+            <ActivityIndicator size="small" color={colors.primary} />
           ) : job ? (
             <>
               <Text style={styles.jobSummaryLabel}>Current Job</Text>
@@ -177,7 +165,7 @@ export default function ChangeOrderScreen() {
                 <Ionicons
                   name="person-outline"
                   size={14}
-                  color={COLORS.muted}
+                  color={colors.muted}
                 />
                 <Text style={styles.jobMetaText}>{contractorName}</Text>
                 {job.status && (
@@ -256,8 +244,8 @@ export default function ChangeOrderScreen() {
                     active
                       ? isUrgent
                         ? "#d97706"
-                        : COLORS.primary
-                      : COLORS.muted
+                        : colors.primary
+                      : colors.muted
                   }
                 />
                 <Text
@@ -300,7 +288,7 @@ export default function ChangeOrderScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: colors.white,
   },
 
   // Header
@@ -311,8 +299,8 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === "ios" ? 56 : 16,
     paddingBottom: 12,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: COLORS.border,
-    backgroundColor: COLORS.background,
+    borderBottomColor: colors.border,
+    backgroundColor: colors.white,
   },
   backBtn: {
     padding: 4,
@@ -321,7 +309,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: COLORS.text,
+    color: colors.text,
     flex: 1,
     textAlign: "center",
   },
@@ -338,28 +326,28 @@ const styles = StyleSheet.create({
   // Info box
   infoBox: {
     flexDirection: "row",
-    backgroundColor: COLORS.infoBlue,
-    borderRadius: 12,
+    backgroundColor: "#DBEAFE",
+    borderRadius: radius.lg,
     padding: 14,
     borderWidth: 1,
-    borderColor: COLORS.infoBorder,
+    borderColor: "#93C5FD",
     gap: 10,
     marginBottom: 20,
   },
   infoBoxText: {
     fontSize: 14,
-    color: COLORS.infoText,
+    color: colors.primaryDark,
     flex: 1,
     lineHeight: 20,
   },
 
   // Job summary card
   jobSummaryCard: {
-    backgroundColor: COLORS.surface,
-    borderRadius: 14,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
     padding: 16,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
     marginBottom: 24,
     minHeight: 60,
     justifyContent: "center",
@@ -367,7 +355,7 @@ const styles = StyleSheet.create({
   jobSummaryLabel: {
     fontSize: 11,
     fontWeight: "600",
-    color: COLORS.muted,
+    color: colors.muted,
     textTransform: "uppercase",
     letterSpacing: 0.5,
     marginBottom: 4,
@@ -375,12 +363,12 @@ const styles = StyleSheet.create({
   jobSummaryTitle: {
     fontSize: 17,
     fontWeight: "700",
-    color: COLORS.text,
+    color: colors.text,
     marginBottom: 4,
   },
   jobSummaryDesc: {
     fontSize: 14,
-    color: COLORS.muted,
+    color: colors.muted,
     lineHeight: 20,
     marginBottom: 8,
   },
@@ -392,78 +380,78 @@ const styles = StyleSheet.create({
   },
   jobMetaText: {
     fontSize: 13,
-    color: COLORS.muted,
+    color: colors.muted,
   },
   metaDot: {
     width: 3,
     height: 3,
     borderRadius: 1.5,
-    backgroundColor: COLORS.muted,
+    backgroundColor: colors.muted,
   },
   mutedText: {
     fontSize: 14,
-    color: COLORS.muted,
+    color: colors.muted,
   },
 
   // Field labels
   fieldLabel: {
     fontSize: 14,
     fontWeight: "600",
-    color: COLORS.text,
+    color: colors.text,
     marginBottom: 8,
   },
   requiredStar: {
-    color: COLORS.danger,
+    color: colors.danger,
   },
   optionalTag: {
     fontSize: 13,
     fontWeight: "400",
-    color: COLORS.muted,
+    color: colors.muted,
   },
   fieldHint: {
     fontSize: 12,
-    color: COLORS.muted,
+    color: colors.muted,
     marginTop: 6,
   },
 
   // Text area
   textArea: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     borderWidth: 1.5,
-    borderColor: COLORS.border,
-    borderRadius: 12,
+    borderColor: colors.border,
+    borderRadius: radius.lg,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 16,
-    color: COLORS.text,
+    color: colors.text,
     minHeight: 130,
     textAlignVertical: "top",
   },
   textAreaError: {
-    borderColor: COLORS.danger,
+    borderColor: colors.danger,
   },
 
   // Cost input
   costInputWrap: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     borderWidth: 1.5,
-    borderColor: COLORS.border,
-    borderRadius: 12,
+    borderColor: colors.border,
+    borderRadius: radius.lg,
     paddingHorizontal: 16,
   },
   dollarPrefix: {
     fontSize: 18,
     fontWeight: "600",
-    color: COLORS.text,
+    color: colors.text,
     marginRight: 6,
   },
   costInput: {
     flex: 1,
     fontSize: 18,
     fontWeight: "600",
-    color: COLORS.text,
+    color: colors.text,
     paddingVertical: 14,
   },
 
@@ -478,14 +466,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 13,
-    borderRadius: 12,
+    borderRadius: radius.lg,
     borderWidth: 1.5,
-    borderColor: COLORS.border,
-    backgroundColor: COLORS.surface,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     gap: 7,
   },
   urgencyChipNormalActive: {
-    borderColor: COLORS.primary,
+    borderColor: colors.primary,
     backgroundColor: "#eff6ff",
   },
   urgencyChipUrgentActive: {
@@ -495,10 +483,10 @@ const styles = StyleSheet.create({
   urgencyChipText: {
     fontSize: 15,
     fontWeight: "600",
-    color: COLORS.muted,
+    color: colors.muted,
   },
   normalText: {
-    color: COLORS.primary,
+    color: colors.primary,
   },
   urgentText: {
     color: "#d97706",
@@ -509,12 +497,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingVertical: 17,
-    borderRadius: 14,
+    borderRadius: radius.lg,
     gap: 8,
     marginTop: 28,
-    shadowColor: COLORS.primary,
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 8,

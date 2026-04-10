@@ -13,23 +13,8 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from '../../../lib/theme';
 
-const COLORS = {
-  primary: "#1e40af",
-  primaryLight: "#3b82f6",
-  primaryBg: "#eff6ff",
-  secondary: "#0f172a",
-  muted: "#64748b",
-  mutedLight: "#94a3b8",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  white: "#ffffff",
-  success: "#059669",
-  successLight: "#ecfdf5",
-  danger: "#dc2626",
-  purple: "#7c3aed",
-  purpleBg: "#f5f3ff",
-};
 
 interface JobSummary {
   id: string;
@@ -124,7 +109,7 @@ export default function CheckoutScreen() {
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color={COLORS.primary} />
+        <ActivityIndicator size="large" color={colors.primary} />
         <Text style={styles.loadingText}>Loading checkout...</Text>
       </View>
     );
@@ -133,7 +118,7 @@ export default function CheckoutScreen() {
   if (!job || !acceptedBid) {
     return (
       <View style={styles.center}>
-        <Ionicons name="alert-circle-outline" size={48} color={COLORS.muted} />
+        <Ionicons name="alert-circle-outline" size={48} color={colors.muted} />
         <Text style={styles.errorText}>No accepted bid found</Text>
         <TouchableOpacity
           style={styles.backBtn}
@@ -146,15 +131,16 @@ export default function CheckoutScreen() {
     );
   }
 
+  const PLATFORM_FEE_RATE = 0.20;
   const bidPrice = acceptedBid.price;
-  const platformFee = bidPrice * 0.2;
+  const platformFee = bidPrice * PLATFORM_FEE_RATE;
   const total = bidPrice;
 
   if (paid) {
     return (
       <View style={styles.center}>
         <View style={styles.successCircle}>
-          <Ionicons name="checkmark-circle" size={64} color={COLORS.success} />
+          <Ionicons name="checkmark-circle" size={64} color={colors.success} />
         </View>
         <Text style={styles.successTitle}>Payment Secured!</Text>
         <Text style={styles.successSub}>
@@ -176,12 +162,12 @@ export default function CheckoutScreen() {
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.primary} />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />}
       >
         {/* Job Summary */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
-            <Ionicons name="briefcase-outline" size={18} color={COLORS.primary} />
+            <Ionicons name="briefcase-outline" size={18} color={colors.primary} />
             <Text style={styles.cardTitle}>Job Summary</Text>
           </View>
           <View style={styles.jobRow}>
@@ -198,7 +184,7 @@ export default function CheckoutScreen() {
         {/* Contractor Info */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
-            <Ionicons name="person-outline" size={18} color={COLORS.primary} />
+            <Ionicons name="person-outline" size={18} color={colors.primary} />
             <Text style={styles.cardTitle}>Your Contractor</Text>
           </View>
           <View style={styles.contractorRow}>
@@ -218,7 +204,7 @@ export default function CheckoutScreen() {
             </View>
             {acceptedBid.timeline_days > 0 && (
               <View style={styles.timelinePill}>
-                <Ionicons name="calendar-outline" size={12} color={COLORS.muted} />
+                <Ionicons name="calendar-outline" size={12} color={colors.muted} />
                 <Text style={styles.timelinePillText}>{acceptedBid.timeline_days} days</Text>
               </View>
             )}
@@ -228,7 +214,7 @@ export default function CheckoutScreen() {
         {/* Price Breakdown */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
-            <Ionicons name="receipt-outline" size={18} color={COLORS.primary} />
+            <Ionicons name="receipt-outline" size={18} color={colors.primary} />
             <Text style={styles.cardTitle}>Price Breakdown</Text>
           </View>
           <View style={styles.priceRow}>
@@ -242,7 +228,7 @@ export default function CheckoutScreen() {
                 onPress={() => Alert.alert("Platform Fee", "The 20% platform fee covers payment processing, Resolution Guarantee protection, contractor vetting, and customer support.")}
                 hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
               >
-                <Ionicons name="information-circle-outline" size={16} color={COLORS.mutedLight} />
+                <Ionicons name="information-circle-outline" size={16} color={colors.muted} />
               </TouchableOpacity>
             </View>
             <Text style={styles.priceValue}>${platformFee.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Text>
@@ -257,7 +243,7 @@ export default function CheckoutScreen() {
         {/* Resolution Guarantee */}
         <View style={styles.guaranteeCard}>
           <View style={styles.guaranteeHeader}>
-            <Ionicons name="shield-checkmark" size={22} color={COLORS.success} />
+            <Ionicons name="shield-checkmark" size={22} color={colors.success} />
             <Text style={styles.guaranteeTitle}>Resolution Guarantee</Text>
           </View>
           <Text style={styles.guaranteeText}>
@@ -271,7 +257,7 @@ export default function CheckoutScreen() {
               "Money-back guarantee",
             ].map((feat, i) => (
               <View key={i} style={styles.guaranteeFeatureRow}>
-                <Ionicons name="checkmark-circle" size={16} color={COLORS.success} />
+                <Ionicons name="checkmark-circle" size={16} color={colors.success} />
                 <Text style={styles.guaranteeFeatureText}>{feat}</Text>
               </View>
             ))}
@@ -281,7 +267,7 @@ export default function CheckoutScreen() {
         {/* Escrow Explanation */}
         <View style={styles.escrowInfoCard}>
           <View style={styles.escrowInfoHeader}>
-            <Ionicons name="lock-closed" size={18} color={COLORS.purple} />
+            <Ionicons name="lock-closed" size={18} color={"#7c3aed"} />
             <Text style={styles.escrowInfoTitle}>How Escrow Works</Text>
           </View>
           <View style={styles.escrowSteps}>
@@ -313,10 +299,10 @@ export default function CheckoutScreen() {
           activeOpacity={0.85}
         >
           {processing ? (
-            <ActivityIndicator color={COLORS.white} />
+            <ActivityIndicator color={colors.white} />
           ) : (
             <>
-              <Ionicons name="lock-closed" size={18} color={COLORS.white} />
+              <Ionicons name="lock-closed" size={18} color={colors.white} />
               <Text style={styles.payBtnText}>
                 Pay & Secure -- ${total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </Text>
@@ -332,66 +318,66 @@ export default function CheckoutScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: COLORS.surface },
-  center: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: COLORS.surface, paddingHorizontal: 32 },
+  screen: { flex: 1, backgroundColor: colors.surface },
+  center: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: colors.surface, paddingHorizontal: 32 },
   scrollContent: { padding: 16, paddingTop: 12 },
 
-  loadingText: { fontSize: 15, color: COLORS.muted, marginTop: 12 },
-  errorText: { fontSize: 16, color: COLORS.muted, marginTop: 12, textAlign: "center" },
-  backBtn: { marginTop: 20, paddingHorizontal: 28, paddingVertical: 12, borderRadius: 12, backgroundColor: COLORS.primaryBg },
-  backBtnText: { color: COLORS.primary, fontSize: 15, fontWeight: "600" },
+  loadingText: { fontSize: 15, color: colors.muted, marginTop: 12 },
+  errorText: { fontSize: 16, color: colors.muted, marginTop: 12, textAlign: "center" },
+  backBtn: { marginTop: 20, paddingHorizontal: 28, paddingVertical: 12, borderRadius: radius.lg, backgroundColor: "#DBEAFE" },
+  backBtnText: { color: colors.primary, fontSize: 15, fontWeight: "600" },
 
   // Success state
   successCircle: { marginBottom: 16 },
-  successTitle: { fontSize: 24, fontWeight: "800", color: COLORS.success, marginBottom: 8 },
-  successSub: { fontSize: 15, color: COLORS.muted, textAlign: "center", lineHeight: 22, marginBottom: 28 },
-  viewJobBtn: { backgroundColor: COLORS.primary, paddingHorizontal: 32, paddingVertical: 16, borderRadius: 14 },
-  viewJobBtnText: { color: COLORS.white, fontSize: 16, fontWeight: "700" },
+  successTitle: { fontSize: 24, fontWeight: "800", color: colors.success, marginBottom: 8 },
+  successSub: { fontSize: 15, color: colors.muted, textAlign: "center", lineHeight: 22, marginBottom: 28 },
+  viewJobBtn: { backgroundColor: colors.primary, paddingHorizontal: 32, paddingVertical: 16, borderRadius: radius.lg },
+  viewJobBtnText: { color: colors.white, fontSize: 16, fontWeight: "700" },
 
   // Cards
   card: {
-    backgroundColor: COLORS.white, borderRadius: 16, padding: 18, marginBottom: 12,
+    backgroundColor: colors.white, borderRadius: radius.xl, padding: 18, marginBottom: 12,
     shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
   },
   cardHeader: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 14 },
-  cardTitle: { fontSize: 16, fontWeight: "700", color: COLORS.secondary },
+  cardTitle: { fontSize: 16, fontWeight: "700", color: colors.text },
 
   // Job summary
   jobRow: { flexDirection: "row", alignItems: "center", gap: 12 },
   jobEmoji: { fontSize: 28 },
-  jobTitle: { fontSize: 16, fontWeight: "700", color: COLORS.secondary, marginBottom: 2 },
-  jobMeta: { fontSize: 13, color: COLORS.muted, textTransform: "capitalize" },
+  jobTitle: { fontSize: 16, fontWeight: "700", color: colors.text, marginBottom: 2 },
+  jobMeta: { fontSize: 13, color: colors.muted, textTransform: "capitalize" },
 
   // Contractor
   contractorRow: { flexDirection: "row", alignItems: "center", gap: 12 },
   contractorAvatar: {
-    width: 48, height: 48, borderRadius: 24, backgroundColor: COLORS.primaryBg,
+    width: 48, height: 48, borderRadius: 24, backgroundColor: "#DBEAFE",
     justifyContent: "center", alignItems: "center",
   },
-  contractorAvatarText: { fontSize: 20, fontWeight: "700", color: COLORS.primary },
-  contractorName: { fontSize: 16, fontWeight: "600", color: COLORS.secondary, marginBottom: 2 },
-  contractorRating: { fontSize: 13, color: COLORS.muted, fontWeight: "500" },
+  contractorAvatarText: { fontSize: 20, fontWeight: "700", color: colors.primary },
+  contractorName: { fontSize: 16, fontWeight: "600", color: colors.text, marginBottom: 2 },
+  contractorRating: { fontSize: 13, color: colors.muted, fontWeight: "500" },
   timelinePill: {
     flexDirection: "row", alignItems: "center", gap: 4,
-    backgroundColor: COLORS.surface, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 10,
+    backgroundColor: colors.surface, paddingHorizontal: 10, paddingVertical: 5, borderRadius: radius.md,
   },
-  timelinePillText: { fontSize: 12, color: COLORS.muted, fontWeight: "500" },
+  timelinePillText: { fontSize: 12, color: colors.muted, fontWeight: "500" },
 
   // Price breakdown
   priceRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 8 },
-  priceLabel: { fontSize: 15, color: COLORS.muted },
-  priceValue: { fontSize: 15, color: COLORS.secondary, fontWeight: "500" },
-  priceDivider: { height: 1, backgroundColor: COLORS.border, marginVertical: 8 },
-  totalLabel: { fontSize: 17, fontWeight: "700", color: COLORS.secondary },
-  totalValue: { fontSize: 22, fontWeight: "800", color: COLORS.primary },
+  priceLabel: { fontSize: 15, color: colors.muted },
+  priceValue: { fontSize: 15, color: colors.text, fontWeight: "500" },
+  priceDivider: { height: 1, backgroundColor: colors.border, marginVertical: 8 },
+  totalLabel: { fontSize: 17, fontWeight: "700", color: colors.text },
+  totalValue: { fontSize: 22, fontWeight: "800", color: colors.primary },
 
   // Guarantee
   guaranteeCard: {
-    backgroundColor: COLORS.successLight, borderRadius: 16, padding: 18, marginBottom: 12,
+    backgroundColor: "#D1FAE5", borderRadius: radius.xl, padding: 18, marginBottom: 12,
     borderWidth: 1.5, borderColor: "#a7f3d0",
   },
   guaranteeHeader: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 10 },
-  guaranteeTitle: { fontSize: 16, fontWeight: "700", color: COLORS.success },
+  guaranteeTitle: { fontSize: 16, fontWeight: "700", color: colors.success },
   guaranteeText: { fontSize: 14, color: "#065f46", lineHeight: 20, marginBottom: 12 },
   guaranteeFeatures: { gap: 8 },
   guaranteeFeatureRow: { flexDirection: "row", alignItems: "center", gap: 8 },
@@ -399,33 +385,33 @@ const styles = StyleSheet.create({
 
   // Escrow info
   escrowInfoCard: {
-    backgroundColor: COLORS.purpleBg, borderRadius: 16, padding: 18, marginBottom: 12,
+    backgroundColor: "#f5f3ff", borderRadius: radius.xl, padding: 18, marginBottom: 12,
     borderWidth: 1.5, borderColor: "#ddd6fe",
   },
   escrowInfoHeader: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 14 },
-  escrowInfoTitle: { fontSize: 16, fontWeight: "700", color: COLORS.purple },
+  escrowInfoTitle: { fontSize: 16, fontWeight: "700", color: "#7c3aed" },
   escrowSteps: { gap: 12 },
   escrowStepRow: { flexDirection: "row", alignItems: "center", gap: 12 },
   escrowStepNum: {
-    width: 28, height: 28, borderRadius: 14, backgroundColor: COLORS.purple,
+    width: 28, height: 28, borderRadius: radius.lg, backgroundColor: "#7c3aed",
     justifyContent: "center", alignItems: "center",
   },
-  escrowStepNumText: { fontSize: 13, fontWeight: "700", color: COLORS.white },
+  escrowStepNumText: { fontSize: 13, fontWeight: "700", color: colors.white },
   escrowStepText: { fontSize: 14, color: "#6b21a8", flex: 1 },
 
   // Sticky bottom
   stickyBottom: {
     position: "absolute", bottom: 0, left: 0, right: 0,
     paddingHorizontal: 16, paddingBottom: 34, paddingTop: 12,
-    backgroundColor: COLORS.white,
-    borderTopWidth: 1, borderTopColor: COLORS.border,
+    backgroundColor: colors.white,
+    borderTopWidth: 1, borderTopColor: colors.border,
     shadowColor: "#000", shadowOffset: { width: 0, height: -2 }, shadowOpacity: 0.08, shadowRadius: 8, elevation: 10,
   },
   payBtn: {
     flexDirection: "row", alignItems: "center", justifyContent: "center",
-    backgroundColor: COLORS.primary, paddingVertical: 18, borderRadius: 14, gap: 8,
-    shadowColor: COLORS.primary, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 6,
+    backgroundColor: colors.primary, paddingVertical: 18, borderRadius: radius.lg, gap: 8,
+    shadowColor: colors.primary, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 6,
   },
-  payBtnText: { color: COLORS.white, fontSize: 17, fontWeight: "800" },
-  stripeNote: { fontSize: 12, color: COLORS.mutedLight, textAlign: "center", marginTop: 8 },
+  payBtnText: { color: colors.white, fontSize: 17, fontWeight: "800" },
+  stripeNote: { fontSize: 12, color: colors.muted, textAlign: "center", marginTop: 8 },
 });

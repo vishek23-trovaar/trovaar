@@ -12,18 +12,19 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { api, ApiError } from "@/lib/api";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from "../../lib/theme";
 
 const COLORS = {
-  primary: "#2563eb",
-  primaryLight: "#eff6ff",
-  background: "#ffffff",
-  surface: "#f8fafc",
-  text: "#1e293b",
-  muted: "#64748b",
-  border: "#e2e8f0",
-  success: "#16a34a",
-  danger: "#dc2626",
-  today: "#2563eb",
+  primary: colors.primary,
+  primaryLight: "#DBEAFE",
+  background: colors.white,
+  surface: colors.surface,
+  text: colors.text,
+  muted: colors.muted,
+  border: colors.border,
+  success: colors.success,
+  danger: colors.danger,
+  today: colors.primary,
   dimmed: "#cbd5e1",
 };
 
@@ -120,7 +121,7 @@ export default function ContractorCalendar() {
       if (err instanceof ApiError && err.status === 404) {
         setCalendarData({});
       } else {
-        console.warn("[Calendar] fetch error:", err);
+        if (__DEV__) console.warn("[Calendar] fetch error:", err);
         setCalendarData({});
       }
     } finally {
@@ -164,7 +165,7 @@ export default function ContractorCalendar() {
         body: JSON.stringify({ weeklySlots: slots }),
       });
     } catch (err) {
-      console.warn("[Calendar] availability save error (best effort):", err);
+      if (__DEV__) console.warn("[Calendar] availability save error (best effort):", err);
     } finally {
       setSavingAvailability(false);
     }
@@ -490,16 +491,12 @@ const styles = StyleSheet.create({
 
   dayDetailPanel: {
     margin: 16,
-    backgroundColor: COLORS.background,
-    borderRadius: 16,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
     padding: 16,
     borderWidth: 1,
-    borderColor: COLORS.border,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    borderColor: colors.border,
+    ...shadows.md,
   },
   dayDetailTitle: {
     fontSize: 15,
@@ -554,11 +551,11 @@ const styles = StyleSheet.create({
 
   availabilitySection: {
     margin: 16,
-    backgroundColor: COLORS.background,
-    borderRadius: 16,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
     padding: 16,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
   },
   availabilityHeader: {
     flexDirection: "row",

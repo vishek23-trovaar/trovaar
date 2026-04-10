@@ -14,17 +14,8 @@ import {
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from '../../../lib/theme';
 
-const COLORS = {
-  primary: "#2563eb",
-  background: "#ffffff",
-  surface: "#f8fafc",
-  text: "#1e293b",
-  muted: "#64748b",
-  border: "#e2e8f0",
-  success: "#16a34a",
-  danger: "#dc2626",
-};
 
 const QUICK_AMOUNTS = [5, 10, 20, 50];
 
@@ -113,7 +104,7 @@ export default function TipScreen() {
       <View style={styles.screen}>
         <View style={styles.celebrationContainer}>
           <View style={styles.celebrationIconWrap}>
-            <Ionicons name="checkmark-circle" size={80} color={COLORS.success} />
+            <Ionicons name="checkmark-circle" size={80} color={colors.success} />
           </View>
           <Text style={styles.celebrationTitle}>Tip Sent!</Text>
           <View style={styles.celebrationAmountBadge}>
@@ -156,7 +147,7 @@ export default function TipScreen() {
           onPress={() => router.back()}
           activeOpacity={0.7}
         >
-          <Ionicons name="arrow-back" size={24} color={COLORS.text} />
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Leave a Tip</Text>
         <View style={styles.headerSpacer} />
@@ -170,7 +161,7 @@ export default function TipScreen() {
         {/* Contractor Info Card */}
         <View style={styles.contractorCard}>
           {loadingJob ? (
-            <ActivityIndicator size="small" color={COLORS.primary} />
+            <ActivityIndicator size="small" color={colors.primary} />
           ) : (
             <>
               <View style={styles.contractorAvatar}>
@@ -307,7 +298,7 @@ export default function TipScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: colors.white,
   },
 
   // Header
@@ -318,8 +309,8 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === "ios" ? 56 : 16,
     paddingBottom: 12,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: COLORS.border,
-    backgroundColor: COLORS.background,
+    borderBottomColor: colors.border,
+    backgroundColor: colors.white,
   },
   backBtn: {
     padding: 4,
@@ -328,7 +319,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: COLORS.text,
+    color: colors.text,
     flex: 1,
     textAlign: "center",
   },
@@ -346,11 +337,11 @@ const styles = StyleSheet.create({
   contractorCard: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: COLORS.surface,
-    borderRadius: 16,
+    backgroundColor: colors.surface,
+    borderRadius: radius.xl,
     padding: 16,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
     marginBottom: 28,
     minHeight: 72,
     gap: 14,
@@ -359,7 +350,7 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -374,25 +365,25 @@ const styles = StyleSheet.create({
   contractorName: {
     fontSize: 17,
     fontWeight: "700",
-    color: COLORS.text,
+    color: colors.text,
     marginBottom: 3,
   },
   contractorTagline: {
     fontSize: 13,
-    color: COLORS.muted,
+    color: colors.muted,
   },
 
   // Section label
   sectionLabel: {
     fontSize: 14,
     fontWeight: "600",
-    color: COLORS.text,
+    color: colors.text,
     marginBottom: 12,
   },
   optionalTag: {
     fontSize: 13,
     fontWeight: "400",
-    color: COLORS.muted,
+    color: colors.muted,
   },
 
   // Amount chips
@@ -405,34 +396,34 @@ const styles = StyleSheet.create({
   amountChip: {
     paddingHorizontal: 22,
     paddingVertical: 12,
-    borderRadius: 12,
+    borderRadius: radius.lg,
     borderWidth: 1.5,
-    borderColor: COLORS.border,
-    backgroundColor: COLORS.surface,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     minWidth: 64,
     alignItems: "center",
   },
   amountChipActive: {
-    borderColor: COLORS.primary,
+    borderColor: colors.primary,
     backgroundColor: "#eff6ff",
   },
   amountChipText: {
     fontSize: 16,
     fontWeight: "600",
-    color: COLORS.muted,
+    color: colors.muted,
   },
   amountChipTextActive: {
-    color: COLORS.primary,
+    color: colors.primary,
   },
 
   // Custom amount
   customAmountWrap: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     borderWidth: 2,
-    borderColor: COLORS.primary,
-    borderRadius: 14,
+    borderColor: colors.primary,
+    borderRadius: radius.lg,
     paddingHorizontal: 16,
     paddingVertical: 4,
     marginTop: 12,
@@ -440,27 +431,27 @@ const styles = StyleSheet.create({
   dollarSign: {
     fontSize: 28,
     fontWeight: "700",
-    color: COLORS.text,
+    color: colors.text,
     marginRight: 6,
   },
   customAmountInput: {
     flex: 1,
     fontSize: 32,
     fontWeight: "700",
-    color: COLORS.text,
+    color: colors.text,
     paddingVertical: 10,
   },
 
   // Message
   messageInput: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     borderWidth: 1.5,
-    borderColor: COLORS.border,
-    borderRadius: 12,
+    borderColor: colors.border,
+    borderRadius: radius.lg,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 16,
-    color: COLORS.text,
+    color: colors.text,
     minHeight: 90,
     textAlignVertical: "top",
   },
@@ -471,7 +462,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: "#f0fdf4",
-    borderRadius: 12,
+    borderRadius: radius.lg,
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderWidth: 1,
@@ -486,7 +477,7 @@ const styles = StyleSheet.create({
   amountPreviewValue: {
     fontSize: 22,
     fontWeight: "800",
-    color: COLORS.success,
+    color: colors.success,
   },
 
   // Send button
@@ -494,12 +485,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingVertical: 17,
-    borderRadius: 14,
+    borderRadius: radius.lg,
     gap: 8,
     marginTop: 24,
-    shadowColor: COLORS.primary,
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -535,7 +526,7 @@ const styles = StyleSheet.create({
   celebrationTitle: {
     fontSize: 32,
     fontWeight: "800",
-    color: COLORS.text,
+    color: colors.text,
     marginBottom: 12,
   },
   celebrationAmountBadge: {
@@ -550,11 +541,11 @@ const styles = StyleSheet.create({
   celebrationAmount: {
     fontSize: 28,
     fontWeight: "800",
-    color: COLORS.primary,
+    color: colors.primary,
   },
   celebrationSubtitle: {
     fontSize: 16,
-    color: COLORS.muted,
+    color: colors.muted,
     textAlign: "center",
     lineHeight: 24,
     marginBottom: 20,
@@ -565,10 +556,10 @@ const styles = StyleSheet.create({
     marginBottom: 36,
   },
   doneBtn: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingVertical: 16,
     paddingHorizontal: 56,
-    borderRadius: 14,
+    borderRadius: radius.lg,
   },
   doneBtnText: {
     color: "#ffffff",

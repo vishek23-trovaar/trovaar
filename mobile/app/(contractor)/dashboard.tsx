@@ -16,22 +16,23 @@ import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/api";
 import { Job } from "@/lib/types";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from "../../lib/theme";
 
 const COLORS = {
-  primary: "#1e40af",
-  primaryLight: "#3b82f6",
-  primaryBg: "#eff6ff",
-  secondary: "#0f172a",
-  muted: "#64748b",
+  primary: colors.primary,
+  primaryLight: colors.primaryLight,
+  primaryBg: "#DBEAFE",
+  secondary: colors.text,
+  muted: colors.muted,
   mutedLight: "#94a3b8",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  white: "#ffffff",
-  success: "#059669",
+  surface: colors.surface,
+  border: colors.border,
+  white: colors.white,
+  success: colors.success,
   successBg: "#f0fdf4",
-  warning: "#d97706",
+  warning: colors.warning,
   warningBg: "#fffbeb",
-  danger: "#dc2626",
+  danger: colors.danger,
   dangerBg: "#fef2f2",
   purple: "#7c3aed",
   purpleBg: "#f5f3ff",
@@ -131,7 +132,7 @@ export default function ContractorDashboard() {
       const { data } = await api<{ jobs: Job[] }>("/api/jobs?status=posted,bidding&limit=50");
       setJobs(data.jobs || []);
     } catch (err) {
-      console.error("[ContractorDashboard] error:", err);
+      if (__DEV__) console.error("[ContractorDashboard] error:", err);
     }
     setLoading(false);
   }, []);
@@ -208,7 +209,7 @@ export default function ContractorDashboard() {
         {/* Location */}
         <View style={styles.locationRow}>
           <Ionicons name="location-outline" size={14} color={COLORS.mutedLight} />
-          <Text style={styles.locationText}>{item.location || "Location TBD"}</Text>
+          <Text style={styles.locationText}>{item.location || "No location set"}</Text>
         </View>
 
         {/* Footer with urgency, bids, and action */}
@@ -508,15 +509,13 @@ const styles = StyleSheet.create({
 
   // Job Card
   card: {
-    backgroundColor: COLORS.white,
-    borderRadius: 18,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
     padding: 18,
     marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: colors.border,
+    ...shadows.md,
   },
   cardHot: {
     borderWidth: 1.5,
@@ -601,13 +600,13 @@ const styles = StyleSheet.create({
   bidBtn: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingHorizontal: 16,
     paddingVertical: 9,
-    borderRadius: 12,
+    borderRadius: radius.md,
     gap: 5,
   },
-  bidBtnText: { fontSize: 13, fontWeight: "700", color: COLORS.white },
+  bidBtnText: { fontSize: 13, fontWeight: "600", color: colors.white },
 
   // Empty
   empty: { alignItems: "center", paddingVertical: 64, paddingHorizontal: 32 },

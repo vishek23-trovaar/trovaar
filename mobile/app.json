@@ -16,7 +16,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.trovaar.app",
-      "buildNumber": "4",
+      "buildNumber": "5",
       "infoPlist": {
         "NSCameraUsageDescription": "Trovaar uses your camera to take photos of jobs you want to post.",
         "NSPhotoLibraryUsageDescription": "Trovaar uses your photo library to attach images to job postings.",

@@ -157,24 +157,20 @@ export default function ReferralScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [copying, setCopying] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchReferrals = useCallback(async () => {
     try {
+      setError(null);
       const { data: res } = await api<ReferralData>("/api/referrals");
       setData(res);
-    } catch {
-      // Provide placeholder data so UI renders
-      setData({
-        referralCode: user?.id?.slice(0, 6).toUpperCase() || "REF123",
-        totalReferred: 0,
-        totalEarned: 0,
-        pendingRewards: 0,
-        referrals: [],
-      });
+    } catch (err: unknown) {
+      setData(null);
+      setError((err as Error).message || "Could not load referral data.");
     } finally {
       setLoading(false);
     }
-  }, [user?.id]);
+  }, []);
 
   useEffect(() => {
     fetchReferrals();
@@ -218,6 +214,28 @@ export default function ReferralScreen() {
           <Text style={styles.headerTitle}>Refer & Earn</Text>
         </View>
         <LoadingSkeleton />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.screen}>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Refer & Earn</Text>
+        </View>
+        <View style={styles.emptyFriends}>
+          <Ionicons name="alert-circle-outline" size={40} color={COLORS.danger} />
+          <Text style={[styles.emptyFriendsText, { color: COLORS.danger }]}>{error}</Text>
+          <TouchableOpacity
+            style={[styles.shareBtn, { alignSelf: "center", flex: 0, paddingHorizontal: 24, marginTop: 8 }]}
+            onPress={() => { setLoading(true); fetchReferrals(); }}
+            activeOpacity={0.8}
+          >
+            <Ionicons name="refresh-outline" size={18} color={COLORS.white} />
+            <Text style={styles.shareBtnText}>Retry</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }

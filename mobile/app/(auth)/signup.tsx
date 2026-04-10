@@ -16,6 +16,7 @@ import { useAuth } from "@/lib/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { Button, Input } from "@/components/ui";
+import { colors, typography, spacing, radius, shadows } from "../../lib/theme";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -84,9 +85,7 @@ export default function SignupScreen() {
 
     setLoading(true);
     try {
-      console.log("[Signup] Attempting signup for", email, role);
       await signup({ email, password, name, role, phone });
-      console.log("[Signup] Success! Navigating to dashboard...");
       if (role === "consumer") {
         router.replace("/(client)/dashboard");
       } else {
@@ -94,7 +93,7 @@ export default function SignupScreen() {
       }
     } catch (err: unknown) {
       const msg = (err instanceof Error && err.message) ? err.message : 'Something went wrong. Please try again.';
-      console.error("[Signup] Failed:", msg);
+      if (__DEV__) console.error("[Signup] Failed:", msg);
       Alert.alert("Signup Failed", msg);
     } finally {
       setLoading(false);
@@ -127,7 +126,7 @@ export default function SignupScreen() {
           onPress={() => setRole("consumer")}
         >
           <View style={[styles.roleIconBox, role === "consumer" && styles.roleIconBoxActive]}>
-            <Ionicons name="home-outline" size={28} color={role === "consumer" ? "#ffffff" : "#64748b"} />
+            <Ionicons name="home-outline" size={28} color={role === "consumer" ? colors.white : colors.muted} />
           </View>
           <Text style={[styles.roleTitle, role === "consumer" && styles.roleTitleActive]}>
             I need work done
@@ -137,7 +136,7 @@ export default function SignupScreen() {
           </Text>
           {role === "consumer" && (
             <View style={styles.checkMark}>
-              <Ionicons name="checkmark-circle" size={24} color="#1e40af" />
+              <Ionicons name="checkmark-circle" size={24} color={colors.primary} />
             </View>
           )}
         </Pressable>
@@ -147,7 +146,7 @@ export default function SignupScreen() {
           onPress={() => setRole("contractor")}
         >
           <View style={[styles.roleIconBox, role === "contractor" && styles.roleIconBoxActive]}>
-            <Ionicons name="construct-outline" size={28} color={role === "contractor" ? "#ffffff" : "#64748b"} />
+            <Ionicons name="construct-outline" size={28} color={role === "contractor" ? colors.white : colors.muted} />
           </View>
           <Text style={[styles.roleTitle, role === "contractor" && styles.roleTitleActive]}>
             I'm a professional
@@ -157,7 +156,7 @@ export default function SignupScreen() {
           </Text>
           {role === "contractor" && (
             <View style={styles.checkMark}>
-              <Ionicons name="checkmark-circle" size={24} color="#1e40af" />
+              <Ionicons name="checkmark-circle" size={24} color={colors.primary} />
             </View>
           )}
         </Pressable>
@@ -230,7 +229,7 @@ export default function SignupScreen() {
           onPress={() => { setAgreeTerms(!agreeTerms); setErrors((p) => ({ ...p, terms: "" })); }}
         >
           <View style={[styles.checkbox, agreeTerms && styles.checkboxChecked]}>
-            {agreeTerms && <Ionicons name="checkmark" size={14} color="#ffffff" />}
+            {agreeTerms && <Ionicons name="checkmark" size={14} color={colors.white} />}
           </View>
           <Text style={styles.termsText}>
             By signing up you agree to our{" "}
@@ -260,7 +259,7 @@ export default function SignupScreen() {
         {/* Header */}
         <View style={styles.header}>
           <Pressable onPress={goBack} style={styles.backBtn}>
-            <Ionicons name="arrow-back" size={24} color="#0f172a" />
+            <Ionicons name="arrow-back" size={24} color={colors.secondary} />
           </Pressable>
           {renderDots()}
           <View style={{ width: 40 }} />
@@ -293,160 +292,160 @@ export default function SignupScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.white,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.lg,
   },
   backBtn: {
     width: 40,
     height: 40,
-    borderRadius: 12,
-    backgroundColor: "#f1f5f9",
+    borderRadius: radius.lg,
+    backgroundColor: colors.surfaceDark,
     alignItems: "center",
     justifyContent: "center",
   },
   dotsRow: {
     flexDirection: "row",
-    gap: 8,
+    gap: spacing.md,
   },
   dot: {
     width: 8,
     height: 8,
-    borderRadius: 4,
-    backgroundColor: "#e2e8f0",
+    borderRadius: radius.full,
+    backgroundColor: colors.border,
   },
   dotActive: {
     width: 24,
-    backgroundColor: "#1e40af",
+    backgroundColor: colors.primary,
   },
   dotDone: {
-    backgroundColor: "#93c5fd",
+    backgroundColor: colors.primaryLight,
   },
   scrollContent: {
     flexGrow: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: spacing["3xl"],
   },
   stepContent: {
     flex: 1,
-    paddingTop: 16,
+    paddingTop: spacing.xl,
   },
   stepTitle: {
     fontSize: 26,
     fontWeight: "800",
-    color: "#0f172a",
+    color: colors.secondary,
     letterSpacing: -0.5,
   },
   stepSubtitle: {
-    fontSize: 15,
-    color: "#64748b",
-    marginTop: 6,
-    marginBottom: 28,
+    ...typography.body,
+    color: colors.muted,
+    marginTop: spacing.smd,
+    marginBottom: spacing["3xl"],
   },
   roleCards: {
-    gap: 16,
-    marginBottom: 32,
+    gap: spacing.xl,
+    marginBottom: spacing["4xl"],
   },
   roleCard: {
     borderWidth: 2,
-    borderColor: "#e2e8f0",
+    borderColor: colors.border,
     borderRadius: 20,
-    padding: 20,
+    padding: spacing["2xl"],
     position: "relative",
   },
   roleCardActive: {
-    borderColor: "#1e40af",
-    backgroundColor: "#eff6ff",
+    borderColor: colors.primary,
+    backgroundColor: "#EFF6FF",
   },
   roleIconBox: {
     width: 52,
     height: 52,
-    borderRadius: 14,
-    backgroundColor: "#f1f5f9",
+    borderRadius: radius.xl,
+    backgroundColor: colors.surfaceDark,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 12,
+    marginBottom: spacing.lg,
   },
   roleIconBoxActive: {
-    backgroundColor: "#1e40af",
+    backgroundColor: colors.primary,
   },
   roleTitle: {
     fontSize: 17,
     fontWeight: "700",
-    color: "#0f172a",
-    marginBottom: 4,
+    color: colors.secondary,
+    marginBottom: spacing.sm,
   },
   roleTitleActive: {
-    color: "#1e40af",
+    color: colors.primary,
   },
   roleDesc: {
     fontSize: 14,
-    color: "#64748b",
+    color: colors.muted,
     lineHeight: 20,
   },
   checkMark: {
     position: "absolute",
-    top: 16,
-    right: 16,
+    top: spacing.xl,
+    right: spacing.xl,
   },
   formGroup: {
-    gap: 4,
-    marginBottom: 28,
+    gap: spacing.sm,
+    marginBottom: spacing["3xl"],
   },
   termsRow: {
     flexDirection: "row",
     alignItems: "flex-start",
-    gap: 12,
-    marginTop: 12,
+    gap: spacing.lg,
+    marginTop: spacing.lg,
   },
   checkbox: {
     width: 22,
     height: 22,
-    borderRadius: 6,
+    borderRadius: radius.sm,
     borderWidth: 2,
-    borderColor: "#d1d5db",
+    borderColor: colors.border,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 1,
   },
   checkboxChecked: {
-    backgroundColor: "#1e40af",
-    borderColor: "#1e40af",
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   termsText: {
     flex: 1,
-    fontSize: 13,
-    color: "#64748b",
+    ...typography.bodySmall,
+    color: colors.muted,
     lineHeight: 20,
   },
   termsLink: {
-    color: "#1e40af",
+    color: colors.primary,
     fontWeight: "600",
   },
   errorText: {
-    fontSize: 12,
-    color: "#dc2626",
-    marginTop: 4,
+    ...typography.caption,
+    color: colors.danger,
+    marginTop: spacing.sm,
     marginLeft: 34,
   },
   footer: {
     flexDirection: "row",
     justifyContent: "center",
-    paddingVertical: 16,
+    paddingVertical: spacing.xl,
     borderTopWidth: 1,
-    borderTopColor: "#f1f5f9",
+    borderTopColor: colors.surfaceDark,
   },
   footerText: {
     fontSize: 14,
-    color: "#64748b",
+    color: colors.muted,
   },
   footerLink: {
     fontSize: 14,
-    color: "#1e40af",
+    color: colors.primary,
     fontWeight: "700",
   },
 });

@@ -16,18 +16,19 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { api, ApiError } from "@/lib/api";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from "../../lib/theme";
 
 const COLORS = {
-  primary: "#2563eb",
-  primaryLight: "#eff6ff",
-  background: "#ffffff",
-  surface: "#f8fafc",
-  text: "#1e293b",
-  muted: "#64748b",
-  border: "#e2e8f0",
-  success: "#16a34a",
-  danger: "#dc2626",
-  warning: "#d97706",
+  primary: colors.primary,
+  primaryLight: "#DBEAFE",
+  background: colors.white,
+  surface: colors.surface,
+  text: colors.text,
+  muted: colors.muted,
+  border: colors.border,
+  success: colors.success,
+  danger: colors.danger,
+  warning: colors.warning,
 };
 
 const PLATFORM_FEE_RATE = 0.1;
@@ -119,7 +120,7 @@ export default function Invoices() {
       const { data } = await api<{ invoices: Invoice[] }>("/api/contractor/invoices");
       setInvoices(data?.invoices || []);
     } catch (err) {
-      console.warn("[Invoices] fetch error:", err);
+      if (__DEV__) console.warn("[Invoices] fetch error:", err);
       setInvoices([]);
     } finally {
       setLoading(false);
@@ -678,15 +679,13 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: "#fff",
-    borderRadius: 16,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
     padding: 16,
     marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: colors.border,
+    ...shadows.md,
   },
   cardTopRow: {
     flexDirection: "row",
@@ -752,14 +751,10 @@ const styles = StyleSheet.create({
     width: 58,
     height: 58,
     borderRadius: 29,
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: COLORS.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    elevation: 8,
+    ...shadows.md,
   },
 
   // Modal
@@ -894,17 +889,13 @@ const styles = StyleSheet.create({
   },
 
   submitBtn: {
-    backgroundColor: COLORS.primary,
-    borderRadius: 14,
+    backgroundColor: colors.primary,
+    borderRadius: radius.md,
     paddingVertical: 16,
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "row",
-    shadowColor: COLORS.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
+    ...shadows.md,
   },
   submitBtnText: {
     fontSize: 16,

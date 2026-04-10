@@ -21,25 +21,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { Job, Bid, Message } from "@/lib/types";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getUrgencyColor, getCategoryIcon } from '../../../lib/theme';
 
-const COLORS = {
-  primary: "#1e40af",
-  primaryLight: "#3b82f6",
-  primaryBg: "#eff6ff",
-  secondary: "#0f172a",
-  muted: "#64748b",
-  mutedLight: "#94a3b8",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  white: "#ffffff",
-  success: "#059669",
-  successLight: "#ecfdf5",
-  danger: "#dc2626",
-  warning: "#d97706",
-  warningBg: "#fffbeb",
-  purple: "#7c3aed",
-  purpleBg: "#f5f3ff",
-};
 
 const URGENCY_COLORS: Record<string, string> = {
   low: "#64748b",
@@ -190,7 +173,7 @@ function SkeletonPulse({
   return (
     <Animated.View
       style={[
-        { width: width as number, height, borderRadius, backgroundColor: "#e2e8f0", opacity: animValue },
+        { width: width as number, height, borderRadius, backgroundColor: colors.border, opacity: animValue },
         style,
       ]}
     />
@@ -557,8 +540,8 @@ export default function JobDetailScreen() {
   if (!job) {
     return (
       <View style={styles.center}>
-        <Ionicons name="alert-circle-outline" size={48} color={COLORS.muted} />
-        <Text style={{ color: COLORS.muted, marginTop: 12, fontSize: 16 }}>
+        <Ionicons name="alert-circle-outline" size={48} color={colors.muted} />
+        <Text style={{ color: colors.muted, marginTop: 12, fontSize: 16 }}>
           Job not found
         </Text>
       </View>
@@ -602,7 +585,7 @@ export default function JobDetailScreen() {
             data={sortedBids}
             keyExtractor={(b) => b.id}
             refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.primary} />
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />
             }
             ListHeaderComponent={
               <View>
@@ -614,9 +597,9 @@ export default function JobDetailScreen() {
                     </View>
                     <View style={styles.heroInfo}>
                       <Text style={styles.heroTitle} numberOfLines={2}>{job.title}</Text>
-                      <View style={[styles.heroBadge, { backgroundColor: (STATUS_COLORS[job.status] || COLORS.muted) + "15" }]}>
-                        <View style={[styles.heroBadgeDot, { backgroundColor: STATUS_COLORS[job.status] || COLORS.muted }]} />
-                        <Text style={[styles.heroBadgeText, { color: STATUS_COLORS[job.status] || COLORS.muted }]}>
+                      <View style={[styles.heroBadge, { backgroundColor: (STATUS_COLORS[job.status] || colors.muted) + "15" }]}>
+                        <View style={[styles.heroBadgeDot, { backgroundColor: STATUS_COLORS[job.status] || colors.muted }]} />
+                        <Text style={[styles.heroBadgeText, { color: STATUS_COLORS[job.status] || colors.muted }]}>
                           {job.status?.replace(/_/g, " ")}
                         </Text>
                       </View>
@@ -627,22 +610,22 @@ export default function JobDetailScreen() {
                   <View style={styles.infoRow}>
                     {job.location ? (
                       <View style={styles.infoItem}>
-                        <Ionicons name="location-outline" size={14} color={COLORS.muted} />
+                        <Ionicons name="location-outline" size={14} color={colors.muted} />
                         <Text style={styles.infoText}>{job.location}</Text>
                       </View>
                     ) : null}
                     <View style={styles.infoItem}>
-                      <View style={[styles.urgencyDot, { backgroundColor: URGENCY_COLORS[job.urgency] || COLORS.muted }]} />
-                      <Text style={[styles.infoText, { color: URGENCY_COLORS[job.urgency] || COLORS.muted, fontWeight: "600" }]}>
+                      <View style={[styles.urgencyDot, { backgroundColor: URGENCY_COLORS[job.urgency] || colors.muted }]} />
+                      <Text style={[styles.infoText, { color: URGENCY_COLORS[job.urgency] || colors.muted, fontWeight: "600" }]}>
                         {job.urgency}
                       </Text>
                     </View>
                     <View style={styles.infoItem}>
-                      <Ionicons name="time-outline" size={14} color={COLORS.muted} />
+                      <Ionicons name="time-outline" size={14} color={colors.muted} />
                       <Text style={styles.infoText}>{timeAgo(job.created_at)}</Text>
                     </View>
                     <View style={styles.infoItem}>
-                      <Ionicons name="people-outline" size={14} color={COLORS.muted} />
+                      <Ionicons name="people-outline" size={14} color={colors.muted} />
                       <Text style={styles.infoText}>{bids.length} bids</Text>
                     </View>
                   </View>
@@ -665,7 +648,7 @@ export default function JobDetailScreen() {
                 {surgeInfo?.active && (
                   <View style={styles.surgeBanner}>
                     <View style={styles.surgeRow}>
-                      <Ionicons name="trending-up" size={20} color={COLORS.warning} />
+                      <Ionicons name="trending-up" size={20} color={colors.warning} />
                       <Text style={styles.surgeTitle}>High Demand</Text>
                       <View style={styles.surgeMultiplier}>
                         <Text style={styles.surgeMultiplierText}>{surgeInfo.multiplier}x</Text>
@@ -693,7 +676,7 @@ export default function JobDetailScreen() {
                               <Ionicons
                                 name={step.icon}
                                 size={12}
-                                color={isDone ? COLORS.white : COLORS.mutedLight}
+                                color={isDone ? colors.white : colors.muted}
                               />
                             </View>
                             <Text style={[
@@ -720,7 +703,7 @@ export default function JobDetailScreen() {
                 {(priceEstimate || priceEstLoading) && (
                   <View style={styles.aiCard}>
                     <View style={styles.aiCardHeader}>
-                      <Ionicons name="sparkles" size={18} color={COLORS.purple} />
+                      <Ionicons name="sparkles" size={18} color={"#7c3aed"} />
                       <Text style={styles.aiCardTitle}>AI Price Estimate</Text>
                     </View>
                     {priceEstLoading ? (
@@ -748,7 +731,7 @@ export default function JobDetailScreen() {
                 {jobHasAcceptedBid && escrowAmount && (
                   <View style={styles.escrowBanner}>
                     <View style={styles.escrowHeader}>
-                      <Ionicons name="shield-checkmark" size={20} color={COLORS.success} />
+                      <Ionicons name="shield-checkmark" size={20} color={colors.success} />
                       <Text style={styles.escrowTitle}>Payment Protected</Text>
                     </View>
                     <Text style={styles.escrowAmount}>
@@ -763,7 +746,7 @@ export default function JobDetailScreen() {
                       ].map((step, idx) => (
                         <View key={idx} style={styles.escrowStep}>
                           <View style={[styles.escrowStepDot, step.done && styles.escrowStepDotDone]}>
-                            <Ionicons name={step.icon} size={12} color={step.done ? COLORS.white : COLORS.muted} />
+                            <Ionicons name={step.icon} size={12} color={step.done ? colors.white : colors.muted} />
                           </View>
                           <Text style={[styles.escrowStepLabel, step.done && styles.escrowStepLabelDone]}>
                             {step.label}
@@ -782,7 +765,7 @@ export default function JobDetailScreen() {
                         onPress={() => router.push(`/(client)/checkout/${id}` as never)}
                         activeOpacity={0.8}
                       >
-                        <Ionicons name="card-outline" size={18} color={COLORS.white} />
+                        <Ionicons name="card-outline" size={18} color={colors.white} />
                         <Text style={styles.payNowBtnText}>Pay & Secure Job</Text>
                       </TouchableOpacity>
                     )}
@@ -799,10 +782,10 @@ export default function JobDetailScreen() {
                       activeOpacity={0.8}
                     >
                       {confirming ? (
-                        <ActivityIndicator color={COLORS.white} />
+                        <ActivityIndicator color={colors.white} />
                       ) : (
                         <>
-                          <Ionicons name="checkmark-circle" size={22} color={COLORS.white} />
+                          <Ionicons name="checkmark-circle" size={22} color={colors.white} />
                           <Text style={styles.confirmReleaseBtnText}>Confirm Completion & Release Payment</Text>
                         </>
                       )}
@@ -812,7 +795,7 @@ export default function JobDetailScreen() {
                       onPress={() => setShowDisputeModal(true)}
                       activeOpacity={0.7}
                     >
-                      <Ionicons name="flag-outline" size={18} color={COLORS.danger} />
+                      <Ionicons name="flag-outline" size={18} color={colors.danger} />
                       <Text style={styles.reportIssueBtnText}>Report Issue</Text>
                     </TouchableOpacity>
                   </View>
@@ -845,10 +828,10 @@ export default function JobDetailScreen() {
                       activeOpacity={0.8}
                     >
                       {submittingReview ? (
-                        <ActivityIndicator color={COLORS.white} />
+                        <ActivityIndicator color={colors.white} />
                       ) : (
                         <>
-                          <Ionicons name="send" size={18} color={COLORS.white} />
+                          <Ionicons name="send" size={18} color={colors.white} />
                           <Text style={styles.reviewSubmitBtnText}>Submit Review</Text>
                         </>
                       )}
@@ -859,7 +842,7 @@ export default function JobDetailScreen() {
                 {/* Review Submitted Success */}
                 {reviewSubmitted && (
                   <View style={styles.reviewSuccess}>
-                    <Ionicons name="checkmark-circle" size={40} color={COLORS.success} />
+                    <Ionicons name="checkmark-circle" size={40} color={colors.success} />
                     <Text style={styles.reviewSuccessTitle}>Review Submitted!</Text>
                     <Text style={styles.reviewSuccessSubtitle}>
                       Thank you for your feedback. Payment has been released.
@@ -871,7 +854,7 @@ export default function JobDetailScreen() {
                 {job.status === "completed" && photos.length > 0 && (
                   <View style={styles.beforeAfterCard}>
                     <View style={styles.beforeAfterHeader}>
-                      <Ionicons name="images-outline" size={18} color={COLORS.primary} />
+                      <Ionicons name="images-outline" size={18} color={colors.primary} />
                       <Text style={styles.beforeAfterTitle}>Before / After</Text>
                     </View>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>
@@ -893,7 +876,7 @@ export default function JobDetailScreen() {
                       onPress={() => router.push(`/(client)/reschedule/${id}` as never)}
                       activeOpacity={0.8}
                     >
-                      <Ionicons name="calendar-outline" size={16} color={COLORS.primary} />
+                      <Ionicons name="calendar-outline" size={16} color={colors.primary} />
                       <Text style={styles.quickActionText}>Reschedule</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -901,7 +884,7 @@ export default function JobDetailScreen() {
                       onPress={() => router.push(`/(client)/change-order/${id}` as never)}
                       activeOpacity={0.8}
                     >
-                      <Ionicons name="add-circle-outline" size={16} color={COLORS.primary} />
+                      <Ionicons name="add-circle-outline" size={16} color={colors.primary} />
                       <Text style={styles.quickActionText}>Change Order</Text>
                     </TouchableOpacity>
                   </View>
@@ -982,7 +965,7 @@ export default function JobDetailScreen() {
 
                   <View style={styles.bidFooter}>
                     <View style={styles.bidTimelineWrap}>
-                      <Ionicons name="calendar-outline" size={14} color={COLORS.muted} />
+                      <Ionicons name="calendar-outline" size={14} color={colors.muted} />
                       <Text style={styles.bidTimeline}>{item.timeline_days ? `${item.timeline_days} days` : "Flexible"}</Text>
                     </View>
                     {item.status === "pending" && job.status !== "completed" && (
@@ -991,14 +974,14 @@ export default function JobDetailScreen() {
                           style={styles.declineBtn}
                           onPress={() => declineBid(item.id)}
                         >
-                          <Ionicons name="close" size={16} color={COLORS.danger} />
+                          <Ionicons name="close" size={16} color={colors.danger} />
                           <Text style={styles.declineBtnText}>Decline</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                           style={styles.acceptBtn}
                           onPress={() => acceptBid(item.id, item.price)}
                         >
-                          <Ionicons name="checkmark" size={16} color={COLORS.white} />
+                          <Ionicons name="checkmark" size={16} color={colors.white} />
                           <Text style={styles.acceptBtnText}>Accept</Text>
                         </TouchableOpacity>
                       </View>
@@ -1032,7 +1015,7 @@ export default function JobDetailScreen() {
                   {!isMine && (
                     <Text style={styles.msgSenderName}>{item.sender_name || "Other"}</Text>
                   )}
-                  <Text style={[styles.msgContent, isMine && { color: COLORS.white }]}>
+                  <Text style={[styles.msgContent, isMine && { color: colors.white }]}>
                     {item.content}
                   </Text>
                   <Text style={[styles.msgTime, isMine && { color: "rgba(255,255,255,0.7)" }]}>
@@ -1063,7 +1046,7 @@ export default function JobDetailScreen() {
               onPress={sendMessage}
               disabled={!msgText.trim()}
             >
-              <Ionicons name="send" size={18} color={COLORS.white} />
+              <Ionicons name="send" size={18} color={colors.white} />
             </TouchableOpacity>
           </View>
         </View>
@@ -1073,7 +1056,7 @@ export default function JobDetailScreen() {
       {tab === "details" && (
         <ScrollView
           contentContainerStyle={{ padding: 16, paddingBottom: 100 }}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.primary} />}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />}
         >
           <View style={styles.detailCard}>
             <DetailRow icon="briefcase-outline" label="Category" value={job.category?.replace(/_/g, " ")} />
@@ -1135,7 +1118,7 @@ export default function JobDetailScreen() {
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Report an Issue</Text>
               <TouchableOpacity onPress={() => setShowDisputeModal(false)} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-                <Ionicons name="close" size={24} color={COLORS.secondary} />
+                <Ionicons name="close" size={24} color={colors.text} />
               </TouchableOpacity>
             </View>
 
@@ -1149,9 +1132,9 @@ export default function JobDetailScreen() {
                 <Ionicons
                   name={disputeReason === reason ? "radio-button-on" : "radio-button-off"}
                   size={20}
-                  color={disputeReason === reason ? COLORS.primary : COLORS.muted}
+                  color={disputeReason === reason ? colors.primary : colors.muted}
                 />
-                <Text style={[styles.disputeReasonText, disputeReason === reason && { color: COLORS.primary, fontWeight: "600" }]}>
+                <Text style={[styles.disputeReasonText, disputeReason === reason && { color: colors.primary, fontWeight: "600" }]}>
                   {reason}
                 </Text>
               </TouchableOpacity>
@@ -1176,7 +1159,7 @@ export default function JobDetailScreen() {
               activeOpacity={0.8}
             >
               {submittingDispute ? (
-                <ActivityIndicator color={COLORS.white} />
+                <ActivityIndicator color={colors.white} />
               ) : (
                 <Text style={styles.disputeSubmitBtnText}>Submit Report</Text>
               )}
@@ -1202,7 +1185,7 @@ function DetailRow({
   return (
     <View style={[styles.detailRow, !last && styles.detailRowBorder]}>
       <View style={styles.detailIconWrap}>
-        <Ionicons name={icon} size={18} color={COLORS.primaryLight} />
+        <Ionicons name={icon} size={18} color={colors.primaryLight} />
       </View>
       <View style={{ flex: 1 }}>
         <Text style={styles.detailLabel}>{label}</Text>
@@ -1213,21 +1196,21 @@ function DetailRow({
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: COLORS.surface },
-  center: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: COLORS.surface },
+  screen: { flex: 1, backgroundColor: colors.surface },
+  center: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: colors.surface },
 
   // Header
   header: {
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.white,
     paddingHorizontal: 20,
     paddingTop: 16,
     paddingBottom: 16,
   },
   headerTop: { flexDirection: "row", alignItems: "flex-start", gap: 14, marginBottom: 14 },
-  heroEmojiWrap: { width: 52, height: 52, borderRadius: 14, backgroundColor: COLORS.surface, justifyContent: "center", alignItems: "center" },
+  heroEmojiWrap: { width: 52, height: 52, borderRadius: radius.lg, backgroundColor: colors.surface, justifyContent: "center", alignItems: "center" },
   heroEmoji: { fontSize: 26 },
   heroInfo: { flex: 1 },
-  heroTitle: { fontSize: 20, fontWeight: "800", color: COLORS.secondary, marginBottom: 6, lineHeight: 26 },
+  heroTitle: { fontSize: 20, fontWeight: "800", color: colors.text, marginBottom: 6, lineHeight: 26 },
   heroBadge: { flexDirection: "row", alignItems: "center", alignSelf: "flex-start", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20, gap: 5 },
   heroBadgeDot: { width: 6, height: 6, borderRadius: 3 },
   heroBadgeText: { fontSize: 12, fontWeight: "600", textTransform: "capitalize" },
@@ -1235,37 +1218,37 @@ const styles = StyleSheet.create({
   // Info row
   infoRow: { flexDirection: "row", flexWrap: "wrap", gap: 14, marginBottom: 10 },
   infoItem: { flexDirection: "row", alignItems: "center", gap: 4 },
-  infoText: { fontSize: 12, color: COLORS.muted },
+  infoText: { fontSize: 12, color: colors.muted },
   urgencyDot: { width: 8, height: 8, borderRadius: 4 },
 
   description: { fontSize: 14, color: "#475569", lineHeight: 21, marginTop: 6 },
 
   // Photos
   photoScroll: { marginTop: 12 },
-  photoThumb: { width: 80, height: 80, borderRadius: 10 },
+  photoThumb: { width: 80, height: 80, borderRadius: radius.md },
 
   // Surge Banner
   surgeBanner: {
-    backgroundColor: COLORS.warningBg,
+    backgroundColor: "#FEF3C7",
     marginHorizontal: 16,
     marginTop: 12,
-    borderRadius: 14,
+    borderRadius: radius.lg,
     padding: 14,
     borderWidth: 1.5,
     borderColor: "#fde68a",
   },
   surgeRow: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 4 },
-  surgeTitle: { fontSize: 15, fontWeight: "700", color: COLORS.warning, flex: 1 },
-  surgeMultiplier: { backgroundColor: "#fde68a", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 12 },
+  surgeTitle: { fontSize: 15, fontWeight: "700", color: colors.warning, flex: 1 },
+  surgeMultiplier: { backgroundColor: "#fde68a", paddingHorizontal: 10, paddingVertical: 3, borderRadius: radius.lg },
   surgeMultiplierText: { fontSize: 13, fontWeight: "800", color: "#92400e" },
   surgeMessage: { fontSize: 13, color: "#92400e", lineHeight: 19 },
 
   // Status Timeline
   timelineCard: {
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.white,
     marginHorizontal: 16,
     marginTop: 12,
-    borderRadius: 16,
+    borderRadius: radius.xl,
     padding: 16,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
@@ -1273,253 +1256,253 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  timelineTitle: { fontSize: 14, fontWeight: "700", color: COLORS.secondary, marginBottom: 14 },
+  timelineTitle: { fontSize: 14, fontWeight: "700", color: colors.text, marginBottom: 14 },
   timelineRow: { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between" },
   timelineStep: { alignItems: "center", flex: 1, position: "relative" },
   timelineStepDot: {
-    width: 28, height: 28, borderRadius: 14,
-    backgroundColor: "#e2e8f0",
+    width: 28, height: 28, borderRadius: radius.lg,
+    backgroundColor: colors.border,
     justifyContent: "center", alignItems: "center",
     marginBottom: 4,
   },
-  timelineStepDotDone: { backgroundColor: COLORS.success },
-  timelineStepDotCurrent: { backgroundColor: COLORS.primaryLight, borderWidth: 2, borderColor: COLORS.primary },
-  timelineStepLabel: { fontSize: 10, color: COLORS.mutedLight, textAlign: "center", fontWeight: "500" },
-  timelineStepLabelDone: { color: COLORS.success, fontWeight: "600" },
-  timelineStepLabelCurrent: { color: COLORS.primary, fontWeight: "700" },
-  timelineStepLine: { position: "absolute", top: 14, left: "60%", right: "-40%", height: 2, backgroundColor: "#e2e8f0", zIndex: -1 },
-  timelineStepLineDone: { backgroundColor: COLORS.success },
+  timelineStepDotDone: { backgroundColor: colors.success },
+  timelineStepDotCurrent: { backgroundColor: colors.primaryLight, borderWidth: 2, borderColor: colors.primary },
+  timelineStepLabel: { fontSize: 10, color: colors.muted, textAlign: "center", fontWeight: "500" },
+  timelineStepLabelDone: { color: colors.success, fontWeight: "600" },
+  timelineStepLabelCurrent: { color: colors.primary, fontWeight: "700" },
+  timelineStepLine: { position: "absolute", top: 14, left: "60%", right: "-40%", height: 2, backgroundColor: colors.border, zIndex: -1 },
+  timelineStepLineDone: { backgroundColor: colors.success },
 
   // AI Card
   aiCard: {
-    backgroundColor: COLORS.purpleBg,
+    backgroundColor: "#f5f3ff",
     marginHorizontal: 16,
     marginTop: 12,
-    borderRadius: 16,
+    borderRadius: radius.xl,
     padding: 16,
     borderWidth: 1.5,
     borderColor: "#ddd6fe",
   },
   aiCardHeader: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 10 },
-  aiCardTitle: { fontSize: 15, fontWeight: "700", color: COLORS.purple },
+  aiCardTitle: { fontSize: 15, fontWeight: "700", color: "#7c3aed" },
   aiPriceRow: { flexDirection: "row", alignItems: "baseline", gap: 8, marginBottom: 6 },
-  aiPriceRange: { fontSize: 22, fontWeight: "800", color: COLORS.secondary },
-  aiPriceLabel: { fontSize: 12, color: COLORS.muted, fontWeight: "500" },
+  aiPriceRange: { fontSize: 22, fontWeight: "800", color: colors.text },
+  aiPriceLabel: { fontSize: 12, color: colors.muted, fontWeight: "500" },
   aiNote: { fontSize: 13, color: "#6b21a8", lineHeight: 19 },
 
   // Escrow Trust Banner
   escrowBanner: {
-    backgroundColor: COLORS.successLight,
+    backgroundColor: "#D1FAE5",
     marginHorizontal: 16,
     marginTop: 12,
-    borderRadius: 16,
+    borderRadius: radius.xl,
     padding: 16,
     borderWidth: 1.5,
     borderColor: "#a7f3d0",
   },
   escrowHeader: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 6 },
-  escrowTitle: { fontSize: 16, fontWeight: "800", color: COLORS.success },
+  escrowTitle: { fontSize: 16, fontWeight: "800", color: colors.success },
   escrowAmount: { fontSize: 14, color: "#065f46", marginBottom: 14, lineHeight: 20 },
   escrowTimeline: { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between" },
   escrowStep: { alignItems: "center", flex: 1, position: "relative" },
-  escrowStepDot: { width: 28, height: 28, borderRadius: 14, backgroundColor: "#d1d5db", justifyContent: "center", alignItems: "center", marginBottom: 4 },
-  escrowStepDotDone: { backgroundColor: COLORS.success },
-  escrowStepLabel: { fontSize: 10, color: COLORS.muted, textAlign: "center", fontWeight: "500" },
-  escrowStepLabelDone: { color: COLORS.success, fontWeight: "700" },
+  escrowStepDot: { width: 28, height: 28, borderRadius: radius.lg, backgroundColor: "#d1d5db", justifyContent: "center", alignItems: "center", marginBottom: 4 },
+  escrowStepDotDone: { backgroundColor: colors.success },
+  escrowStepLabel: { fontSize: 10, color: colors.muted, textAlign: "center", fontWeight: "500" },
+  escrowStepLabelDone: { color: colors.success, fontWeight: "700" },
   escrowStepLine: { position: "absolute", top: 14, left: "60%", right: "-40%", height: 2, backgroundColor: "#d1d5db", zIndex: -1 },
-  escrowStepLineDone: { backgroundColor: COLORS.success },
+  escrowStepLineDone: { backgroundColor: colors.success },
   payNowBtn: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: radius.lg,
     gap: 8,
     marginTop: 14,
   },
-  payNowBtnText: { color: COLORS.white, fontSize: 16, fontWeight: "700" },
+  payNowBtnText: { color: colors.white, fontSize: 16, fontWeight: "700" },
 
   // Confirm & Release
   confirmSection: { paddingHorizontal: 16, paddingTop: 12, gap: 8 },
   confirmReleaseBtn: {
     flexDirection: "row", alignItems: "center", justifyContent: "center",
-    paddingVertical: 16, borderRadius: 14, gap: 8,
-    backgroundColor: COLORS.success,
+    paddingVertical: 16, borderRadius: radius.lg, gap: 8,
+    backgroundColor: colors.success,
     shadowColor: "#059669", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 6,
   },
-  confirmReleaseBtnText: { color: COLORS.white, fontSize: 15, fontWeight: "700" },
+  confirmReleaseBtnText: { color: colors.white, fontSize: 15, fontWeight: "700" },
   reportIssueBtn: {
     flexDirection: "row", alignItems: "center", justifyContent: "center",
-    paddingVertical: 12, borderRadius: 12, gap: 6,
-    borderWidth: 1.5, borderColor: "#fecaca", backgroundColor: COLORS.white,
+    paddingVertical: 12, borderRadius: radius.lg, gap: 6,
+    borderWidth: 1.5, borderColor: "#fecaca", backgroundColor: colors.white,
   },
-  reportIssueBtnText: { color: COLORS.danger, fontSize: 14, fontWeight: "600" },
+  reportIssueBtnText: { color: colors.danger, fontSize: 14, fontWeight: "600" },
 
   // Review Form
   reviewForm: {
-    backgroundColor: COLORS.white, marginHorizontal: 16, marginTop: 12,
-    borderRadius: 16, padding: 20, borderWidth: 1, borderColor: COLORS.border,
+    backgroundColor: colors.white, marginHorizontal: 16, marginTop: 12,
+    borderRadius: radius.xl, padding: 20, borderWidth: 1, borderColor: colors.border,
   },
-  reviewFormTitle: { fontSize: 18, fontWeight: "800", color: COLORS.secondary, marginBottom: 4 },
-  reviewFormSubtitle: { fontSize: 14, color: COLORS.muted },
+  reviewFormTitle: { fontSize: 18, fontWeight: "800", color: colors.text, marginBottom: 4 },
+  reviewFormSubtitle: { fontSize: 14, color: colors.muted },
   reviewInput: {
-    backgroundColor: COLORS.surface, borderWidth: 1, borderColor: COLORS.border,
-    borderRadius: 12, padding: 14, fontSize: 15, color: COLORS.secondary, minHeight: 80, marginBottom: 16,
+    backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border,
+    borderRadius: radius.lg, padding: 14, fontSize: 15, color: colors.text, minHeight: 80, marginBottom: 16,
   },
   reviewSubmitBtn: {
     flexDirection: "row", alignItems: "center", justifyContent: "center",
-    backgroundColor: COLORS.primary, paddingVertical: 14, borderRadius: 12, gap: 8,
+    backgroundColor: colors.primary, paddingVertical: 14, borderRadius: radius.lg, gap: 8,
   },
-  reviewSubmitBtnText: { color: COLORS.white, fontSize: 16, fontWeight: "700" },
+  reviewSubmitBtnText: { color: colors.white, fontSize: 16, fontWeight: "700" },
 
   // Review Success
   reviewSuccess: {
-    alignItems: "center", backgroundColor: COLORS.successLight,
-    marginHorizontal: 16, marginTop: 12, borderRadius: 16, padding: 24,
+    alignItems: "center", backgroundColor: "#D1FAE5",
+    marginHorizontal: 16, marginTop: 12, borderRadius: radius.xl, padding: 24,
     borderWidth: 1.5, borderColor: "#a7f3d0",
   },
-  reviewSuccessTitle: { fontSize: 18, fontWeight: "800", color: COLORS.success, marginTop: 8 },
+  reviewSuccessTitle: { fontSize: 18, fontWeight: "800", color: colors.success, marginTop: 8 },
   reviewSuccessSubtitle: { fontSize: 14, color: "#065f46", marginTop: 4, textAlign: "center" },
 
   // Before/After
   beforeAfterCard: {
-    backgroundColor: COLORS.white, marginHorizontal: 16, marginTop: 12,
-    borderRadius: 16, padding: 16, shadowColor: "#000",
+    backgroundColor: colors.white, marginHorizontal: 16, marginTop: 12,
+    borderRadius: radius.xl, padding: 16, shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
   },
   beforeAfterHeader: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 12 },
-  beforeAfterTitle: { fontSize: 15, fontWeight: "700", color: COLORS.secondary },
+  beforeAfterTitle: { fontSize: 15, fontWeight: "700", color: colors.text },
   beforeAfterImageWrap: { alignItems: "center" },
-  beforeAfterImage: { width: 140, height: 140, borderRadius: 12 },
-  beforeAfterLabel: { fontSize: 11, fontWeight: "600", color: COLORS.muted, marginTop: 4 },
+  beforeAfterImage: { width: 140, height: 140, borderRadius: radius.lg },
+  beforeAfterLabel: { fontSize: 11, fontWeight: "600", color: colors.muted, marginTop: 4 },
 
   // Quick Actions
   quickActions: { flexDirection: "row", gap: 10, marginHorizontal: 16, marginTop: 10 },
   quickActionBtn: {
     flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center",
-    gap: 6, borderWidth: 1.5, borderColor: COLORS.primary, borderRadius: 10,
-    paddingVertical: 10, backgroundColor: COLORS.primaryBg,
+    gap: 6, borderWidth: 1.5, borderColor: colors.primary, borderRadius: radius.md,
+    paddingVertical: 10, backgroundColor: "#DBEAFE",
   },
-  quickActionText: { color: COLORS.primary, fontWeight: "600", fontSize: 14 },
+  quickActionText: { color: colors.primary, fontWeight: "600", fontSize: 14 },
 
   // Tabs
   tabBar: {
-    flexDirection: "row", backgroundColor: COLORS.white,
+    flexDirection: "row", backgroundColor: colors.white,
     paddingHorizontal: 16, paddingTop: 4,
-    borderBottomWidth: 1, borderColor: COLORS.border,
+    borderBottomWidth: 1, borderColor: colors.border,
   },
   tabBtn: { flex: 1, paddingVertical: 12, alignItems: "center", borderBottomWidth: 2, borderColor: "transparent" },
-  tabBtnActive: { borderColor: COLORS.primary },
-  tabBtnText: { fontSize: 14, fontWeight: "500", color: COLORS.muted },
-  tabBtnTextActive: { color: COLORS.primary, fontWeight: "700" },
+  tabBtnActive: { borderColor: colors.primary },
+  tabBtnText: { fontSize: 14, fontWeight: "500", color: colors.muted },
+  tabBtnTextActive: { color: colors.primary, fontWeight: "700" },
 
   // Sort bar
   sortBar: {
     flexDirection: "row", alignItems: "center",
     paddingHorizontal: 16, paddingVertical: 10, gap: 8,
-    backgroundColor: COLORS.white, borderBottomWidth: 1, borderColor: COLORS.border,
+    backgroundColor: colors.white, borderBottomWidth: 1, borderColor: colors.border,
   },
-  sortLabel: { fontSize: 12, color: COLORS.muted, fontWeight: "500" },
+  sortLabel: { fontSize: 12, color: colors.muted, fontWeight: "500" },
   sortChip: {
-    paddingHorizontal: 12, paddingVertical: 5, borderRadius: 14,
-    backgroundColor: COLORS.surface, borderWidth: 1, borderColor: COLORS.border,
+    paddingHorizontal: 12, paddingVertical: 5, borderRadius: radius.lg,
+    backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border,
   },
-  sortChipActive: { backgroundColor: COLORS.primaryBg, borderColor: COLORS.primary },
-  sortChipText: { fontSize: 12, color: COLORS.muted, fontWeight: "500" },
-  sortChipTextActive: { color: COLORS.primary, fontWeight: "600" },
+  sortChipActive: { backgroundColor: "#DBEAFE", borderColor: colors.primary },
+  sortChipText: { fontSize: 12, color: colors.muted, fontWeight: "500" },
+  sortChipTextActive: { color: colors.primary, fontWeight: "600" },
 
   // Bid cards
   bidCard: {
-    backgroundColor: COLORS.white, borderRadius: 16, padding: 16,
+    backgroundColor: colors.white, borderRadius: radius.xl, padding: 16,
     marginHorizontal: 16, marginBottom: 12,
     shadowColor: "#000", shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
-    borderWidth: 1.5, borderColor: COLORS.border,
+    borderWidth: 1.5, borderColor: colors.border,
   },
   bidCardAccepted: { borderColor: "#059669", borderWidth: 2 },
   acceptedBanner: {
     flexDirection: "row", alignItems: "center", gap: 4, marginBottom: 10,
     backgroundColor: "#f0fdf4", alignSelf: "flex-start",
-    paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12,
+    paddingHorizontal: 10, paddingVertical: 4, borderRadius: radius.lg,
   },
   acceptedBannerText: { fontSize: 12, fontWeight: "600", color: "#059669" },
   bidHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 },
   bidContractor: { flexDirection: "row", alignItems: "center", gap: 10, flex: 1 },
-  bidAvatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: COLORS.primaryBg, justifyContent: "center", alignItems: "center" },
-  bidAvatarText: { fontSize: 17, fontWeight: "700", color: COLORS.primary },
-  bidName: { fontSize: 15, fontWeight: "600", color: COLORS.secondary, marginBottom: 2 },
-  ratingNum: { fontSize: 12, color: COLORS.muted, fontWeight: "500" },
+  bidAvatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: "#DBEAFE", justifyContent: "center", alignItems: "center" },
+  bidAvatarText: { fontSize: 17, fontWeight: "700", color: colors.primary },
+  bidName: { fontSize: 15, fontWeight: "600", color: colors.text, marginBottom: 2 },
+  ratingNum: { fontSize: 12, color: colors.muted, fontWeight: "500" },
   bidPrice: { fontSize: 22, fontWeight: "800", color: "#059669" },
   matchBadge: {
     flexDirection: "row", alignItems: "center", gap: 3,
-    paddingHorizontal: 8, paddingVertical: 3, borderRadius: 10, marginTop: 4,
+    paddingHorizontal: 8, paddingVertical: 3, borderRadius: radius.md, marginTop: 4,
   },
   matchBadgeHigh: { backgroundColor: "#f0fdf4" },
-  matchBadgeMed: { backgroundColor: COLORS.warningBg },
-  matchBadgeLow: { backgroundColor: COLORS.surface },
+  matchBadgeMed: { backgroundColor: "#FEF3C7" },
+  matchBadgeLow: { backgroundColor: colors.surface },
   matchBadgeText: { fontSize: 11, fontWeight: "600" },
   bidMsg: { fontSize: 13, color: "#475569", lineHeight: 19, marginBottom: 12 },
   bidFooter: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
   bidTimelineWrap: { flexDirection: "row", alignItems: "center", gap: 5 },
-  bidTimeline: { fontSize: 12, color: COLORS.muted },
+  bidTimeline: { fontSize: 12, color: colors.muted },
   acceptBtn: {
     flexDirection: "row", alignItems: "center",
     backgroundColor: "#059669", paddingHorizontal: 14, paddingVertical: 9,
-    borderRadius: 10, gap: 4,
+    borderRadius: radius.md, gap: 4,
   },
-  acceptBtnText: { color: COLORS.white, fontSize: 13, fontWeight: "700" },
+  acceptBtnText: { color: colors.white, fontSize: 13, fontWeight: "700" },
   declineBtn: {
     flexDirection: "row", alignItems: "center",
-    backgroundColor: COLORS.white, paddingHorizontal: 14, paddingVertical: 9,
-    borderRadius: 10, gap: 4, borderWidth: 1.5, borderColor: "#fecaca",
+    backgroundColor: colors.white, paddingHorizontal: 14, paddingVertical: 9,
+    borderRadius: radius.md, gap: 4, borderWidth: 1.5, borderColor: "#fecaca",
   },
-  declineBtnText: { color: COLORS.danger, fontSize: 13, fontWeight: "600" },
+  declineBtnText: { color: colors.danger, fontSize: 13, fontWeight: "600" },
 
   // Messages
   msgBubble: { maxWidth: "80%", padding: 12, borderRadius: 18, marginBottom: 8 },
-  msgSent: { alignSelf: "flex-end", backgroundColor: COLORS.primary, borderBottomRightRadius: 4 },
-  msgReceived: { alignSelf: "flex-start", backgroundColor: "#e2e8f0", borderBottomLeftRadius: 4 },
-  msgSenderName: { fontSize: 11, fontWeight: "600", color: COLORS.muted, marginBottom: 2 },
-  msgContent: { fontSize: 15, color: COLORS.secondary, lineHeight: 20 },
+  msgSent: { alignSelf: "flex-end", backgroundColor: colors.primary, borderBottomRightRadius: 4 },
+  msgReceived: { alignSelf: "flex-start", backgroundColor: colors.border, borderBottomLeftRadius: 4 },
+  msgSenderName: { fontSize: 11, fontWeight: "600", color: colors.muted, marginBottom: 2 },
+  msgContent: { fontSize: 15, color: colors.text, lineHeight: 20 },
   msgTime: { fontSize: 10, color: "#94a3b8", marginTop: 4, textAlign: "right" },
   msgInputBar: {
-    flexDirection: "row", padding: 12, backgroundColor: COLORS.white,
-    borderTopWidth: 1, borderColor: COLORS.border, gap: 8, alignItems: "flex-end",
+    flexDirection: "row", padding: 12, backgroundColor: colors.white,
+    borderTopWidth: 1, borderColor: colors.border, gap: 8, alignItems: "flex-end",
   },
   msgTextInput: {
-    flex: 1, backgroundColor: COLORS.surface, borderRadius: 22,
-    paddingHorizontal: 18, paddingVertical: 10, fontSize: 15, maxHeight: 100, color: COLORS.secondary,
+    flex: 1, backgroundColor: colors.surface, borderRadius: 22,
+    paddingHorizontal: 18, paddingVertical: 10, fontSize: 15, maxHeight: 100, color: colors.text,
   },
-  sendBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: COLORS.primary, justifyContent: "center", alignItems: "center" },
+  sendBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: colors.primary, justifyContent: "center", alignItems: "center" },
 
   // Details tab
   detailCard: {
-    backgroundColor: COLORS.white, borderRadius: 16, padding: 4,
+    backgroundColor: colors.white, borderRadius: radius.xl, padding: 4,
     shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
   },
   detailRow: { flexDirection: "row", alignItems: "center", padding: 16, gap: 12 },
-  detailRowBorder: { borderBottomWidth: 1, borderColor: COLORS.border },
-  detailIconWrap: { width: 36, height: 36, borderRadius: 10, backgroundColor: COLORS.primaryBg, justifyContent: "center", alignItems: "center" },
-  detailLabel: { fontSize: 12, color: COLORS.muted, fontWeight: "500", marginBottom: 2 },
-  detailValue: { fontSize: 15, fontWeight: "600", color: COLORS.secondary, textTransform: "capitalize" },
+  detailRowBorder: { borderBottomWidth: 1, borderColor: colors.border },
+  detailIconWrap: { width: 36, height: 36, borderRadius: radius.md, backgroundColor: "#DBEAFE", justifyContent: "center", alignItems: "center" },
+  detailLabel: { fontSize: 12, color: colors.muted, fontWeight: "500", marginBottom: 2 },
+  detailValue: { fontSize: 15, fontWeight: "600", color: colors.text, textTransform: "capitalize" },
 
   fullDescCard: {
-    backgroundColor: COLORS.white, borderRadius: 16, padding: 16, marginTop: 12,
+    backgroundColor: colors.white, borderRadius: radius.xl, padding: 16, marginTop: 12,
     shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
   },
-  fullDescTitle: { fontSize: 15, fontWeight: "700", color: COLORS.secondary, marginBottom: 10 },
+  fullDescTitle: { fontSize: 15, fontWeight: "700", color: colors.text, marginBottom: 10 },
   fullDescText: { fontSize: 14, color: "#475569", lineHeight: 22 },
 
   detailPhotosCard: {
-    backgroundColor: COLORS.white, borderRadius: 16, padding: 16, marginTop: 12,
+    backgroundColor: colors.white, borderRadius: radius.xl, padding: 16, marginTop: 12,
     shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
   },
-  detailPhotoLarge: { width: 160, height: 160, borderRadius: 12 },
+  detailPhotoLarge: { width: 160, height: 160, borderRadius: radius.lg },
 
   cancelBtn: {
     flexDirection: "row", alignItems: "center", justifyContent: "center",
-    backgroundColor: COLORS.white, paddingVertical: 16, borderRadius: 14, marginTop: 12, gap: 8,
+    backgroundColor: colors.white, paddingVertical: 16, borderRadius: radius.lg, marginTop: 12, gap: 8,
     borderWidth: 1.5, borderColor: "#fecaca",
   },
   cancelBtnText: { color: "#dc2626", fontSize: 16, fontWeight: "600" },
@@ -1532,22 +1515,22 @@ const styles = StyleSheet.create({
   // Dispute Modal
   modalOverlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "flex-end" },
   modalContent: {
-    backgroundColor: COLORS.white, borderTopLeftRadius: 24, borderTopRightRadius: 24,
+    backgroundColor: colors.white, borderTopLeftRadius: 24, borderTopRightRadius: 24,
     padding: 24, paddingBottom: Platform.OS === "ios" ? 40 : 24, maxHeight: "80%",
   },
   modalHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 20 },
-  modalTitle: { fontSize: 20, fontWeight: "800", color: COLORS.secondary },
-  modalLabel: { fontSize: 14, fontWeight: "600", color: COLORS.secondary, marginBottom: 8 },
+  modalTitle: { fontSize: 20, fontWeight: "800", color: colors.text },
+  modalLabel: { fontSize: 14, fontWeight: "600", color: colors.text, marginBottom: 8 },
   disputeReasonBtn: { flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 10, paddingHorizontal: 4 },
-  disputeReasonBtnActive: { backgroundColor: COLORS.primaryBg, borderRadius: 10, paddingHorizontal: 10 },
-  disputeReasonText: { fontSize: 15, color: COLORS.secondary },
+  disputeReasonBtnActive: { backgroundColor: "#DBEAFE", borderRadius: radius.md, paddingHorizontal: 10 },
+  disputeReasonText: { fontSize: 15, color: colors.text },
   disputeInput: {
-    backgroundColor: COLORS.surface, borderWidth: 1, borderColor: COLORS.border,
-    borderRadius: 12, padding: 14, fontSize: 15, color: COLORS.secondary, minHeight: 100,
+    backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border,
+    borderRadius: radius.lg, padding: 14, fontSize: 15, color: colors.text, minHeight: 100,
   },
   disputeSubmitBtn: {
-    backgroundColor: COLORS.danger, paddingVertical: 16, borderRadius: 14,
+    backgroundColor: colors.danger, paddingVertical: 16, borderRadius: radius.lg,
     alignItems: "center", justifyContent: "center", marginTop: 20,
   },
-  disputeSubmitBtnText: { color: COLORS.white, fontSize: 16, fontWeight: "700" },
+  disputeSubmitBtnText: { color: colors.white, fontSize: 16, fontWeight: "700" },
 });

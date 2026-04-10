@@ -12,20 +12,8 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from '../../lib/theme';
 
-const COLORS = {
-  primary: "#2563eb",
-  primaryLight: "#3b82f6",
-  primaryBg: "#eff6ff",
-  secondary: "#1e293b",
-  muted: "#64748b",
-  mutedLight: "#94a3b8",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  white: "#ffffff",
-  success: "#16a34a",
-  successBg: "#f0fdf4",
-};
 
 const CATEGORIES = [
   "All",
@@ -129,7 +117,7 @@ function SkeletonPulse({
   return (
     <Animated.View
       style={[
-        { width: width as number, height, borderRadius, backgroundColor: "#e2e8f0", opacity: animValue },
+        { width: width as number, height, borderRadius, backgroundColor: colors.border, opacity: animValue },
         style,
       ]}
     />
@@ -150,8 +138,8 @@ function LoadingSkeleton() {
         <View
           key={i}
           style={{
-            backgroundColor: COLORS.white,
-            borderRadius: 16,
+            backgroundColor: colors.white,
+            borderRadius: radius.xl,
             padding: 16,
             gap: 8,
             shadowColor: "#000",
@@ -176,7 +164,7 @@ function LoadingSkeleton() {
 }
 
 function ActivityCard({ item, isDemo }: { item: ActivityItem; isDemo: boolean }) {
-  const catColors = CATEGORY_COLORS[item.category] || { bg: COLORS.surface, text: COLORS.muted };
+  const catColors = CATEGORY_COLORS[item.category] || { bg: colors.surface, text: colors.muted };
   const catIcon = CATEGORY_ICONS[item.category] || "checkmark-circle-outline";
 
   return (
@@ -200,10 +188,10 @@ function ActivityCard({ item, isDemo }: { item: ActivityItem; isDemo: boolean })
             {item.message}
           </Text>
           <View style={styles.metaRow}>
-            <Ionicons name="location-outline" size={12} color={COLORS.mutedLight} />
+            <Ionicons name="location-outline" size={12} color={colors.muted} />
             <Text style={styles.metaText}>{item.location}</Text>
             <Text style={styles.metaDot}>·</Text>
-            <Ionicons name="time-outline" size={12} color={COLORS.mutedLight} />
+            <Ionicons name="time-outline" size={12} color={colors.muted} />
             <Text style={styles.metaText}>{item.time}</Text>
           </View>
         </View>
@@ -286,7 +274,7 @@ export default function NeighborhoodScreen() {
       {/* Demo notice */}
       {isDemo && (
         <View style={styles.demoNotice}>
-          <Ionicons name="information-circle-outline" size={16} color={COLORS.primaryLight} />
+          <Ionicons name="information-circle-outline" size={16} color={colors.primaryLight} />
           <Text style={styles.demoNoticeText}>
             Showing sample data — real activity will appear here once available in your area.
           </Text>
@@ -302,15 +290,15 @@ export default function NeighborhoodScreen() {
         >
           {CATEGORIES.map((cat) => {
             const active = selectedCategory === cat;
-            const catColors = CATEGORY_COLORS[cat] || { bg: COLORS.surface, text: COLORS.muted };
+            const catColors = CATEGORY_COLORS[cat] || { bg: colors.surface, text: colors.muted };
             return (
               <TouchableOpacity
                 key={cat}
                 style={[
                   styles.chip,
                   active
-                    ? { backgroundColor: COLORS.primary, borderColor: COLORS.primary }
-                    : { backgroundColor: COLORS.white, borderColor: COLORS.border },
+                    ? { backgroundColor: colors.primary, borderColor: colors.primary }
+                    : { backgroundColor: colors.white, borderColor: colors.border },
                 ]}
                 onPress={() => setSelectedCategory(cat)}
                 activeOpacity={0.7}
@@ -321,7 +309,7 @@ export default function NeighborhoodScreen() {
                 <Text
                   style={[
                     styles.chipText,
-                    active ? { color: COLORS.white } : { color: COLORS.secondary },
+                    active ? { color: colors.white } : { color: colors.text },
                   ]}
                 >
                   {cat}
@@ -339,8 +327,8 @@ export default function NeighborhoodScreen() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            tintColor={COLORS.primary}
-            colors={[COLORS.primary]}
+            tintColor={colors.primary}
+            colors={[colors.primary]}
           />
         }
         contentContainerStyle={[
@@ -364,7 +352,7 @@ export default function NeighborhoodScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: COLORS.surface },
+  screen: { flex: 1, backgroundColor: colors.surface },
 
   header: {
     flexDirection: "row",
@@ -373,62 +361,62 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: Platform.OS === "ios" ? 60 : 20,
     paddingBottom: 14,
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.white,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: colors.border,
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: "800",
-    color: COLORS.secondary,
+    color: colors.text,
   },
   headerSub: {
     fontSize: 13,
-    color: COLORS.muted,
+    color: colors.muted,
     marginTop: 2,
   },
   liveDot: {
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
-    backgroundColor: COLORS.successBg,
+    backgroundColor: "#D1FAE5",
     paddingHorizontal: 10,
     paddingVertical: 5,
-    borderRadius: 12,
+    borderRadius: radius.lg,
   },
   liveDotInner: {
     width: 7,
     height: 7,
     borderRadius: 3.5,
-    backgroundColor: COLORS.success,
+    backgroundColor: colors.success,
   },
   liveText: {
     fontSize: 12,
     fontWeight: "700",
-    color: COLORS.success,
+    color: colors.success,
   },
 
   demoNotice: {
     flexDirection: "row",
     alignItems: "flex-start",
     gap: 8,
-    backgroundColor: COLORS.primaryBg,
+    backgroundColor: "#DBEAFE",
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: colors.border,
   },
   demoNoticeText: {
     flex: 1,
     fontSize: 12,
-    color: COLORS.primaryLight,
+    color: colors.primaryLight,
     lineHeight: 17,
   },
 
   filtersWrap: {
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.white,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: COLORS.border,
+    borderBottomColor: colors.border,
   },
   filtersContent: {
     paddingHorizontal: 16,
@@ -441,7 +429,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 16,
+    borderRadius: radius.xl,
     borderWidth: 1.5,
     gap: 4,
     marginRight: 0,
@@ -456,8 +444,8 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: COLORS.white,
-    borderRadius: 16,
+    backgroundColor: colors.white,
+    borderRadius: radius.xl,
     padding: 16,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -500,7 +488,7 @@ const styles = StyleSheet.create({
   cardMessage: {
     fontSize: 14,
     fontWeight: "600",
-    color: COLORS.secondary,
+    color: colors.text,
     lineHeight: 20,
   },
   metaRow: {
@@ -510,16 +498,16 @@ const styles = StyleSheet.create({
   },
   metaText: {
     fontSize: 12,
-    color: COLORS.mutedLight,
+    color: colors.muted,
   },
   metaDot: {
     fontSize: 12,
-    color: COLORS.mutedLight,
+    color: colors.muted,
   },
   catBadge: {
     paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 8,
+    borderRadius: radius.md,
     alignSelf: "flex-start",
     flexShrink: 0,
   },
@@ -541,12 +529,12 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 20,
     fontWeight: "700",
-    color: COLORS.secondary,
+    color: colors.text,
     marginBottom: 8,
   },
   emptySub: {
     fontSize: 14,
-    color: COLORS.muted,
+    color: colors.muted,
     textAlign: "center",
     lineHeight: 20,
   },

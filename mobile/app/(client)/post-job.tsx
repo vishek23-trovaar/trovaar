@@ -18,21 +18,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
 import * as ImagePicker from "expo-image-picker";
 import VoiceJobRecorder from "@/components/VoiceJobRecorder";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from '../../lib/theme';
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const TOTAL_STEPS = 3;
 
-const COLORS = {
-  primary: "#1e40af",
-  primaryLight: "#3b82f6",
-  secondary: "#0f172a",
-  muted: "#64748b",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  white: "#ffffff",
-  success: "#059669",
-  successLight: "#ecfdf5",
-};
 
 const CATEGORIES = [
   { value: "plumbing", label: "Plumbing", emoji: "\u{1F527}" },
@@ -337,7 +327,7 @@ export default function PostJobScreen() {
 
       {/* Back Button */}
       <TouchableOpacity style={styles.backBtn} onPress={goBack}>
-        <Ionicons name="arrow-back" size={24} color={COLORS.secondary} />
+        <Ionicons name="arrow-back" size={24} color={colors.text} />
       </TouchableOpacity>
 
       <Animated.View
@@ -413,7 +403,7 @@ export default function PostJobScreen() {
                     <Ionicons
                       name="add"
                       size={28}
-                      color={COLORS.muted}
+                      color={colors.muted}
                     />
                   </TouchableOpacity>
                 </ScrollView>
@@ -423,7 +413,7 @@ export default function PostJobScreen() {
                     <Ionicons
                       name="cloud-upload-outline"
                       size={40}
-                      color={COLORS.primaryLight}
+                      color={colors.primaryLight}
                     />
                   </View>
                   <Text style={styles.uploadTitle}>
@@ -445,7 +435,7 @@ export default function PostJobScreen() {
                   <Ionicons
                     name="images-outline"
                     size={20}
-                    color={COLORS.primary}
+                    color={colors.primary}
                   />
                   <Text style={styles.uploadBtnText}>Gallery</Text>
                 </TouchableOpacity>
@@ -457,7 +447,7 @@ export default function PostJobScreen() {
                   <Ionicons
                     name="camera-outline"
                     size={20}
-                    color={COLORS.primary}
+                    color={colors.primary}
                   />
                   <Text style={styles.uploadBtnText}>Camera</Text>
                 </TouchableOpacity>
@@ -477,7 +467,7 @@ export default function PostJobScreen() {
             >
               {aiParsing ? (
                 <>
-                  <ActivityIndicator color={COLORS.white} />
+                  <ActivityIndicator color={colors.white} />
                   <Text style={styles.aiAnalyzeBtnText}>
                     AI is analyzing...
                   </Text>
@@ -487,7 +477,7 @@ export default function PostJobScreen() {
                   <Ionicons
                     name="sparkles"
                     size={20}
-                    color={COLORS.white}
+                    color={colors.white}
                   />
                   <Text style={styles.aiAnalyzeBtnText}>
                     Analyze with AI
@@ -610,7 +600,7 @@ export default function PostJobScreen() {
                     name={opt.icon}
                     size={16}
                     color={
-                      urgency === opt.value ? opt.color : COLORS.muted
+                      urgency === opt.value ? opt.color : colors.muted
                     }
                   />
                   <Text
@@ -633,7 +623,7 @@ export default function PostJobScreen() {
               <Ionicons
                 name="arrow-forward"
                 size={20}
-                color={COLORS.white}
+                color={colors.white}
               />
             </TouchableOpacity>
           </ScrollView>
@@ -683,7 +673,7 @@ export default function PostJobScreen() {
                   <Ionicons
                     name="pencil-outline"
                     size={18}
-                    color={COLORS.primaryLight}
+                    color={colors.primaryLight}
                   />
                 </TouchableOpacity>
               </View>
@@ -710,7 +700,7 @@ export default function PostJobScreen() {
                   <Ionicons
                     name="pencil-outline"
                     size={18}
-                    color={COLORS.primaryLight}
+                    color={colors.primaryLight}
                   />
                 </TouchableOpacity>
               </View>
@@ -729,7 +719,7 @@ export default function PostJobScreen() {
                   <Ionicons
                     name="pencil-outline"
                     size={18}
-                    color={COLORS.primaryLight}
+                    color={colors.primaryLight}
                   />
                 </TouchableOpacity>
               </View>
@@ -741,7 +731,7 @@ export default function PostJobScreen() {
               <Ionicons
                 name="location-outline"
                 size={20}
-                color={COLORS.muted}
+                color={colors.muted}
                 style={styles.inputIcon}
               />
               <TextInput
@@ -759,13 +749,13 @@ export default function PostJobScreen() {
               disabled={loading}
             >
               {loading ? (
-                <ActivityIndicator color={COLORS.white} />
+                <ActivityIndicator color={colors.white} />
               ) : (
                 <>
                   <Ionicons
                     name="rocket-outline"
                     size={20}
-                    color={COLORS.white}
+                    color={colors.white}
                   />
                   <Text style={styles.postBtnText}>Post Job</Text>
                 </>
@@ -781,7 +771,7 @@ export default function PostJobScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.white,
   },
 
   // Progress
@@ -792,18 +782,18 @@ const styles = StyleSheet.create({
   },
   progressTrack: {
     height: 4,
-    backgroundColor: COLORS.border,
+    backgroundColor: colors.border,
     borderRadius: 2,
     overflow: "hidden",
   },
   progressFill: {
     height: "100%",
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     borderRadius: 2,
   },
   stepIndicator: {
     fontSize: 12,
-    color: COLORS.muted,
+    color: colors.muted,
     marginTop: 6,
     textAlign: "right",
   },
@@ -826,12 +816,12 @@ const styles = StyleSheet.create({
   stepTitle: {
     fontSize: 26,
     fontWeight: "800",
-    color: COLORS.secondary,
+    color: colors.text,
     marginBottom: 6,
   },
   stepSubtitle: {
     fontSize: 15,
-    color: COLORS.muted,
+    color: colors.muted,
     marginBottom: 24,
   },
 
@@ -840,7 +830,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#f5f3ff",
-    borderRadius: 16,
+    borderRadius: radius.xl,
     padding: 16,
     marginBottom: 20,
     borderWidth: 1.5,
@@ -850,7 +840,7 @@ const styles = StyleSheet.create({
   voiceIcon: {
     width: 52,
     height: 52,
-    borderRadius: 14,
+    borderRadius: radius.lg,
     backgroundColor: "#ede9fe",
     alignItems: "center",
     justifyContent: "center",
@@ -881,11 +871,11 @@ const styles = StyleSheet.create({
 
   // Upload Section
   uploadSection: {
-    backgroundColor: COLORS.surface,
-    borderRadius: 16,
+    backgroundColor: colors.surface,
+    borderRadius: radius.xl,
     padding: 20,
     borderWidth: 1.5,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
     marginBottom: 16,
   },
   uploadPlaceholder: {
@@ -896,7 +886,7 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: 36,
-    backgroundColor: "#eff6ff",
+    backgroundColor: "#DBEAFE",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 12,
@@ -904,12 +894,12 @@ const styles = StyleSheet.create({
   uploadTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: COLORS.secondary,
+    color: colors.text,
     marginBottom: 4,
   },
   uploadSubtitle: {
     fontSize: 13,
-    color: COLORS.muted,
+    color: colors.muted,
     textAlign: "center",
     lineHeight: 18,
     paddingHorizontal: 20,
@@ -925,16 +915,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 12,
-    borderRadius: 12,
+    borderRadius: radius.lg,
     borderWidth: 1.5,
-    borderColor: COLORS.primary,
-    backgroundColor: "#eff6ff",
+    borderColor: colors.primary,
+    backgroundColor: "#DBEAFE",
     gap: 6,
   },
   uploadBtnText: {
     fontSize: 14,
     fontWeight: "600",
-    color: COLORS.primary,
+    color: colors.primary,
   },
   mediaThumbWrap: {
     position: "relative",
@@ -942,26 +932,26 @@ const styles = StyleSheet.create({
   mediaThumb: {
     width: 100,
     height: 100,
-    borderRadius: 12,
-    backgroundColor: "#e2e8f0",
+    borderRadius: radius.lg,
+    backgroundColor: colors.border,
   },
   removeMediaBtn: {
     position: "absolute",
     top: -6,
     right: -6,
-    backgroundColor: COLORS.white,
-    borderRadius: 12,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
   },
   addMoreBtn: {
     width: 100,
     height: 100,
-    borderRadius: 12,
+    borderRadius: radius.lg,
     borderWidth: 1.5,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
     borderStyle: "dashed",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
   },
 
   // AI Analyze
@@ -971,7 +961,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#7c3aed",
     paddingVertical: 16,
-    borderRadius: 14,
+    borderRadius: radius.lg,
     gap: 8,
     shadowColor: "#7c3aed",
     shadowOffset: { width: 0, height: 4 },
@@ -980,7 +970,7 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   aiAnalyzeBtnText: {
-    color: COLORS.white,
+    color: colors.white,
     fontSize: 17,
     fontWeight: "700",
   },
@@ -990,7 +980,7 @@ const styles = StyleSheet.create({
   },
   skipBtnText: {
     fontSize: 14,
-    color: COLORS.muted,
+    color: colors.muted,
     fontWeight: "500",
   },
 
@@ -1002,7 +992,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f3ff",
     paddingHorizontal: 14,
     paddingVertical: 10,
-    borderRadius: 12,
+    borderRadius: radius.lg,
     marginBottom: 16,
     borderWidth: 1,
     borderColor: "#ddd6fe",
@@ -1021,14 +1011,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderRadius: 20,
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     borderWidth: 1.5,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
     gap: 6,
   },
   categoryChipSelected: {
-    borderColor: COLORS.primary,
-    backgroundColor: "#eff6ff",
+    borderColor: colors.primary,
+    backgroundColor: "#DBEAFE",
   },
   categoryChipEmoji: {
     fontSize: 16,
@@ -1036,10 +1026,10 @@ const styles = StyleSheet.create({
   categoryChipText: {
     fontSize: 13,
     fontWeight: "500",
-    color: COLORS.muted,
+    color: colors.muted,
   },
   categoryChipTextSelected: {
-    color: COLORS.primary,
+    color: colors.primary,
     fontWeight: "700",
   },
 
@@ -1054,35 +1044,35 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 14,
     paddingVertical: 10,
-    borderRadius: 12,
+    borderRadius: radius.lg,
     borderWidth: 1.5,
-    borderColor: COLORS.border,
-    backgroundColor: COLORS.surface,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     gap: 6,
   },
   urgencyChipText: {
     fontSize: 13,
     fontWeight: "500",
-    color: COLORS.muted,
+    color: colors.muted,
   },
 
   // Inputs
   inputLabel: {
     fontSize: 14,
     fontWeight: "600",
-    color: COLORS.secondary,
+    color: colors.text,
     marginBottom: 8,
     marginTop: 16,
   },
   input: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 12,
+    borderColor: colors.border,
+    borderRadius: radius.lg,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 16,
-    color: COLORS.secondary,
+    color: colors.text,
   },
   textArea: {
     height: 110,
@@ -1106,8 +1096,8 @@ const styles = StyleSheet.create({
   reviewPhoto: {
     width: 80,
     height: 80,
-    borderRadius: 10,
-    backgroundColor: "#e2e8f0",
+    borderRadius: radius.md,
+    backgroundColor: colors.border,
   },
 
   // Next button
@@ -1115,25 +1105,25 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingVertical: 16,
-    borderRadius: 14,
+    borderRadius: radius.lg,
     marginTop: 28,
     gap: 8,
   },
   nextBtnText: {
-    color: COLORS.white,
+    color: colors.white,
     fontSize: 17,
     fontWeight: "700",
   },
 
   // Summary
   summaryCard: {
-    backgroundColor: COLORS.surface,
-    borderRadius: 16,
+    backgroundColor: colors.surface,
+    borderRadius: radius.xl,
     padding: 20,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
   },
   summaryRow: {
     flexDirection: "row",
@@ -1147,7 +1137,7 @@ const styles = StyleSheet.create({
   summaryLabel: {
     fontSize: 12,
     fontWeight: "600",
-    color: COLORS.muted,
+    color: colors.muted,
     textTransform: "uppercase",
     letterSpacing: 0.5,
     marginBottom: 4,
@@ -1155,7 +1145,7 @@ const styles = StyleSheet.create({
   summaryValue: {
     fontSize: 16,
     fontWeight: "700",
-    color: COLORS.secondary,
+    color: colors.text,
     marginBottom: 4,
   },
   summaryDesc: {
@@ -1166,7 +1156,7 @@ const styles = StyleSheet.create({
   },
   summaryDivider: {
     height: 1,
-    backgroundColor: COLORS.border,
+    backgroundColor: colors.border,
     marginVertical: 16,
   },
 
@@ -1175,19 +1165,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingVertical: 18,
-    borderRadius: 14,
+    borderRadius: radius.lg,
     marginTop: 24,
     gap: 8,
-    shadowColor: COLORS.primary,
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 6,
   },
   postBtnText: {
-    color: COLORS.white,
+    color: colors.white,
     fontSize: 18,
     fontWeight: "800",
   },

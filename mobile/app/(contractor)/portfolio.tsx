@@ -18,20 +18,21 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "@/lib/auth";
-import { api } from "@/lib/api";
+import { api, getToken, API_URL } from "@/lib/api";
+import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from "../../lib/theme";
 
 const COLORS = {
-  primary: "#3b82f6",
-  primaryDark: "#1e40af",
-  secondary: "#1e293b",
-  muted: "#64748b",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  success: "#059669",
+  primary: colors.primary,
+  primaryDark: colors.primaryDark,
+  secondary: colors.text,
+  muted: colors.muted,
+  surface: colors.surface,
+  border: colors.border,
+  success: colors.success,
   successLight: "#ecfdf5",
-  danger: "#dc2626",
-  white: "#ffffff",
-  warning: "#d97706",
+  danger: colors.danger,
+  white: colors.white,
+  warning: colors.warning,
   warningBg: "#fffbeb",
 };
 
@@ -172,16 +173,45 @@ export default function PortfolioScreen() {
     }
     setSubmitting(true);
     try {
-      await api("/api/portfolio", {
-        method: "POST",
-        body: JSON.stringify({
-          title: newTitle,
-          category: newCategory,
-          description: newDescription,
-          before_photos: beforePhotos,
-          after_photos: afterPhotos,
-        }),
+      const token = await getToken();
+      const formData = new FormData();
+      formData.append("title", newTitle);
+      formData.append("category", newCategory);
+      if (newDescription) formData.append("description", newDescription);
+      beforePhotos.forEach((uri, i) => {
+        formData.append("before_photos", {
+          uri,
+          type: "image/jpeg",
+          name: `before_${i}.jpg`,
+        } as any);
       });
+      afterPhotos.forEach((uri, i) => {
+        formData.append("after_photos", {
+          uri,
+          type: "image/jpeg",
+          name: `after_${i}.jpg`,
+        } as any);
+      });
+      const res = await fetch(`${API_URL}/api/portfolio`, {
+        method: "POST",
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: formData,
+      });
+      if (!res.ok) {
+        // Fall back to JSON upload if multipart is not supported
+        await api("/api/portfolio", {
+          method: "POST",
+          body: JSON.stringify({
+            title: newTitle,
+            category: newCategory,
+            description: newDescription,
+            before_photos: beforePhotos,
+            after_photos: afterPhotos,
+          }),
+        });
+      }
       Alert.alert("Success", "Portfolio item added!");
       setShowAddForm(false);
       setNewTitle("");
@@ -522,16 +552,13 @@ const styles = StyleSheet.create({
 
   // Form
   formCard: {
-    backgroundColor: COLORS.white,
-    borderRadius: 16,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
     padding: 20,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: COLORS.border,
-    ...Platform.select({
-      ios: { shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 8 },
-      android: { elevation: 3 },
-    }),
+    borderColor: colors.border,
+    ...shadows.md,
   },
   formTitle: { fontSize: 20, fontWeight: "800", color: COLORS.secondary, marginBottom: 16 },
   label: { fontSize: 13, fontWeight: "600", color: "#334155", marginBottom: 6, marginTop: 14 },
@@ -597,19 +624,16 @@ const styles = StyleSheet.create({
 
   submitBtn: {
     flexDirection: "row",
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     paddingVertical: 16,
-    borderRadius: 14,
+    borderRadius: radius.md,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 24,
     gap: 8,
-    ...Platform.select({
-      ios: { shadowColor: COLORS.primary, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8 },
-      android: { elevation: 6 },
-    }),
+    ...shadows.md,
   },
-  submitBtnText: { color: COLORS.white, fontSize: 16, fontWeight: "700" },
+  submitBtnText: { color: colors.white, fontSize: 16, fontWeight: "600" },
 
   // Empty state
   emptyState: {
@@ -658,16 +682,13 @@ const styles = StyleSheet.create({
 
   // Portfolio Card
   portfolioCard: {
-    backgroundColor: COLORS.white,
-    borderRadius: 16,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
     padding: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: COLORS.border,
-    ...Platform.select({
-      ios: { shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4 },
-      android: { elevation: 1 },
-    }),
+    borderColor: colors.border,
+    ...shadows.sm,
   },
   portfolioCardHeader: {
     flexDirection: "row",
