@@ -106,7 +106,7 @@ export default function ImageUploader({ images, onImagesChange, maxImages = 5, l
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/*,video/mp4,video/quicktime,video/x-msvideo,video/x-matroska,video/webm,video/x-ms-wmv,video/3gpp,video/3gpp2,video/x-m4v"
+        accept="image/*,video/*"
         multiple
         onChange={handleUpload}
         className="hidden"

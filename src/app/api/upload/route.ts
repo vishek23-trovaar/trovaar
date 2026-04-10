@@ -23,7 +23,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "File too large (max 100MB)" }, { status: 400 });
     }
 
-    if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+    const isAllowed = file.type.startsWith("image/") || file.type.startsWith("video/") || ALLOWED_FILE_TYPES.includes(file.type);
+    if (!isAllowed) {
       return NextResponse.json({ error: "Invalid file type" }, { status: 400 });
     }
 

@@ -174,6 +174,8 @@ export default function ClientLayout() {
       <Tabs.Screen name="tip/[jobId]" options={{ href: null, title: "Leave a Tip" }} />
       <Tabs.Screen name="change-order/[jobId]" options={{ href: null, title: "Change Order" }} />
       <Tabs.Screen name="reschedule/[jobId]" options={{ href: null, title: "Reschedule Job" }} />
+      <Tabs.Screen name="checkout/[jobId]" options={{ href: null, title: "Checkout" }} />
+      <Tabs.Screen name="review/[jobId]" options={{ href: null, title: "Leave a Review" }} />
     </Tabs>
   );
 }

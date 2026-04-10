@@ -244,11 +244,14 @@ export const JOB_STATUSES = [
 
 export const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB to support video uploads
 export const ALLOWED_FILE_TYPES = [
-  // Images
+  // Images — all common formats
   "image/jpeg", "image/png", "image/webp", "image/gif", "image/heic", "image/heif",
+  "image/bmp", "image/tiff", "image/svg+xml", "image/avif", "image/x-icon",
+  "image/vnd.microsoft.icon", "image/jxl",
   // Videos — all common formats
   "video/mp4", "video/quicktime", "video/x-msvideo", "video/x-matroska",
   "video/webm", "video/x-ms-wmv", "video/3gpp", "video/3gpp2", "video/x-m4v",
+  "video/ogg", "video/x-flv", "video/mpeg",
   // Documents
   "application/pdf",
 ];

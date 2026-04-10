@@ -148,7 +148,7 @@ export default function PortfolioScreen() {
       return;
     }
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsMultipleSelection: true,
       quality: 0.8,
     });
@@ -162,13 +162,25 @@ export default function PortfolioScreen() {
     }
   };
 
+  const getMimeType = (uri: string): string => {
+    const ext = uri.split(".").pop()?.toLowerCase() || "jpg";
+    const mimeMap: Record<string, string> = {
+      jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", gif: "image/gif",
+      webp: "image/webp", heic: "image/heic", heif: "image/heif", bmp: "image/bmp",
+      tiff: "image/tiff", tif: "image/tiff", avif: "image/avif", svg: "image/svg+xml",
+      mp4: "video/mp4", mov: "video/quicktime", avi: "video/x-msvideo",
+      mkv: "video/x-matroska", webm: "video/webm", wmv: "video/x-ms-wmv",
+    };
+    return mimeMap[ext] || "image/jpeg";
+  };
+
   const handleSubmit = async () => {
     if (!newTitle.trim()) {
       Alert.alert("Error", "Please enter a project title");
       return;
     }
     if (beforePhotos.length === 0 && afterPhotos.length === 0) {
-      Alert.alert("Error", "Please add at least one photo");
+      Alert.alert("Error", "Please add at least one photo or video");
       return;
     }
     setSubmitting(true);
@@ -179,17 +191,19 @@ export default function PortfolioScreen() {
       formData.append("category", newCategory);
       if (newDescription) formData.append("description", newDescription);
       beforePhotos.forEach((uri, i) => {
+        const ext = uri.split(".").pop()?.toLowerCase() || "jpg";
         formData.append("before_photos", {
           uri,
-          type: "image/jpeg",
-          name: `before_${i}.jpg`,
+          type: getMimeType(uri),
+          name: `before_${i}.${ext}`,
         } as any);
       });
       afterPhotos.forEach((uri, i) => {
+        const ext = uri.split(".").pop()?.toLowerCase() || "jpg";
         formData.append("after_photos", {
           uri,
-          type: "image/jpeg",
-          name: `after_${i}.jpg`,
+          type: getMimeType(uri),
+          name: `after_${i}.${ext}`,
         } as any);
       });
       const res = await fetch(`${API_URL}/api/portfolio`, {

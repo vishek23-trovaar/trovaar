@@ -71,8 +71,8 @@ export function ReceiptsPanel({ jobId, isContractor, canUpload }: Props) {
     const maxSize = 10 * 1024 * 1024;
     if (file.size > maxSize) { setError("File too large (max 10MB)."); return; }
 
-    const allowed = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
-    if (!allowed.includes(file.type)) { setError("Only JPG, PNG, WebP, and PDF files are accepted."); return; }
+    const allowed = file.type.startsWith("image/") || file.type === "application/pdf";
+    if (!allowed) { setError("Only image files and PDFs are accepted."); return; }
 
     setUploading(true);
     try {
@@ -186,11 +186,11 @@ export function ReceiptsPanel({ jobId, isContractor, canUpload }: Props) {
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/jpeg,image/png,image/webp,application/pdf"
+                accept="image/*,application/pdf"
                 required
                 className="block w-full text-sm text-muted file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-primary/10 file:text-primary hover:file:bg-primary/20 cursor-pointer"
               />
-              <p className="text-xs text-muted mt-1">JPG, PNG, WebP or PDF · max 10MB</p>
+              <p className="text-xs text-muted mt-1">Any image format or PDF · max 10MB</p>
             </div>
 
             {/* Description */}

@@ -188,7 +188,8 @@ export default function PostJobScreen() {
       const formData = new FormData();
       mediaUris.forEach((uri, i) => {
         const ext = uri.split(".").pop()?.toLowerCase() || "jpg";
-        const type = ext === "mp4" || ext === "mov" ? "video/mp4" : `image/${ext}`;
+        const videoExts = ["mp4", "mov", "avi", "mkv", "webm", "wmv", "3gp", "m4v"];
+        const type = videoExts.includes(ext) ? `video/${ext === "mov" ? "quicktime" : ext}` : `image/${ext === "jpg" ? "jpeg" : ext}`;
         formData.append("media", {
           uri,
           name: `upload_${i}.${ext}`,
