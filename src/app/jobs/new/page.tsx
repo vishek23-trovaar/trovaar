@@ -12,7 +12,7 @@ import { ConsumerSurgeBanner } from "@/components/insights/ConsumerSurgeBanner";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-interface AiQuestion { question: string; answer: string; }
+interface AiQuestion { question: string; answer: string; type: string; placeholder: string; }
 interface ReferenceLink { url: string; label: string; }
 
 const STEPS = [
@@ -158,7 +158,7 @@ function PostJobContent() {
     setAiLoading(true);
     setStepError("");
     try {
-      // Send photos directly — the API now uses Gemini Vision to analyze them
+      // Send photos directly — the API uses Gemini Vision to analyze them
       const res = await fetch("/api/ai/parse-job", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -167,12 +167,16 @@ function PostJobContent() {
 
       if (res.ok) {
         const data = await res.json();
-        if (data.title) setTitle(data.title);
+        // Only auto-fill description — title and category are left for the user
         if (data.description) setDescription(data.description);
-        if (data.category) applyCategoryValue(data.category);
-        if (data.urgency) setUrgency(data.urgency);
+        // Set scenario-based questions with type and placeholder
         if (data.questions?.length) {
-          setAiQuestions(data.questions.map((q: string) => ({ question: q, answer: "" })));
+          setAiQuestions(data.questions.map((q: { question: string; type?: string; placeholder?: string }) => ({
+            question: q.question,
+            answer: "",
+            type: q.type || "text",
+            placeholder: q.placeholder || "Your answer",
+          })));
           setAiGenerated(true);
         }
       }
@@ -240,7 +244,10 @@ function PostJobContent() {
       });
       if (res.ok) {
         const data = await res.json();
-        setAiQuestions(data.questions.map((q: string) => ({ question: q, answer: "" })));
+        setAiQuestions(data.questions.map((q: string | { question: string; type?: string; placeholder?: string }) => {
+          if (typeof q === "string") return { question: q, answer: "", type: "text", placeholder: "Your answer" };
+          return { question: q.question, answer: "", type: q.type || "text", placeholder: q.placeholder || "Your answer" };
+        }));
         setAiGenerated(true);
       }
     } catch {
@@ -556,7 +563,7 @@ function PostJobContent() {
             </div>
             <div className="text-center">
               <p className="text-lg font-semibold text-secondary">AI Analyzing...</p>
-              <p className="text-sm text-muted mt-1">Detecting category, generating title and description</p>
+              <p className="text-sm text-muted mt-1">Analyzing your photos and generating project details</p>
             </div>
           </div>
         )}
@@ -565,9 +572,9 @@ function PostJobContent() {
         {step === 2 && !aiLoading && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-semibold text-secondary mb-1">AI Analysis Results</h2>
+              <h2 className="text-lg font-semibold text-secondary mb-1">Describe Your Project</h2>
               <p className="text-sm text-muted">
-                We auto-detected these details from your upload. Review and modify anything that needs adjustment.
+                Our AI analyzed your photos and drafted a description. Fill in the title, category, and answer the questions below so contractors can quote accurately.
               </p>
             </div>
 
@@ -597,7 +604,6 @@ function PostJobContent() {
             <div>
               <label className="block text-sm font-medium text-secondary mb-1.5">
                 Service Category *
-                {aiAnalyzed && category && <span className="ml-2 text-xs font-normal text-primary">(AI detected)</span>}
               </label>
               <select
                 value={category}
@@ -659,7 +665,6 @@ function PostJobContent() {
             <div>
               <label className="block text-sm font-medium text-secondary mb-1.5">
                 Job Title *
-                {aiAnalyzed && title && <span className="ml-2 text-xs font-normal text-primary">(AI generated)</span>}
               </label>
               <Input
                 value={title}
@@ -677,7 +682,7 @@ function PostJobContent() {
             <div>
               <label className="block text-sm font-medium text-secondary mb-1.5">
                 Project Description *
-                {aiAnalyzed && description && <span className="ml-2 text-xs font-normal text-primary">(AI generated)</span>}
+                {aiAnalyzed && description && <span className="ml-2 text-xs font-normal text-primary">(AI drafted — feel free to edit)</span>}
               </label>
               <textarea
                 value={description}
@@ -693,7 +698,6 @@ function PostJobContent() {
             <div>
               <label className="block text-sm font-medium text-secondary mb-1.5">
                 Urgency *
-                {aiAnalyzed && urgency && <span className="ml-2 text-xs font-normal text-primary">(AI detected)</span>}
               </label>
               <select
                 value={urgency}
@@ -707,34 +711,76 @@ function PostJobContent() {
               </select>
             </div>
 
-            {/* AI smart questions */}
-            {canGenerateQuestions && (
+            {/* AI scenario-based questions */}
+            {aiGenerated && aiQuestions.length > 0 && (
               <div className="rounded-xl border border-violet-200 bg-violet-50/60 p-5">
-                <div className="flex items-center gap-2 mb-3">
+                <div className="flex items-center gap-2 mb-1">
                   <span className="text-lg">✨</span>
                   <p className="text-sm font-semibold text-violet-900">Help contractors quote you accurately</p>
-                  {aiQuestionsLoading && (
-                    <div className="ml-auto w-4 h-4 border-2 border-violet-400 border-t-transparent rounded-full animate-spin" />
-                  )}
                 </div>
-                {aiGenerated && aiQuestions.length > 0 && (
-                  <div className="space-y-4">
-                    {aiQuestions.map((q, i) => (
-                      <div key={i}>
-                        <label className="block text-sm font-medium text-violet-900 mb-1.5">
-                          {i + 1}. {q.question}
-                        </label>
+                <p className="text-xs text-violet-600 mb-4">
+                  Answer these questions so pros have what they need to give you an accurate bid.
+                </p>
+                <div className="space-y-4">
+                  {aiQuestions.map((q, i) => (
+                    <div key={i}>
+                      <label className="block text-sm font-medium text-violet-900 mb-1.5">
+                        {i + 1}. {q.question}
+                      </label>
+                      {q.type === "yesno" ? (
+                        <div className="flex gap-3">
+                          <button
+                            type="button"
+                            onClick={() => updateAnswer(i, "Yes")}
+                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
+                              q.answer === "Yes"
+                                ? "bg-primary text-white"
+                                : "bg-white border border-violet-200 text-secondary hover:border-primary"
+                            }`}
+                          >
+                            Yes
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => updateAnswer(i, "No")}
+                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
+                              q.answer === "No"
+                                ? "bg-primary text-white"
+                                : "bg-white border border-violet-200 text-secondary hover:border-primary"
+                            }`}
+                          >
+                            No
+                          </button>
+                        </div>
+                      ) : q.type === "measurement" ? (
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-violet-400 text-sm">📏</span>
+                          <input
+                            type="text"
+                            value={q.answer}
+                            onChange={(e) => updateAnswer(i, e.target.value)}
+                            placeholder={q.placeholder}
+                            className="w-full pl-9 pr-3 py-2 rounded-lg border border-violet-200 focus:outline-none focus:ring-2 focus:ring-violet-300 bg-white text-secondary placeholder-muted text-sm"
+                          />
+                        </div>
+                      ) : (
                         <input
                           type="text"
                           value={q.answer}
                           onChange={(e) => updateAnswer(i, e.target.value)}
-                          placeholder="Your answer"
+                          placeholder={q.placeholder}
                           className="w-full px-3 py-2 rounded-lg border border-violet-200 focus:outline-none focus:ring-2 focus:ring-violet-300 bg-white text-secondary placeholder-muted text-sm"
                         />
-                      </div>
-                    ))}
-                  </div>
-                )}
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {aiQuestionsLoading && (
+              <div className="flex items-center gap-2 text-sm text-violet-600">
+                <div className="w-4 h-4 border-2 border-violet-400 border-t-transparent rounded-full animate-spin" />
+                Generating questions based on your project...
               </div>
             )}
 
