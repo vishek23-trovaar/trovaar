@@ -234,8 +234,6 @@ function PostJobContent() {
 
   async function generateQuestions(cat: string, ttl: string, desc: string, photoUrls: string[]) {
     setAiQuestionsLoading(true);
-    setAiGenerated(false);
-    setAiQuestions([]);
     try {
       const res = await fetch("/api/ai/job-questions", {
         method: "POST",
@@ -244,10 +242,18 @@ function PostJobContent() {
       });
       if (res.ok) {
         const data = await res.json();
-        setAiQuestions(data.questions.map((q: string | { question: string; type?: string; placeholder?: string }) => {
+        const newQuestions: AiQuestion[] = data.questions.map((q: string | { question: string; type?: string; placeholder?: string }) => {
           if (typeof q === "string") return { question: q, answer: "", type: "text", placeholder: "Your answer" };
           return { question: q.question, answer: "", type: q.type || "text", placeholder: q.placeholder || "Your answer" };
-        }));
+        });
+        // Preserve existing answers when a matching question comes back
+        setAiQuestions((prev) => {
+          const answerMap = new Map(prev.filter((p) => p.answer.trim()).map((p) => [p.question.toLowerCase().trim(), p.answer]));
+          return newQuestions.map((q) => {
+            const existing = answerMap.get(q.question.toLowerCase().trim());
+            return existing ? { ...q, answer: existing } : q;
+          });
+        });
         setAiGenerated(true);
       }
     } catch {
