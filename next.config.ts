@@ -52,6 +52,11 @@ const nextConfig: NextConfig = {
   output: "standalone",
   serverExternalPackages: ["pg"],
   poweredByHeader: false,
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "100mb",
+    },
+  },
   headers: async () => [
     {
       // HTML pages: always revalidate so deploys are picked up immediately.

@@ -5,6 +5,10 @@ import { MAX_FILE_SIZE, ALLOWED_FILE_TYPES } from "@/lib/constants";
 import { uploadFile } from "@/lib/s3";
 import logger from "@/lib/logger";
 
+// Allow up to 100MB uploads (Next.js default is 4MB)
+export const maxDuration = 60;
+export const dynamic = "force-dynamic";
+
 export async function POST(request: NextRequest) {
   const payload = getAuthPayload(request.headers);
   if (!payload) {

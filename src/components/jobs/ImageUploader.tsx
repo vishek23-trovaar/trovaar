@@ -12,32 +12,54 @@ interface ImageUploaderProps {
 
 export default function ImageUploader({ images, onImagesChange, maxImages = 5, label, hint }: ImageUploaderProps) {
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const files = e.target.files;
-    if (!files) return;
+    if (!files || files.length === 0) return;
 
     setUploading(true);
+    setError(null);
     const newImages = [...images];
+    const errors: string[] = [];
 
     for (let i = 0; i < files.length && newImages.length < maxImages; i++) {
+      const file = files[i];
+
+      // Client-side size check (100MB)
+      if (file.size > 100 * 1024 * 1024) {
+        errors.push(`${file.name}: File too large (max 100MB)`);
+        continue;
+      }
+
       const formData = new FormData();
-      formData.append("file", files[i]);
+      formData.append("file", file);
 
       try {
         const res = await fetch("/api/upload", { method: "POST", body: formData });
         if (res.ok) {
           const data = await res.json();
           newImages.push(data.url);
+        } else {
+          let msg = `Upload failed (${res.status})`;
+          try {
+            const errData = await res.json();
+            if (errData.error) msg = errData.error;
+          } catch {}
+          errors.push(`${file.name}: ${msg}`);
         }
       } catch (err) {
-        console.error("Upload failed:", err);
+        const msg = err instanceof Error ? err.message : "Network error";
+        errors.push(`${file.name}: ${msg}`);
       }
     }
 
     onImagesChange(newImages);
     setUploading(false);
+    if (errors.length > 0) {
+      setError(errors.join(". "));
+    }
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
@@ -52,9 +74,14 @@ export default function ImageUploader({ images, onImagesChange, maxImages = 5, l
           {label ?? "Photos / Videos"}
         </label>
       )}
+      {error && (
+        <div className="mb-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-sm text-red-700">{error}</p>
+        </div>
+      )}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {images.map((url, i) => {
-          const isVideo = url.match(/\.(mp4|mov|webm)$/i);
+          const isVideo = url.match(/\.(mp4|mov|webm|avi|mkv)$/i);
           return (
             <div key={i} className="relative aspect-square rounded-lg overflow-hidden border border-border group">
               {isVideo ? (
