@@ -84,7 +84,7 @@ export default function ContractorLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: COLORS.primary,
+        tabBarActiveTintColor: COLORS.primaryLight,
         tabBarInactiveTintColor: COLORS.muted,
         tabBarLabelStyle: { fontSize: 11, fontWeight: "600", marginTop: 2 },
         tabBarStyle: {
@@ -116,9 +116,9 @@ export default function ContractorLayout() {
       <Tabs.Screen
         name="dashboard"
         options={{
-          title: "Browse Jobs",
+          title: "Jobs",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? "search" : "search-outline"} size={24} color={color} />
+            <Ionicons name={focused ? "briefcase" : "briefcase-outline"} size={24} color={color} />
           ),
         }}
       />
@@ -132,15 +132,6 @@ export default function ContractorLayout() {
         }}
       />
       <Tabs.Screen
-        name="calendar"
-        options={{
-          title: "Calendar",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? "calendar" : "calendar-outline"} size={24} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="messages"
         options={{
           title: "Messages",
@@ -149,6 +140,15 @@ export default function ContractorLayout() {
               <Ionicons name={focused ? "chatbubbles" : "chatbubbles-outline"} size={24} color={color} />
               <TabBarBadge count={unreadCount} />
             </View>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="earnings"
+        options={{
+          title: "Earnings",
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? "cash" : "cash-outline"} size={24} color={color} />
           ),
         }}
       />
@@ -166,10 +166,13 @@ export default function ContractorLayout() {
       <Tabs.Screen name="job/[id]" options={{ href: null }} />
       <Tabs.Screen name="notifications" options={{ href: null, title: "Notifications" }} />
       <Tabs.Screen name="chat/[jobId]" options={{ href: null, title: "Chat" }} />
-      <Tabs.Screen name="earnings" options={{ href: null, title: "Earnings" }} />
+      <Tabs.Screen name="calendar" options={{ href: null, title: "Calendar" }} />
       <Tabs.Screen name="invoices" options={{ href: null, title: "Invoices" }} />
       <Tabs.Screen name="tax" options={{ href: null, title: "Tax & Earnings" }} />
       <Tabs.Screen name="clients" options={{ href: null, title: "My Clients" }} />
+      <Tabs.Screen name="portfolio" options={{ href: null, title: "Portfolio" }} />
+      <Tabs.Screen name="quiz" options={{ href: null, title: "Skills Quizzes" }} />
+      <Tabs.Screen name="verification" options={{ href: null, title: "Verification" }} />
     </Tabs>
   );
 }

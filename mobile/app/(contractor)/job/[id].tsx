@@ -183,6 +183,23 @@ export default function ContractorJobDetail() {
   const [beforePhotos, setBeforePhotos] = useState<string[]>([]);
   const [afterPhotos, setAfterPhotos] = useState<string[]>([]);
 
+  // Portfolio gate
+  const [portfolioPhotoCount, setPortfolioPhotoCount] = useState<number | null>(null);
+  const [portfolioGateChecked, setPortfolioGateChecked] = useState(false);
+
+  // AI price estimate
+  const [priceEstimate, setPriceEstimate] = useState<{ low: number; high: number; average: number } | null>(null);
+  const [loadingEstimate, setLoadingEstimate] = useState(false);
+
+  // Match score
+  const [matchScore, setMatchScore] = useState<number | null>(null);
+
+  // Enhanced bid form
+  const [bidType, setBidType] = useState<"flat" | "itemized">("flat");
+  const [lineItems, setLineItems] = useState<{ description: string; amount: string }[]>([{ description: "", amount: "" }]);
+  const [partsNeeded, setPartsNeeded] = useState("");
+  const [equipmentList, setEquipmentList] = useState("");
+
   const fetchJob = useCallback(async () => {
     try {
       const { data } = await api<{ job: Job }>(`/api/jobs/${id}`);
@@ -209,9 +226,85 @@ export default function ContractorJobDetail() {
     fetchJob();
   }, [fetchJob]);
 
+  // Portfolio gate check
+  useEffect(() => {
+    if (!user?.id) return;
+    (async () => {
+      try {
+        const { data } = await api<{ portfolio?: { before_photos?: string[]; after_photos?: string[] }[]; items?: { before_photos?: string[]; after_photos?: string[] }[] }>(
+          `/api/portfolio?contractorId=${user.id}`
+        );
+        const portfolio = data.portfolio || data.items || [];
+        const total = portfolio.reduce((sum: number, item: { before_photos?: string[]; after_photos?: string[] }) => {
+          const b = Array.isArray(item.before_photos) ? item.before_photos.length : 0;
+          const a = Array.isArray(item.after_photos) ? item.after_photos.length : 0;
+          return sum + b + a;
+        }, 0);
+        setPortfolioPhotoCount(total);
+      } catch {
+        setPortfolioPhotoCount(0);
+      }
+      setPortfolioGateChecked(true);
+    })();
+  }, [user?.id]);
+
+  // Match score and AI price estimate
+  useEffect(() => {
+    if (!job || !user?.id) return;
+    // Fetch match score
+    (async () => {
+      try {
+        const { data } = await api<{ match_score?: number; score?: number }>(
+          `/api/jobs/${id}/match-score`
+        );
+        setMatchScore(data.match_score ?? data.score ?? null);
+      } catch {
+        /* ignore */
+      }
+    })();
+  }, [job, user?.id, id]);
+
+  const fetchPriceEstimate = async () => {
+    if (!job) return;
+    setLoadingEstimate(true);
+    try {
+      const { data } = await api<{ low: number; high: number; average: number }>(
+        `/api/ai/price-estimate?category=${job.category}&location=${encodeURIComponent(job.location || "")}&title=${encodeURIComponent(job.title)}`
+      );
+      setPriceEstimate(data);
+    } catch {
+      /* ignore */
+    }
+    setLoadingEstimate(false);
+  };
+
+  const addLineItem = () => {
+    setLineItems((prev) => [...prev, { description: "", amount: "" }]);
+  };
+
+  const updateLineItem = (index: number, field: "description" | "amount", value: string) => {
+    setLineItems((prev) => prev.map((item, i) => (i === index ? { ...item, [field]: value } : item)));
+  };
+
+  const removeLineItem = (index: number) => {
+    if (lineItems.length <= 1) return;
+    setLineItems((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const itemizedTotal = lineItems.reduce((sum, item) => sum + (Number(item.amount) || 0), 0);
+
   const handleBid = async () => {
-    if (!price || isNaN(Number(price))) {
+    const finalPrice = bidType === "itemized" ? itemizedTotal : Number(price);
+    if (!finalPrice || isNaN(finalPrice) || finalPrice <= 0) {
       Alert.alert("Error", "Enter a valid price");
+      return;
+    }
+    // Portfolio gate
+    if (portfolioPhotoCount !== null && portfolioPhotoCount < 3) {
+      Alert.alert(
+        "Portfolio Required",
+        `You need at least 3 portfolio photos to bid on jobs. You currently have ${portfolioPhotoCount}. Go to Portfolio to add more.`
+      );
       return;
     }
     setSubmitting(true);
@@ -219,7 +312,11 @@ export default function ContractorJobDetail() {
       await api(`/api/jobs/${id}/bids`, {
         method: "POST",
         body: JSON.stringify({
-          price: Number(price),
+          price: finalPrice,
+          bid_type: bidType,
+          line_items: bidType === "itemized" ? lineItems.filter((li) => li.description && li.amount) : undefined,
+          parts_needed: partsNeeded || undefined,
+          equipment_list: equipmentList || undefined,
           timeline: timeline || `${timelineDays} days`,
           timeline_days: timelineDays ? Number(timelineDays) : undefined,
           availability_date: availabilityDate || undefined,
@@ -378,6 +475,12 @@ export default function ContractorJobDetail() {
         {job.description ? (
           <Text style={styles.desc}>{job.description}</Text>
         ) : null}
+        {matchScore !== null && matchScore > 0 && (
+          <View style={styles.matchScoreBadge}>
+            <Ionicons name="sparkles" size={14} color="#7c3aed" />
+            <Text style={styles.matchScoreText}>{matchScore}% match</Text>
+          </View>
+        )}
       </View>
 
       {/* Info cards */}
@@ -737,7 +840,7 @@ export default function ContractorJobDetail() {
               <Text style={styles.existingBidPrice}>
                 ${myBid.price?.toLocaleString()}
               </Text>
-              {myBid.timeline && (
+              {myBid.timeline_days ? (
                 <View style={styles.existingBidRow}>
                   <Ionicons
                     name="calendar-outline"
@@ -745,10 +848,10 @@ export default function ContractorJobDetail() {
                     color={COLORS.muted}
                   />
                   <Text style={styles.existingBidMeta}>
-                    {myBid.timeline}
+                    {myBid.timeline_days} days
                   </Text>
                 </View>
-              )}
+              ) : null}
               {myBid.message && (
                 <View style={styles.existingBidRow}>
                   <Ionicons
@@ -769,18 +872,149 @@ export default function ContractorJobDetail() {
             <View style={styles.bidForm}>
               <Text style={styles.formTitle}>Place Your Bid</Text>
 
-              <Text style={styles.label}>Your Price *</Text>
-              <View style={styles.priceInputContainer}>
-                <Text style={styles.pricePrefix}>$</Text>
-                <TextInput
-                  style={styles.priceInput}
-                  placeholder="0"
-                  placeholderTextColor="#94a3b8"
-                  value={price}
-                  onChangeText={setPrice}
-                  keyboardType="numeric"
-                />
+              {/* Portfolio Gate Warning */}
+              {portfolioGateChecked && portfolioPhotoCount !== null && portfolioPhotoCount < 3 && (
+                <View style={styles.portfolioGateCard}>
+                  <Ionicons name="alert-circle" size={20} color="#d97706" />
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.portfolioGateTitle}>Portfolio Required</Text>
+                    <Text style={styles.portfolioGateDesc}>
+                      You need at least 3 portfolio photos to bid. You have {portfolioPhotoCount}. Add more in your Portfolio.
+                    </Text>
+                  </View>
+                </View>
+              )}
+
+              {/* AI Market Rate Insight */}
+              <TouchableOpacity
+                style={styles.aiInsightBtn}
+                onPress={fetchPriceEstimate}
+                disabled={loadingEstimate}
+                activeOpacity={0.7}
+              >
+                {loadingEstimate ? (
+                  <ActivityIndicator size="small" color={COLORS.primaryLight} />
+                ) : (
+                  <Ionicons name="sparkles" size={18} color={COLORS.primaryLight} />
+                )}
+                <Text style={styles.aiInsightBtnText}>
+                  {priceEstimate ? "AI Market Rate" : "Get AI Market Rate Insight"}
+                </Text>
+              </TouchableOpacity>
+              {priceEstimate && (
+                <View style={styles.priceEstimateCard}>
+                  <View style={styles.priceEstimateRow}>
+                    <View style={styles.priceEstimateItem}>
+                      <Text style={styles.priceEstimateLabel}>Low</Text>
+                      <Text style={styles.priceEstimateValue}>${priceEstimate.low.toLocaleString()}</Text>
+                    </View>
+                    <View style={[styles.priceEstimateItem, styles.priceEstimateItemHighlight]}>
+                      <Text style={styles.priceEstimateLabel}>Average</Text>
+                      <Text style={[styles.priceEstimateValue, { color: COLORS.primaryLight }]}>${priceEstimate.average.toLocaleString()}</Text>
+                    </View>
+                    <View style={styles.priceEstimateItem}>
+                      <Text style={styles.priceEstimateLabel}>High</Text>
+                      <Text style={styles.priceEstimateValue}>${priceEstimate.high.toLocaleString()}</Text>
+                    </View>
+                  </View>
+                </View>
+              )}
+
+              {/* Bid Type Toggle */}
+              <Text style={styles.label}>Pricing Type</Text>
+              <View style={styles.bidTypeToggle}>
+                <TouchableOpacity
+                  style={[styles.bidTypeBtn, bidType === "flat" && styles.bidTypeBtnActive]}
+                  onPress={() => setBidType("flat")}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons name="cash-outline" size={16} color={bidType === "flat" ? COLORS.white : COLORS.muted} />
+                  <Text style={[styles.bidTypeBtnText, bidType === "flat" && styles.bidTypeBtnTextActive]}>Flat Rate</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.bidTypeBtn, bidType === "itemized" && styles.bidTypeBtnActive]}
+                  onPress={() => setBidType("itemized")}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons name="list-outline" size={16} color={bidType === "itemized" ? COLORS.white : COLORS.muted} />
+                  <Text style={[styles.bidTypeBtnText, bidType === "itemized" && styles.bidTypeBtnTextActive]}>Itemized</Text>
+                </TouchableOpacity>
               </View>
+
+              {bidType === "flat" ? (
+                <>
+                  <Text style={styles.label}>Your Price *</Text>
+                  <View style={styles.priceInputContainer}>
+                    <Text style={styles.pricePrefix}>$</Text>
+                    <TextInput
+                      style={styles.priceInput}
+                      placeholder="0"
+                      placeholderTextColor="#94a3b8"
+                      value={price}
+                      onChangeText={setPrice}
+                      keyboardType="numeric"
+                    />
+                  </View>
+                </>
+              ) : (
+                <>
+                  <Text style={styles.label}>Line Items *</Text>
+                  {lineItems.map((item, idx) => (
+                    <View key={idx} style={styles.lineItemRow}>
+                      <TextInput
+                        style={[styles.input, { flex: 2 }]}
+                        placeholder="Description"
+                        placeholderTextColor="#94a3b8"
+                        value={item.description}
+                        onChangeText={(v) => updateLineItem(idx, "description", v)}
+                      />
+                      <View style={[styles.priceInputContainer, { flex: 1 }]}>
+                        <Text style={[styles.pricePrefix, { fontSize: 16 }]}>$</Text>
+                        <TextInput
+                          style={[styles.priceInput, { fontSize: 16 }]}
+                          placeholder="0"
+                          placeholderTextColor="#94a3b8"
+                          value={item.amount}
+                          onChangeText={(v) => updateLineItem(idx, "amount", v)}
+                          keyboardType="numeric"
+                        />
+                      </View>
+                      {lineItems.length > 1 && (
+                        <TouchableOpacity onPress={() => removeLineItem(idx)} style={{ padding: 4 }}>
+                          <Ionicons name="close-circle" size={22} color={COLORS.danger} />
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  ))}
+                  <TouchableOpacity style={styles.addLineItemBtn} onPress={addLineItem} activeOpacity={0.7}>
+                    <Ionicons name="add-circle-outline" size={18} color={COLORS.primaryLight} />
+                    <Text style={styles.addLineItemText}>Add line item</Text>
+                  </TouchableOpacity>
+                  <View style={styles.itemizedTotalRow}>
+                    <Text style={styles.itemizedTotalLabel}>Total</Text>
+                    <Text style={styles.itemizedTotalValue}>${itemizedTotal.toLocaleString()}</Text>
+                  </View>
+                </>
+              )}
+
+              {/* Parts & Equipment */}
+              <Text style={styles.label}>Parts Needed</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="e.g., PVC fittings, copper pipe, sealant"
+                placeholderTextColor="#94a3b8"
+                value={partsNeeded}
+                onChangeText={setPartsNeeded}
+              />
+
+              <Text style={styles.label}>Equipment Required</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="e.g., Pipe wrench, soldering kit"
+                placeholderTextColor="#94a3b8"
+                value={equipmentList}
+                onChangeText={setEquipmentList}
+              />
 
               <Text style={styles.label}>Timeline (days) *</Text>
               <TextInput
@@ -1201,6 +1435,99 @@ const styles = StyleSheet.create({
     color: "#94a3b8",
     marginTop: 8,
   },
+
+  // Match Score Badge
+  matchScoreBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "flex-start",
+    backgroundColor: "#f5f3ff",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+    gap: 4,
+    marginTop: 10,
+  },
+  matchScoreText: { fontSize: 13, fontWeight: "700", color: "#7c3aed" },
+
+  // Portfolio Gate
+  portfolioGateCard: {
+    flexDirection: "row",
+    backgroundColor: "#fffbeb",
+    borderRadius: 12,
+    padding: 14,
+    gap: 10,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "#fde68a",
+  },
+  portfolioGateTitle: { fontSize: 14, fontWeight: "700", color: "#d97706", marginBottom: 2 },
+  portfolioGateDesc: { fontSize: 13, color: "#92400e", lineHeight: 18 },
+
+  // AI Insight
+  aiInsightBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    backgroundColor: "#eff6ff",
+    padding: 14,
+    borderRadius: 12,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: "#bfdbfe",
+  },
+  aiInsightBtnText: { fontSize: 14, fontWeight: "600", color: COLORS.primaryLight },
+  priceEstimateCard: {
+    backgroundColor: "#f8fafc",
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  priceEstimateRow: { flexDirection: "row", justifyContent: "space-between" },
+  priceEstimateItem: { alignItems: "center", flex: 1 },
+  priceEstimateItemHighlight: { borderLeftWidth: 1, borderRightWidth: 1, borderColor: COLORS.border },
+  priceEstimateLabel: { fontSize: 11, color: COLORS.muted, fontWeight: "500", marginBottom: 4 },
+  priceEstimateValue: { fontSize: 18, fontWeight: "800", color: COLORS.secondary },
+
+  // Bid Type Toggle
+  bidTypeToggle: {
+    flexDirection: "row",
+    backgroundColor: "#f1f5f9",
+    borderRadius: 12,
+    padding: 4,
+    marginBottom: 14,
+  },
+  bidTypeBtn: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 10,
+    borderRadius: 10,
+    gap: 6,
+  },
+  bidTypeBtnActive: { backgroundColor: COLORS.primaryLight },
+  bidTypeBtnText: { fontSize: 14, fontWeight: "600", color: COLORS.muted },
+  bidTypeBtnTextActive: { color: COLORS.white },
+
+  // Line Items
+  lineItemRow: { flexDirection: "row", gap: 8, marginBottom: 8, alignItems: "center" },
+  addLineItemBtn: { flexDirection: "row", alignItems: "center", gap: 6, paddingVertical: 8 },
+  addLineItemText: { fontSize: 14, fontWeight: "600", color: COLORS.primaryLight },
+  itemizedTotalRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 12,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.border,
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  itemizedTotalLabel: { fontSize: 16, fontWeight: "700", color: COLORS.secondary },
+  itemizedTotalValue: { fontSize: 22, fontWeight: "800", color: COLORS.success },
 
   bidForm: {
     backgroundColor: COLORS.surface,

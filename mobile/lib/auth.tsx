@@ -30,8 +30,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const token = await getToken();
       if (!token) { setUser(null); return; }
-      const { data } = await api<{ id: string; email: string; name: string; role: "consumer" | "contractor" }>("/api/auth/me");
-      setUser(data);
+      const { data } = await api<{ user: User }>("/api/auth/me");
+      setUser(data.user);
     } catch {
       setUser(null);
       await clearToken();

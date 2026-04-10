@@ -238,6 +238,13 @@ export default function ContractorProfile() {
     completionRate: 0,
   });
 
+  // Portfolio & Quiz
+  const [portfolioCount, setPortfolioCount] = useState(0);
+  const [portfolioPhotoCount, setPortfolioPhotoCount] = useState(0);
+  const [quizScores, setQuizScores] = useState<{ category: string; percentage: number; passed: boolean }[]>([]);
+  const [headline, setHeadline] = useState("");
+  const [analyzingProfile, setAnalyzingProfile] = useState(false);
+
   // Certifications & Work History
   const [certifications, setCertifications] = useState<Certification[]>([]);
   const [workHistory, setWorkHistory] = useState<WorkHistoryItem[]>([]);
@@ -311,6 +318,33 @@ export default function ContractorProfile() {
         /* endpoint may not exist yet */
       }
 
+      // Fetch portfolio count
+      try {
+        const { data } = await api<{ portfolio?: { before_photos?: string[]; after_photos?: string[] }[]; items?: { before_photos?: string[]; after_photos?: string[] }[] }>(
+          `/api/portfolio?contractorId=${user.id}`
+        );
+        const portfolio = data.portfolio || data.items || [];
+        setPortfolioCount(portfolio.length);
+        const photoTotal = portfolio.reduce((sum: number, item: { before_photos?: string[]; after_photos?: string[] }) => {
+          const b = Array.isArray(item.before_photos) ? item.before_photos.length : 0;
+          const a = Array.isArray(item.after_photos) ? item.after_photos.length : 0;
+          return sum + b + a;
+        }, 0);
+        setPortfolioPhotoCount(photoTotal);
+      } catch {
+        /* endpoint may not exist yet */
+      }
+
+      // Fetch quiz scores
+      try {
+        const { data } = await api<{ scores: { category: string; percentage: number; passed: boolean }[] }>(
+          `/api/quiz/scores/${user.id}`
+        );
+        setQuizScores(data.scores || []);
+      } catch {
+        /* endpoint may not exist yet */
+      }
+
       setLoadingExtra(false);
     })();
   }, [user?.id]);
@@ -335,6 +369,37 @@ export default function ContractorProfile() {
       setOriginalPhone(phone);
       setOriginalLocation(location);
       Alert.alert("Saved", "Profile updated");
+    } catch (err: unknown) {
+      Alert.alert("Error", (err as Error).message);
+    }
+    setSaving(false);
+  };
+
+  const handleAnalyzeProfile = async () => {
+    setAnalyzingProfile(true);
+    try {
+      const { data } = await api<{ analysis: string; suggestions: string[] }>("/api/ai/analyze-profile", {
+        method: "POST",
+      });
+      const suggestions = data.suggestions?.length
+        ? "\n\nSuggestions:\n" + data.suggestions.map((s: string, i: number) => `${i + 1}. ${s}`).join("\n")
+        : "";
+      Alert.alert("AI Profile Analysis", (data.analysis || "Analysis complete.") + suggestions);
+    } catch (err: unknown) {
+      Alert.alert("Error", (err as Error).message);
+    }
+    setAnalyzingProfile(false);
+  };
+
+  const handleSaveHeadlineBio = async () => {
+    if (!user?.id) return;
+    setSaving(true);
+    try {
+      await api(`/api/contractors/${user.id}/profile`, {
+        method: "PATCH",
+        body: JSON.stringify({ headline, bio }),
+      });
+      Alert.alert("Saved", "Headline and bio updated");
     } catch (err: unknown) {
       Alert.alert("Error", (err as Error).message);
     }
@@ -528,6 +593,155 @@ export default function ContractorProfile() {
             verified={false}
           />
         </View>
+
+        {/* Portfolio Preview */}
+        <SectionHeader title="Portfolio" />
+        <TouchableOpacity
+          style={styles.portfolioPreviewCard}
+          onPress={() => router.push("/(contractor)/portfolio")}
+          activeOpacity={0.7}
+        >
+          <View style={styles.portfolioPreviewLeft}>
+            <View style={styles.portfolioPreviewIconWrap}>
+              <Ionicons name="images-outline" size={24} color={COLORS.primaryLight} />
+            </View>
+            <View>
+              <Text style={styles.portfolioPreviewTitle}>
+                {portfolioCount} Project{portfolioCount !== 1 ? "s" : ""}
+              </Text>
+              <Text style={styles.portfolioPreviewSub}>
+                {portfolioPhotoCount} photo{portfolioPhotoCount !== 1 ? "s" : ""} uploaded
+              </Text>
+            </View>
+          </View>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+            {portfolioPhotoCount < 3 && (
+              <View style={styles.portfolioGateBadge}>
+                <Text style={styles.portfolioGateText}>Need {3 - portfolioPhotoCount} more</Text>
+              </View>
+            )}
+            <Ionicons name="chevron-forward" size={18} color={COLORS.border} />
+          </View>
+        </TouchableOpacity>
+
+        {/* Quiz Scores */}
+        <SectionHeader title="Quiz Scores" />
+        {quizScores.length > 0 ? (
+          <View style={styles.quizScoresList}>
+            {quizScores.map((score, idx) => (
+              <View key={`${score.category}-${idx}`} style={styles.quizScoreRow}>
+                <View style={styles.quizScoreLeft}>
+                  <Ionicons
+                    name={score.passed ? "checkmark-circle" : "close-circle"}
+                    size={18}
+                    color={score.passed ? COLORS.success : "#dc2626"}
+                  />
+                  <Text style={styles.quizScoreCategory}>{score.category}</Text>
+                </View>
+                <View style={[styles.quizScoreBadge, { backgroundColor: score.passed ? COLORS.successLight : "#fef2f2" }]}>
+                  <Text style={[styles.quizScorePercent, { color: score.passed ? COLORS.success : "#dc2626" }]}>
+                    {Math.round(score.percentage)}%
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        ) : (
+          <TouchableOpacity
+            style={styles.emptyCard}
+            onPress={() => router.push("/(contractor)/quiz")}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="school-outline" size={28} color="#d1d5db" />
+            <Text style={styles.emptyCardText}>No quiz scores yet</Text>
+            <Text style={styles.emptyCardSubtext}>Take a skills quiz to earn badges</Text>
+          </TouchableOpacity>
+        )}
+
+        {/* AI Profile Analysis */}
+        <SectionHeader title="Profile Insights" />
+        <TouchableOpacity
+          style={styles.aiAnalysisBtn}
+          onPress={handleAnalyzeProfile}
+          disabled={analyzingProfile}
+          activeOpacity={0.7}
+        >
+          {analyzingProfile ? (
+            <ActivityIndicator color={COLORS.primaryLight} />
+          ) : (
+            <>
+              <View style={styles.aiAnalysisIconWrap}>
+                <Ionicons name="sparkles" size={20} color={COLORS.primaryLight} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.aiAnalysisTitle}>AI Profile Analysis</Text>
+                <Text style={styles.aiAnalysisDesc}>
+                  Get AI-powered suggestions to improve your profile
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={COLORS.border} />
+            </>
+          )}
+        </TouchableOpacity>
+
+        {/* Trust & Verification Link */}
+        <SectionHeader title="Trust & Verification" />
+        <TouchableOpacity
+          style={styles.verificationLinkCard}
+          onPress={() => router.push("/(contractor)/verification")}
+          activeOpacity={0.7}
+        >
+          <View style={styles.verificationLinkLeft}>
+            <Ionicons name="shield-checkmark" size={22} color={COLORS.success} />
+            <Text style={styles.verificationLinkText}>Manage Trust Badges</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={COLORS.border} />
+        </TouchableOpacity>
+
+        {/* Headline & Bio Editing */}
+        <SectionHeader title="Headline & Bio" />
+        <View style={styles.settingsCard}>
+          <View style={[styles.settingsRow, styles.settingsRowBorder, { flexDirection: "column", alignItems: "flex-start" }]}>
+            <View style={styles.settingsRowLeft}>
+              <View style={styles.settingsIconWrap}>
+                <Ionicons name="megaphone-outline" size={20} color={COLORS.primary} />
+              </View>
+              <Text style={styles.settingsLabel}>Headline</Text>
+            </View>
+            <TextInput
+              style={[styles.bioInput, { minHeight: 44 }]}
+              value={headline}
+              onChangeText={setHeadline}
+              placeholder="e.g., Licensed Plumber with 10+ years experience"
+              placeholderTextColor={COLORS.border}
+            />
+          </View>
+          <View style={[styles.settingsRow, { flexDirection: "column", alignItems: "flex-start" }]}>
+            <View style={styles.settingsRowLeft}>
+              <View style={styles.settingsIconWrap}>
+                <Ionicons name="document-text-outline" size={20} color={COLORS.primary} />
+              </View>
+              <Text style={styles.settingsLabel}>Bio</Text>
+            </View>
+            <TextInput
+              style={styles.bioInput}
+              value={bio}
+              onChangeText={setBio}
+              placeholder="Tell clients about yourself, your experience, and what makes you stand out..."
+              placeholderTextColor={COLORS.border}
+              multiline
+              numberOfLines={4}
+              textAlignVertical="top"
+            />
+          </View>
+        </View>
+        <TouchableOpacity
+          style={styles.saveHeadlineBtn}
+          onPress={handleSaveHeadlineBio}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.saveHeadlineBtnText}>Save Headline & Bio</Text>
+        </TouchableOpacity>
 
         {/* Certifications */}
         <SectionHeader title="Certifications" />
@@ -1540,6 +1754,114 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   logoutText: { color: COLORS.danger, fontSize: 16, fontWeight: "600" },
+
+  // Portfolio Preview
+  portfolioPreviewCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: COLORS.white,
+    marginHorizontal: 16,
+    borderRadius: 14,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    marginBottom: 8,
+  },
+  portfolioPreviewLeft: { flexDirection: "row", alignItems: "center", gap: 12 },
+  portfolioPreviewIconWrap: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    backgroundColor: "#eff6ff",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  portfolioPreviewTitle: { fontSize: 16, fontWeight: "700", color: COLORS.secondary },
+  portfolioPreviewSub: { fontSize: 13, color: COLORS.muted, marginTop: 2 },
+  portfolioGateBadge: {
+    backgroundColor: "#fffbeb",
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 10,
+  },
+  portfolioGateText: { fontSize: 12, fontWeight: "600", color: "#d97706" },
+
+  // Quiz Scores
+  quizScoresList: {
+    marginHorizontal: 16,
+    backgroundColor: COLORS.white,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    overflow: "hidden",
+    marginBottom: 8,
+  },
+  quizScoreRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: COLORS.border,
+  },
+  quizScoreLeft: { flexDirection: "row", alignItems: "center", gap: 8 },
+  quizScoreCategory: { fontSize: 15, fontWeight: "600", color: COLORS.secondary, textTransform: "capitalize" },
+  quizScoreBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 10 },
+  quizScorePercent: { fontSize: 13, fontWeight: "700" },
+
+  // AI Analysis
+  aiAnalysisBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: COLORS.white,
+    marginHorizontal: 16,
+    borderRadius: 14,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    gap: 12,
+    marginBottom: 8,
+  },
+  aiAnalysisIconWrap: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: "#eff6ff",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  aiAnalysisTitle: { fontSize: 16, fontWeight: "700", color: COLORS.secondary },
+  aiAnalysisDesc: { fontSize: 13, color: COLORS.muted, marginTop: 2 },
+
+  // Verification Link
+  verificationLinkCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: COLORS.white,
+    marginHorizontal: 16,
+    borderRadius: 14,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    marginBottom: 8,
+  },
+  verificationLinkLeft: { flexDirection: "row", alignItems: "center", gap: 10 },
+  verificationLinkText: { fontSize: 16, fontWeight: "600", color: COLORS.secondary },
+
+  // Save Headline Btn
+  saveHeadlineBtn: {
+    backgroundColor: COLORS.primaryLight,
+    marginHorizontal: 16,
+    marginTop: 10,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  saveHeadlineBtnText: { color: COLORS.white, fontSize: 15, fontWeight: "700" },
 
   // Sticky Save
   stickyBottom: {

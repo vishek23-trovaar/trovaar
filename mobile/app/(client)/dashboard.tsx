@@ -148,12 +148,18 @@ function QuickAction({ icon, label, color, bgColor, onPress }: QuickActionProps)
   );
 }
 
+interface SurgeCategory {
+  category: string;
+  multiplier: number;
+}
+
 export default function ClientDashboard() {
   const { user } = useAuth();
   const router = useRouter();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [surgeCategories, setSurgeCategories] = useState<SurgeCategory[]>([]);
 
   const fetchJobs = useCallback(async () => {
     try {
@@ -167,7 +173,16 @@ export default function ClientDashboard() {
     setLoading(false);
   }, [user?.id]);
 
-  useEffect(() => { fetchJobs(); }, [fetchJobs]);
+  const fetchSurge = useCallback(async () => {
+    try {
+      const { data } = await api<{ categories: SurgeCategory[] }>("/api/surge");
+      setSurgeCategories((data.categories || []).filter((c) => c.multiplier > 1));
+    } catch {
+      // Surge info not available
+    }
+  }, []);
+
+  useEffect(() => { fetchJobs(); fetchSurge(); }, [fetchJobs, fetchSurge]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -264,6 +279,35 @@ export default function ClientDashboard() {
               />
             </View>
 
+            {/* ── Surge Pricing Banner ── */}
+            {surgeCategories.length > 0 && (
+              <View style={styles.surgeBanner}>
+                <View style={styles.surgeRow}>
+                  <Ionicons name="trending-up" size={18} color="#d97706" />
+                  <Text style={styles.surgeTitle}>High Demand Right Now</Text>
+                </View>
+                <Text style={styles.surgeText}>
+                  {surgeCategories.map((c) => c.category.replace(/_/g, " ")).join(", ")} services are in high demand in your area
+                </Text>
+              </View>
+            )}
+
+            {/* ── Referral Banner ── */}
+            <TouchableOpacity
+              style={styles.referralBanner}
+              onPress={() => router.push("/(client)/referral")}
+              activeOpacity={0.8}
+            >
+              <View style={styles.referralLeft}>
+                <Ionicons name="gift-outline" size={22} color={COLORS.primary} />
+                <View>
+                  <Text style={styles.referralTitle}>Invite a Friend, Earn $25</Text>
+                  <Text style={styles.referralSub}>Share your referral code and both of you save</Text>
+                </View>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={COLORS.mutedLight} />
+            </TouchableOpacity>
+
             {/* ── Active Jobs Header ── */}
             {activeJobs.length > 0 ? (
               <View style={styles.sectionHeader}>
@@ -312,7 +356,7 @@ export default function ClientDashboard() {
 
                 <View style={styles.metaItem}>
                   <Ionicons name="people-outline" size={13} color={COLORS.mutedLight} />
-                  <Text style={styles.metaText}>{item.bid_count || 0} bids</Text>
+                  <Text style={styles.metaText}>{Number(item.bid_count) || 0} bids</Text>
                 </View>
 
                 <View style={{ flex: 1 }} />
@@ -576,6 +620,62 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   emptyBtnText: { color: COLORS.white, fontSize: 16, fontWeight: "700" },
+
+  // Surge Banner
+  surgeBanner: {
+    backgroundColor: "#fffbeb",
+    borderRadius: 14,
+    padding: 14,
+    marginBottom: 16,
+    borderWidth: 1.5,
+    borderColor: "#fde68a",
+  },
+  surgeRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 4,
+  },
+  surgeTitle: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#d97706",
+  },
+  surgeText: {
+    fontSize: 13,
+    color: "#92400e",
+    lineHeight: 19,
+    textTransform: "capitalize",
+  },
+
+  // Referral Banner
+  referralBanner: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: COLORS.white,
+    borderRadius: 14,
+    padding: 14,
+    marginBottom: 16,
+    borderWidth: 1.5,
+    borderColor: "#dbeafe",
+  },
+  referralLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    flex: 1,
+  },
+  referralTitle: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: COLORS.secondary,
+  },
+  referralSub: {
+    fontSize: 12,
+    color: COLORS.muted,
+    marginTop: 1,
+  },
 
   // FAB
   fab: {

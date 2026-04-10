@@ -11,6 +11,7 @@ import {
   Switch,
   Image,
   Platform,
+  Share,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -81,6 +82,9 @@ export default function ClientProfile() {
   const [darkMode, setDarkMode] = useState(false);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [creditBalance, setCreditBalance] = useState(0);
+  const [referralCode, setReferralCode] = useState("");
+  const [phoneVerified, setPhoneVerified] = useState(false);
 
   // Track original values to detect changes
   const [originalName, setOriginalName] = useState("");
@@ -93,15 +97,23 @@ export default function ClientProfile() {
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await api<{ name: string; phone: string; location: string }>(
-          "/api/auth/me"
-        );
+        const { data } = await api<{
+          name: string;
+          phone: string;
+          location: string;
+          credit_balance?: number;
+          referral_code?: string;
+          phone_verified?: boolean;
+        }>("/api/auth/me");
         setName(data.name || "");
         setPhone(data.phone || "");
         setLocation(data.location || "");
         setOriginalName(data.name || "");
         setOriginalPhone(data.phone || "");
         setOriginalLocation(data.location || "");
+        setCreditBalance(data.credit_balance || 0);
+        setReferralCode(data.referral_code || "");
+        setPhoneVerified(data.phone_verified || false);
       } catch {
         /* ignore */
       }
@@ -144,6 +156,20 @@ export default function ClientProfile() {
       // TODO: upload to server
     }
   }, []);
+
+  const shareReferralCode = async () => {
+    if (!referralCode) {
+      Alert.alert("No Referral Code", "Your referral code is not available yet.");
+      return;
+    }
+    try {
+      await Share.share({
+        message: `Join Trovaar and get $25 off your first service! Use my referral code: ${referralCode}\n\nhttps://trovaar.com/r/${referralCode}`,
+      });
+    } catch {
+      /* ignore */
+    }
+  };
 
   const comingSoon = (feature: string) => () =>
     Alert.alert(feature, "Coming soon");
@@ -207,6 +233,52 @@ export default function ClientProfile() {
 
           {user?.id && (
             <Text style={styles.accountNumber}>Account: {user.id.slice(0, 8).toUpperCase()}</Text>
+          )}
+        </View>
+
+        {/* Credit Balance & Referral */}
+        <View style={styles.infoCardsRow}>
+          <View style={styles.infoCard}>
+            <Ionicons name="wallet-outline" size={22} color={COLORS.success} />
+            <Text style={styles.infoCardValue}>${creditBalance.toFixed(2)}</Text>
+            <Text style={styles.infoCardLabel}>Credit Balance</Text>
+          </View>
+          <TouchableOpacity style={styles.infoCard} onPress={shareReferralCode} activeOpacity={0.7}>
+            <Ionicons name="gift-outline" size={22} color={COLORS.primaryLight} />
+            <Text style={styles.infoCardValue}>{referralCode || "---"}</Text>
+            <Text style={styles.infoCardLabel}>Referral Code</Text>
+            {referralCode ? (
+              <View style={styles.shareChip}>
+                <Ionicons name="share-outline" size={12} color={COLORS.primaryLight} />
+                <Text style={styles.shareChipText}>Share</Text>
+              </View>
+            ) : null}
+          </TouchableOpacity>
+        </View>
+
+        {/* Phone Verification Status */}
+        <View style={styles.verificationCard}>
+          <View style={styles.verificationRow}>
+            <Ionicons
+              name={phoneVerified ? "checkmark-circle" : "alert-circle-outline"}
+              size={20}
+              color={phoneVerified ? COLORS.success : "#d97706"}
+            />
+            <Text style={styles.verificationLabel}>Phone Verification</Text>
+            <View style={[styles.verificationBadge, phoneVerified ? styles.verificationBadgeVerified : styles.verificationBadgePending]}>
+              <Text style={[styles.verificationBadgeText, phoneVerified ? { color: COLORS.success } : { color: "#d97706" }]}>
+                {phoneVerified ? "Verified" : "Pending"}
+              </Text>
+            </View>
+          </View>
+          {!phoneVerified && (
+            <TouchableOpacity
+              style={styles.verifyBtn}
+              onPress={comingSoon("Phone Verification")}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.verifyBtnText}>Verify Now</Text>
+            </TouchableOpacity>
           )}
         </View>
 
@@ -387,6 +459,100 @@ const styles = StyleSheet.create({
   },
   clientBadgeText: { fontSize: 13, fontWeight: "600", color: COLORS.primary },
   accountNumber: { fontSize: 12, color: COLORS.muted, marginTop: 4 },
+
+  // Info Cards Row
+  infoCardsRow: {
+    flexDirection: "row",
+    gap: 12,
+    paddingHorizontal: 16,
+    marginTop: 16,
+  },
+  infoCard: {
+    flex: 1,
+    backgroundColor: "#f8fafc",
+    borderRadius: 14,
+    padding: 14,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    gap: 4,
+  },
+  infoCardValue: {
+    fontSize: 18,
+    fontWeight: "800",
+    color: COLORS.secondary,
+    marginTop: 4,
+  },
+  infoCardLabel: {
+    fontSize: 12,
+    color: COLORS.muted,
+    fontWeight: "500",
+  },
+  shareChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 3,
+    marginTop: 4,
+    backgroundColor: "#eff6ff",
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 10,
+  },
+  shareChipText: {
+    fontSize: 11,
+    fontWeight: "600",
+    color: COLORS.primaryLight,
+  },
+
+  // Verification Card
+  verificationCard: {
+    marginHorizontal: 16,
+    marginTop: 12,
+    marginBottom: 16,
+    backgroundColor: COLORS.white,
+    borderRadius: 12,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  verificationRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  verificationLabel: {
+    fontSize: 15,
+    fontWeight: "500",
+    color: COLORS.secondary,
+    flex: 1,
+  },
+  verificationBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 10,
+  },
+  verificationBadgeVerified: {
+    backgroundColor: "#f0fdf4",
+  },
+  verificationBadgePending: {
+    backgroundColor: "#fffbeb",
+  },
+  verificationBadgeText: {
+    fontSize: 12,
+    fontWeight: "600",
+  },
+  verifyBtn: {
+    marginTop: 10,
+    backgroundColor: "#eff6ff",
+    paddingVertical: 10,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  verifyBtnText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: COLORS.primaryLight,
+  },
 
   divider: { height: 8, backgroundColor: COLORS.surface },
 

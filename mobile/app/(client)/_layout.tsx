@@ -92,7 +92,7 @@ export default function ClientLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: COLORS.primary,
+        tabBarActiveTintColor: COLORS.primaryLight,
         tabBarInactiveTintColor: COLORS.muted,
         tabBarLabelStyle: { fontSize: 11, fontWeight: "600", marginTop: 2 },
         tabBarStyle: {
@@ -115,16 +115,14 @@ export default function ClientLayout() {
           }),
         },
         headerTitleStyle: { fontWeight: "700", fontSize: 17, color: "#0f172a" },
-        headerRight: () => (
-          <NotificationBell count={notifUnreadCount} onPress={() => router.push("/(client)/notifications")} />
-        ),
+        headerRight: undefined,
       }}
     >
       {/* ── Visible tabs ── */}
       <Tabs.Screen
         name="dashboard"
         options={{
-          title: "My Jobs",
+          title: "Dashboard",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? "home" : "home-outline"} size={24} color={color} />
           ),
@@ -136,15 +134,6 @@ export default function ClientLayout() {
           title: "Post Job",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? "add-circle" : "add-circle-outline"} size={24} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="neighborhood"
-        options={{
-          title: "Explore",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? "compass" : "compass-outline"} size={24} color={color} />
           ),
         }}
       />
@@ -161,6 +150,18 @@ export default function ClientLayout() {
         }}
       />
       <Tabs.Screen
+        name="notifications"
+        options={{
+          title: "Notifications",
+          tabBarIcon: ({ color, focused }) => (
+            <View>
+              <Ionicons name={focused ? "notifications" : "notifications-outline"} size={24} color={color} />
+              <TabBarBadge count={notifUnreadCount} />
+            </View>
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",
@@ -172,8 +173,8 @@ export default function ClientLayout() {
 
       {/* ── Hidden screens (navigated to from within the app) ── */}
       <Tabs.Screen name="job/[id]" options={{ href: null }} />
-      <Tabs.Screen name="notifications" options={{ href: null, title: "Notifications" }} />
       <Tabs.Screen name="chat/[jobId]" options={{ href: null, title: "Chat" }} />
+      <Tabs.Screen name="neighborhood" options={{ href: null, title: "Explore" }} />
       <Tabs.Screen name="templates" options={{ href: null, title: "Job Templates" }} />
       <Tabs.Screen name="referral" options={{ href: null, title: "Refer & Earn" }} />
       <Tabs.Screen name="subscriptions" options={{ href: null, title: "My Plan" }} />
