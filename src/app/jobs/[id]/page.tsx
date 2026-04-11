@@ -359,7 +359,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
       const res = await fetch(`/api/jobs/${id}/messages`);
       if (res.ok) {
         const data = await res.json();
-        setMessages(data.messages);
+        setMessages(Array.isArray(data.messages) ? data.messages : []);
       }
     } catch (err) {
       console.error("Failed to fetch messages:", err);

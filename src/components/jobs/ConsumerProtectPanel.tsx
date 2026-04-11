@@ -48,7 +48,14 @@ export function ConsumerProtectPanel({ category, title, description, location, b
         });
         if (res.ok) {
           const data = await res.json();
-          setReport(data.report);
+          if (data.report) {
+            setReport({
+              ...data.report,
+              fair_includes: Array.isArray(data.report.fair_includes) ? data.report.fair_includes : [],
+              upsell_warnings: Array.isArray(data.report.upsell_warnings) ? data.report.upsell_warnings : [],
+              questions: Array.isArray(data.report.questions) ? data.report.questions : [],
+            });
+          }
         }
       } catch { /* silent fallback */ }
       finally { setLoading(false); }
