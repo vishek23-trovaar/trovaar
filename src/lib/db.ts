@@ -1310,6 +1310,18 @@ export async function initializeDatabase(): Promise<void> {
        computed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
        UNIQUE(job_id, contractor_id)
      )`,
+    // Job discussions — public Q&A forum per job
+    `CREATE TABLE IF NOT EXISTS job_discussions (
+       id TEXT PRIMARY KEY,
+       job_id TEXT NOT NULL,
+       user_id TEXT NOT NULL,
+       user_role TEXT NOT NULL CHECK(user_role IN ('consumer', 'contractor')),
+       parent_id TEXT,
+       content TEXT NOT NULL,
+       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+       FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,
+       FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+     )`,
 
   ];
 

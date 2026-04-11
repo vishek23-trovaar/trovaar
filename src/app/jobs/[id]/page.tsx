@@ -28,6 +28,7 @@ import { useBidStream } from "@/hooks/useBidStream";
 const JobMap = dynamic(() => import("@/components/map/JobMap"), { ssr: false });
 const JobChat = dynamic(() => import("@/components/messaging/JobChat"), { ssr: false });
 const AiJobChat = dynamic(() => import("@/components/jobs/AiJobChat"), { ssr: false });
+const JobForum = dynamic(() => import("@/components/jobs/JobForum"), { ssr: false });
 
 interface Message {
   id: string;
@@ -100,7 +101,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
   const [messageSending, setMessageSending] = useState(false);
   const [messageWarnings, setMessageWarnings] = useState<string[]>([]);
   const [messageRedacted, setMessageRedacted] = useState(false);
-  const [activeTab, setActiveTab] = useState<"details" | "messages" | "receipts" | "crew">("details");
+  const [activeTab, setActiveTab] = useState<"details" | "qna" | "messages" | "receipts" | "crew">("details");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Mandatory rating modal
@@ -843,26 +844,27 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
         </div>
       )}
 
-      {/* Tabs (details / messages) */}
-      {canMessage && (
-        <div className="flex gap-1 mb-4 border-b border-border">
-          {(["details", "messages", "receipts", "crew"] as const).map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 text-sm font-medium capitalize border-b-2 transition-colors cursor-pointer -mb-px ${
-                activeTab === tab
-                  ? "border-primary text-primary"
-                  : "border-transparent text-muted hover:text-secondary"
-              }`}
-            >
-              {tab === "details" ? "Details" : tab === "messages" ? "💬 Messages" : tab === "receipts" ? "🧾 Receipts" : "🤝 Crew"}
-            </button>
-          ))}
-        </div>
-      )}
+      {/* Tabs (details / Q&A / messages) */}
+      <div className="flex gap-1 mb-4 border-b border-border">
+        {(["details", "qna", ...(canMessage ? ["messages", "receipts", "crew"] as const : [])] as const).map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab as typeof activeTab)}
+            className={`px-4 py-2 text-sm font-medium capitalize border-b-2 transition-colors cursor-pointer -mb-px ${
+              activeTab === tab
+                ? "border-primary text-primary"
+                : "border-transparent text-muted hover:text-secondary"
+            }`}
+          >
+            {tab === "details" ? "Details" : tab === "qna" ? "🙋 Q&A" : tab === "messages" ? "💬 Messages" : tab === "receipts" ? "🧾 Receipts" : "🤝 Crew"}
+          </button>
+        ))}
+      </div>
 
-      {activeTab === "messages" && canMessage ? (
+      {activeTab === "qna" ? (
+        /* Public Q&A Forum */
+        <JobForum jobId={id} jobStatus={job.status} isOwner={isOwner} />
+      ) : activeTab === "messages" && canMessage ? (
         /* Messages thread */
         <div className="flex flex-col h-[60vh]">
           {/* Off-platform ToS banner */}
