@@ -256,7 +256,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
       const res = await fetch(`/api/jobs/${id}/bids`);
       if (res.ok) {
         const data = await res.json();
-        setBids(data.bids);
+        setBids(Array.isArray(data.bids) ? data.bids : []);
       }
     } catch (err) {
       console.error("Failed to fetch bids:", err);
@@ -886,7 +886,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
           )}
 
           <div className="flex-1 overflow-y-auto space-y-3 p-4 bg-surface rounded-xl border border-border mb-3">
-            {messages.length === 0 ? (
+            {!Array.isArray(messages) || messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center py-8">
                 <div className="text-4xl mb-2">💬</div>
                 <p className="text-muted text-sm">No messages yet.</p>
@@ -932,7 +932,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
           <div className="flex gap-2">
             <div className="flex-1 space-y-1.5">
-              {messageWarnings.length > 0 && (
+              {Array.isArray(messageWarnings) && messageWarnings.length > 0 && (
                 <div className="flex items-start gap-2 rounded-lg bg-red-50 border border-red-200 px-3 py-2 text-xs text-red-700">
                   <span className="shrink-0 mt-0.5">🚫</span>
                   <div>
