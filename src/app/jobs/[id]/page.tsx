@@ -27,6 +27,7 @@ import { useBidStream } from "@/hooks/useBidStream";
 
 const JobMap = dynamic(() => import("@/components/map/JobMap"), { ssr: false });
 const JobChat = dynamic(() => import("@/components/messaging/JobChat"), { ssr: false });
+const AiJobChat = dynamic(() => import("@/components/jobs/AiJobChat"), { ssr: false });
 
 interface Message {
   id: string;
@@ -1743,6 +1744,16 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                 description={job.description ?? ""}
                 location={job.location ?? ""}
                 bids={bids.map((b) => ({ price: b.price, status: b.status }))}
+              />
+            )}
+
+            {/* AI Project Assistant — shown to job owner for open jobs */}
+            {isOwner && ["posted", "bidding"].includes(job.status) && job.title && job.description && (
+              <AiJobChat
+                jobId={id}
+                jobTitle={job.title}
+                jobDescription={job.description}
+                jobCategory={job.category}
               />
             )}
 
