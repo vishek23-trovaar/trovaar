@@ -64,15 +64,17 @@ export default function AiJobChat({ jobId, jobTitle, jobDescription, jobCategory
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || "Failed to get response");
+        const errorMsg = data.error || "Failed to get response";
+        throw new Error(errorMsg);
       }
 
       const data = await res.json();
       setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
-    } catch {
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Sorry, I had trouble responding. Please try again.";
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "Sorry, I had trouble responding. Please try again." },
+        { role: "assistant", content: errorMessage },
       ]);
     } finally {
       setLoading(false);

@@ -118,6 +118,9 @@ Your role:
     if (!res.ok) {
       const errBody = await res.text();
       logger.error({ body: errBody }, "Gemini job-chat error");
+      if (res.status === 429) {
+        return NextResponse.json({ error: "AI is temporarily busy — please wait a minute and try again." }, { status: 429 });
+      }
       return NextResponse.json({ error: "AI service error" }, { status: 502 });
     }
 
