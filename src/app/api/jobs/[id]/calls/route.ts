@@ -40,7 +40,7 @@ export async function GET(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const calls = db
+  const calls = await db
     .prepare(
       `SELECT cl.id, cl.status, cl.duration_seconds, cl.created_at, cl.ended_at,
          cl.recording_url, cl.transcript,

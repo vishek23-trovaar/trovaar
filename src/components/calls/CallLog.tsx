@@ -26,7 +26,7 @@ export function CallLog({
     if (!canView) return;
     fetch(`/api/jobs/${jobId}/calls`)
       .then((r) => r.json())
-      .then((d: { calls?: CallRecord[] }) => setCalls(d.calls ?? []))
+      .then((d: { calls?: CallRecord[] }) => setCalls(Array.isArray(d.calls) ? d.calls : []))
       .catch(() => {});
   }, [jobId, canView]);
 
