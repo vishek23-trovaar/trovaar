@@ -60,7 +60,7 @@ export default function JobStatusTimeline({ status, scheduledArrivalAt }: Props)
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0 transition-all ${
                     isDone    ? "bg-success text-white shadow-sm" :
-                    isCurrent ? "bg-primary text-white ring-4 ring-primary/20 shadow-md animate-pulse" :
+                    isCurrent ? "bg-red-500 text-white ring-4 ring-red-200 shadow-md animate-pulse" :
                                 "bg-surface-dark text-muted border border-border"
                   }`}
                 >
@@ -68,7 +68,7 @@ export default function JobStatusTimeline({ status, scheduledArrivalAt }: Props)
                 </div>
                 <span
                   className={`text-[10px] text-center leading-tight ${
-                    isCurrent ? "font-semibold text-primary" :
+                    isCurrent ? "font-semibold text-red-500" :
                     isDone    ? "text-success" :
                                 "text-muted"
                   }`}
