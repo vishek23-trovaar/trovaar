@@ -1020,8 +1020,8 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
               </Card>
             )}
 
-            {/* Feature 25 — Before & After Photos */}
-            {((job as any).before_photo_url || (job as any).after_photo_url) && (
+            {/* Feature 25 — Before & After Photos (only visible after completion) */}
+            {job.status === "completed" && ((job as any).before_photo_url || (job as any).after_photo_url) && (
               <div className="rounded-xl overflow-hidden border border-border">
                 <h3 className="font-semibold text-secondary p-4 pb-2">Before &amp; After</h3>
                 {(job as any).before_photo_url && (job as any).after_photo_url ? (
