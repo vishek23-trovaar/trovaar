@@ -767,9 +767,9 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
               🔒 Locked — bid accepted
             </span>
           )}
-          {canMessage && (
+          {hasAcceptedBid && canMessage && (
             <a
-              href="/client/messages"
+              href={isOwner ? "/client/messages" : "/contractor/messages"}
               className="text-sm text-primary hover:underline flex items-center gap-1"
             >
               💬 Messages
@@ -844,12 +844,12 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
         </div>
       )}
 
-      {/* Tabs — Q&A for pre-acceptance, Messages for post-acceptance */}
+      {/* Tabs */}
       <div className="flex gap-1 mb-4 border-b border-border">
         {([
           "details" as const,
-          ...(!hasAcceptedBid ? ["qna" as const] : []),
-          ...(hasAcceptedBid && canMessage ? ["messages" as const, "receipts" as const, "crew" as const] : []),
+          "qna" as const,
+          ...(hasAcceptedBid ? ["receipts" as const, "crew" as const] : []),
         ]).map((tab) => (
           <button
             key={tab}
@@ -860,116 +860,33 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                 : "border-transparent text-muted hover:text-secondary"
             }`}
           >
-            {tab === "details" ? "Details" : tab === "qna" ? "🙋 Q&A" : tab === "messages" ? "💬 Messages" : tab === "receipts" ? "🧾 Receipts" : "🤝 Crew"}
+            {tab === "details" ? "Details" : tab === "qna" ? "🙋 Q&A" : tab === "receipts" ? "🧾 Receipts" : "🤝 Crew"}
           </button>
         ))}
       </div>
 
+      {/* Post-acceptance messaging prompt */}
+      {hasAcceptedBid && canMessage && (
+        <div className="flex items-center gap-3 rounded-xl bg-blue-50 border border-blue-200 px-4 py-3 mb-4">
+          <span className="text-xl">💬</span>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-blue-900">Bid accepted — you can now message your {isOwner ? "contractor" : "client"} directly</p>
+            <p className="text-xs text-blue-700 mt-0.5">
+              All communication is recorded and documented for your protection. Do not share contact info outside the platform.
+            </p>
+          </div>
+          <a
+            href={isOwner ? "/client/messages" : "/contractor/messages"}
+            className="shrink-0 px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 transition-colors"
+          >
+            Open Messages
+          </a>
+        </div>
+      )}
+
       {activeTab === "qna" ? (
         /* Public Q&A Forum — pre-acceptance only */
         <JobForum jobId={id} jobStatus={job.status} isOwner={isOwner} />
-      ) : activeTab === "messages" && hasAcceptedBid && canMessage ? (
-        /* Direct Messages — post-acceptance only */
-        <div className="flex flex-col h-[60vh]">
-          {/* Off-platform warning */}
-          <div className="flex items-start gap-2 rounded-xl bg-amber-50 border border-amber-200 px-3 py-2.5 mb-3 text-xs text-amber-800">
-            <span className="shrink-0 text-sm">🔒</span>
-            <p>
-              <strong>Keep all communication on-platform.</strong> Sharing phone numbers, emails, or payment app handles violates our Terms of Service and <strong>voids payment protection</strong> for both parties. Violations may result in account suspension.
-            </p>
-          </div>
-
-          {messageRedacted && (
-            <div className="flex items-start gap-2 rounded-xl bg-orange-50 border border-orange-200 px-3 py-2.5 mb-3 text-xs text-orange-800">
-              <span className="shrink-0 text-sm">✂️</span>
-              <p>
-                <strong>Your message was edited</strong> — contact info is not allowed on this platform. The cleaned version was sent.
-              </p>
-            </div>
-          )}
-
-          <div className="flex-1 overflow-y-auto space-y-3 p-4 bg-surface rounded-xl border border-border mb-3">
-            {!Array.isArray(messages) || messages.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full text-center py-8">
-                <div className="text-4xl mb-2">💬</div>
-                <p className="text-muted text-sm">No messages yet.</p>
-                <p className="text-xs text-muted">Start the conversation with your {isOwner ? "contractor" : "client"}!</p>
-              </div>
-            ) : (
-              messages.map((msg) => {
-                const isMine = msg.sender_id === user?.id;
-                const isFlagged = !!msg.flagged;
-                return (
-                  <div key={msg.id} className={`flex flex-col ${isMine ? "items-end" : "items-start"}`}>
-                    <div className={`max-w-[75%] rounded-2xl px-4 py-2.5 ${
-                      isFlagged
-                        ? "bg-red-50 border-2 border-red-300"
-                        : isMine ? "bg-primary text-white rounded-br-sm" : "bg-white border border-border rounded-bl-sm"
-                    }`}>
-                      {!isMine && (
-                        <p className={`text-xs font-semibold mb-0.5 ${isFlagged ? "text-red-700" : "text-muted"}`}>{msg.sender_name}</p>
-                      )}
-                      <p className={`text-sm ${isFlagged ? "text-red-800" : isMine ? "text-white" : "text-secondary"}`}>{msg.content}</p>
-                      <p className={`text-[10px] mt-1 ${isFlagged ? "text-red-400" : isMine ? "text-white/60" : "text-muted"}`}>
-                        {new Date(msg.created_at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}
-                      </p>
-                    </div>
-                    {isFlagged && (
-                      <p className="text-[10px] text-red-500 mt-0.5 px-1">
-                        ⚠️ Off-platform contact info detected — this violates Terms of Service
-                      </p>
-                    )}
-                  </div>
-                );
-              })
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Call button */}
-          {canCall && callReceiverId && (
-            <div className="mb-2">
-              <CallButton jobId={id} receiverId={callReceiverId} receiverName={callReceiverName} />
-            </div>
-          )}
-
-          <div className="flex gap-2">
-            <div className="flex-1 space-y-1.5">
-              {Array.isArray(messageWarnings) && messageWarnings.length > 0 && (
-                <div className="flex items-start gap-2 rounded-lg bg-red-50 border border-red-200 px-3 py-2 text-xs text-red-700">
-                  <span className="shrink-0 mt-0.5">🚫</span>
-                  <div>
-                    <span className="font-semibold">Off-platform contact detected: </span>
-                    {messageWarnings.join(", ")}. Sharing contact info or payment handles outside the platform <strong>voids all protections</strong> for both parties.
-                  </div>
-                </div>
-              )}
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={messageInput}
-                  onChange={(e) => {
-                    setMessageInput(e.target.value);
-                    setMessageWarnings(clientScanMessage(e.target.value));
-                  }}
-                  onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
-                  placeholder="Type a message…"
-                  className={`flex-1 px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 bg-white text-secondary placeholder-muted text-sm transition-colors ${
-                    messageWarnings.length > 0
-                      ? "border-red-300 focus:ring-red-200 focus:border-red-400"
-                      : "border-border focus:ring-primary/20 focus:border-primary"
-                  }`}
-                />
-                <Button onClick={sendMessage} loading={messageSending} disabled={!messageInput.trim()}>
-                  Send
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Call history */}
-          <CallLog jobId={id} canView={canViewCalls} />
-        </div>
       ) : activeTab === "receipts" ? (
         /* ── Receipts tab ── */
         <ReceiptsPanel
