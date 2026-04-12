@@ -9,7 +9,7 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "backgroundColor": "#1e40af",
+      "backgroundColor": "#2563eb",
       "resizeMode": "contain",
       "image": "./assets/splash.png"
     },
@@ -31,7 +31,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#1e40af"
+        "backgroundColor": "#2563eb"
       },
       "package": "com.trovaar.app",
       "versionCode": 1,
