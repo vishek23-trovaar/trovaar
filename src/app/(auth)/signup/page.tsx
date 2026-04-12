@@ -96,65 +96,51 @@ function SignupForm() {
   const strength = getPasswordStrength(password);
 
   async function detectLocation() {
-    if (!navigator.geolocation) {
-      setGeoError("Geolocation not supported by your browser");
-      return;
-    }
     setGeoLoading(true);
     setGeoError("");
 
-    // Wrap geolocation in a promise with a hard timeout
-    let settled = false;
-    const settle = () => { settled = true; };
-
-    const geoTimeout = setTimeout(() => {
-      if (!settled) {
-        settle();
-        setGeoLoading(false);
-        setGeoError("Location request timed out — please type your city manually");
+    // Try browser geolocation first, fall back to IP-based lookup
+    try {
+      const coords = await new Promise<{ latitude: number; longitude: number }>((resolve, reject) => {
+        if (!navigator.geolocation) { reject(new Error("no-geo")); return; }
+        navigator.geolocation.getCurrentPosition(
+          (pos) => resolve(pos.coords),
+          (err) => reject(err),
+          { timeout: 8000, maximumAge: 60000 }
+        );
+      });
+      const res = await fetch(`/api/geocode/reverse?lat=${coords.latitude}&lon=${coords.longitude}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.location) { setLocation(data.location); return; }
       }
-    }, 15000);
+    } catch {
+      // GPS failed — fall through to IP-based fallback
+    }
 
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        if (settled) return;
-        try {
-          const { latitude, longitude } = pos.coords;
-          const res = await fetch(`/api/geocode/reverse?lat=${latitude}&lon=${longitude}`);
-          if (res.ok) {
-            const data = await res.json();
-            if (data.location) {
-              setLocation(data.location);
-            } else {
-              setGeoError("Could not determine your city — please type it manually");
-            }
-          } else {
-            setGeoError("Location lookup failed — please type your city manually");
-          }
-        } catch {
-          setGeoError("Could not determine your location — please type it manually");
-        } finally {
-          settle();
-          clearTimeout(geoTimeout);
-          setGeoLoading(false);
+    // Fallback: IP-based geolocation (approximate city, via server)
+    try {
+      const ipRes = await fetch("/api/geocode/ip");
+      if (ipRes.ok) {
+        const ipData = await ipRes.json();
+        if (ipData.location) {
+          setLocation(ipData.location);
+          return;
         }
-      },
-      (err) => {
-        if (settled) return;
-        settle();
-        clearTimeout(geoTimeout);
-        if (err.code === 1) {
-          setGeoError("Location access denied — please type your city manually");
-        } else if (err.code === 3) {
-          setGeoError("Location request timed out — please type your city manually");
-        } else {
-          setGeoError("Could not get location — please type your city manually");
-        }
-        setGeoLoading(false);
-      },
-      { timeout: 10000, maximumAge: 60000 }
-    );
+      }
+    } catch {
+      // IP lookup also failed
+    }
+
+    setGeoError("Could not detect location — please type your city manually");
+    setGeoLoading(false);
   }
+
+  // Ensure loading stops after detectLocation resolves
+  const handleDetectLocation = async () => {
+    await detectLocation();
+    setGeoLoading(false);
+  };
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -424,7 +410,7 @@ function SignupForm() {
               />
               <button
                 type="button"
-                onClick={detectLocation}
+                onClick={handleDetectLocation}
                 disabled={geoLoading}
                 title="Detect my location"
                 className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-border bg-surface text-sm font-medium text-secondary hover:bg-surface-dark transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"

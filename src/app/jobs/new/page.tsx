@@ -271,25 +271,38 @@ function PostJobContent() {
   // ── Location detect ─────────────────────────────────────────────────────────
   async function detectLocation() {
     setGeoError("");
-    if (!navigator.geolocation) { setGeoError("Geolocation not supported."); return; }
     setGeoLoading(true);
     try {
-      const position = await new Promise<GeolocationPosition>((resolve, reject) =>
-        navigator.geolocation.getCurrentPosition(resolve, reject, {
-          enableHighAccuracy: false, timeout: 5000, maximumAge: 60000,
-        })
-      );
-      const { latitude, longitude } = position.coords;
-      const res = await fetch(`/api/geocode/reverse?lat=${latitude}&lon=${longitude}`);
-      if (!res.ok) throw new Error("Geocoding failed");
-      const data = await res.json();
-      if (!data.location) { setGeoError("Could not determine city. Please enter manually."); return; }
-      setLocation(data.location);
-    } catch (err) {
-      if (err instanceof GeolocationPositionError) {
-        if (err.code === 1) setGeoError("Location access denied.");
-        else setGeoError("Could not detect location. Please enter manually.");
-      } else { setGeoError("Location detection failed."); }
+      // Try browser GPS first
+      try {
+        const position = await new Promise<GeolocationPosition>((resolve, reject) =>
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            enableHighAccuracy: false, timeout: 8000, maximumAge: 60000,
+          })
+        );
+        const { latitude, longitude } = position.coords;
+        const res = await fetch(`/api/geocode/reverse?lat=${latitude}&lon=${longitude}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.location) { setLocation(data.location); return; }
+        }
+      } catch {
+        // GPS failed — fall through to IP fallback
+      }
+
+      // Fallback: IP-based geolocation (via server)
+      const ipRes = await fetch("/api/geocode/ip");
+      if (ipRes.ok) {
+        const ipData = await ipRes.json();
+        if (ipData.location) {
+          setLocation(ipData.location);
+          return;
+        }
+      }
+
+      setGeoError("Could not detect location. Please enter manually.");
+    } catch {
+      setGeoError("Location detection failed.");
     } finally { setGeoLoading(false); }
   }
 
