@@ -8,6 +8,7 @@ import { CONTRACTOR_TYPES, getPlatformTier, CATEGORIES } from "@/lib/constants";
 import { ContractorType, Qualification } from "@/types";
 import PhoneVerifyWidget from "@/components/auth/PhoneVerifyWidget";
 import PortfolioManager from "@/components/portfolio/PortfolioManager";
+import CredentialUploader from "@/components/portfolio/CredentialUploader";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -134,6 +135,7 @@ export default function ContractorPerformancePage() {
   const router = useRouter();
 
   const [activeTab, setActiveTab] = useState<"performance" | "portfolio" | "trust">("performance");
+  const [portfolioSubTab, setPortfolioSubTab] = useState<"projects" | "credentials">("projects");
 
   const [profile, setProfile] = useState<ContractorProfileData | null>(null);
   const [completedJobs, setCompletedJobs] = useState(0);
@@ -741,40 +743,76 @@ export default function ContractorPerformancePage() {
         {/* ── Portfolio tab ────────────────────────────────────────────── */}
         {activeTab === "portfolio" && (
           <div className="space-y-4">
-            {/* Portfolio photo requirement warning */}
-            {portfolioPhotoCount < 3 && (
-              <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-2xl p-4">
-                <span className="text-xl shrink-0">&#9888;&#65039;</span>
-                <div>
-                  <p className="font-bold text-amber-800">You need at least 3 work photos to start bidding on jobs</p>
-                  <p className="text-sm text-amber-700 mt-1">
-                    Upload photos of your completed projects to build credibility with homeowners.
-                  </p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <div className="flex-1 max-w-[200px] h-2 bg-amber-200 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-amber-500 rounded-full transition-all"
-                        style={{ width: `${Math.min((portfolioPhotoCount / 3) * 100, 100)}%` }}
-                      />
-                    </div>
-                    <span className="text-sm font-semibold text-amber-800">
-                      {portfolioPhotoCount}/3 photos uploaded
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-            {portfolioPhotoCount >= 3 && (
-              <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
-                <span className="text-xl">&#9989;</span>
-                <p className="font-semibold text-emerald-800">
-                  {portfolioPhotoCount} portfolio photos uploaded &mdash; you&apos;re ready to bid!
-                </p>
-              </div>
-            )}
-            <div className="bg-white rounded-2xl border border-border p-6">
-              <PortfolioManager contractorId={user.id} editable={true} />
+            {/* Sub-tabs: Projects / Credentials */}
+            <div className="flex gap-1 bg-surface rounded-xl p-1">
+              <button
+                onClick={() => setPortfolioSubTab("projects")}
+                className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
+                  portfolioSubTab === "projects" ? "bg-white text-secondary shadow-sm" : "text-muted hover:text-secondary"
+                }`}
+              >
+                Projects
+              </button>
+              <button
+                onClick={() => setPortfolioSubTab("credentials")}
+                className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
+                  portfolioSubTab === "credentials" ? "bg-white text-secondary shadow-sm" : "text-muted hover:text-secondary"
+                }`}
+              >
+                Licenses &amp; Credentials
+              </button>
             </div>
+
+            {portfolioSubTab === "projects" && (
+              <>
+                {/* Portfolio photo requirement warning */}
+                {portfolioPhotoCount < 3 && (
+                  <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-2xl p-4">
+                    <span className="text-xl shrink-0">&#9888;&#65039;</span>
+                    <div>
+                      <p className="font-bold text-amber-800">You need at least 3 work photos to start bidding on jobs</p>
+                      <p className="text-sm text-amber-700 mt-1">
+                        Upload photos of your completed projects to build credibility with homeowners.
+                      </p>
+                      <div className="flex items-center gap-2 mt-2">
+                        <div className="flex-1 max-w-[200px] h-2 bg-amber-200 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-amber-500 rounded-full transition-all"
+                            style={{ width: `${Math.min((portfolioPhotoCount / 3) * 100, 100)}%` }}
+                          />
+                        </div>
+                        <span className="text-sm font-semibold text-amber-800">
+                          {portfolioPhotoCount}/3 photos uploaded
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {portfolioPhotoCount >= 3 && (
+                  <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
+                    <span className="text-xl">&#9989;</span>
+                    <p className="font-semibold text-emerald-800">
+                      {portfolioPhotoCount} portfolio photos uploaded &mdash; you&apos;re ready to bid!
+                    </p>
+                  </div>
+                )}
+                <div className="bg-white rounded-2xl border border-border p-6">
+                  <PortfolioManager contractorId={user.id} editable={true} />
+                </div>
+              </>
+            )}
+
+            {portfolioSubTab === "credentials" && (
+              <div className="bg-white rounded-2xl border border-border p-6">
+                <div className="mb-4">
+                  <h3 className="font-semibold text-secondary">Licenses &amp; Certifications</h3>
+                  <p className="text-xs text-muted mt-1">
+                    Upload your professional license or certification. Our AI will automatically extract and verify the details.
+                  </p>
+                </div>
+                <CredentialUploader contractorId={user.id} editable={true} />
+              </div>
+            )}
           </div>
         )}
 

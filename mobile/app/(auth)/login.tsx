@@ -16,9 +16,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { Button, Input } from "@/components/ui";
 import { colors, typography, spacing, radius, shadows } from "../../lib/theme";
+import { API_URL, setToken } from "@/lib/api";
+import * as AppleAuthentication from "expo-apple-authentication";
 
 export default function LoginScreen() {
-  const { login } = useAuth();
+  const { login, refreshUser } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,6 +47,47 @@ export default function LoginScreen() {
       Alert.alert("Login Failed", (err instanceof Error && err.message) ? err.message : 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAppleSignIn = async () => {
+    try {
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
+      });
+
+      const res = await fetch(`${API_URL}/api/auth/oauth/apple/mobile`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          identityToken: credential.identityToken,
+          fullName: credential.fullName,
+          email: credential.email,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        Alert.alert("Sign In Failed", data.error || "Apple sign-in failed");
+        return;
+      }
+
+      if (data.needsCompletion) {
+        // New user — navigate to account completion with the pending token
+        router.push({ pathname: "/(auth)/signup", params: { pendingToken: data.pendingToken } });
+      } else if (data.token) {
+        // Existing user — log them in directly
+        await setToken(data.token);
+        await refreshUser();
+        router.replace("/");
+      }
+    } catch (err: unknown) {
+      if ((err as { code?: string }).code === "ERR_REQUEST_CANCELED") return;
+      Alert.alert("Apple Sign In", "Something went wrong. Please try again.");
     }
   };
 
@@ -114,6 +157,24 @@ export default function LoginScreen() {
             />
           </View>
 
+          {/* Divider */}
+          <View style={styles.divider}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>or</Text>
+            <View style={styles.dividerLine} />
+          </View>
+
+          {/* Apple Sign-In (iOS only) */}
+          {Platform.OS === "ios" && (
+            <AppleAuthentication.AppleAuthenticationButton
+              buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+              buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+              cornerRadius={12}
+              style={styles.appleButton}
+              onPress={handleAppleSignIn}
+            />
+          )}
+
           {/* Sign Up Link */}
           <View style={styles.footer}>
             <Text style={styles.footerText}>Don't have an account? </Text>
@@ -182,10 +243,30 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontWeight: "600",
   },
+  divider: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: spacing["3xl"],
+    marginBottom: spacing.lg,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: colors.border,
+  },
+  dividerText: {
+    paddingHorizontal: spacing.md,
+    fontSize: 13,
+    color: colors.muted,
+  },
+  appleButton: {
+    width: "100%",
+    height: 50,
+  },
   footer: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: spacing["4xl"],
+    marginTop: spacing["3xl"],
   },
   footerText: {
     fontSize: 14,

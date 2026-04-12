@@ -22,8 +22,9 @@ export function buildGoogleAuthUrl(state: string): string {
 }
 
 export function buildAppleAuthUrl(state: string): string {
-  // Encode state in redirect_uri query param so it survives Apple's form_post (SameSite cookie issue)
-  const redirectUri = `${BASE_URL}/api/auth/oauth/apple/callback?csrf=${state}`;
+  // Use a static redirect_uri — Apple requires exact match on registered URLs.
+  // State is passed via the `state` param and Apple returns it in the form POST body.
+  const redirectUri = `${BASE_URL}/api/auth/oauth/apple/callback`;
   const params = new URLSearchParams({
     client_id: process.env.APPLE_CLIENT_ID || "",
     redirect_uri: redirectUri,

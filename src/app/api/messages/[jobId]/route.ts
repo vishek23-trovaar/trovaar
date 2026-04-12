@@ -69,7 +69,7 @@ export async function GET(
 
   // Mark messages as read where receiver_id = current user
   await db.prepare(
-    "UPDATE messages SET read = 1 WHERE job_id = ? AND receiver_id = ? AND read = 0"
+    "UPDATE messages SET read = 1, read_at = COALESCE(read_at, NOW()) WHERE job_id = ? AND receiver_id = ? AND read = 0"
   ).run(jobId, payload.userId);
 
   const result = messages.map((m) => ({
@@ -138,10 +138,10 @@ export async function POST(
   const id = uuidv4();
   const now = new Date().toISOString();
 
-  db.prepare(`
-    INSERT INTO messages (id, job_id, sender_id, receiver_id, content, read, created_at)
-    VALUES (?, ?, ?, ?, ?, 0, ?)
-  `).run(id, jobId, payload.userId, receiverId, content, now);
+  await db.prepare(`
+    INSERT INTO messages (id, job_id, sender_id, receiver_id, content, read, delivered_at, created_at)
+    VALUES (?, ?, ?, ?, ?, 0, ?, ?)
+  `).run(id, jobId, payload.userId, receiverId, content, now, now);
 
   // Send notification to receiver
   try {

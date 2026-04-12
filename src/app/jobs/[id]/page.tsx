@@ -730,6 +730,11 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
             }>
               {urgency?.label}
             </Badge>
+            {job.budget_range && (
+              <span className="inline-flex items-center gap-1 text-xs font-semibold bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+                💰 Budget: {job.budget_range}
+              </span>
+            )}
             <span>Posted {new Date(job.created_at).toLocaleDateString()}</span>
             {job.expected_completion_date && (
               <span className="flex items-center gap-1">

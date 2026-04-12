@@ -183,6 +183,7 @@ export default function Navbar() {
                   <nav className="hidden sm:flex items-center gap-1">
                     <NavLink href="/client/dashboard" pathname={pathname}>Dashboard</NavLink>
                     <NavLink href="/client/jobs/new" pathname={pathname}>Post a Job</NavLink>
+                    <NavLink href="/quote-buster" pathname={pathname}>Quote Buster</NavLink>
                     <NavLink href="/client/messages" pathname={pathname}>Messages</NavLink>
                   </nav>
                 )}
@@ -261,6 +262,7 @@ export default function Navbar() {
             ) : (
               <>
                 <nav className="hidden sm:flex items-center gap-1 mr-2">
+                  <NavLink href="/quote-buster" pathname={pathname}>Quote Buster</NavLink>
                   <NavLink href="/about" pathname={pathname}>About</NavLink>
                 </nav>
                 <Link href="/login"><Button variant="ghost" size="sm">Log In</Button></Link>

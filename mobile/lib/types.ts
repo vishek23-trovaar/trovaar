@@ -22,6 +22,7 @@ export interface Job {
   payment_status?: string;
   contractor_confirmed?: number;
   consumer_confirmed?: number;
+  budget_range?: string;
   created_at: string;
   updated_at?: string;
 }

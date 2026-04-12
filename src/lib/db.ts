@@ -1322,6 +1322,58 @@ export async function initializeDatabase(): Promise<void> {
        FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,
        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
      )`,
+    // License/certification AI verification fields
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='contractor_profiles' AND column_name='license_expiry_date') THEN
+         ALTER TABLE contractor_profiles ADD COLUMN license_expiry_date TEXT;
+       END IF;
+     END $$`,
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='contractor_profiles' AND column_name='license_holder_name') THEN
+         ALTER TABLE contractor_profiles ADD COLUMN license_holder_name TEXT;
+       END IF;
+     END $$`,
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='contractor_profiles' AND column_name='license_issuer') THEN
+         ALTER TABLE contractor_profiles ADD COLUMN license_issuer TEXT;
+       END IF;
+     END $$`,
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='contractor_profiles' AND column_name='license_type') THEN
+         ALTER TABLE contractor_profiles ADD COLUMN license_type TEXT;
+       END IF;
+     END $$`,
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='contractor_profiles' AND column_name='license_state') THEN
+         ALTER TABLE contractor_profiles ADD COLUMN license_state TEXT;
+       END IF;
+     END $$`,
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='contractor_profiles' AND column_name='ai_verification_result') THEN
+         ALTER TABLE contractor_profiles ADD COLUMN ai_verification_result TEXT;
+       END IF;
+     END $$`,
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='contractor_profiles' AND column_name='ai_verified_at') THEN
+         ALTER TABLE contractor_profiles ADD COLUMN ai_verified_at TIMESTAMPTZ;
+       END IF;
+     END $$`,
+    // Messenger-style chat: add read_at, delivered_at, message_type to messages
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='messages' AND column_name='delivered_at') THEN
+         ALTER TABLE messages ADD COLUMN delivered_at TIMESTAMPTZ;
+       END IF;
+     END $$`,
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='messages' AND column_name='read_at') THEN
+         ALTER TABLE messages ADD COLUMN read_at TIMESTAMPTZ;
+       END IF;
+     END $$`,
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='messages' AND column_name='message_type') THEN
+         ALTER TABLE messages ADD COLUMN message_type TEXT NOT NULL DEFAULT 'text';
+       END IF;
+     END $$`,
 
   ];
 

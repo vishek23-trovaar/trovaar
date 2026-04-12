@@ -65,6 +65,7 @@ function PostJobContent() {
   const [expectedDate, setExpectedDate] = useState("");
   const [emergencyAcknowledged, setEmergencyAcknowledged] = useState(false);
   const [location, setLocation] = useState("");
+  const [budgetRange, setBudgetRange] = useState("");
   const [geoLoading, setGeoLoading] = useState(false);
   const [geoError, setGeoError] = useState("");
 
@@ -97,10 +98,12 @@ function PostJobContent() {
     const tDescription = searchParams.get("description");
     const tUrgency = searchParams.get("urgency");
     const tLocation = searchParams.get("location");
+    const tBudgetRange = searchParams.get("budget_range");
     if (tTitle) setTitle(tTitle);
     if (tDescription) setDescription(tDescription);
     if (tUrgency) setUrgency(tUrgency);
     if (tLocation) setLocation(tLocation);
+    if (tBudgetRange) setBudgetRange(tBudgetRange);
     if (tCategory) {
       applyCategoryValue(tCategory);
     }
@@ -369,6 +372,7 @@ function PostJobContent() {
           ai_questions: answeredQuestions.length > 0 ? answeredQuestions : null,
           reference_links: referenceLinks.filter((l) => l.url.trim()),
           inspiration_photos: inspirationPhotos,
+          budget_range: budgetRange || undefined,
         }),
       });
       if (!res.ok) {
@@ -852,6 +856,12 @@ function PostJobContent() {
                   {selectedUrgency?.label}
                 </span>
               </ReviewRow>
+
+              {budgetRange && (
+                <ReviewRow label="Budget Range">
+                  <span className="font-semibold text-green-600">{budgetRange}</span>
+                </ReviewRow>
+              )}
             </div>
 
             {/* Emergency ack */}
@@ -1014,18 +1024,18 @@ function PostJobContent() {
 }
 
 // ── Shared review row component ────────────────────────────────────────────────
-function ReviewRow({ label, onEdit, children }: { label: string; onEdit: () => void; children: React.ReactNode }) {
+function ReviewRow({ label, onEdit, children }: { label: string; onEdit?: () => void; children: React.ReactNode }) {
   return (
     <div className="flex items-start gap-3 px-4 py-3">
       <p className="text-xs font-semibold text-muted uppercase tracking-wide w-20 flex-shrink-0 pt-0.5">{label}</p>
       <div className="flex-1 min-w-0">{children}</div>
-      <button
+      {onEdit && <button
         type="button"
         onClick={onEdit}
         className="text-xs text-primary hover:underline flex-shrink-0 cursor-pointer"
       >
         Edit
-      </button>
+      </button>}
     </div>
   );
 }

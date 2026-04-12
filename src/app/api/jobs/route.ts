@@ -52,6 +52,12 @@ function approximateCoords(
 // ─────────────────────────────────────────────────────────────────────────────
 
 export async function GET(request: NextRequest) {
+  // Require authentication to view job listings and map locations
+  const payload = getAuthPayload(request.headers);
+  if (!payload) {
+    return NextResponse.json({ error: "Sign in to browse jobs and view locations" }, { status: 401 });
+  }
+
   const { searchParams } = new URL(request.url);
   const categories = searchParams.getAll("category");
   const category = categories.length === 1 ? categories[0] : null;

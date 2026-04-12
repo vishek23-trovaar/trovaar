@@ -16,11 +16,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const code = body.get("code");
   const firstLoginUser = body.get("user") || undefined;
 
-  // Apple state CSRF: we embedded state in the redirect_uri as ?csrf=... so read from URL
-  const urlState = request.nextUrl.searchParams.get("csrf");
+  // Apple returns state in the form POST body (not URL params)
+  const formState = body.get("state");
   const cookieState = request.cookies.get("oauth_state")?.value;
 
-  if (!code || !urlState || !cookieState || urlState !== cookieState) {
+  if (!code || !formState || !cookieState || formState !== cookieState) {
     return NextResponse.redirect(`${BASE_URL}/login?error=oauth_failed`);
   }
 

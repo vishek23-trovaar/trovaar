@@ -13,7 +13,7 @@ import {
   Platform,
   Image,
 } from "react-native";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
 import * as ImagePicker from "expo-image-picker";
@@ -71,6 +71,7 @@ const URGENCY_OPTIONS = [
 
 export default function PostJobScreen() {
   const router = useRouter();
+  const params = useLocalSearchParams<{ category?: string; description?: string; budget_range?: string }>();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [showVoiceRecorder, setShowVoiceRecorder] = useState(false);
@@ -82,11 +83,12 @@ export default function PostJobScreen() {
   ).current;
 
   // Form state
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(params.category || "");
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(params.description || "");
   const [location, setLocation] = useState("");
   const [urgency, setUrgency] = useState("");
+  const [budgetRange] = useState(params.budget_range || "");
 
   // Media state
   const [mediaUris, setMediaUris] = useState<string[]>([]);
@@ -272,6 +274,7 @@ export default function PostJobScreen() {
           location,
           urgency: urgency || "medium",
           photos: mediaUris.length > 0 ? JSON.stringify(mediaUris) : undefined,
+          budget_range: budgetRange || undefined,
         }),
       });
       Alert.alert("Success", "Your job has been posted!", [

@@ -253,11 +253,11 @@ export default function ClientDashboard() {
                 onPress={() => router.push("/(client)/profile")}
               />
               <QuickAction
-                icon="help-circle-outline"
-                label="Support"
-                color={colors.warning}
-                bgColor={"#FEF3C7"}
-                onPress={() => {}}
+                icon="cash-outline"
+                label="Quote Buster"
+                color={"#7c3aed"}
+                bgColor={"#f3e8ff"}
+                onPress={() => router.push("/(client)/quote-buster")}
               />
             </View>
 

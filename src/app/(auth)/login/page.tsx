@@ -57,9 +57,10 @@ function LoginForm() {
   // Redirect already-authenticated users to their dashboard
   useEffect(() => {
     if (!authLoading && user) {
-      router.replace(dashboardPath(user.role));
+      const redirect = searchParams.get("redirect");
+      router.replace(redirect || dashboardPath(user.role));
     }
-  }, [user, authLoading, router]);
+  }, [user, authLoading, router, searchParams]);
 
   const urlError = searchParams.get("error");
   const displayError = error || (urlError ? ERROR_MESSAGES[urlError] || "An error occurred." : "");
@@ -74,7 +75,8 @@ function LoginForm() {
 
     try {
       const loggedInUser = await login(email, password);
-      router.push(dashboardPath(loggedInUser.role));
+      const redirect = searchParams.get("redirect");
+      router.push(redirect || dashboardPath(loggedInUser.role));
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");

@@ -36,10 +36,22 @@ export default function TermsOfServicePage() {
           competitive bids, and engage Contractors to perform work.
         </p>
         <p className="text-muted leading-relaxed mt-3">
-          Trovaar is a technology platform and intermediary only. We do not employ Contractors,
-          perform services, or guarantee the quality, safety, legality, or timeliness of any work
+          <strong className="text-secondary">Trovaar is a networking and technology platform only.</strong> Our
+          sole function is to connect Consumers with Contractors. We do not employ Contractors,
+          perform services, supervise work, or guarantee the quality, safety, legality, or timeliness of any work
           performed through the platform. All contracts for services are entered into directly between
-          Consumers and Contractors. Trovaar is not a party to those agreements.
+          Consumers and Contractors. <strong className="text-secondary">Trovaar is not a party to those agreements
+          and assumes no liability whatsoever for the work performed, the conduct of any user, or any
+          outcomes arising from the engagement between a Consumer and a Contractor.</strong>
+        </p>
+        <p className="text-muted leading-relaxed mt-3">
+          <strong className="text-secondary">Assumption of risk:</strong> By using the Service, Consumers
+          acknowledge and accept that they are engaging independent third-party Contractors to perform work.
+          Consumers assume all risks associated with granting Contractors access to their property, including
+          but not limited to the risk of property damage, personal injury, or loss. Consumers are encouraged
+          to independently verify Contractor credentials, insurance status, and references before engaging
+          any Contractor. Trovaar&apos;s verification badges and AI-generated match scores are informational
+          tools only and do not constitute a guarantee, warranty, or endorsement of any Contractor.
         </p>
       </section>
 
@@ -179,6 +191,19 @@ export default function TermsOfServicePage() {
           complete the review within five (5) business days of the Contractor uploading completion photos,
           the escrow funds will be automatically released to the Contractor. Trovaar will attempt to
           contact the Consumer before auto-release.
+        </p>
+        <p className="text-muted leading-relaxed mt-3">
+          <strong className="text-secondary">Trovaar&apos;s right to withhold and redirect funds:</strong> By
+          using the platform, both Consumers and Contractors acknowledge and agree that Trovaar has the
+          unilateral right to withhold escrowed funds when there is reasonable evidence that work was not
+          performed in accordance with the original job posting specifications. When Trovaar determines, in
+          its sole discretion, that work was incomplete, defective, or not performed as agreed, Trovaar
+          may: (a) withhold all or a portion of the escrowed funds; (b) pay the original Contractor a
+          partial amount proportional to the work satisfactorily completed; and (c) use the remaining
+          escrowed funds to engage a different qualified Contractor through the platform to complete or
+          correct the work. The Contractor agrees that Trovaar&apos;s determination regarding the
+          allocation of escrowed funds under this section is final and binding. This right exists to
+          protect the integrity of the marketplace and ensure Consumers receive the work they paid for.
         </p>
         <p className="text-muted leading-relaxed mt-3">
           <strong className="text-secondary">Cancellations:</strong> If a job is cancelled before
@@ -322,10 +347,36 @@ export default function TermsOfServicePage() {
       </section>
 
       <section>
-        <h2 className="text-xl font-semibold text-secondary mb-3">11. Limitation of Liability</h2>
+        <h2 className="text-xl font-semibold text-secondary mb-3">11. Limitation of Liability and Allocation of Risk</h2>
         <p className="text-muted leading-relaxed">
-          Trovaar is a marketplace platform. We are not a service provider, general contractor,
-          or employer. We do not perform, supervise, or control any work performed by Contractors.
+          <strong className="text-secondary">Trovaar is a networking platform only.</strong> We are not a service
+          provider, general contractor, subcontractor, or employer. We do not perform, supervise, direct, or
+          control any work performed by Contractors. We do not inspect, approve, or certify the quality of
+          any completed work.
+        </p>
+        <p className="text-muted leading-relaxed mt-3">
+          <strong className="text-secondary">All liability for work performed rests exclusively between the
+          Consumer and the Contractor.</strong> The Consumer and Contractor each acknowledge and agree that
+          any claims related to the quality, timeliness, safety, or legality of work performed&mdash;including
+          property damage, personal injury, code violations, permit issues, or any consequential harm&mdash;are
+          exclusively between the Consumer and the Contractor. Trovaar shall not be named as a party in, or held
+          liable for, any dispute, claim, lawsuit, or proceeding arising from work performed or services
+          rendered through the platform.
+        </p>
+        <p className="text-muted leading-relaxed mt-3">
+          <strong className="text-secondary">Contractor liability:</strong> Contractors accept full and sole
+          liability for all work they perform, including but not limited to: property damage, personal injury
+          to the Consumer or third parties, defective workmanship, failure to comply with applicable building
+          codes, permit requirements, or safety regulations, and any claims arising from their use of
+          subcontractors or employees. Contractors agree to maintain adequate general liability insurance
+          covering their work and to provide proof of insurance upon request.
+        </p>
+        <p className="text-muted leading-relaxed mt-3">
+          <strong className="text-secondary">Consumer liability:</strong> Consumers accept full responsibility
+          for providing a safe work environment, disclosing known hazards at the work site, and ensuring that
+          the work requested does not violate applicable laws or regulations. Consumers acknowledge that by
+          engaging a Contractor through the platform, they assume all risk associated with granting access
+          to their property.
         </p>
         <p className="text-muted leading-relaxed mt-3">
           To the fullest extent permitted by applicable law, Trovaar, its officers, directors,
@@ -337,11 +388,13 @@ export default function TermsOfServicePage() {
         <p className="text-muted leading-relaxed mt-3">
           Without limiting the foregoing, Trovaar is not liable for: (a) the conduct, whether online
           or offline, of any user; (b) the quality, safety, or legality of any services performed;
-          (c) any disputes between Consumers and Contractors; or (d) the accuracy of any AI-generated
-          analysis or recommendations.
+          (c) any disputes between Consumers and Contractors; (d) the accuracy of any AI-generated
+          analysis, price estimates, match scores, or recommendations; (e) property damage or personal injury
+          resulting from any Contractor&apos;s work; or (f) a Contractor&apos;s failure to maintain required
+          licenses, permits, or insurance.
         </p>
         <p className="text-muted leading-relaxed mt-3">
-          Trovaar&apos; total liability to you for any claim arising from or related to the Service
+          Trovaar&apos;s total liability to you for any claim arising from or related to the Service
           shall not exceed the greater of (a) the total fees paid by you to Trovaar in the twelve
           months preceding the claim, or (b) one hundred dollars ($100.00).
         </p>
@@ -374,18 +427,96 @@ export default function TermsOfServicePage() {
       </section>
 
       <section>
-        <h2 className="text-xl font-semibold text-secondary mb-3">13. Privacy</h2>
+        <h2 className="text-xl font-semibold text-secondary mb-3">13. Privacy, Data Sharing, and AI Processing</h2>
         <p className="text-muted leading-relaxed">
           Your use of the Service is also governed by our{" "}
           <a href="/legal/privacy" className="text-primary hover:underline">Privacy Policy</a>,
           which describes how we collect, use, and share your personal information. By using the
           Service, you consent to the collection and use of your information as described in the
-          Privacy Policy.
+          Privacy Policy and this section.
+        </p>
+        <p className="text-muted leading-relaxed mt-3">
+          <strong className="text-secondary">AI-powered features and data sharing with third-party AI providers:</strong> Trovaar
+          uses artificial intelligence and machine learning technologies to power core features of the
+          platform, including but not limited to: job categorization and description analysis, price estimation
+          and Quote Buster comparisons, contractor-job matching and match scoring, license and credential
+          verification, profile analysis, and content moderation. These AI features are essential to providing
+          you with the best possible service experience.
+        </p>
+        <p className="text-muted leading-relaxed mt-3">
+          <strong className="text-secondary">To deliver these AI-powered features, your data&mdash;including
+          personal information, job descriptions, photos, videos, uploaded documents (such as licenses and
+          certifications), messages, reviews, location data, and usage patterns&mdash;may be transmitted to
+          and processed by third-party AI service providers</strong> (including, but not limited to, Anthropic,
+          the maker of Claude). By using the Service, you explicitly consent to this data sharing and processing.
+        </p>
+        <p className="text-muted leading-relaxed mt-3">
+          We select AI service providers that maintain industry-standard security and data protection practices.
+          However, Trovaar does not control the data processing practices of third-party AI providers and is
+          not responsible for their handling of your data once transmitted. We encourage you to review the
+          privacy policies of our AI service providers.
+        </p>
+        <p className="text-muted leading-relaxed mt-3">
+          <strong className="text-secondary">No guarantee of AI accuracy:</strong> All AI-generated outputs&mdash;including
+          price estimates, match scores, document verification results, and category suggestions&mdash;are
+          provided for informational purposes only and should not be relied upon as professional advice.
+          AI outputs may be inaccurate, incomplete, or outdated. Trovaar makes no warranties regarding
+          the accuracy, reliability, or completeness of any AI-generated content. Users are solely responsible
+          for verifying AI-generated information and making their own decisions.
+        </p>
+        <p className="text-muted leading-relaxed mt-3">
+          <strong className="text-secondary">Data retention:</strong> Data processed by AI features may be
+          retained by Trovaar and/or its AI service providers for the purpose of improving service quality,
+          training models, and maintaining platform functionality, subject to applicable data protection laws.
+          You may request deletion of your personal data by contacting us, subject to any legal retention
+          obligations.
+        </p>
+        <p className="text-muted leading-relaxed mt-3">
+          <strong className="text-secondary">Opt-out:</strong> If you do not consent to AI processing of your
+          data, you may choose not to use AI-powered features. However, as AI processing is integral to core
+          platform functionality (including job matching and content moderation), you acknowledge that opting
+          out of AI processing may limit or prevent your use of the Service.
         </p>
       </section>
 
       <section>
-        <h2 className="text-xl font-semibold text-secondary mb-3">14. Termination</h2>
+        <h2 className="text-xl font-semibold text-secondary mb-3">14. Insurance Requirements</h2>
+        <p className="text-muted leading-relaxed">
+          <strong className="text-secondary">Contractor insurance:</strong> Contractors are strongly
+          encouraged, and in certain jurisdictions may be required, to maintain the following insurance coverage:
+        </p>
+        <ul className="list-disc list-inside text-muted space-y-1.5 mt-3 leading-relaxed">
+          <li>General liability insurance with a minimum coverage of $500,000 per occurrence.</li>
+          <li>Workers&apos; compensation insurance where required by applicable state law.</li>
+          <li>Professional liability insurance for specialized trades (e.g., electrical, plumbing, HVAC).</li>
+          <li>Commercial auto insurance if using vehicles for platform-related work.</li>
+        </ul>
+        <p className="text-muted leading-relaxed mt-3">
+          Trovaar may request proof of insurance at any time and may restrict or suspend a Contractor&apos;s
+          ability to bid on jobs if adequate insurance cannot be verified. Contractors who represent on the
+          platform that they carry insurance but fail to maintain active coverage may be permanently removed
+          from the platform.
+        </p>
+        <p className="text-muted leading-relaxed mt-3">
+          <strong className="text-secondary">Trovaar does not provide insurance coverage</strong> to
+          Consumers, Contractors, or any third party. All insurance obligations rest solely with the
+          individual user. Trovaar is not responsible for any uninsured losses.
+        </p>
+      </section>
+
+      <section>
+        <h2 className="text-xl font-semibold text-secondary mb-3">15. Force Majeure</h2>
+        <p className="text-muted leading-relaxed">
+          Neither Trovaar nor any user shall be liable for any failure or delay in performance resulting from
+          causes beyond their reasonable control, including but not limited to: natural disasters, pandemics,
+          government actions, war, terrorism, labor disputes, utility failures, internet or telecommunications
+          outages, or cyberattacks. In the event of a force majeure, affected parties shall notify the other
+          parties as soon as reasonably practicable.
+        </p>
+      </section>
+
+      <section>
+        <h2 className="text-xl font-semibold text-secondary mb-3">16. Termination</h2>
         <p className="text-muted leading-relaxed">
           You may deactivate your account at any time through your account settings or by contacting
           support. Trovaar may suspend or terminate your account at any time, with or without cause,
@@ -405,7 +536,7 @@ export default function TermsOfServicePage() {
       </section>
 
       <section>
-        <h2 className="text-xl font-semibold text-secondary mb-3">15. Indemnification</h2>
+        <h2 className="text-xl font-semibold text-secondary mb-3">17. Indemnification</h2>
         <p className="text-muted leading-relaxed">
           You agree to indemnify, defend, and hold harmless Trovaar and its officers, directors,
           employees, agents, and affiliates from and against any claims, liabilities, damages, losses,
@@ -417,7 +548,7 @@ export default function TermsOfServicePage() {
       </section>
 
       <section>
-        <h2 className="text-xl font-semibold text-secondary mb-3">16. Governing Law and Arbitration</h2>
+        <h2 className="text-xl font-semibold text-secondary mb-3">18. Governing Law and Arbitration</h2>
         <p className="text-muted leading-relaxed">
           These Terms shall be governed by and construed in accordance with the laws of the State of
           Delaware, without regard to its conflict of law provisions. Any dispute arising from or relating
@@ -438,7 +569,7 @@ export default function TermsOfServicePage() {
       </section>
 
       <section>
-        <h2 className="text-xl font-semibold text-secondary mb-3">17. Severability</h2>
+        <h2 className="text-xl font-semibold text-secondary mb-3">19. Severability</h2>
         <p className="text-muted leading-relaxed">
           If any provision of these Terms is found to be invalid or unenforceable by a court of
           competent jurisdiction, the remaining provisions shall remain in full force and effect. The
@@ -448,7 +579,7 @@ export default function TermsOfServicePage() {
       </section>
 
       <section>
-        <h2 className="text-xl font-semibold text-secondary mb-3">18. Contact Information</h2>
+        <h2 className="text-xl font-semibold text-secondary mb-3">20. Contact Information</h2>
         <p className="text-muted leading-relaxed">
           If you have any questions about these Terms of Service, please contact us:
         </p>

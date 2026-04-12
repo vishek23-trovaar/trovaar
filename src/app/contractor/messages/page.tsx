@@ -71,6 +71,8 @@ export default function ContractorMessagesPage() {
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true);
+  const [isTyping, setIsTyping] = useState(false);
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -105,11 +107,53 @@ export default function ContractorMessagesPage() {
     return () => clearInterval(interval);
   }, [fetchConversations]);
 
+  // SSE for real-time messages in active conversation, fallback to polling
   useEffect(() => {
     if (!activeJobId) return;
     fetchMessages(activeJobId);
-    const interval = setInterval(() => fetchMessages(activeJobId), 5000);
-    return () => clearInterval(interval);
+
+    let eventSource: EventSource | null = null;
+    let pollInterval: ReturnType<typeof setInterval> | null = null;
+
+    try {
+      eventSource = new EventSource(`/api/messages/${activeJobId}/stream`);
+
+      eventSource.addEventListener("message", (e) => {
+        try {
+          const msg = JSON.parse(e.data);
+          setMessages((prev) => {
+            if (prev.some((m) => m.id === msg.id)) return prev;
+            const withoutTemp = prev.filter((m) => !m.id.startsWith("temp-") || m.content !== msg.content);
+            return [...withoutTemp, msg];
+          });
+        } catch { /* ignore */ }
+      });
+
+      eventSource.addEventListener("read", () => {
+        setMessages((prev) => prev.map((m) => (m.is_mine ? { ...m, read: 1 } : m)));
+      });
+
+      eventSource.addEventListener("typing", () => {
+        setIsTyping(true);
+        if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+        typingTimeoutRef.current = setTimeout(() => setIsTyping(false), 3000);
+      });
+
+      eventSource.onerror = () => {
+        eventSource?.close();
+        eventSource = null;
+        if (!pollInterval) {
+          pollInterval = setInterval(() => fetchMessages(activeJobId), 5000);
+        }
+      };
+    } catch {
+      pollInterval = setInterval(() => fetchMessages(activeJobId), 5000);
+    }
+
+    return () => {
+      eventSource?.close();
+      if (pollInterval) clearInterval(pollInterval);
+    };
   }, [activeJobId, fetchMessages]);
 
   useEffect(() => {
@@ -371,16 +415,37 @@ export default function ContractorMessagesPage() {
                               {msg.content}
                             </div>
                             {isLast && (
-                              <p className={`text-[10px] text-gray-400 mt-1 ${msg.is_mine ? "text-right mr-1" : "ml-1"}`}>
-                                {formatTime(msg.created_at)}
-                                {msg.is_mine && msg.read ? " · Read" : ""}
-                              </p>
+                              <div className={`flex items-center gap-1 mt-1 ${msg.is_mine ? "justify-end mr-1" : "ml-1"}`}>
+                                <span className="text-[10px] text-gray-400">
+                                  {formatTime(msg.created_at)}
+                                </span>
+                                {msg.is_mine && (
+                                  <span className={`text-[10px] ${msg.read ? "text-primary" : "text-gray-300"}`}>
+                                    {msg.read ? "✓✓" : "✓"}
+                                  </span>
+                                )}
+                              </div>
                             )}
                           </div>
                         </div>
                       </div>
                     );
                   })}
+                  {/* Typing indicator */}
+                  {isTyping && (
+                    <div className="flex items-end gap-2 mb-2">
+                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-[10px] font-bold text-white">
+                        {activeConv?.other_user_name.charAt(0).toUpperCase()}
+                      </div>
+                      <div className="bg-white text-gray-400 rounded-2xl rounded-bl-md shadow-sm border border-gray-100 px-4 py-3">
+                        <div className="flex gap-1">
+                          <span className="w-2 h-2 bg-gray-300 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                          <span className="w-2 h-2 bg-gray-300 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                          <span className="w-2 h-2 bg-gray-300 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                        </div>
+                      </div>
+                    </div>
+                  )}
                   <div ref={bottomRef} />
                 </div>
               )}

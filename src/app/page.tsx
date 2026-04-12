@@ -180,6 +180,23 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Quote Buster CTA ── */}
+      <section className="py-16" style={{ background: "linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%)" }}>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+          <span className="text-4xl mb-4 block">💰</span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold mb-3">Got an expensive quote?</h2>
+          <p className="text-lg text-blue-200 mb-8 max-w-2xl mx-auto">
+            Big companies charge 30–50% more than local pros. Use our free Quote Buster
+            to see what you should really be paying.
+          </p>
+          <Link href="/quote-buster">
+            <Button size="lg" variant="white" className="px-8">
+              Bust My Quote
+            </Button>
+          </Link>
+        </div>
+      </section>
+
       {/* ── Service categories ── */}
       <CategorySection />
 

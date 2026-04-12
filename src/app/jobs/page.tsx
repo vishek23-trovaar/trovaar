@@ -61,8 +61,11 @@ function BrowseJobsContent() {
     });
   }, []);
 
+  const [requiresAuth, setRequiresAuth] = useState(false);
+
   const fetchJobs = useCallback(async () => {
     setLoading(true);
+    setRequiresAuth(false);
     try {
       const params = new URLSearchParams();
       if (categoryFilter) {
@@ -73,6 +76,11 @@ function BrowseJobsContent() {
       }
       if (searchQuery) params.set("search", searchQuery);
       const res = await fetch(`/api/jobs?${params}`);
+      if (res.status === 401) {
+        setRequiresAuth(true);
+        setJobs([]);
+        return;
+      }
       if (res.ok) {
         const data = await res.json();
         setJobs(data.jobs);
@@ -356,6 +364,9 @@ function BrowseJobsContent() {
                           </span>
                         </div>
                         <p className="text-[10px] text-muted mt-1 truncate">📍 {job.location}</p>
+                        {job.budget_range && (
+                          <p className="text-[10px] font-semibold text-green-700 truncate">💰 {job.budget_range}</p>
+                        )}
                         <p className="text-[10px] text-muted/70 truncate">{catLabel}</p>
                       </div>
                     </Link>
@@ -368,12 +379,37 @@ function BrowseJobsContent() {
 
         {/* ── Map — dominant view ── */}
         <div className="flex-1 relative min-h-0 h-[64dvh] md:h-auto">
+          {requiresAuth ? (
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-surface to-gray-100">
+              <div className="text-center max-w-sm px-6">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                  <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </div>
+                <h2 className="text-xl font-bold text-secondary mb-2">Sign in to browse jobs</h2>
+                <p className="text-sm text-muted mb-6">
+                  Create a free account or log in to see job locations on the map, browse available work, and connect with local pros.
+                </p>
+                <div className="flex flex-col gap-3">
+                  <Link href={`/login?redirect=${encodeURIComponent("/jobs" + (categoryFilter ? `?category=${categoryFilter}` : ""))}`}>
+                    <Button className="w-full">Sign In</Button>
+                  </Link>
+                  <Link href="/signup" className="text-sm text-primary hover:underline font-medium">
+                    Don&apos;t have an account? Sign up free
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ) : (
           <JobMap
             jobs={sortedJobs}
             activeJobId={activeJobId}
             onJobHover={handleJobHover}
             className="w-full h-full"
           />
+          )}
 
           {/* Post Job button */}
           <div className="absolute top-3 right-3 z-[500]">
