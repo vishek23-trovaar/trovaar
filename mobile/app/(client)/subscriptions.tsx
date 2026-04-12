@@ -297,6 +297,7 @@ function PlanCard({
 
 export default function SubscriptionsScreen() {
   const { user } = useAuth();
+  const screenOpacity = useRef(new Animated.Value(0)).current;
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [plans, setPlans] = useState<Plan[]>(HARDCODED_PLANS);
   const [loading, setLoading] = useState(true);
@@ -327,6 +328,10 @@ export default function SubscriptionsScreen() {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -405,7 +410,7 @@ export default function SubscriptionsScreen() {
   const activePlanId = subscription?.status === "active" ? subscription.plan_id : null;
 
   return (
-    <View style={styles.screen}>
+    <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>My Plan</Text>
@@ -503,7 +508,7 @@ export default function SubscriptionsScreen() {
 
         <View style={{ height: 80 }} />
       </ScrollView>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -526,7 +531,7 @@ const styles = StyleSheet.create({
 
   scrollContent: {
     padding: 16,
-    gap: 14,
+    gap: 16,
   },
 
   // Current subscription card
@@ -625,7 +630,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 6,
     paddingVertical: 11,
-    borderRadius: 12,
+    borderRadius: 16,
     borderWidth: 1.5,
     borderColor: COLORS.danger,
     backgroundColor: COLORS.dangerBg,
@@ -836,7 +841,7 @@ const styles = StyleSheet.create({
     gap: 8,
     padding: 14,
     backgroundColor: COLORS.white,
-    borderRadius: 12,
+    borderRadius: 16,
   },
   footerNoteText: {
     flex: 1,

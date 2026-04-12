@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   ScrollView,
   Dimensions,
   Pressable,
+  Animated,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -91,6 +92,15 @@ type Mode = null | "client" | "pro";
 export default function OnboardingScreen() {
   const router = useRouter();
   const [mode, setMode] = useState<Mode>(null);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 400,
+      useNativeDriver: true,
+    }).start();
+  }, []);
 
   const pages = mode === "pro" ? PRO_PAGES : CLIENT_PAGES;
 
@@ -106,7 +116,7 @@ export default function OnboardingScreen() {
   if (mode === null) {
     return (
       <SafeAreaView style={styles.safe}>
-        <View style={styles.pickerScreen}>
+        <Animated.View style={[styles.pickerScreen, { opacity: fadeAnim }]}>
           {/* Top spacer */}
           <View style={{ flex: 1 }} />
 
@@ -163,7 +173,7 @@ export default function OnboardingScreen() {
             </Pressable>
             <Text style={styles.sloganText}>The network that connects every skilled trade to every job.</Text>
           </View>
-        </View>
+        </Animated.View>
       </SafeAreaView>
     );
   }
@@ -171,6 +181,7 @@ export default function OnboardingScreen() {
   // ── Onboarding — Stacked Cards with Tabs ──
   return (
     <SafeAreaView style={styles.safe}>
+      <Animated.View style={{ flex: 1, opacity: fadeAnim }}>
       {/* Header */}
       <View style={styles.header}>
         <Pressable onPress={() => setMode(null)} style={styles.backBtn}>
@@ -233,6 +244,7 @@ export default function OnboardingScreen() {
           <Text style={styles.loginLink}>Log In</Text>
         </Pressable>
       </View>
+      </Animated.View>
     </SafeAreaView>
   );
 }
@@ -326,7 +338,7 @@ const styles = StyleSheet.create({
     padding: 18,
     borderWidth: 1.5,
     borderColor: colors.border,
-    borderRadius: 18,
+    borderRadius: radius.lg,
     marginBottom: spacing.xl,
     gap: 14,
   },
@@ -408,7 +420,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.lg,
     marginBottom: spacing.lg,
     gap: 14,
-    ...shadows.sm,
+    ...shadows.md,
   },
   featureIcon: {
     width: 48,

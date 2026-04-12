@@ -529,9 +529,9 @@ export default function JobDetailScreen() {
         <View style={{ padding: 20 }}>
           <SkeletonPulse width="100%" height={28} style={{ marginBottom: 8 }} />
           <SkeletonPulse width="60%" height={18} style={{ marginBottom: 16 }} />
-          <SkeletonPulse width="100%" height={60} borderRadius={12} style={{ marginBottom: 12 }} />
-          <SkeletonPulse width="100%" height={120} borderRadius={12} style={{ marginBottom: 12 }} />
-          <SkeletonPulse width="100%" height={120} borderRadius={12} />
+          <SkeletonPulse width="100%" height={60} borderRadius={16} style={{ marginBottom: 14 }} />
+          <SkeletonPulse width="100%" height={120} borderRadius={16} style={{ marginBottom: 14 }} />
+          <SkeletonPulse width="100%" height={120} borderRadius={16} />
         </View>
       </View>
     );
@@ -1371,7 +1371,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.xl, padding: 16, shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
   },
-  beforeAfterHeader: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 12 },
+  beforeAfterHeader: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 14 },
   beforeAfterTitle: { fontSize: 15, fontWeight: "700", color: colors.text },
   beforeAfterImageWrap: { alignItems: "center" },
   beforeAfterImage: { width: 140, height: 140, borderRadius: radius.lg },
@@ -1415,7 +1415,7 @@ const styles = StyleSheet.create({
   // Bid cards
   bidCard: {
     backgroundColor: colors.white, borderRadius: radius.xl, padding: 16,
-    marginHorizontal: 16, marginBottom: 12,
+    marginHorizontal: 16, marginBottom: 14,
     shadowColor: "#000", shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
     borderWidth: 1.5, borderColor: colors.border,
@@ -1442,7 +1442,7 @@ const styles = StyleSheet.create({
   matchBadgeMed: { backgroundColor: "#FEF3C7" },
   matchBadgeLow: { backgroundColor: colors.surface },
   matchBadgeText: { fontSize: 11, fontWeight: "600" },
-  bidMsg: { fontSize: 13, color: "#475569", lineHeight: 19, marginBottom: 12 },
+  bidMsg: { fontSize: 13, color: "#475569", lineHeight: 19, marginBottom: 14 },
   bidFooter: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
   bidTimelineWrap: { flexDirection: "row", alignItems: "center", gap: 5 },
   bidTimeline: { fontSize: 12, color: colors.muted },

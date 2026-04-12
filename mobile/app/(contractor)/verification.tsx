@@ -100,6 +100,12 @@ function SkeletonLoader() {
 
 export default function VerificationScreen() {
   const { user } = useAuth();
+  const screenOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
+
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [verificationStatus, setVerificationStatus] = useState<Record<string, string>>({});
@@ -233,14 +239,15 @@ export default function VerificationScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.screen}>
+      <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
         <SkeletonLoader />
-      </SafeAreaView>
+      </Animated.View>
     );
   }
 
   return (
-    <SafeAreaView style={styles.screen} edges={["top"]}>
+    <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
+    <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
@@ -641,6 +648,7 @@ export default function VerificationScreen() {
         <View style={{ height: 40 }} />
       </ScrollView>
     </SafeAreaView>
+    </Animated.View>
   );
 }
 
@@ -717,7 +725,7 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: "center",
     borderWidth: 1.5,
-    ...shadows.sm,
+    ...shadows.md,
   },
   badgeIconWrap: {
     width: 48,
@@ -749,7 +757,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     borderWidth: 1,
     borderColor: colors.border,
-    ...shadows.sm,
+    ...shadows.md,
   },
   actionCardHeader: {
     flexDirection: "row",
@@ -760,7 +768,7 @@ const styles = StyleSheet.create({
   actionIconWrap: {
     width: 44,
     height: 44,
-    borderRadius: 12,
+    borderRadius: 16,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -796,7 +804,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.surface,
     borderWidth: 1,
     borderColor: COLORS.border,
-    borderRadius: 12,
+    borderRadius: 16,
     paddingHorizontal: 16,
     paddingVertical: 12,
     fontSize: 16,
@@ -809,7 +817,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.surface,
     borderWidth: 1,
     borderColor: COLORS.border,
-    borderRadius: 12,
+    borderRadius: 16,
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
@@ -850,7 +858,7 @@ const styles = StyleSheet.create({
   licenseCancelBtn: {
     flex: 1,
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: 16,
     alignItems: "center",
     borderWidth: 1,
     borderColor: COLORS.border,
@@ -864,7 +872,7 @@ const styles = StyleSheet.create({
   licenseSubmitBtn: {
     flex: 1,
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: 16,
     alignItems: "center",
     backgroundColor: COLORS.primary,
   },

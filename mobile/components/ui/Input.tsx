@@ -34,7 +34,7 @@ export default function Input({
   const borderColor = error
     ? "#dc2626"
     : focused
-    ? "#1e40af"
+    ? "#2563eb"
     : "#e2e8f0";
 
   return (
@@ -45,7 +45,7 @@ export default function Input({
           <Ionicons
             name={leftIcon}
             size={20}
-            color={focused ? "#1e40af" : "#94a3b8"}
+            color={focused ? "#2563eb" : "#94a3b8"}
             style={styles.leftIcon}
           />
         )}

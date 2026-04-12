@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   Platform,
   ScrollView,
   Pressable,
+  Animated,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -21,6 +22,15 @@ export default function ForgotPasswordScreen() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; general?: string }>({});
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 400,
+      useNativeDriver: true,
+    }).start();
+  }, []);
 
   const validate = () => {
     const e: typeof errors = {};
@@ -57,10 +67,11 @@ export default function ForgotPasswordScreen() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
-        <ScrollView
+        <Animated.ScrollView
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
+          style={{ opacity: fadeAnim }}
         >
           {/* Back button */}
           <Pressable style={styles.backBtn} onPress={() => router.back()}>
@@ -147,7 +158,7 @@ export default function ForgotPasswordScreen() {
               </Pressable>
             </View>
           )}
-        </ScrollView>
+        </Animated.ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -183,6 +194,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: spacing["3xl"],
     alignSelf: "center",
+    ...shadows.md,
   },
   title: {
     ...typography.h1,

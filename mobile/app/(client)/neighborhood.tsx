@@ -213,6 +213,11 @@ export default function NeighborhoodScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [isDemo, setIsDemo] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const screenOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
 
   const fetchActivities = useCallback(async () => {
     try {
@@ -258,7 +263,7 @@ export default function NeighborhoodScreen() {
   }
 
   return (
-    <View style={styles.screen}>
+    <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
       {/* Header */}
       <View style={styles.header}>
         <View>
@@ -347,7 +352,7 @@ export default function NeighborhoodScreen() {
           </View>
         }
       />
-    </View>
+    </Animated.View>
   );
 }
 
@@ -439,7 +444,7 @@ const styles = StyleSheet.create({
 
   listContent: {
     padding: 16,
-    gap: 10,
+    gap: 12,
     paddingBottom: 100,
   },
 
@@ -447,11 +452,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: radius.xl,
     padding: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    ...shadows.md,
   },
   demoBadge: {
     alignSelf: "flex-start",

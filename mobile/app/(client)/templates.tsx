@@ -183,6 +183,7 @@ function LabeledInput({
 export default function TemplatesScreen() {
   const router = useRouter();
   const { user } = useAuth();
+  const screenOpacity = useRef(new Animated.Value(0)).current;
 
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
@@ -209,6 +210,10 @@ export default function TemplatesScreen() {
   useEffect(() => {
     fetchTemplates();
   }, [fetchTemplates]);
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -334,7 +339,7 @@ export default function TemplatesScreen() {
   }
 
   return (
-    <View style={styles.screen}>
+    <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Job Templates</Text>
@@ -586,7 +591,7 @@ export default function TemplatesScreen() {
           </View>
         </KeyboardAvoidingView>
       </Modal>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -625,7 +630,7 @@ const styles = StyleSheet.create({
 
   listContent: {
     padding: 16,
-    gap: 12,
+    gap: 14,
     paddingBottom: 100,
   },
 

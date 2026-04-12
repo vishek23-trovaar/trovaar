@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {
   Image,
   Platform,
   Share,
+  Animated,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -64,6 +65,7 @@ function SectionHeader({ title, danger }: { title: string; danger?: boolean }) {
 export default function ClientProfile() {
   const { user, logout, refreshUser } = useAuth();
   const router = useRouter();
+  const screenOpacity = useRef(new Animated.Value(0)).current;
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [location, setLocation] = useState("");
@@ -84,6 +86,10 @@ export default function ClientProfile() {
 
   const hasChanges =
     name !== originalName || phone !== originalPhone || location !== originalLocation;
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
 
   useEffect(() => {
     (async () => {
@@ -216,7 +222,7 @@ export default function ClientProfile() {
   }
 
   return (
-    <View style={styles.screen}>
+    <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
         {/* Profile Header */}
         <View style={styles.profileHeader}>
@@ -434,7 +440,7 @@ export default function ClientProfile() {
           </TouchableOpacity>
         </View>
       )}
-    </View>
+    </Animated.View>
   );
 }
 
@@ -474,7 +480,7 @@ const styles = StyleSheet.create({
   // Info Cards Row
   infoCardsRow: {
     flexDirection: "row",
-    gap: 12,
+    gap: 14,
     paddingHorizontal: 16,
     marginTop: 16,
   },

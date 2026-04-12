@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  Animated,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { api, ApiError } from "@/lib/api";
@@ -102,6 +103,12 @@ const EMPTY_FORM: CreateInvoiceForm = {
 };
 
 export default function Invoices() {
+  const screenOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
+
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -567,7 +574,7 @@ export default function Invoices() {
   };
 
   return (
-    <View style={styles.screen}>
+    <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
       {/* Stats */}
       {renderStatsRow()}
 
@@ -611,7 +618,7 @@ export default function Invoices() {
 
       {renderCreateModal()}
       {renderDetailModal()}
-    </View>
+    </Animated.View>
   );
 }
 
@@ -799,7 +806,7 @@ const styles = StyleSheet.create({
   textInput: {
     borderWidth: 1.5,
     borderColor: COLORS.border,
-    borderRadius: 12,
+    borderRadius: 16,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 15,
@@ -827,7 +834,7 @@ const styles = StyleSheet.create({
   jobChip: {
     paddingHorizontal: 14,
     paddingVertical: 10,
-    borderRadius: 12,
+    borderRadius: 16,
     borderWidth: 1.5,
     borderColor: COLORS.border,
     backgroundColor: "#fff",

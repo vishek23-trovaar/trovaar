@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
 
   // Cards
   card: {
-    backgroundColor: colors.white, borderRadius: radius.xl, padding: 18, marginBottom: 12,
+    backgroundColor: colors.white, borderRadius: radius.xl, padding: 18, marginBottom: 14,
     shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
   },
   cardHeader: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 14 },

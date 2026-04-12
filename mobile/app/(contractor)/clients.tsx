@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  Animated,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { api, ApiError } from "@/lib/api";
@@ -138,6 +139,12 @@ function groupJobsByConsumer(rawJobs: RawJob[]): Client[] {
 type FilterMode = "all" | "favorites";
 
 export default function Clients() {
+  const screenOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
+
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -436,7 +443,7 @@ export default function Clients() {
   };
 
   return (
-    <View style={styles.screen}>
+    <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
       {/* Search bar */}
       <View style={styles.searchContainer}>
         <View style={styles.searchBar}>
@@ -537,7 +544,7 @@ export default function Clients() {
       )}
 
       {renderDetailModal()}
-    </View>
+    </Animated.View>
   );
 }
 
@@ -556,7 +563,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: COLORS.surface,
-    borderRadius: 12,
+    borderRadius: 16,
     paddingHorizontal: 12,
     paddingVertical: 10,
     gap: 8,
@@ -804,7 +811,7 @@ const styles = StyleSheet.create({
   textInput: {
     borderWidth: 1.5,
     borderColor: COLORS.border,
-    borderRadius: 12,
+    borderRadius: 16,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 15,

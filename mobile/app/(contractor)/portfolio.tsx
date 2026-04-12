@@ -84,6 +84,12 @@ function SkeletonLoader() {
 export default function PortfolioScreen() {
   const { user } = useAuth();
   const router = useRouter();
+  const screenOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
+
   const [items, setItems] = useState<PortfolioItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -250,14 +256,15 @@ export default function PortfolioScreen() {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.screen}>
+      <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
         <SkeletonLoader />
-      </SafeAreaView>
+      </Animated.View>
     );
   }
 
   return (
-    <SafeAreaView style={styles.screen} edges={["top"]}>
+    <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
+    <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
@@ -509,6 +516,7 @@ export default function PortfolioScreen() {
         <View style={{ height: 40 }} />
       </ScrollView>
     </SafeAreaView>
+    </Animated.View>
   );
 }
 
@@ -602,7 +610,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     borderWidth: 1,
     borderColor: COLORS.border,
-    borderRadius: 12,
+    borderRadius: 16,
     marginTop: 4,
     overflow: "hidden",
   },
@@ -621,12 +629,12 @@ const styles = StyleSheet.create({
   // Photo inputs
   photoRow: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
   photoThumbWrap: { position: "relative" },
-  photoThumb: { width: 80, height: 80, borderRadius: 12 },
+  photoThumb: { width: 80, height: 80, borderRadius: 16 },
   photoRemoveBtn: { position: "absolute", top: -6, right: -6, backgroundColor: COLORS.white, borderRadius: 10 },
   addPhotoBtn: {
     width: 80,
     height: 80,
-    borderRadius: 12,
+    borderRadius: 16,
     borderWidth: 1.5,
     borderColor: COLORS.border,
     borderStyle: "dashed",
@@ -702,7 +710,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     borderWidth: 1,
     borderColor: colors.border,
-    ...shadows.sm,
+    ...shadows.md,
   },
   portfolioCardHeader: {
     flexDirection: "row",

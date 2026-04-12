@@ -62,7 +62,7 @@ const SORT_OPTIONS = [
 
 const URGENCY_CONFIG: Record<string, { bg: string; text: string; label: string; dotColor: string }> = {
   low: { bg: "#f1f5f9", text: "#64748b", label: "Low", dotColor: "#94a3b8" },
-  medium: { bg: "#eff6ff", text: "#1e40af", label: "Medium", dotColor: "#3b82f6" },
+  medium: { bg: "#eff6ff", text: "#2563eb", label: "Medium", dotColor: "#3b82f6" },
   high: { bg: "#fffbeb", text: "#d97706", label: "High", dotColor: "#f59e0b" },
   emergency: { bg: "#fef2f2", text: "#dc2626", label: "Emergency", dotColor: "#ef4444" },
 };
@@ -126,6 +126,11 @@ export default function ContractorDashboard() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
   const [showSortMenu, setShowSortMenu] = useState(false);
+  const screenOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
 
   const fetchJobs = useCallback(async () => {
     try {
@@ -240,7 +245,7 @@ export default function ContractorDashboard() {
   };
 
   return (
-    <View style={styles.screen}>
+    <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
       {/* ── Header ── */}
       <View style={styles.header}>
         <View>
@@ -381,7 +386,7 @@ export default function ContractorDashboard() {
           }
         />
       )}
-    </View>
+    </Animated.View>
   );
 }
 
@@ -546,7 +551,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.surface,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    borderRadius: 12,
+    borderRadius: 16,
     gap: 5,
   },
   categoryEmoji: { fontSize: 12, fontWeight: "700", color: COLORS.muted },
@@ -627,7 +632,7 @@ const styles = StyleSheet.create({
     gap: 6,
     paddingHorizontal: 20,
     paddingVertical: 10,
-    borderRadius: 12,
+    borderRadius: 16,
     backgroundColor: COLORS.primaryBg,
   },
   clearFilterText: { fontSize: 14, fontWeight: "600", color: COLORS.primary },

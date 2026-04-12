@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   StyleSheet,
   RefreshControl,
   ActivityIndicator,
+  Animated,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -57,6 +58,11 @@ export default function ClientNotifications() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [markingRead, setMarkingRead] = useState(false);
+  const screenOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
 
   const fetchNotifications = useCallback(async () => {
     try {
@@ -109,7 +115,7 @@ export default function ClientNotifications() {
   }
 
   return (
-    <View style={styles.screen}>
+    <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
       <FlatList
         data={notifications}
         keyExtractor={(n) => n.id}
@@ -176,7 +182,7 @@ export default function ClientNotifications() {
         contentContainerStyle={{ paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
       />
-    </View>
+    </Animated.View>
   );
 }
 
@@ -211,9 +217,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 16,
     alignItems: "flex-start",
-    gap: 12,
+    gap: 14,
   },
   rowUnread: {
     backgroundColor: "#DBEAFE",

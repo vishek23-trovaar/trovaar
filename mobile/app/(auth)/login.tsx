@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   ScrollView,
   Alert,
   Pressable,
+  Animated,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/lib/auth";
@@ -27,6 +28,15 @@ export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 400,
+      useNativeDriver: true,
+    }).start();
+  }, []);
 
   const validate = () => {
     const e: typeof errors = {};
@@ -97,10 +107,11 @@ export default function LoginScreen() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
-        <ScrollView
+        <Animated.ScrollView
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
+          style={{ opacity: fadeAnim }}
         >
           {/* Logo */}
           <View style={styles.logoBox}>
@@ -169,7 +180,7 @@ export default function LoginScreen() {
             <AppleAuthentication.AppleAuthenticationButton
               buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
               buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
-              cornerRadius={12}
+              cornerRadius={radius.lg}
               style={styles.appleButton}
               onPress={handleAppleSignIn}
             />
@@ -182,7 +193,7 @@ export default function LoginScreen() {
               <Text style={styles.footerLink}>Sign Up</Text>
             </Pressable>
           </View>
-        </ScrollView>
+        </Animated.ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -211,11 +222,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondary,
     alignItems: "center",
     justifyContent: "center",
+    ...shadows.lg,
     shadowColor: colors.secondary,
-    shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 8,
   },
   title: {
     fontSize: 30,

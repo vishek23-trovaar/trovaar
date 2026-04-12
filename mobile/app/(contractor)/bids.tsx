@@ -65,7 +65,7 @@ const CATEGORY_EMOJIS: Record<string, string> = {
 
 const URGENCY_CONFIG: Record<string, { bg: string; text: string }> = {
   low: { bg: "#f1f5f9", text: "#64748b" },
-  medium: { bg: "#eff6ff", text: "#1e40af" },
+  medium: { bg: "#eff6ff", text: "#2563eb" },
   high: { bg: "#fffbeb", text: "#d97706" },
   emergency: { bg: "#fef2f2", text: "#dc2626" },
 };
@@ -128,6 +128,11 @@ export default function MyBids() {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("all");
+  const screenOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
 
   const fetchBids = useCallback(async () => {
     try {
@@ -258,7 +263,7 @@ export default function MyBids() {
   const empty = emptyMessages[activeTab] || emptyMessages.all;
 
   return (
-    <View style={styles.screen}>
+    <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
       {/* Tab filter */}
       <View style={styles.tabContainer}>
         {TABS.map((tab) => (
@@ -315,7 +320,7 @@ export default function MyBids() {
           }
         />
       )}
-    </View>
+    </Animated.View>
   );
 }
 

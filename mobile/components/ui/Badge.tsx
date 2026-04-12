@@ -9,7 +9,7 @@ interface BadgeProps {
 }
 
 const BADGE_COLORS: Record<BadgeColor, { bg: string; text: string }> = {
-  blue: { bg: "#dbeafe", text: "#1e40af" },
+  blue: { bg: "#dbeafe", text: "#2563eb" },
   green: { bg: "#d1fae5", text: "#059669" },
   amber: { bg: "#fef3c7", text: "#d97706" },
   red: { bg: "#fee2e2", text: "#dc2626" },

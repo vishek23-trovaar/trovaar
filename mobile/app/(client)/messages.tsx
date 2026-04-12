@@ -33,7 +33,7 @@ function timeAgo(dateStr: string): string {
 
 // Avatar colors based on name
 const AVATAR_COLORS = [
-  "#1e40af", "#7c3aed", "#059669", "#d97706", "#dc2626",
+  "#2563eb", "#7c3aed", "#059669", "#d97706", "#dc2626",
   "#0891b2", "#4f46e5", "#c026d3", "#ea580c", "#16a34a",
 ];
 
@@ -96,6 +96,11 @@ export default function ClientMessages() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchVisible, setSearchVisible] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const screenOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
 
   const fetchConvos = useCallback(async () => {
     try {
@@ -145,7 +150,7 @@ export default function ClientMessages() {
   }
 
   return (
-    <View style={styles.screen}>
+    <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
       <FlatList
         data={filteredConvos}
         keyExtractor={(c) => c.job_id}
@@ -249,7 +254,7 @@ export default function ClientMessages() {
         contentContainerStyle={{ paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
       />
-    </View>
+    </Animated.View>
   );
 }
 
@@ -284,9 +289,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 16,
     alignItems: "center",
-    gap: 12,
+    gap: 14,
   },
   avatar: {
     width: 52,

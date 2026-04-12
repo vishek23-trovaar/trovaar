@@ -50,7 +50,7 @@ const URGENCY_CONFIG: Record<
   { bg: string; text: string; label: string }
 > = {
   low: { bg: "#f1f5f9", text: "#64748b", label: "Low" },
-  medium: { bg: "#eff6ff", text: "#1e40af", label: "Medium" },
+  medium: { bg: "#eff6ff", text: "#2563eb", label: "Medium" },
   high: { bg: "#fffbeb", text: "#d97706", label: "High" },
   emergency: { bg: "#fef2f2", text: "#dc2626", label: "Emergency" },
 };
@@ -73,7 +73,7 @@ const JOB_STATUS_CONFIG: Record<
   string,
   { bg: string; text: string; label: string }
 > = {
-  posted: { bg: "#eff6ff", text: "#1e40af", label: "Posted" },
+  posted: { bg: "#eff6ff", text: "#2563eb", label: "Posted" },
   bidding: { bg: "#f5f3ff", text: "#7c3aed", label: "Bidding" },
   accepted: { bg: "#ecfdf5", text: "#059669", label: "Accepted" },
   in_progress: { bg: "#fffbeb", text: "#d97706", label: "In Progress" },
@@ -168,6 +168,12 @@ export default function ContractorJobDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { user } = useAuth();
+  const screenOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
+
   const [job, setJob] = useState<Job | null>(null);
   const [myBid, setMyBid] = useState<Bid | null>(null);
   const [price, setPrice] = useState("");
@@ -397,9 +403,9 @@ export default function ContractorJobDetail() {
 
   if (loading) {
     return (
-      <View style={styles.screen}>
+      <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
         <SkeletonScreen />
-      </View>
+      </Animated.View>
     );
   }
 
@@ -442,8 +448,9 @@ export default function ContractorJobDetail() {
       job.status === "completed");
 
   return (
+    <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
     <ScrollView
-      style={styles.screen}
+      style={{ flex: 1 }}
       contentContainerStyle={styles.container}
     >
       {/* Job header */}
@@ -1079,6 +1086,7 @@ export default function ContractorJobDetail() {
       {/* Bottom safe area */}
       <View style={{ height: 40 }} />
     </ScrollView>
+    </Animated.View>
   );
 }
 
@@ -1109,7 +1117,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f1f5f9",
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 12,
+    borderRadius: 16,
     gap: 6,
     alignSelf: "flex-start",
     marginBottom: 12,
@@ -1177,7 +1185,7 @@ const styles = StyleSheet.create({
   photo: {
     width: 160,
     height: 120,
-    borderRadius: 12,
+    borderRadius: 16,
     marginRight: 10,
     backgroundColor: "#e2e8f0",
   },
@@ -1286,7 +1294,7 @@ const styles = StyleSheet.create({
     gap: 10,
     backgroundColor: COLORS.successLight,
     padding: 16,
-    borderRadius: 12,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: "#a7f3d0",
   },
@@ -1374,7 +1382,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.success,
     paddingHorizontal: 24,
     paddingVertical: 12,
-    borderRadius: 12,
+    borderRadius: 16,
   },
   backToJobsBtnText: {
     color: COLORS.white,
@@ -1441,7 +1449,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f3ff",
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 12,
+    borderRadius: 16,
     gap: 4,
     marginTop: 10,
   },
@@ -1451,7 +1459,7 @@ const styles = StyleSheet.create({
   portfolioGateCard: {
     flexDirection: "row",
     backgroundColor: "#fffbeb",
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 14,
     gap: 10,
     marginBottom: 16,
@@ -1468,7 +1476,7 @@ const styles = StyleSheet.create({
     gap: 8,
     backgroundColor: "#eff6ff",
     padding: 14,
-    borderRadius: 12,
+    borderRadius: 16,
     marginBottom: 12,
     borderWidth: 1,
     borderColor: "#bfdbfe",
@@ -1476,7 +1484,7 @@ const styles = StyleSheet.create({
   aiInsightBtnText: { fontSize: 14, fontWeight: "600", color: COLORS.primaryLight },
   priceEstimateCard: {
     backgroundColor: "#f8fafc",
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 14,
     marginBottom: 16,
     borderWidth: 1,
@@ -1492,7 +1500,7 @@ const styles = StyleSheet.create({
   bidTypeToggle: {
     flexDirection: "row",
     backgroundColor: "#f1f5f9",
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 4,
     marginBottom: 14,
   },

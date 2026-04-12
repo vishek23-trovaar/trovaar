@@ -105,6 +105,12 @@ function BarChart({ data }: { data: number[] }) {
 }
 
 export default function Earnings() {
+  const screenOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
+
   const [total, setTotal] = useState(0);
   const [thisWeek, setThisWeek] = useState(0);
   const [thisMonth, setThisMonth] = useState(0);
@@ -253,7 +259,7 @@ export default function Earnings() {
 
   if (loading) {
     return (
-      <View style={styles.screen}>
+      <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
         <View style={[styles.heroCard, { opacity: 0.5 }]}>
           <View style={styles.heroGradient}>
             <View style={{ width: 100, height: 14, borderRadius: 7, backgroundColor: "rgba(255,255,255,0.3)", marginBottom: 8 }} />
@@ -265,12 +271,12 @@ export default function Earnings() {
           <SkeletonCard delay={200} />
           <SkeletonCard delay={400} />
         </View>
-      </View>
+      </Animated.View>
     );
   }
 
   return (
-    <View style={styles.screen}>
+    <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
       <FlatList
         data={filteredItems}
         keyExtractor={(_, i) => String(i)}
@@ -288,7 +294,7 @@ export default function Earnings() {
           </View>
         }
       />
-    </View>
+    </Animated.View>
   );
 }
 
@@ -363,7 +369,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderWidth: 1,
     borderColor: colors.border,
-    ...shadows.sm,
+    ...shadows.md,
   },
   chartTitle: {
     fontSize: 14,
@@ -417,7 +423,7 @@ const styles = StyleSheet.create({
   earningIcon: {
     width: 40,
     height: 40,
-    borderRadius: 12,
+    borderRadius: 16,
     backgroundColor: "#f1f5f9",
     justifyContent: "center",
     alignItems: "center",

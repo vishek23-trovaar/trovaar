@@ -72,6 +72,11 @@ export default function ContractorMessages() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const screenOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
 
   const fetchConvos = useCallback(async () => {
     try {
@@ -152,14 +157,14 @@ export default function ContractorMessages() {
 
   if (error) {
     return (
-      <View style={[styles.screen, { justifyContent: 'center', alignItems: 'center' }]}>
+      <Animated.View style={[styles.screen, { justifyContent: 'center', alignItems: 'center', opacity: screenOpacity }]}>
         <Text style={{ color: '#dc2626', fontSize: 15, textAlign: 'center', paddingHorizontal: 24 }}>{error}</Text>
-      </View>
+      </Animated.View>
     );
   }
 
   return (
-    <View style={styles.screen}>
+    <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
       {/* Search bar */}
       <View style={styles.searchContainer}>
         <View style={styles.searchBar}>
@@ -212,7 +217,7 @@ export default function ContractorMessages() {
           contentContainerStyle={{ paddingBottom: 40 }}
         />
       )}
-    </View>
+    </Animated.View>
   );
 }
 

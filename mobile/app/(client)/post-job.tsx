@@ -81,6 +81,11 @@ export default function PostJobScreen() {
   const progressAnim = useRef(
     new Animated.Value(1 / TOTAL_STEPS)
   ).current;
+  const screenOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
 
   // Form state
   const [category, setCategory] = useState(params.category || "");
@@ -308,7 +313,7 @@ export default function PostJobScreen() {
   }
 
   return (
-    <View style={styles.screen}>
+    <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
       {/* Progress Bar */}
       <View style={styles.progressContainer}>
         <View style={styles.progressTrack}>
@@ -768,7 +773,7 @@ export default function PostJobScreen() {
           </ScrollView>
         )}
       </Animated.View>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -880,7 +885,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderWidth: 1.5,
     borderColor: colors.border,
-    marginBottom: 16,
+    marginBottom: 18,
   },
   uploadPlaceholder: {
     alignItems: "center",

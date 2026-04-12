@@ -153,6 +153,7 @@ function FriendRow({ friend }: { friend: ReferralFriend }) {
 
 export default function ReferralScreen() {
   const { user } = useAuth();
+  const screenOpacity = useRef(new Animated.Value(0)).current;
   const [data, setData] = useState<ReferralData | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -175,6 +176,10 @@ export default function ReferralScreen() {
   useEffect(() => {
     fetchReferrals();
   }, [fetchReferrals]);
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -356,7 +361,7 @@ export default function ReferralScreen() {
   const referrals = data?.referrals ?? [];
 
   return (
-    <View style={styles.screen}>
+    <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Refer & Earn</Text>
@@ -389,7 +394,7 @@ export default function ReferralScreen() {
           </View>
         }
       />
-    </View>
+    </Animated.View>
   );
 }
 
@@ -413,7 +418,7 @@ const styles = StyleSheet.create({
   listContent: {
     padding: 16,
     paddingBottom: 100,
-    gap: 12,
+    gap: 14,
   },
 
   // Hero card

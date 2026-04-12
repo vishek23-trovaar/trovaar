@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Alert,
   RefreshControl,
+  Animated,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { api, ApiError, getToken, API_URL } from "@/lib/api";
@@ -96,6 +97,12 @@ function buildTaxFromEarnings(items: EarningItem[], year: number): TaxSummary {
 }
 
 export default function Tax() {
+  const screenOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
+
   const [selectedYear, setSelectedYear] = useState(CURRENT_YEAR);
   const [summary, setSummary] = useState<TaxSummary | null>(null);
   const [loading, setLoading] = useState(true);
@@ -190,7 +197,7 @@ export default function Tax() {
     summary !== null && summary.total_earned >= W9_THRESHOLD_CENTS;
 
   return (
-    <View style={styles.screen}>
+    <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
@@ -413,7 +420,7 @@ export default function Tax() {
 
         <View style={{ height: 40 }} />
       </ScrollView>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -479,7 +486,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderWidth: 1,
     borderColor: colors.border,
-    ...shadows.sm,
+    ...shadows.md,
     marginBottom: 4,
   },
   summaryCardPrimary: {
@@ -513,7 +520,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: 4,
     backgroundColor: "#fffbeb",
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 12,
     borderWidth: 1,
     borderColor: "#fde68a",

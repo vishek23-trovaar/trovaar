@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -37,7 +37,16 @@ export default function SignupScreen() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 400,
+      useNativeDriver: true,
+    }).start();
+  }, []);
 
   const animateStep = (direction: "forward" | "back") => {
     const from = direction === "forward" ? SCREEN_WIDTH : -SCREEN_WIDTH;
@@ -252,6 +261,7 @@ export default function SignupScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
+      <Animated.View style={{ flex: 1, opacity: fadeAnim }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
@@ -285,6 +295,7 @@ export default function SignupScreen() {
           </Pressable>
         </View>
       </KeyboardAvoidingView>
+      </Animated.View>
     </SafeAreaView>
   );
 }
@@ -360,6 +371,7 @@ const styles = StyleSheet.create({
   roleCardActive: {
     borderColor: colors.primary,
     backgroundColor: "#EFF6FF",
+    ...shadows.md,
   },
   roleIconBox: {
     width: 52,

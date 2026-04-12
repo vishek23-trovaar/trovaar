@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
   Switch,
   Image,
   Platform,
+  Animated,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -210,6 +211,12 @@ function TrustBadge({
 export default function ContractorProfile() {
   const { user, logout, refreshUser } = useAuth();
   const router = useRouter();
+  const screenOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
+
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [location, setLocation] = useState("");
@@ -516,7 +523,7 @@ export default function ContractorProfile() {
   }
 
   return (
-    <View style={styles.screen}>
+    <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
@@ -1376,7 +1383,7 @@ export default function ContractorProfile() {
           </TouchableOpacity>
         </View>
       )}
-    </View>
+    </Animated.View>
   );
 }
 
@@ -1496,7 +1503,7 @@ const styles = StyleSheet.create({
     gap: 6,
     paddingHorizontal: 14,
     paddingVertical: 10,
-    borderRadius: 12,
+    borderRadius: 16,
     borderWidth: 1,
   },
   trustBadgeVerified: {
@@ -1669,7 +1676,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     borderWidth: 1,
     borderColor: colors.border,
-    ...shadows.sm,
+    ...shadows.md,
   },
   settingsRow: {
     flexDirection: "row",
@@ -1790,7 +1797,7 @@ const styles = StyleSheet.create({
   verificationBadge: {
     paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 12,
+    borderRadius: 16,
   },
   verificationBadgeText: { fontSize: 12, fontWeight: "600" },
 
@@ -1802,7 +1809,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 24,
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: 16,
     borderWidth: 1.5,
     borderColor: COLORS.danger,
     backgroundColor: COLORS.white,
@@ -1827,7 +1834,7 @@ const styles = StyleSheet.create({
   portfolioPreviewIconWrap: {
     width: 44,
     height: 44,
-    borderRadius: 12,
+    borderRadius: 16,
     backgroundColor: "#eff6ff",
     justifyContent: "center",
     alignItems: "center",
@@ -1912,7 +1919,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 10,
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: 16,
     alignItems: "center",
     marginBottom: 8,
   },
@@ -1934,7 +1941,7 @@ const styles = StyleSheet.create({
   saveBtn: {
     backgroundColor: COLORS.pro,
     paddingVertical: 16,
-    borderRadius: 12,
+    borderRadius: 16,
     alignItems: "center",
   },
   saveBtnText: { color: COLORS.white, fontSize: 16, fontWeight: "700" },

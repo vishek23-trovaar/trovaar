@@ -26,9 +26,9 @@ interface ButtonProps {
 }
 
 const COLORS = {
-  primary: { bg: "#1e40af", text: "#ffffff", pressed: "#1e3a8a", border: "transparent" },
-  secondary: { bg: "transparent", text: "#1e40af", pressed: "#eff6ff", border: "#1e40af" },
-  danger: { bg: "#dc2626", text: "#ffffff", pressed: "#b91c1c", border: "transparent" },
+  primary: { bg: "#2563eb", text: "#ffffff", pressed: "#1d4ed8", border: "transparent" },
+  secondary: { bg: "transparent", text: "#2563eb", pressed: "#eff6ff", border: "#2563eb" },
+  danger: { bg: "#ef4444", text: "#ffffff", pressed: "#dc2626", border: "transparent" },
   ghost: { bg: "transparent", text: "#64748b", pressed: "#f1f5f9", border: "transparent" },
 };
 
@@ -110,10 +110,10 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   shadow: {
-    shadowColor: "#1e40af",
+    shadowColor: "#2563eb",
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    elevation: 6,
   },
 });

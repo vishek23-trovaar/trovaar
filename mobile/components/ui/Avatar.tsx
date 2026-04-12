@@ -24,7 +24,7 @@ const FONT_MAP: Record<AvatarSize, number> = {
 };
 
 const PALETTE = [
-  "#1e40af", "#7c3aed", "#0891b2", "#059669",
+  "#2563eb", "#7c3aed", "#0891b2", "#059669",
   "#d97706", "#dc2626", "#9333ea", "#2563eb",
 ];
 

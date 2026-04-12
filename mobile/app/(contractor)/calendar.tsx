@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   Switch,
   ActivityIndicator,
   Alert,
+  Animated,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { api, ApiError } from "@/lib/api";
@@ -86,6 +87,12 @@ function formatTime(timeStr?: string): string {
 }
 
 export default function ContractorCalendar() {
+  const screenOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
+
   const today = new Date();
   const [viewYear, setViewYear] = useState(today.getFullYear());
   const [viewMonth, setViewMonth] = useState(today.getMonth());
@@ -380,14 +387,14 @@ export default function ContractorCalendar() {
   );
 
   return (
-    <View style={styles.screen}>
+    <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 20 }}
       >
         {renderHeader()}
       </ScrollView>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -406,7 +413,7 @@ const styles = StyleSheet.create({
   navBtn: {
     width: 40,
     height: 40,
-    borderRadius: 12,
+    borderRadius: 16,
     backgroundColor: COLORS.surface,
     justifyContent: "center",
     alignItems: "center",

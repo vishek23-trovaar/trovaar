@@ -142,6 +142,11 @@ export default function ClientDashboard() {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [surgeCategories, setSurgeCategories] = useState<SurgeCategory[]>([]);
+  const screenOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
 
   const fetchJobs = useCallback(async () => {
     try {
@@ -184,7 +189,7 @@ export default function ClientDashboard() {
   }
 
   return (
-    <View style={styles.screen}>
+    <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
       <FlatList
         data={activeJobs}
         keyExtractor={(j) => j.id}
@@ -388,7 +393,7 @@ export default function ClientDashboard() {
           <Ionicons name="add" size={28} color={colors.white} />
         </TouchableOpacity>
       )}
-    </View>
+    </Animated.View>
   );
 }
 
@@ -403,7 +408,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xl,
     borderWidth: 1,
     borderColor: colors.border,
-    ...shadows.md,
+    ...shadows.lg,
   },
   heroTop: {
     flexDirection: "row",
@@ -465,7 +470,7 @@ const styles = StyleSheet.create({
   sectionHeader: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 14,
+    marginBottom: 16,
     gap: 8,
   },
   sectionTitle: { fontSize: 18, fontWeight: "700", color: colors.text },
@@ -485,10 +490,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: radius.lg,
     padding: 18,
-    marginBottom: spacing.lg,
+    marginBottom: 14,
     borderWidth: 1,
     borderColor: colors.border,
-    ...shadows.sm,
+    ...shadows.md,
   },
   cardTop: {
     flexDirection: "row",

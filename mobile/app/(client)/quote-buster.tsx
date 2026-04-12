@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Image,
+  Animated,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,7 +17,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import { api, API_URL, getToken } from "@/lib/api";
 import { Button } from "@/components/ui";
-import { colors, spacing, radius, typography } from "../../lib/theme";
+import { colors, spacing, radius, typography, shadows } from "../../lib/theme";
 
 const CATEGORIES = [
   { value: "plumbing", label: "Plumbing", emoji: "\u{1F527}" },
@@ -50,6 +51,7 @@ interface QuoteBustResult {
 
 export default function QuoteBusterScreen() {
   const router = useRouter();
+  const screenOpacity = useRef(new Animated.Value(0)).current;
   const [category, setCategory] = useState("");
   const [quoteAmount, setQuoteAmount] = useState("");
   const [description, setDescription] = useState("");
@@ -57,6 +59,10 @@ export default function QuoteBusterScreen() {
   const [result, setResult] = useState<QuoteBustResult | null>(null);
   const [quoteImageUri, setQuoteImageUri] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
 
   function formatCurrency(n: number) {
     return "$" + n.toLocaleString("en-US", { maximumFractionDigits: 0 });
@@ -122,6 +128,7 @@ export default function QuoteBusterScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={["bottom"]}>
+      <Animated.View style={{ flex: 1, opacity: screenOpacity }}>
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
@@ -321,6 +328,7 @@ export default function QuoteBusterScreen() {
           </View>
         )}
       </ScrollView>
+      </Animated.View>
     </SafeAreaView>
   );
 }
@@ -450,7 +458,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.lg,
     padding: spacing["2xl"],
     alignItems: "center",
-    ...shadows.sm,
+    ...shadows.lg,
   },
   savingsLabel: { ...typography.caption, color: colors.success },
   savingsAmount: { fontSize: 40, fontWeight: "800", color: colors.success, marginVertical: 4 },
@@ -463,7 +471,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     borderRadius: radius.lg,
     padding: spacing.xl,
-    ...shadows.sm,
+    ...shadows.md,
   },
   comparisonTitle: { ...typography.caption, fontWeight: "700", color: colors.text, marginBottom: spacing.lg },
   barGroup: { marginBottom: spacing.lg },
@@ -480,7 +488,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     borderRadius: radius.lg,
     padding: spacing.xl,
-    ...shadows.sm,
+    ...shadows.md,
   },
   breakdownTitle: { ...typography.caption, fontWeight: "700", color: colors.text, marginBottom: 8 },
   breakdownText: { ...typography.body, color: colors.muted, lineHeight: 22 },
@@ -503,7 +511,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.lg,
     padding: spacing["2xl"],
     alignItems: "center",
-    ...shadows.md,
+    ...shadows.lg,
   },
   ctaTitle: { ...typography.h4, color: colors.white, marginBottom: 4 },
   ctaSubtitle: { ...typography.body, color: "#93c5fd", marginBottom: spacing.xl },

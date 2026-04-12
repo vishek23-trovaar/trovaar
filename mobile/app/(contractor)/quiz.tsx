@@ -84,6 +84,12 @@ function SkeletonLoader() {
 
 export default function QuizScreen() {
   const { user } = useAuth();
+  const screenOpacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
+  }, [screenOpacity]);
+
   const [screenState, setScreenState] = useState<ScreenState>("categories");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -211,7 +217,8 @@ export default function QuizScreen() {
   // Category selection screen
   if (screenState === "categories") {
     return (
-      <SafeAreaView style={styles.screen} edges={["top"]}>
+      <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
+      <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
         <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
             <Text style={styles.headerTitle}>Skills Assessment</Text>
@@ -255,6 +262,7 @@ export default function QuizScreen() {
           <View style={{ height: 40 }} />
         </ScrollView>
       </SafeAreaView>
+      </Animated.View>
     );
   }
 
@@ -262,12 +270,12 @@ export default function QuizScreen() {
   if (screenState === "quiz") {
     if (submitting) {
       return (
-        <SafeAreaView style={styles.screen} edges={["top"]}>
+        <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
           <View style={styles.centerContent}>
             <ActivityIndicator size="large" color={COLORS.primary} />
             <Text style={styles.submittingText}>Submitting your answers...</Text>
           </View>
-        </SafeAreaView>
+        </Animated.View>
       );
     }
 
@@ -276,7 +284,8 @@ export default function QuizScreen() {
     const timerColor = timer <= 10 ? COLORS.danger : timer <= 20 ? COLORS.warning : COLORS.success;
 
     return (
-      <SafeAreaView style={styles.screen} edges={["top"]}>
+      <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
+      <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
         <View style={styles.quizContainer}>
           {/* Quiz Header */}
           <View style={styles.quizHeader}>
@@ -364,6 +373,7 @@ export default function QuizScreen() {
           </View>
         </View>
       </SafeAreaView>
+      </Animated.View>
     );
   }
 
@@ -374,7 +384,8 @@ export default function QuizScreen() {
     const cooldownUntil = result.cooldown_until ? new Date(result.cooldown_until) : null;
 
     return (
-      <SafeAreaView style={styles.screen} edges={["top"]}>
+      <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
+      <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
         <ScrollView contentContainerStyle={styles.resultsContainer} showsVerticalScrollIndicator={false}>
           <View style={[styles.resultIconWrap, passed ? styles.resultIconPass : styles.resultIconFail]}>
             <Ionicons
@@ -439,6 +450,7 @@ export default function QuizScreen() {
           </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
+      </Animated.View>
     );
   }
 
@@ -483,7 +495,7 @@ const styles = StyleSheet.create({
     gap: 14,
     borderWidth: 1,
     borderColor: colors.border,
-    ...shadows.sm,
+    ...shadows.md,
   },
   categoryIconWrap: {
     width: 48,
@@ -511,7 +523,7 @@ const styles = StyleSheet.create({
     gap: 4,
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 12,
+    borderRadius: 16,
   },
   timerText: { fontSize: 16, fontWeight: "800" },
 
