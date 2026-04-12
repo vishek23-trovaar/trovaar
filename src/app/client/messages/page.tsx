@@ -251,7 +251,7 @@ export default function ClientMessagesPage() {
         } md:flex flex-col w-full md:w-[360px] border-r border-gray-200 bg-white`}
       >
         {/* Sidebar header */}
-        <div className="px-4 py-4 border-b border-gray-100">
+        <div className="px-4 py-4 border-b border-gray-100 bg-gradient-to-r from-white to-gray-50/80 backdrop-blur-sm">
           <h1 className="text-2xl font-bold text-gray-900">Chats</h1>
           {totalUnread > 0 && (
             <p className="text-xs text-primary font-medium mt-0.5">
@@ -262,7 +262,7 @@ export default function ClientMessagesPage() {
 
         {/* Search placeholder */}
         <div className="px-3 py-2">
-          <div className="flex items-center gap-2 bg-gray-100 rounded-full px-3 py-2">
+          <div className="flex items-center gap-2 bg-gray-100/80 backdrop-blur-sm rounded-full px-3 py-2 transition-all duration-300 hover:bg-gray-100">
             <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
@@ -289,8 +289,8 @@ export default function ClientMessagesPage() {
               <button
                 key={conv.job_id}
                 onClick={() => selectConversation(conv.job_id)}
-                className={`w-full flex items-center gap-3 px-3 py-3 hover:bg-gray-50 transition-colors text-left ${
-                  activeJobId === conv.job_id ? "bg-primary/5" : ""
+                className={`w-full flex items-center gap-3 px-3 py-3 hover:bg-gray-50 transition-all duration-200 text-left ${
+                  activeJobId === conv.job_id ? "bg-primary/5 border-l-2 border-primary" : "border-l-2 border-transparent"
                 }`}
               >
                 {/* Avatar */}
@@ -355,7 +355,7 @@ export default function ClientMessagesPage() {
         ) : (
           <>
             {/* Chat header */}
-            <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-200 bg-white shadow-sm">
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-200 bg-white/90 backdrop-blur-sm shadow-sm">
               {/* Back button — mobile only */}
               <button
                 onClick={() => { setShowSidebar(true); setActiveJobId(null); }}
@@ -474,7 +474,7 @@ export default function ClientMessagesPage() {
             </div>
 
             {/* Input area */}
-            <div className="px-4 py-3 border-t border-gray-200 bg-white">
+            <div className="px-4 py-3 border-t border-gray-200 bg-white/90 backdrop-blur-sm">
               <div className="flex items-center gap-2">
                 <input
                   ref={inputRef}

@@ -172,19 +172,19 @@ export default function AdminSubscriptionsPage() {
       {/* KPI cards */}
       {kpis && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 hover:shadow-lg transition-all duration-300">
             <p className="text-xs text-slate-400 font-medium uppercase tracking-wide mb-1">Total Active Subscribers</p>
             <p className="text-3xl font-extrabold text-slate-900">{kpis.totalActiveSubscribers}</p>
             {cancellingCount > 0 && (
               <p className="text-xs text-amber-600 mt-1">{cancellingCount} pending cancellation</p>
             )}
           </div>
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 hover:shadow-lg transition-all duration-300">
             <p className="text-xs text-slate-400 font-medium uppercase tracking-wide mb-1">Monthly Recurring Revenue</p>
             <p className="text-3xl font-extrabold text-emerald-600">{formatPrice(kpis.monthlyRecurringRevenue)}</p>
             <p className="text-xs text-slate-400 mt-1">From active subscribers only</p>
           </div>
-          <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-5">
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 hover:shadow-lg transition-all duration-300">
             <p className="text-xs text-slate-400 font-medium uppercase tracking-wide mb-1">Active Plans</p>
             <p className="text-3xl font-extrabold text-slate-900">{kpis.activePlans}</p>
             <p className="text-xs text-slate-400 mt-1">of {plans.length} total plans</p>
@@ -193,7 +193,7 @@ export default function AdminSubscriptionsPage() {
       )}
 
       {/* Plans table */}
-      <div className="bg-white rounded-xl border border-slate-100 shadow-sm mb-8 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm mb-8 overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100">
           <h2 className="font-bold text-slate-900">Subscription Plans</h2>
         </div>
@@ -339,7 +339,7 @@ export default function AdminSubscriptionsPage() {
       </div>
 
       {/* Subscribers table */}
-      <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
           <h2 className="font-bold text-slate-900">Subscribers</h2>
           <span className="text-xs text-slate-400">{activeSubs.length} active</span>

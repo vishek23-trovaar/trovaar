@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 import { CATEGORY_GROUPS } from "@/lib/constants";
 
 interface QuoteBustResult {
@@ -141,6 +142,7 @@ export default function QuoteBusterPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* Form */}
+          <ScrollReveal delay={100}>
           <div>
             <h2 className="text-xl font-bold text-secondary mb-1">Enter your quote</h2>
             <p className="text-sm text-muted mb-6">Upload the actual quote document and we&apos;ll compare it against real local pro rates.</p>
@@ -280,7 +282,10 @@ export default function QuoteBusterPage() {
             </form>
           </div>
 
+          </ScrollReveal>
+
           {/* Results */}
+          <ScrollReveal delay={200} direction="right">
           <div>
             {!result && !loading && (
               <div className="h-full flex items-center justify-center">
@@ -307,7 +312,7 @@ export default function QuoteBusterPage() {
             {result && (
               <div className="space-y-5">
                 {/* Savings headline */}
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-6 text-center">
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-6 text-center shadow-sm">
                   <p className="text-sm font-medium text-green-700 mb-1">You could save up to</p>
                   <p className="text-4xl sm:text-5xl font-extrabold text-green-600 mb-1">
                     {formatCurrency(result.savingsHigh)}
@@ -320,7 +325,7 @@ export default function QuoteBusterPage() {
                 </div>
 
                 {/* Price comparison bar */}
-                <div className="bg-white border border-border rounded-2xl p-6">
+                <div className="bg-white border border-border rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
                   <h3 className="text-sm font-semibold text-secondary mb-4">Price Comparison</h3>
 
                   {/* Their quote */}
@@ -352,14 +357,14 @@ export default function QuoteBusterPage() {
                 </div>
 
                 {/* Breakdown */}
-                <div className="bg-slate-50 border border-border rounded-2xl p-6">
+                <div className="bg-slate-50 border border-border rounded-2xl p-6 shadow-sm">
                   <h3 className="text-sm font-semibold text-secondary mb-2">Why the difference?</h3>
                   <p className="text-sm text-muted leading-relaxed">{result.breakdown}</p>
                 </div>
 
                 {/* Tips */}
                 {result.tips.length > 0 && (
-                  <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6">
+                  <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 shadow-sm">
                     <h3 className="text-sm font-semibold text-blue-800 mb-3">Pro tips</h3>
                     <ul className="space-y-2">
                       {result.tips.map((tip, i) => (
@@ -389,6 +394,7 @@ export default function QuoteBusterPage() {
               </div>
             )}
           </div>
+          </ScrollReveal>
         </div>
       </div>
     </div>

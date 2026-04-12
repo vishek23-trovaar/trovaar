@@ -9,6 +9,7 @@ import PhoneVerifyWidget from "@/components/auth/PhoneVerifyWidget";
 import { SurgeBanner } from "@/components/insights/SurgeBanner";
 import PushNotificationPrompt from "@/components/PushNotificationPrompt";
 import dynamic from "next/dynamic";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 const JobMap = dynamic(() => import("@/components/map/JobMap"), { ssr: false });
 
@@ -231,12 +232,13 @@ export default function ContractorDashboard() {
       <PushNotificationPrompt />
 
       {/* Quick Actions */}
+      <ScrollReveal delay={0}>
       <div className="grid grid-cols-3 gap-3 mb-6">
         <Link
           href="/contractor/calendar"
-          className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 hover:shadow-md hover:border-blue-200 transition-all flex items-center gap-3"
+          className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 hover:shadow-lg hover:-translate-y-0.5 hover:border-blue-200 transition-all duration-300 flex items-center gap-3"
         >
-          <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-xl">
+          <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-xl">
             📅
           </div>
           <div>
@@ -246,9 +248,9 @@ export default function ContractorDashboard() {
         </Link>
         <Link
           href="/contractor/invoices"
-          className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 hover:shadow-md hover:border-blue-200 transition-all flex items-center gap-3"
+          className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 hover:shadow-lg hover:-translate-y-0.5 hover:border-blue-200 transition-all duration-300 flex items-center gap-3"
         >
-          <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center text-xl">
+          <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center text-xl">
             📄
           </div>
           <div>
@@ -258,9 +260,9 @@ export default function ContractorDashboard() {
         </Link>
         <Link
           href="/contractor/clients"
-          className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 hover:shadow-md hover:border-blue-200 transition-all flex items-center gap-3"
+          className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 hover:shadow-lg hover:-translate-y-0.5 hover:border-blue-200 transition-all duration-300 flex items-center gap-3"
         >
-          <div className="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center text-xl">
+          <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-xl">
             👥
           </div>
           <div>
@@ -269,36 +271,40 @@ export default function ContractorDashboard() {
           </div>
         </Link>
       </div>
+      </ScrollReveal>
 
       {/* Stats bar */}
+      <ScrollReveal delay={100}>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 text-center">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
           <p className="text-xl font-bold text-amber-600">
             {profile?.rating && profile.rating > 0 ? `${profile.rating.toFixed(1)} ⭐` : "—"}
           </p>
           <p className="text-xs text-gray-500 mt-1">Rating</p>
         </div>
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 text-center">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
           <p className="text-xl font-bold text-indigo-600">{stats?.total_bids ?? 0}</p>
           <p className="text-xs text-gray-500 mt-1">Bids Submitted</p>
         </div>
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 text-center">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
           <p className="text-xl font-bold text-green-600">{stats?.accepted_bids ?? 0}</p>
           <p className="text-xs text-gray-500 mt-1">Jobs Won</p>
         </div>
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 text-center">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
           <p className="text-xl font-bold text-blue-600">{formatResponseTime(stats?.avg_response_hours ?? null)}</p>
           <p className="text-xs text-gray-500 mt-1">Avg Response</p>
         </div>
       </div>
+      </ScrollReveal>
 
       {/* Surge Banner */}
       <SurgeBanner />
 
       {/* Referral Banner */}
+      <ScrollReveal delay={200}>
       <Link
         href="/referrals"
-        className="flex items-center justify-between gap-3 mb-6 bg-indigo-50 border border-indigo-200 rounded-xl px-5 py-3.5 hover:bg-indigo-100 transition-colors"
+        className="flex items-center justify-between gap-3 mb-6 bg-indigo-50 border border-indigo-200 rounded-2xl px-5 py-3.5 hover:bg-indigo-100 hover:shadow-md transition-all duration-300"
       >
         <div className="flex items-center gap-3 min-w-0">
           <span className="text-xl shrink-0">🎁</span>
@@ -308,6 +314,7 @@ export default function ContractorDashboard() {
         </div>
         <span className="text-indigo-600 text-sm font-semibold shrink-0">Invite &amp; Earn →</span>
       </Link>
+      </ScrollReveal>
 
       {/* Tabs */}
       <div className="flex gap-1 bg-gray-100 p-1 rounded-xl mb-6 w-fit">
@@ -443,7 +450,7 @@ export default function ContractorDashboard() {
               {filteredJobs.map((job) => {
                 const photos = (() => { try { return JSON.parse(job.photos || "[]"); } catch { return []; } })();
                 return (
-                  <div key={job.id} className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow flex flex-col">
+                  <div key={job.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col">
                     {/* Thumbnail */}
                     {photos.length > 0 ? (
                       <img src={photos[0]} alt="" className="w-full h-36 object-cover" />

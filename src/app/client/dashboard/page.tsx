@@ -9,6 +9,7 @@ import NearbyContractorsBanner from "@/components/dashboard/NearbyContractorsBan
 import PhoneVerifyWidget from "@/components/auth/PhoneVerifyWidget";
 import { ConsumerSurgeBanner } from "@/components/insights/ConsumerSurgeBanner";
 import PushNotificationPrompt from "@/components/PushNotificationPrompt";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 function getCategoryIcon(value: string): string {
   for (const g of CATEGORY_GROUPS) {
@@ -200,18 +201,22 @@ export default function ClientDashboard() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        {stats.map((stat) => (
-          <div key={stat.label} className={`${stat.bg} rounded-xl p-4 text-center`}>
-            <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
-            <p className="text-xs text-gray-500 mt-1">{stat.label}</p>
-          </div>
+        {stats.map((stat, i) => (
+          <ScrollReveal key={stat.label} delay={i * 80}>
+            <div className={`${stat.bg} rounded-2xl p-4 text-center border border-white/60 backdrop-blur-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300`}>
+              <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
+              <p className="text-xs text-gray-500 mt-1">{stat.label}</p>
+            </div>
+          </ScrollReveal>
         ))}
       </div>
 
       {/* Surge Banner */}
-      <div className="mb-6">
-        <ConsumerSurgeBanner />
-      </div>
+      <ScrollReveal delay={100}>
+        <div className="mb-6">
+          <ConsumerSurgeBanner />
+        </div>
+      </ScrollReveal>
 
       {/* Jobs list */}
       {loading ? (
@@ -220,7 +225,7 @@ export default function ClientDashboard() {
         </div>
       ) : jobs.length === 0 ? (
         /* Empty state */
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-16 text-center">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-16 text-center">
           <div className="text-5xl mb-4">📋</div>
           <h2 className="text-xl font-semibold text-gray-900 mb-2">No jobs yet</h2>
           <p className="text-gray-500 text-sm mb-8 max-w-sm mx-auto">
@@ -235,8 +240,9 @@ export default function ClientDashboard() {
         </div>
       ) : (
         <div className="space-y-3">
-          {jobs.map((job) => (
-            <div key={job.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow">
+          {jobs.map((job, i) => (
+            <ScrollReveal key={job.id} delay={i * 60}>
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
               <div className="flex items-start gap-4">
                 {/* Category icon */}
                 <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center text-xl shrink-0">
@@ -310,6 +316,7 @@ export default function ClientDashboard() {
                 </div>
               </div>
             </div>
+            </ScrollReveal>
           ))}
         </div>
       )}

@@ -170,8 +170,8 @@ export default function UserDisputesPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
-      <div className="flex items-center justify-between mb-8">
+    <div className="max-w-5xl mx-auto px-4 py-10">
+      <div className="flex items-center justify-between mb-8" style={{ animation: "fadeInUp 0.5s ease-out" }}>
         <div>
           <h1 className="text-2xl font-bold text-slate-900">My Disputes</h1>
           <p className="text-sm text-slate-500 mt-1">View and manage disputes related to your jobs</p>
@@ -183,7 +183,7 @@ export default function UserDisputesPage() {
           <div className="animate-spin w-8 h-8 border-4 border-indigo-400 border-t-transparent rounded-full" />
         </div>
       ) : disputes.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
+        <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center shadow-sm">
           <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -204,7 +204,7 @@ export default function UserDisputesPage() {
                     <button
                       key={d.id}
                       onClick={() => { setSelectedId(d.id); setActionError(null); setActionSuccess(null); }}
-                      className={`w-full text-left bg-white rounded-xl border p-4 transition-all cursor-pointer hover:shadow-sm ${
+                      className={`w-full text-left bg-white rounded-xl border p-4 transition-all duration-200 cursor-pointer hover:shadow-md hover:-translate-y-0.5 ${
                         selectedId === d.id ? "border-indigo-400 ring-2 ring-indigo-100" : "border-slate-200"
                       }`}
                     >
@@ -228,7 +228,7 @@ export default function UserDisputesPage() {
                     <button
                       key={d.id}
                       onClick={() => { setSelectedId(d.id); setActionError(null); setActionSuccess(null); }}
-                      className={`w-full text-left bg-white rounded-xl border p-4 transition-all cursor-pointer hover:shadow-sm ${
+                      className={`w-full text-left bg-white rounded-xl border p-4 transition-all duration-200 cursor-pointer hover:shadow-md hover:-translate-y-0.5 ${
                         selectedId === d.id ? "border-indigo-400 ring-2 ring-indigo-100" : "border-slate-200"
                       }`}
                     >
@@ -248,7 +248,7 @@ export default function UserDisputesPage() {
           {/* Right: Detail panel */}
           <div className="lg:col-span-2">
             {!selected ? (
-              <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
+              <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center shadow-sm">
                 <div className="w-14 h-14 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-3">
                   <svg className="w-7 h-7 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -259,7 +259,7 @@ export default function UserDisputesPage() {
             ) : (
               <div className="space-y-4">
                 {/* Header */}
-                <div className="bg-white rounded-2xl border border-slate-200 p-6">
+                <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
                   <div className="flex items-start justify-between gap-3 mb-4">
                     <div>
                       <h2 className="text-lg font-bold text-slate-900">{selected.job_title}</h2>
@@ -308,7 +308,7 @@ export default function UserDisputesPage() {
                 </div>
 
                 {/* Status Timeline */}
-                <div className="bg-white rounded-2xl border border-slate-200 p-6">
+                <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
                   <h3 className="text-sm font-bold text-slate-800 mb-4">Dispute Status</h3>
                   <div className="space-y-0">
                     <TimelineStep
@@ -338,7 +338,7 @@ export default function UserDisputesPage() {
 
                 {/* Resolution details */}
                 {selected.resolution_type && selected.resolution_type !== "pending" && (
-                  <div className="bg-white rounded-2xl border border-slate-200 p-6">
+                  <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
                     <h3 className="text-sm font-bold text-slate-800 mb-4">Resolution Details</h3>
 
                     <div className="grid grid-cols-3 gap-4 text-sm mb-4">

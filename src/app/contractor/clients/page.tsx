@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 interface ClientRow {
   consumer_id: string;
@@ -144,24 +145,26 @@ export default function ContractorClientsPage() {
 
       {/* Stats */}
       {stats && (
+        <ScrollReveal delay={0}>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 text-center">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
             <p className="text-xl font-bold text-gray-900">{stats.totalClients}</p>
             <p className="text-xs text-gray-500 mt-1">Total Clients</p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 text-center">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
             <p className="text-xl font-bold text-indigo-600">{stats.repeatClients}</p>
             <p className="text-xs text-gray-500 mt-1">Repeat Clients</p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 text-center">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
             <p className="text-xl font-bold text-green-600">{formatCents(stats.totalEarned)}</p>
             <p className="text-xs text-gray-500 mt-1">Total Earned</p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 text-center">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
             <p className="text-xl font-bold text-amber-600">{formatCents(stats.avgPerClient)}</p>
             <p className="text-xs text-gray-500 mt-1">Avg per Client</p>
           </div>
         </div>
+        </ScrollReveal>
       )}
 
       {/* Search and filter */}
@@ -199,9 +202,9 @@ export default function ContractorClientsPage() {
       ) : (
         <div className="space-y-3">
           {filteredClients.map((client) => (
-            <div key={client.consumer_id} className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+            <div key={client.consumer_id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300">
               <div
-                className="p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+                className="p-4 cursor-pointer hover:bg-gray-50 transition-all duration-200"
                 onClick={() => expandClient(client.consumer_id)}
               >
                 <div className="flex items-center gap-4">

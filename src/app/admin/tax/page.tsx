@@ -138,19 +138,19 @@ export default function AdminTaxPage() {
           {/* Stats Cards */}
           {summary && (
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-              <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 hover:shadow-lg transition-all duration-300">
                 <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Contractors &ge; $600</p>
                 <p className="text-2xl font-bold text-gray-900 mt-1">{summary.totalContractors}</p>
               </div>
-              <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 hover:shadow-lg transition-all duration-300">
                 <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Total Gross Earnings</p>
                 <p className="text-2xl font-bold text-gray-900 mt-1">{formatCents(summary.totalEarningsCents)}</p>
               </div>
-              <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 hover:shadow-lg transition-all duration-300">
                 <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">1099s Generated</p>
                 <p className="text-2xl font-bold text-emerald-600 mt-1">{summary.formsGenerated}</p>
               </div>
-              <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 hover:shadow-lg transition-all duration-300">
                 <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">1099s Pending</p>
                 <p className="text-2xl font-bold text-amber-600 mt-1">{summary.formsPending}</p>
               </div>
@@ -159,11 +159,11 @@ export default function AdminTaxPage() {
 
           {/* Contractors Table */}
           {contractors.length === 0 ? (
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-12 text-center">
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-12 text-center">
               <p className="text-gray-500">No contractors with earnings &ge; $600 for {year}</p>
             </div>
           ) : (
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>

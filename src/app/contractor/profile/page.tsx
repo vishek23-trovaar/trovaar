@@ -9,6 +9,7 @@ import { ContractorType, Qualification } from "@/types";
 import PhoneVerifyWidget from "@/components/auth/PhoneVerifyWidget";
 import PortfolioManager from "@/components/portfolio/PortfolioManager";
 import CredentialUploader from "@/components/portfolio/CredentialUploader";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -821,11 +822,12 @@ export default function ContractorPerformancePage() {
           <div className="space-y-6">
 
             {/* Trust Badges Display */}
+            <ScrollReveal delay={0}>
             <div className="bg-white rounded-2xl border border-border p-6">
               <h2 className="text-base font-bold text-secondary mb-4">Your Trust Badges</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {/* Identity Verified */}
-                <div className={`rounded-xl p-4 text-center border ${
+                <div className={`rounded-2xl p-4 text-center border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ${
                   profile?.verification_status === "approved"
                     ? "bg-blue-50 border-blue-200"
                     : "bg-gray-50 border-gray-200 opacity-50"
@@ -838,7 +840,7 @@ export default function ContractorPerformancePage() {
                   }
                 </div>
                 {/* Background Check */}
-                <div className={`rounded-xl p-4 text-center border ${
+                <div className={`rounded-2xl p-4 text-center border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ${
                   (profile as any)?.background_check_status === "approved"
                     ? "bg-green-50 border-green-200"
                     : "bg-gray-50 border-gray-200 opacity-50"
@@ -851,7 +853,7 @@ export default function ContractorPerformancePage() {
                   }
                 </div>
                 {/* Licensed & Insured */}
-                <div className={`rounded-xl p-4 text-center border ${
+                <div className={`rounded-2xl p-4 text-center border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ${
                   profile?.insurance_status === "approved"
                     ? "bg-emerald-50 border-emerald-200"
                     : "bg-gray-50 border-gray-200 opacity-50"
@@ -864,7 +866,7 @@ export default function ContractorPerformancePage() {
                   }
                 </div>
                 {/* Top Rated */}
-                <div className={`rounded-xl p-4 text-center border ${
+                <div className={`rounded-2xl p-4 text-center border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ${
                   profile && profile.rating >= 4.8
                     ? "bg-amber-50 border-amber-200"
                     : "bg-gray-50 border-gray-200 opacity-50"
@@ -877,7 +879,7 @@ export default function ContractorPerformancePage() {
                   }
                 </div>
                 {/* Elite Pro */}
-                <div className={`rounded-xl p-4 text-center border ${
+                <div className={`rounded-2xl p-4 text-center border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ${
                   completedJobs >= 50
                     ? "bg-purple-50 border-purple-200"
                     : "bg-gray-50 border-gray-200 opacity-50"
@@ -890,7 +892,7 @@ export default function ContractorPerformancePage() {
                   }
                 </div>
                 {/* Fast Responder */}
-                <div className={`rounded-xl p-4 text-center border ${
+                <div className={`rounded-2xl p-4 text-center border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ${
                   contractorStats?.avg_response_hours != null && contractorStats.avg_response_hours < 2
                     ? "bg-sky-50 border-sky-200"
                     : "bg-gray-50 border-gray-200 opacity-50"
@@ -904,8 +906,10 @@ export default function ContractorPerformancePage() {
                 </div>
               </div>
             </div>
+            </ScrollReveal>
 
             {/* Background Check */}
+            <ScrollReveal delay={100}>
             <div className="bg-white rounded-2xl border border-border p-6">
               <h2 className="text-base font-bold text-secondary mb-4">Background Check</h2>
 
@@ -954,8 +958,10 @@ export default function ContractorPerformancePage() {
                 </div>
               )}
             </div>
+            </ScrollReveal>
 
             {/* Identity Verification */}
+            <ScrollReveal delay={200}>
             <div className="bg-white rounded-2xl border border-border p-6">
               <h2 className="text-base font-bold text-secondary mb-4">Identity Verification</h2>
 
@@ -999,8 +1005,10 @@ export default function ContractorPerformancePage() {
                 </div>
               )}
             </div>
+            </ScrollReveal>
 
             {/* Professional Summary */}
+            <ScrollReveal delay={300}>
             <div className="bg-white rounded-2xl border border-border p-6">
               <h2 className="text-base font-bold text-secondary mb-4">Professional Summary</h2>
               <div className="space-y-4">
@@ -1066,8 +1074,10 @@ export default function ContractorPerformancePage() {
                 </button>
               </div>
             </div>
+            </ScrollReveal>
 
             {/* Trade License Submission */}
+            <ScrollReveal delay={400}>
             <div className="bg-white rounded-2xl border border-border p-6">
               <h2 className="text-base font-bold text-secondary mb-1">Trade License</h2>
               <p className="text-xs text-muted mb-4">Submit your trade license for verification. Verified licenses appear on your public profile.</p>
@@ -1157,8 +1167,10 @@ export default function ContractorPerformancePage() {
                 </button>
               </div>
             </div>
+            </ScrollReveal>
 
             {/* Certifications */}
+            <ScrollReveal delay={100}>
             <div className="bg-white rounded-2xl border border-border p-6">
               <h2 className="text-base font-bold text-secondary mb-1">Certifications</h2>
               <p className="text-xs text-muted mb-4">Trade licenses, ASE certs, NATE certs, EPA certifications, and more.</p>
@@ -1311,8 +1323,10 @@ export default function ContractorPerformancePage() {
                 </button>
               </div>
             </div>
+            </ScrollReveal>
 
             {/* Work History */}
+            <ScrollReveal delay={200}>
             <div className="bg-white rounded-2xl border border-border p-6">
               <h2 className="text-base font-bold text-secondary mb-1">Work History</h2>
               <p className="text-xs text-muted mb-4">Show clients your professional background and corporate-level training.</p>
@@ -1400,8 +1414,10 @@ export default function ContractorPerformancePage() {
                 </button>
               </div>
             </div>
+            </ScrollReveal>
 
             {/* Completed Jobs (portfolio showcase with ratings) */}
+            <ScrollReveal delay={300}>
             <div className="bg-white rounded-2xl border border-border p-6">
               <h2 className="text-base font-bold text-secondary mb-1">Completed Jobs</h2>
               <p className="text-xs text-muted mb-4">Jobs completed on the Trovaar platform with client ratings.</p>
@@ -1434,6 +1450,7 @@ export default function ContractorPerformancePage() {
                 </div>
               )}
             </div>
+            </ScrollReveal>
           </div>
         )}
 
@@ -1573,7 +1590,7 @@ export default function ContractorPerformancePage() {
                 <h2 className="text-base font-bold text-secondary mb-3">Performance Stats</h2>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {/* Rating */}
-                  <div className="bg-gray-50 rounded-xl p-4 text-center">
+                  <div className="bg-gray-50 rounded-2xl p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                     <p className="text-2xl mb-1">⭐</p>
                     <p className="text-xl font-bold text-secondary">
                       {profile && profile.rating > 0 ? profile.rating.toFixed(1) : "—"}
@@ -1585,7 +1602,7 @@ export default function ContractorPerformancePage() {
                   </div>
 
                   {/* Jobs Completed */}
-                  <div className="bg-gray-50 rounded-xl p-4 text-center">
+                  <div className="bg-gray-50 rounded-2xl p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                     <p className="text-2xl mb-1">✅</p>
                     <p className="text-xl font-bold text-secondary">
                       {contractorStats?.completion_count ?? completedJobs}
@@ -1594,7 +1611,7 @@ export default function ContractorPerformancePage() {
                   </div>
 
                   {/* Completion Rate */}
-                  <div className="bg-gray-50 rounded-xl p-4 text-center">
+                  <div className="bg-gray-50 rounded-2xl p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                     <p className="text-2xl mb-1">📊</p>
                     <p className={`text-xl font-bold ${completionRateColor}`}>
                       {contractorStats?.completionRate != null
@@ -1605,7 +1622,7 @@ export default function ContractorPerformancePage() {
                   </div>
 
                   {/* Response Time */}
-                  <div className="bg-gray-50 rounded-xl p-4 text-center">
+                  <div className="bg-gray-50 rounded-2xl p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                     <p className="text-2xl mb-1">⚡</p>
                     <p className="text-xl font-bold text-secondary">
                       {formatResponseTime(contractorStats?.avg_response_hours ?? null)}

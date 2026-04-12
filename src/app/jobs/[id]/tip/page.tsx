@@ -13,6 +13,7 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "");
 
@@ -53,7 +54,7 @@ function TipForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="bg-surface rounded-xl p-4 text-sm">
+      <div className="bg-surface rounded-2xl p-4 text-sm">
         <div className="flex justify-between font-semibold text-secondary">
           <span>Tip amount</span>
           <span>${(amountCents / 100).toFixed(2)}</span>
@@ -123,15 +124,18 @@ export default function TipPage({ params }: { params: Promise<{ id: string }> })
 
   return (
     <div className="max-w-md mx-auto px-4 py-12">
-      <div className="mb-6">
+      <ScrollReveal>
+      <div className="mb-8">
         <Link href={`/jobs/${id}`} className="text-sm text-primary hover:underline">
           ← Back to job
         </Link>
         <h1 className="text-2xl font-bold text-secondary mt-3">Leave a Tip</h1>
         <p className="text-muted text-sm mt-1">Show your appreciation for a job well done.</p>
       </div>
+      </ScrollReveal>
 
-      <Card className="p-6">
+      <ScrollReveal delay={100}>
+      <Card className="p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300">
         {step === "choose" ? (
           <div className="space-y-6">
             {/* Preset amounts */}
@@ -143,10 +147,10 @@ export default function TipPage({ params }: { params: Promise<{ id: string }> })
                     key={amt}
                     type="button"
                     onClick={() => { setSelectedAmount(amt); setCustomAmount(""); }}
-                    className={`py-2.5 rounded-lg text-sm font-semibold border transition-all cursor-pointer ${
+                    className={`py-2.5 rounded-xl text-sm font-semibold border transition-all duration-300 cursor-pointer ${
                       selectedAmount === amt
-                        ? "border-primary bg-primary text-white"
-                        : "border-border text-secondary hover:border-primary/50"
+                        ? "border-primary bg-primary text-white shadow-md"
+                        : "border-border text-secondary hover:border-primary/50 hover:shadow-sm hover:-translate-y-0.5"
                     }`}
                   >
                     ${amt / 100}
@@ -195,6 +199,7 @@ export default function TipPage({ params }: { params: Promise<{ id: string }> })
           </Elements>
         ) : null}
       </Card>
+      </ScrollReveal>
     </div>
   );
 }

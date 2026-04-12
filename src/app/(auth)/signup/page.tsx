@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Card from "@/components/ui/Card";
+import AuthLayout from "@/components/layout/AuthLayout";
 import { UserRole } from "@/types";
 import { dashboardPath } from "@/lib/portalRoutes";
 
@@ -183,8 +184,8 @@ function SignupForm() {
   if (authLoading || user) return null;
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
-      <Card className="w-full max-w-md p-8">
+    <AuthLayout>
+      <Card className="w-full p-8">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-secondary">Create Your Account</h1>
           <p className="text-muted mt-2">Join Trovaar today</p>
@@ -478,7 +479,7 @@ function SignupForm() {
           </Link>
         </p>
       </Card>
-    </div>
+    </AuthLayout>
   );
 }
 

@@ -13,6 +13,7 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "");
 
@@ -58,7 +59,7 @@ function CheckoutForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="bg-surface rounded-xl p-4 space-y-2 text-sm">
+      <div className="bg-surface rounded-2xl p-4 space-y-2 text-sm">
         <div className="flex justify-between">
           <span className="text-muted">Job payment</span>
           <span className="font-medium text-secondary">${(amountCents / 100).toFixed(2)}</span>
@@ -144,7 +145,8 @@ export default function PayPage({ params }: { params: Promise<{ id: string }> })
 
   return (
     <div className="max-w-md mx-auto px-4 py-12">
-      <div className="mb-6">
+      <ScrollReveal>
+      <div className="mb-8">
         <Link href={`/jobs/${id}`} className="text-sm text-primary hover:underline">
           ← Back to job
         </Link>
@@ -153,8 +155,10 @@ export default function PayPage({ params }: { params: Promise<{ id: string }> })
           Payment is held securely and released to the contractor upon job completion.
         </p>
       </div>
+      </ScrollReveal>
 
-      <Card className="p-6">
+      <ScrollReveal delay={100}>
+      <Card className="p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300">
         {loading ? (
           <div className="flex justify-center py-12">
             <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
@@ -184,6 +188,7 @@ export default function PayPage({ params }: { params: Promise<{ id: string }> })
           </Elements>
         ) : null}
       </Card>
+      </ScrollReveal>
     </div>
   );
 }

@@ -9,6 +9,7 @@ import ImageUploader from "@/components/jobs/ImageUploader";
 import { CATEGORY_GROUPS, URGENCY_LEVELS } from "@/lib/constants";
 import { useAuth } from "@/context/AuthContext";
 import { ConsumerSurgeBanner } from "@/components/insights/ConsumerSurgeBanner";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -429,17 +430,20 @@ function PostJobContent() {
 
   // ────────────────────────────────────────────────────────────────────────────
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
+    <div className="max-w-2xl mx-auto px-4 py-10">
 
       {/* Page header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-secondary">Post a Job</h1>
-        <p className="text-muted text-sm mt-1">
-          Snap a photo — our AI figures out the rest. Skilled pros compete for your job.
-        </p>
-      </div>
+      <ScrollReveal>
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-secondary">Post a Job</h1>
+          <p className="text-muted text-sm mt-1">
+            Snap a photo — our AI figures out the rest. Skilled pros compete for your job.
+          </p>
+        </div>
+      </ScrollReveal>
 
       {/* Progress bar */}
+      <ScrollReveal delay={100}>
       <div className="mb-8">
         <div className="hidden sm:flex items-center justify-between mb-2">
           {STEPS.map((s) => (
@@ -469,6 +473,7 @@ function PostJobContent() {
           Step {step} of {STEPS.length} — {STEPS[step - 1].label}
         </p>
       </div>
+      </ScrollReveal>
 
       {/* Step error */}
       {stepError && (
@@ -485,7 +490,7 @@ function PostJobContent() {
         </div>
       )}
 
-      <Card className="p-6 sm:p-8">
+      <Card className="p-6 sm:p-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300">
 
         {/* ── Step 1: Upload Photo/Video ──────────────────────────────── */}
         {step === 1 && (

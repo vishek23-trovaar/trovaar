@@ -93,8 +93,9 @@ export default function VerifyEmailPage() {
   }, []);
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
-      <Card className="w-full max-w-md p-8">
+    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12 bg-gradient-to-b from-slate-50 to-white">
+      <div style={{ animation: "fadeInUp 0.5s ease-out" }}>
+      <Card className="w-full max-w-md p-8 shadow-lg">
         {/* Icon */}
         <div className="flex justify-center mb-6">
           <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
@@ -164,6 +165,7 @@ export default function VerifyEmailPage() {
           </Button>
         </div>
       </Card>
+      </div>
     </div>
   );
 }

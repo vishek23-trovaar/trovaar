@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 interface Subscription {
   id: string;
@@ -206,10 +207,11 @@ export default function ClientSubscriptionsPage() {
             { name: "Basic Care", price: "$49", visits: 2, color: "bg-slate-50 border-slate-200" },
             { name: "Home Health", price: "$99", visits: 4, color: "bg-emerald-50 border-emerald-300", badge: "Most popular" },
             { name: "Home Guard", price: "$189", visits: 8, color: "bg-indigo-50 border-indigo-200" },
-          ].map((p) => (
-            <div key={p.name} className={`rounded-xl border p-5 ${p.color} relative`}>
+          ].map((p, i) => (
+            <ScrollReveal key={p.name} delay={i * 100}>
+            <div className={`rounded-2xl border p-5 ${p.color} relative backdrop-blur-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300`}>
               {p.badge && (
-                <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-xs font-bold px-3 py-0.5 rounded-full">
+                <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-xs font-bold px-3 py-0.5 rounded-full shadow-sm">
                   {p.badge}
                 </span>
               )}
@@ -217,6 +219,7 @@ export default function ClientSubscriptionsPage() {
               <div className="text-2xl font-extrabold text-slate-900 mt-1">{p.price}<span className="text-sm font-normal text-slate-400">/mo</span></div>
               <div className="text-sm text-slate-600 mt-1">{p.visits} visits/month</div>
             </div>
+            </ScrollReveal>
           ))}
         </div>
       </div>
@@ -239,7 +242,8 @@ export default function ClientSubscriptionsPage() {
       </div>
 
       {/* Subscription card */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
+      <ScrollReveal>
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6 hover:shadow-md transition-all duration-300">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
@@ -294,8 +298,10 @@ export default function ClientSubscriptionsPage() {
           </p>
         </div>
       </div>
+      </ScrollReveal>
 
       {/* Upcoming visits */}
+      <ScrollReveal delay={100}>
       <div className="mb-6">
         <h2 className="text-base font-bold text-slate-900 mb-3">Upcoming visits</h2>
         {upcomingVisits.length === 0 ? (
@@ -307,7 +313,7 @@ export default function ClientSubscriptionsPage() {
             {upcomingVisits.map((v) => (
               <div
                 key={v.id}
-                className="bg-white rounded-xl border border-slate-100 shadow-sm p-4 flex items-center gap-4"
+                className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 flex items-center gap-4 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
               >
                 <div className="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center text-xl shrink-0">
                   {v.service_icon}
@@ -329,16 +335,18 @@ export default function ClientSubscriptionsPage() {
           </div>
         )}
       </div>
+      </ScrollReveal>
 
       {/* Past visits */}
       {pastVisits.length > 0 && (
+        <ScrollReveal delay={200}>
         <div className="mb-8">
           <h2 className="text-base font-bold text-slate-900 mb-3">Past visits</h2>
           <div className="space-y-2">
             {pastVisits.map((v) => (
               <div
                 key={v.id}
-                className="bg-white rounded-xl border border-slate-100 p-4 flex items-center gap-4 opacity-75"
+                className="bg-white rounded-2xl border border-slate-100 p-4 flex items-center gap-4 opacity-75 hover:opacity-100 transition-all duration-300"
               >
                 <div className="w-9 h-9 bg-slate-50 rounded-lg flex items-center justify-center text-lg shrink-0">
                   {v.service_icon}
@@ -358,6 +366,7 @@ export default function ClientSubscriptionsPage() {
             ))}
           </div>
         </div>
+        </ScrollReveal>
       )}
 
       {/* Cancel subscription */}
@@ -384,8 +393,8 @@ export default function ClientSubscriptionsPage() {
 
       {/* Schedule visit modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
             <div className="flex items-center justify-between mb-5">
               <h3 className="text-lg font-bold text-slate-900">Schedule a Visit</h3>
               <button
@@ -466,8 +475,8 @@ export default function ClientSubscriptionsPage() {
 
       {/* Cancel confirmation modal */}
       {showCancelConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 text-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">
             <div className="text-4xl mb-4">⚠️</div>
             <h3 className="text-lg font-bold text-slate-900 mb-2">Cancel subscription?</h3>
             <p className="text-sm text-slate-500 mb-6">

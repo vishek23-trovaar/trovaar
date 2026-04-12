@@ -158,7 +158,7 @@ export default function AdminCategoriesPage() {
 
       {/* Add form */}
       {showAdd && (
-        <div className="bg-white rounded-xl border border-slate-200 p-5 mb-6 shadow-sm">
+        <div className="bg-white rounded-2xl border border-slate-200 p-5 mb-6 shadow-sm">
           <h2 className="font-semibold text-slate-800 mb-4">New Category</h2>
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
@@ -195,7 +195,7 @@ export default function AdminCategoriesPage() {
       )}
 
       {/* Search + filter */}
-      <div className="bg-white rounded-xl border border-slate-200 p-4 mb-5 shadow-sm flex flex-col sm:flex-row gap-3">
+      <div className="bg-white rounded-2xl border border-slate-200 p-4 mb-5 shadow-sm flex flex-col sm:flex-row gap-3">
         <input
           type="text" value={search} onChange={(e) => setSearch(e.target.value)}
           placeholder="Search categories…"
@@ -222,7 +222,7 @@ export default function AdminCategoriesPage() {
             const groupCats = filtered.filter((c) => c.group_label === group);
             const groupIcon = groupCats[0]?.icon ?? "🔧";
             return (
-              <div key={group} className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+              <div key={group} className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="px-5 py-3 bg-slate-50 border-b border-slate-100 flex items-center gap-2">
                   <span>{groupIcon}</span>
                   <span className="font-semibold text-slate-700 text-sm">{group}</span>

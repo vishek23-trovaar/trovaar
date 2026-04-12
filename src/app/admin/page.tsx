@@ -197,7 +197,7 @@ export default function AdminDashboardPage() {
         {STAT_CARDS.map((card) => (
           <div
             key={card.label}
-            className={`bg-white rounded-xl border ${card.border} p-5 shadow-sm`}
+            className={`bg-white rounded-2xl border ${card.border} p-5 shadow-sm hover:shadow-lg transition-all duration-300`}
           >
             <div className="text-2xl mb-3">{card.icon}</div>
             <div className="text-2xl font-bold text-slate-800">{card.value}</div>
@@ -210,13 +210,13 @@ export default function AdminDashboardPage() {
       {/* Two-column section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Jobs by status — CSS bar chart */}
-        <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
           <h2 className="font-semibold text-slate-800 mb-5">Jobs by Status</h2>
           <JobsStatusChart jobsByStatus={stats.jobsByStatus ?? {}} />
         </div>
 
         {/* Top 5 categories */}
-        <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
           <h2 className="font-semibold text-slate-800 mb-5">Top Job Categories</h2>
           {(stats.topCategories ?? []).length === 0 ? (
             <p className="text-slate-400 text-sm">No data yet.</p>
@@ -243,7 +243,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Recent bids with markup view */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mb-6">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-6">
         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
           <div>
             <h2 className="font-semibold text-slate-800">Recent Bids — Markup View</h2>
@@ -283,7 +283,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Recent jobs */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
           <h2 className="font-semibold text-slate-800">Recent Jobs</h2>
           <Link

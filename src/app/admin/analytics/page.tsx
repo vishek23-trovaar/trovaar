@@ -71,7 +71,7 @@ function fmtTime(hours: number): string {
 
 function KpiCard({ label, value, sub }: { label: string; value: string; sub: string }) {
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+    <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-lg transition-all duration-300">
       <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">{label}</p>
       <p className="text-2xl font-bold text-slate-800 mt-1">{value}</p>
       <p className="text-xs text-slate-400 mt-1">{sub}</p>
@@ -81,7 +81,7 @@ function KpiCard({ label, value, sub }: { label: string; value: string; sub: str
 
 function TimeStatCard({ label, value, unit }: { label: string; value: string; unit: string }) {
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm text-center">
+    <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm text-center hover:shadow-lg transition-all duration-300">
       <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">{label}</p>
       <p className="text-3xl font-bold text-slate-800 mt-2">{value}</p>
       <p className="text-xs text-slate-400 mt-1">{unit}</p>
@@ -166,7 +166,7 @@ export default function AnalyticsPage() {
   if (error || !data) {
     return (
       <div className="p-8">
-        <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-red-700">{error ?? "No data available"}</div>
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-6 text-red-700">{error ?? "No data available"}</div>
       </div>
     );
   }
@@ -222,7 +222,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* ── Section A: Job Funnel ──────────────────────────── */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
         <div className="flex items-center justify-between mb-5">
           <div>
             <h2 className="text-base font-semibold text-slate-800">Job Conversion Funnel</h2>
@@ -284,7 +284,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Revenue Trend Chart */}
-      <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
         <div className="flex items-center justify-between mb-5">
           <div>
             <h2 className="font-semibold text-slate-800">Daily Revenue (Last 30 Days)</h2>
@@ -308,7 +308,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Revenue by Category */}
-      <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
         <h2 className="font-semibold text-slate-800 mb-1">Revenue by Category</h2>
         <p className="text-xs text-slate-400 mb-5">Platform earnings by job category</p>
         {catData.length === 0 ? (
@@ -338,7 +338,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* User Growth Chart */}
-      <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
         <div className="flex items-center justify-between mb-5">
           <div>
             <h2 className="font-semibold text-slate-800">Signups Per Day (Last 30 Days)</h2>

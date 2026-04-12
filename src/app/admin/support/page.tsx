@@ -136,7 +136,7 @@ export default function SupportPage() {
           { label: "In Progress", value: counts.in_progress, color: "text-blue-600" },
           { label: "Resolved", value: counts.resolved, color: "text-slate-500" },
         ].map((kpi) => (
-          <div key={kpi.label} className="bg-white rounded-xl shadow-sm border border-slate-100 px-5 py-4">
+          <div key={kpi.label} className="bg-white rounded-2xl shadow-sm border border-slate-100 px-5 py-4 hover:shadow-lg transition-all duration-300">
             <p className="text-xs text-slate-500 font-medium uppercase tracking-wide">{kpi.label}</p>
             <p className={`text-2xl font-bold mt-1 ${kpi.color}`}>{kpi.value}</p>
           </div>
@@ -146,7 +146,7 @@ export default function SupportPage() {
       {/* Main split-view */}
       <div className="flex gap-4 min-h-[500px]">
         {/* Ticket list */}
-        <div className="w-96 shrink-0 bg-white rounded-xl shadow-sm border border-slate-100 flex flex-col">
+        <div className="w-96 shrink-0 bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col">
           {/* Status tabs */}
           <div className="flex border-b border-slate-100 px-2 pt-2">
             {STATUS_TABS.map((tab) => (
@@ -206,7 +206,7 @@ export default function SupportPage() {
         </div>
 
         {/* Ticket detail */}
-        <div className="flex-1 bg-white rounded-xl shadow-sm border border-slate-100 flex flex-col">
+        <div className="flex-1 bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col">
           {selected === null ? (
             <div className="flex-1 flex items-center justify-center text-slate-400 flex-col gap-3">
               <span className="text-4xl">🎧</span>

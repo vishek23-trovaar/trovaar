@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 const CATEGORY_EMOJIS: Record<string, string> = {
   plumbing: "🔧",
@@ -177,7 +178,8 @@ export default function NeighborhoodFeedPage() {
         ) : data ? (
           <div className="space-y-4">
             {/* Summary card */}
-            <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+            <ScrollReveal>
+            <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-lg transition-all duration-300">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-xl shrink-0">
                   🏘️
@@ -197,16 +199,18 @@ export default function NeighborhoodFeedPage() {
                 </div>
               </div>
             </div>
+            </ScrollReveal>
 
             {/* Popular categories */}
             {data.popular_categories && data.popular_categories.length > 0 && (
-              <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+              <ScrollReveal delay={100}>
+              <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-md transition-all duration-300">
                 <h2 className="text-sm font-bold text-gray-900 mb-3">Popular Categories {data.platform_wide ? "" : "Near You"}</h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {data.popular_categories.map((cat) => (
                     <div
                       key={cat.category}
-                      className="flex items-center gap-2 px-3 py-2.5 bg-gray-50 rounded-lg border border-gray-100 hover:border-emerald-200 hover:bg-emerald-50/50 transition-colors"
+                      className="flex items-center gap-2 px-3 py-2.5 bg-gray-50 rounded-xl border border-gray-100 hover:border-emerald-200 hover:bg-emerald-50/50 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-300"
                     >
                       <span className="text-lg">{getCategoryEmoji(cat.category)}</span>
                       <div className="min-w-0">
@@ -217,11 +221,13 @@ export default function NeighborhoodFeedPage() {
                   ))}
                 </div>
               </div>
+              </ScrollReveal>
             )}
 
             {/* Trending contractors */}
             {data.trending_contractors && data.trending_contractors.length > 0 && (
-              <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+              <ScrollReveal delay={200}>
+              <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-md transition-all duration-300">
                 <h2 className="text-sm font-bold text-gray-900 mb-3">
                   Trending Contractors {data.platform_wide ? "" : "Nearby"}
                 </h2>
@@ -230,7 +236,7 @@ export default function NeighborhoodFeedPage() {
                     <Link
                       key={contractor.id}
                       href={`/profile/${contractor.id}`}
-                      className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100 hover:border-emerald-200 hover:bg-emerald-50/30 transition-all group"
+                      className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100 hover:border-emerald-200 hover:bg-emerald-50/30 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-300 group"
                     >
                       <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center overflow-hidden shrink-0">
                         {contractor.profile_photo ? (
@@ -269,11 +275,12 @@ export default function NeighborhoodFeedPage() {
                   ))}
                 </div>
               </div>
+              </ScrollReveal>
             )}
 
             {/* Feed items */}
             {data.nearby.length === 0 ? (
-              <div className="bg-white rounded-xl border border-gray-200 p-10 text-center">
+              <div className="bg-white rounded-2xl border border-gray-200 p-10 text-center">
                 <p className="text-4xl mb-3">🏘️</p>
                 <p className="font-semibold text-gray-700">No recent activity found</p>
                 <p className="text-sm text-gray-500 mt-1">Check back soon as jobs are completed in your area.</p>
@@ -287,9 +294,9 @@ export default function NeighborhoodFeedPage() {
                   const location = [item.city, item.state].filter(Boolean).join(", ") || item.zip || "Unknown area";
                   const emoji = getCategoryEmoji(item.category);
                   return (
+                    <ScrollReveal key={`${item.category}-${item.city}-${item.zip}-${idx}`} delay={idx * 50}>
                     <div
-                      key={`${item.category}-${item.city}-${item.zip}-${idx}`}
-                      className="bg-white rounded-xl border border-gray-200 px-5 py-4 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow"
+                      className="bg-white rounded-2xl border border-gray-200 px-5 py-4 flex items-center gap-4 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
                     >
                       <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-xl shrink-0">
                         {emoji}
@@ -304,10 +311,11 @@ export default function NeighborhoodFeedPage() {
                           {item.zip ? ` · ZIP ${item.zip}` : ""}
                         </p>
                       </div>
-                      <span className="shrink-0 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">
+                      <span className="shrink-0 text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
                         {item.count}×
                       </span>
                     </div>
+                    </ScrollReveal>
                   );
                 })}
               </div>

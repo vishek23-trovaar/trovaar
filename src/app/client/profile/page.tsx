@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import PhoneVerifyWidget from "@/components/auth/PhoneVerifyWidget";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 interface ClientStats {
   totalJobs: number;
@@ -197,20 +198,23 @@ export default function ClientProfilePage() {
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
-          { label: "Jobs Posted", value: stats.totalJobs, color: "text-blue-600" },
-          { label: "Active", value: stats.activeJobs, color: "text-amber-600" },
-          { label: "Completed", value: stats.completedJobs, color: "text-emerald-600" },
-          { label: "Total Spent", value: `$${stats.totalSpent.toFixed(0)}`, color: "text-purple-600" },
-        ].map(s => (
-          <div key={s.label} className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center">
-            <div className={`text-2xl font-bold ${s.color}`}>{s.value}</div>
-            <div className="text-xs text-gray-500 mt-1">{s.label}</div>
-          </div>
+          { label: "Jobs Posted", value: stats.totalJobs, color: "text-blue-600", bg: "bg-blue-50/50" },
+          { label: "Active", value: stats.activeJobs, color: "text-amber-600", bg: "bg-amber-50/50" },
+          { label: "Completed", value: stats.completedJobs, color: "text-emerald-600", bg: "bg-emerald-50/50" },
+          { label: "Total Spent", value: `$${stats.totalSpent.toFixed(0)}`, color: "text-purple-600", bg: "bg-purple-50/50" },
+        ].map((s, i) => (
+          <ScrollReveal key={s.label} delay={i * 80}>
+            <div className={`${s.bg} rounded-2xl p-4 shadow-sm border border-white/60 backdrop-blur-sm text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300`}>
+              <div className={`text-2xl font-bold ${s.color}`}>{s.value}</div>
+              <div className="text-xs text-gray-500 mt-1">{s.label}</div>
+            </div>
+          </ScrollReveal>
         ))}
       </div>
 
       {/* Personal Info */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <ScrollReveal delay={100}>
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-300">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h2>
         <form onSubmit={saveProfile} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -270,9 +274,11 @@ export default function ClientProfilePage() {
           </div>
         </form>
       </div>
+      </ScrollReveal>
 
       {/* SMS Bid Alerts */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <ScrollReveal delay={150}>
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-300">
         <h2 className="text-lg font-semibold text-gray-900 mb-1">SMS Bid Alerts</h2>
         <p className="text-sm text-gray-500 mb-4">
           Get a text message on your phone whenever a contractor submits a new bid on one of your jobs.
@@ -307,9 +313,11 @@ export default function ClientProfilePage() {
           </p>
         )}
       </div>
+      </ScrollReveal>
 
       {/* Account Security */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <ScrollReveal delay={200}>
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-300">
         <h2 className="text-lg font-semibold text-gray-900 mb-1">Account Security</h2>
         <p className="text-sm text-gray-500 mb-4">Change your password. You&apos;ll need your current password to update it.</p>
         <form onSubmit={changePassword} className="space-y-4">
@@ -357,9 +365,11 @@ export default function ClientProfilePage() {
           </div>
         </form>
       </div>
+      </ScrollReveal>
 
       {/* Account Info */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <ScrollReveal delay={250}>
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-300">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Account Details</h2>
         <div className="space-y-3 text-sm">
           <div className="flex justify-between items-center py-2 border-b border-gray-50">
@@ -390,9 +400,11 @@ export default function ClientProfilePage() {
           </div>
         </div>
       </div>
+      </ScrollReveal>
 
       {/* Danger Zone */}
-      <div className="bg-white rounded-xl shadow-sm border border-red-100 p-6">
+      <ScrollReveal delay={300}>
+      <div className="bg-white rounded-2xl shadow-sm border border-red-100 p-6">
         <h2 className="text-lg font-semibold text-red-700 mb-1">Danger Zone</h2>
         <p className="text-sm text-gray-500 mb-4">Permanently delete your account and all associated data. This cannot be undone.</p>
         {!showDeleteConfirm ? (
@@ -423,6 +435,7 @@ export default function ClientProfilePage() {
           </div>
         )}
       </div>
+      </ScrollReveal>
 
     </div>
   );

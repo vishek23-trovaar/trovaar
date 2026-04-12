@@ -317,14 +317,14 @@ function BrowseJobsContent() {
                       onMouseEnter={() => setActiveJobId(job.id)}
                       onMouseLeave={() => setActiveJobId(null)}
                       className={
-                        "flex gap-3 p-3 hover:bg-surface/60 transition-all block " +
+                        "flex gap-3 p-3 hover:bg-surface/60 hover:shadow-sm transition-all duration-300 block " +
                         (activeJobId === job.id
                           ? "bg-primary/5 border-l-[3px] border-primary pl-[9px]"
                           : "border-l-[3px] border-transparent")
                       }
                     >
                       {/* Thumbnail */}
-                      <div className="w-14 h-14 rounded-lg overflow-hidden shrink-0 bg-surface relative">
+                      <div className="w-14 h-14 rounded-xl overflow-hidden shrink-0 bg-surface relative shadow-sm">
                         {photos[0] ? (
                           isVideo ? (
                             <>
@@ -423,7 +423,7 @@ function BrowseJobsContent() {
             onClick={() => setSidebarOpen((v) => !v)}
             className="md:hidden absolute bottom-5 left-1/2 -translate-x-1/2 z-[500]
               flex items-center gap-2 bg-white shadow-xl rounded-full px-4 py-2.5
-              text-sm font-semibold text-secondary border border-border/60 active:scale-95 transition-transform"
+              text-sm font-semibold text-secondary border border-border/60 active:scale-95 transition-all duration-300 hover:shadow-2xl"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />

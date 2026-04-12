@@ -88,7 +88,7 @@ export default function NotificationsPage() {
       </div>
 
       {/* Send Notification Form */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
         <h2 className="text-base font-semibold text-slate-800 mb-5">Send Notification</h2>
 
         {successMsg && (
@@ -171,7 +171,7 @@ export default function NotificationsPage() {
       </div>
 
       {/* Notification History */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
         <h2 className="text-base font-semibold text-slate-800 mb-4">Notification History</h2>
 
         {loading ? (

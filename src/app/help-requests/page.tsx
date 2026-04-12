@@ -98,9 +98,9 @@ export default function HelpRequestsPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-secondary">Find Help Gigs 🤝</h1>
+    <div className="max-w-2xl mx-auto px-4 py-10">
+      <div className="mb-6" style={{ animation: "fadeInUp 0.5s ease-out" }}>
+        <h1 className="text-2xl font-bold text-secondary">Find Help Gigs</h1>
         <p className="text-muted text-sm mt-1">
           Contractors looking for extra hands on active jobs. Flat pay, flexible work.
         </p>
@@ -125,7 +125,7 @@ export default function HelpRequestsPage() {
             const spotsLeft = req.spots - req.spots_filled;
 
             return (
-              <Card key={req.id} className="p-5">
+              <Card key={req.id} className="p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                 {/* Pay badge */}
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div className="flex-1 min-w-0">

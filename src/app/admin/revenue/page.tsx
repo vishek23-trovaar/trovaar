@@ -34,7 +34,7 @@ function fmtUSD(cents: number) {
 
 function KpiCard({ label, value, sub, color }: { label: string; value: string; sub: string; color: string }) {
   return (
-    <div className={`bg-white rounded-xl border p-5 shadow-sm ${color}`}>
+    <div className={`bg-white rounded-2xl border p-5 shadow-sm hover:shadow-lg transition-all duration-300 ${color}`}>
       <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">{label}</p>
       <p className="text-2xl font-bold text-slate-800 mt-1">{value}</p>
       <p className="text-xs text-slate-400 mt-1">{sub}</p>
@@ -116,7 +116,7 @@ export default function AdminRevenuePage() {
       </div>
 
       {/* Revenue trend — line chart */}
-      <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
         <h2 className="font-semibold text-slate-800 mb-1">Daily Platform Revenue</h2>
         <p className="text-xs text-slate-400 mb-5">20% markup captured per accepted bid</p>
         <ResponsiveContainer width="100%" height={260}>
@@ -131,7 +131,7 @@ export default function AdminRevenuePage() {
       </div>
 
       {/* Growth chart — signups + jobs */}
-      <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
         <h2 className="font-semibold text-slate-800 mb-1">Platform Growth</h2>
         <p className="text-xs text-slate-400 mb-5">New users vs new jobs posted per day</p>
         <ResponsiveContainer width="100%" height={260}>
@@ -148,7 +148,7 @@ export default function AdminRevenuePage() {
       </div>
 
       {/* Revenue by category */}
-      <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
         <h2 className="font-semibold text-slate-800 mb-1">Revenue by Category</h2>
         <p className="text-xs text-slate-400 mb-5">Top 10 categories by platform earnings (all time)</p>
         {catChartData.length === 0 ? (
@@ -168,7 +168,7 @@ export default function AdminRevenuePage() {
 
       {/* Category detail table */}
       {catChartData.length > 0 && (
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-100">
             <h2 className="font-semibold text-slate-800">Category Breakdown</h2>
           </div>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 interface TaxData {
   year: number;
@@ -111,26 +112,29 @@ export default function ContractorTaxPage() {
       ) : data ? (
         <div className="space-y-6">
           {/* Summary Cards */}
+          <ScrollReveal delay={0}>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
               <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Total Earnings</p>
               <p className="text-2xl font-bold text-gray-900 mt-1">{formatCents(data.totalEarnedCents)}</p>
               <p className="text-xs text-gray-400 mt-1">Gross before fees</p>
             </div>
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
               <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Net Earnings</p>
               <p className="text-2xl font-bold text-emerald-600 mt-1">{formatCents(data.netEarningsCents)}</p>
               <p className="text-xs text-gray-400 mt-1">After platform fees</p>
             </div>
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
               <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Jobs Completed</p>
               <p className="text-2xl font-bold text-blue-600 mt-1">{data.totalJobs}</p>
               <p className="text-xs text-gray-400 mt-1">Platform fee: {formatCents(data.platformFeeCents)}</p>
             </div>
           </div>
+          </ScrollReveal>
 
           {/* 1099 Status */}
-          <div className={`rounded-xl border p-5 ${data.meetsThreshold ? "bg-amber-50 border-amber-200" : "bg-green-50 border-green-200"}`}>
+          <ScrollReveal delay={100}>
+          <div className={`rounded-2xl border p-5 ${data.meetsThreshold ? "bg-amber-50 border-amber-200" : "bg-green-50 border-green-200"}`}>
             <div className="flex items-start gap-3">
               <span className="text-xl">{data.meetsThreshold ? "\u26A0\uFE0F" : "\u2705"}</span>
               <div>
@@ -154,9 +158,11 @@ export default function ContractorTaxPage() {
               </div>
             </div>
           </div>
+          </ScrollReveal>
 
           {/* Monthly Breakdown */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          <ScrollReveal delay={200}>
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
             <div className="px-5 py-4 border-b border-gray-100">
               <h2 className="font-semibold text-gray-900">Monthly Breakdown</h2>
             </div>
@@ -188,9 +194,11 @@ export default function ContractorTaxPage() {
               </table>
             </div>
           </div>
+          </ScrollReveal>
 
           {/* Tax Information Form */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+          <ScrollReveal delay={300}>
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
             <h2 className="font-semibold text-gray-900 mb-4">Tax Information</h2>
             <p className="text-sm text-gray-500 mb-4">
               This information is used for generating your 1099-NEC form. Please keep it up to date.
@@ -246,6 +254,7 @@ export default function ContractorTaxPage() {
               {saving ? "Saving..." : "Save Tax Info"}
             </button>
           </div>
+          </ScrollReveal>
         </div>
       ) : (
         <div className="text-center py-12 text-gray-500">Failed to load tax data</div>

@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Card from "@/components/ui/Card";
+import AuthLayout from "@/components/layout/AuthLayout";
 import { dashboardPath } from "@/lib/portalRoutes";
 
 function GoogleIcon() {
@@ -86,8 +87,8 @@ function LoginForm() {
   }
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
-      <Card className="w-full max-w-md p-8">
+    <AuthLayout>
+      <Card className="w-full p-8">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-secondary">Welcome Back</h1>
           <p className="text-muted mt-2">Log in to your Trovaar account</p>
@@ -187,7 +188,7 @@ function LoginForm() {
           </Link>
         </p>
       </Card>
-    </div>
+    </AuthLayout>
   );
 }
 

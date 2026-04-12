@@ -43,8 +43,9 @@ export default function CompleteOAuthPage() {
   }
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
-      <Card className="w-full max-w-md p-8">
+    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12 bg-gradient-to-b from-slate-50 to-white">
+      <div style={{ animation: "fadeInUp 0.5s ease-out" }}>
+      <Card className="w-full max-w-md p-8 shadow-lg">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-secondary">One last step</h1>
           <p className="text-muted mt-2">How will you use Trovaar?</p>
@@ -62,10 +63,10 @@ export default function CompleteOAuthPage() {
               <button
                 type="button"
                 onClick={() => setRole("consumer")}
-                className={`p-4 rounded-lg border-2 text-center transition-all cursor-pointer ${
+                className={`p-4 rounded-2xl border-2 text-center transition-all duration-200 cursor-pointer ${
                   role === "consumer"
-                    ? "border-primary bg-primary/5 text-primary"
-                    : "border-border text-muted hover:border-primary/30"
+                    ? "border-primary bg-primary/5 text-primary shadow-sm"
+                    : "border-border text-muted hover:border-primary/30 hover:shadow-sm"
                 }`}
               >
                 <svg className="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,10 +79,10 @@ export default function CompleteOAuthPage() {
               <button
                 type="button"
                 onClick={() => setRole("contractor")}
-                className={`p-4 rounded-lg border-2 text-center transition-all cursor-pointer ${
+                className={`p-4 rounded-2xl border-2 text-center transition-all duration-200 cursor-pointer ${
                   role === "contractor"
-                    ? "border-primary bg-primary/5 text-primary"
-                    : "border-border text-muted hover:border-primary/30"
+                    ? "border-primary bg-primary/5 text-primary shadow-sm"
+                    : "border-border text-muted hover:border-primary/30 hover:shadow-sm"
                 }`}
               >
                 <svg className="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,6 +108,7 @@ export default function CompleteOAuthPage() {
           </Button>
         </form>
       </Card>
+      </div>
     </div>
   );
 }

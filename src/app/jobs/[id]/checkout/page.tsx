@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 export default function CheckoutDisclaimerPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -105,9 +106,10 @@ export default function CheckoutDisclaimerPage({ params }: { params: Promise<{ i
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
+    <div className="max-w-2xl mx-auto px-4 py-10">
       {/* Header */}
-      <div className="mb-6">
+      <ScrollReveal>
+      <div className="mb-8">
         <Link href={`/jobs/${id}`} className="text-sm text-muted hover:text-secondary flex items-center gap-1 mb-4">
           ← Back to job
         </Link>
@@ -116,9 +118,11 @@ export default function CheckoutDisclaimerPage({ params }: { params: Promise<{ i
           Please review and accept the following terms before proceeding to payment.
         </p>
       </div>
+      </ScrollReveal>
 
       {job && (
-        <div className="bg-surface rounded-xl border border-border px-4 py-3 mb-6 flex items-center justify-between">
+        <ScrollReveal delay={100}>
+        <div className="bg-surface rounded-2xl border border-border px-5 py-4 mb-8 flex items-center justify-between shadow-sm">
           <div>
             <p className="text-xs text-muted">Service Request</p>
             <p className="font-semibold text-secondary">{job.title}</p>
@@ -128,9 +132,10 @@ export default function CheckoutDisclaimerPage({ params }: { params: Promise<{ i
             <p className="text-xs font-medium text-green-600">🔒 Secure Payment</p>
           </div>
         </div>
+        </ScrollReveal>
       )}
 
-      <div className="space-y-4 mb-8">
+      <div className="space-y-5 mb-8">
 
         {/* 1. Adult present */}
         <DisclaimerBlock
@@ -250,7 +255,8 @@ export default function CheckoutDisclaimerPage({ params }: { params: Promise<{ i
           {error}
         </div>
       )}
-      <div className={`rounded-xl border-2 p-6 transition-all ${allChecked ? "border-primary bg-primary/5" : "border-border bg-surface"}`}>
+      <ScrollReveal delay={200}>
+      <div className={`rounded-2xl border-2 p-6 transition-all duration-300 ${allChecked ? "border-primary bg-primary/5 shadow-lg" : "border-border bg-surface"}`}>
         <div className="flex items-center gap-3 mb-4">
           <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${allChecked ? "bg-primary text-white" : "bg-surface-dark text-muted"}`}>
             {allChecked ? "✓" : Object.values(checks).filter(Boolean).length + "/" + Object.keys(checks).length}
@@ -281,6 +287,7 @@ export default function CheckoutDisclaimerPage({ params }: { params: Promise<{ i
           Payment is processed securely via Stripe. Your card details are never stored by Trovaar.
         </p>
       </div>
+      </ScrollReveal>
     </div>
   );
 }
@@ -307,7 +314,7 @@ function DisclaimerBlock({
 }) {
   const c = colorMap[color];
   return (
-    <div className={`rounded-xl border ${c.border} ${c.bg} overflow-hidden`}>
+    <div className={`rounded-2xl border ${c.border} ${c.bg} overflow-hidden hover:shadow-md transition-shadow duration-300`}>
       <div className="px-5 pt-4 pb-3">
         <div className="flex items-center gap-2 mb-2">
           <span className="text-xl">{icon}</span>

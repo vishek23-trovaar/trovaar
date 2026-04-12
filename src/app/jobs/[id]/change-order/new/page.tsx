@@ -6,6 +6,7 @@ import Link from "next/link";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 interface MaterialLine {
   description: string;
@@ -99,19 +100,22 @@ export default function NewChangeOrderPage({ params }: { params: Promise<{ id: s
   }
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-8">
+    <div className="max-w-xl mx-auto px-4 py-10">
+      <ScrollReveal>
       <Link href={`/jobs/${id}`} className="text-sm text-muted hover:text-secondary flex items-center gap-1 mb-4">
         ← Back to job
       </Link>
       <h1 className="text-2xl font-bold text-secondary mb-1">Submit Change Order</h1>
-      <p className="text-muted mb-6 text-sm">
+      <p className="text-muted mb-8 text-sm">
         Use a change order when additional work or materials are required beyond the original bid. The consumer must approve before you proceed.
       </p>
+      </ScrollReveal>
 
-      <Card className="p-6 space-y-5">
+      <ScrollReveal delay={100}>
+      <Card className="p-6 space-y-5 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300">
         {error && <div className="bg-red-50 text-danger text-sm p-3 rounded-lg">{error}</div>}
 
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
           ⚠️ <strong>Important:</strong> Work requiring this change order must <strong>not</strong> proceed until the consumer approves it.
           Submitting means you've identified new scope, not that you've already done the work.
         </div>
@@ -214,6 +218,7 @@ export default function NewChangeOrderPage({ params }: { params: Promise<{ id: s
           Submit Change Order for Approval
         </Button>
       </Card>
+      </ScrollReveal>
     </div>
   );
 }

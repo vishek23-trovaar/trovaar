@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { CATEGORY_GROUPS } from "@/lib/constants";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 function getCategoryLabel(value: string): string {
   for (const g of CATEGORY_GROUPS) {
@@ -94,20 +95,22 @@ export default function ContractorEarningsPage() {
       </div>
 
       {/* Summary cards */}
+      <ScrollReveal delay={0}>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 text-center">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
           <p className="text-3xl font-bold text-green-600">{fmt(totalCents)}</p>
           <p className="text-sm text-gray-500 mt-1">Total Earned (Net)</p>
         </div>
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 text-center">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
           <p className="text-3xl font-bold text-blue-600">{fmt(thisMonthCents)}</p>
           <p className="text-sm text-gray-500 mt-1">This Month (Net)</p>
         </div>
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 text-center">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
           <p className="text-3xl font-bold text-indigo-600">{earnings.length}</p>
           <p className="text-sm text-gray-500 mt-1">Jobs Completed</p>
         </div>
       </div>
+      </ScrollReveal>
 
       {/* Earnings list */}
       {loading ? (
@@ -129,7 +132,8 @@ export default function ContractorEarningsPage() {
           </Link>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+        <ScrollReveal delay={100}>
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
             <p className="text-sm font-semibold text-gray-700">Payment History</p>
             <p className="text-xs text-gray-400">{earnings.length} job{earnings.length !== 1 ? "s" : ""}</p>
@@ -138,7 +142,7 @@ export default function ContractorEarningsPage() {
             {earnings.map((row) => (
               <div
                 key={row.job_id}
-                className="flex items-center justify-between p-4 gap-4 hover:bg-gray-50/60 transition-colors"
+                className="flex items-center justify-between p-4 gap-4 hover:bg-gray-50/60 transition-all duration-200"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-10 h-10 rounded-xl bg-green-50 border border-green-100 flex items-center justify-center text-xl shrink-0">
@@ -174,6 +178,7 @@ export default function ContractorEarningsPage() {
             <p className="text-sm font-bold text-green-600">{fmt(totalCents)}</p>
           </div>
         </div>
+        </ScrollReveal>
       )}
     </div>
   );

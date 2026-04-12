@@ -6,6 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Card from "@/components/ui/Card";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 interface MaterialLine {
   description: string;
@@ -241,7 +242,7 @@ export default function SubmitBidPage({ params }: { params: Promise<{ id: string
   if (user && user.role !== "contractor") {
     return (
       <div className="max-w-2xl mx-auto px-4 py-8 text-center">
-        <Card className="p-8">
+        <Card className="p-8 rounded-2xl">
           <p className="text-lg font-semibold text-secondary mb-2">Contractors Only</p>
           <p className="text-sm text-muted mb-4">Only contractor accounts can submit bids on jobs.</p>
           <Button onClick={() => router.push(`/jobs/${id}`)}>Back to Job</Button>
@@ -253,7 +254,7 @@ export default function SubmitBidPage({ params }: { params: Promise<{ id: string
   if (user && job && user.id === job.consumer_id) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-8 text-center">
-        <Card className="p-8">
+        <Card className="p-8 rounded-2xl">
           <p className="text-lg font-semibold text-secondary mb-2">Cannot Bid on Your Own Job</p>
           <p className="text-sm text-muted mb-4">You cannot submit a bid on a job you created.</p>
           <Button onClick={() => router.push(`/jobs/${id}`)}>Back to Job</Button>
@@ -266,7 +267,7 @@ export default function SubmitBidPage({ params }: { params: Promise<{ id: string
   if (!portfolioLoading && portfolioCount !== null && portfolioCount < 3) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-8 text-center">
-        <Card className="p-8">
+        <Card className="p-8 rounded-2xl">
           <div className="text-4xl mb-4">📸</div>
           <p className="text-lg font-semibold text-secondary mb-2">Portfolio Required</p>
           <p className="text-sm text-muted mb-2">
@@ -289,11 +290,14 @@ export default function SubmitBidPage({ params }: { params: Promise<{ id: string
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-secondary mb-2">Submit Your Bid</h1>
-      {job && <p className="text-muted mb-6">For: <strong>{job.title}</strong></p>}
+    <div className="max-w-2xl mx-auto px-4 py-10">
+      <ScrollReveal>
+        <h1 className="text-2xl font-bold text-secondary mb-2">Submit Your Bid</h1>
+        {job && <p className="text-muted mb-6">For: <strong>{job.title}</strong></p>}
+      </ScrollReveal>
 
-      <Card className="p-6 sm:p-8">
+      <ScrollReveal delay={100}>
+      <Card className="p-6 sm:p-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300">
         <form onSubmit={handleSubmit} className="space-y-7">
           {error && (
             <div role="alert" aria-live="polite" className="bg-red-50 text-danger text-sm p-3 rounded-lg">{error}</div>
@@ -652,6 +656,7 @@ export default function SubmitBidPage({ params }: { params: Promise<{ id: string
           </Button>
         </form>
       </Card>
+      </ScrollReveal>
     </div>
   );
 }

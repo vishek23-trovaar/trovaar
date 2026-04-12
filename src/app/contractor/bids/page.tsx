@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { JobWithBidCount } from "@/types";
 import { CATEGORY_GROUPS } from "@/lib/constants";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 function getCategoryIcon(value: string): string {
   for (const g of CATEGORY_GROUPS) {
@@ -136,6 +137,7 @@ export default function ContractorBidsPage() {
       </div>
 
       {/* Summary cards */}
+      <ScrollReveal delay={0}>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         {[
           { key: "all",      label: "Total Bids",   color: "text-gray-800" },
@@ -146,7 +148,7 @@ export default function ContractorBidsPage() {
           <button
             key={s.key}
             onClick={() => setFilter(s.key as typeof filter)}
-            className={`bg-white rounded-xl border p-4 text-center transition-all cursor-pointer ${
+            className={`bg-white rounded-2xl border p-4 text-center transition-all duration-300 cursor-pointer hover:shadow-lg hover:-translate-y-0.5 ${
               filter === s.key ? "border-primary shadow-sm" : "border-gray-100 hover:border-gray-200"
             }`}
           >
@@ -155,6 +157,7 @@ export default function ContractorBidsPage() {
           </button>
         ))}
       </div>
+      </ScrollReveal>
 
       {/* Bid list */}
       {loading ? (
@@ -182,10 +185,11 @@ export default function ContractorBidsPage() {
           )}
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+        <ScrollReveal delay={100}>
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
           <div className="divide-y divide-gray-50">
             {filtered.map((bid) => (
-              <div key={bid.id} className="p-4 hover:bg-gray-50/60 transition-colors">
+              <div key={bid.id} className="p-4 hover:bg-gray-50/60 transition-all duration-200">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-start gap-3 min-w-0">
                     <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center text-xl shrink-0">
@@ -221,6 +225,7 @@ export default function ContractorBidsPage() {
             ))}
           </div>
         </div>
+        </ScrollReveal>
       )}
     </div>
   );

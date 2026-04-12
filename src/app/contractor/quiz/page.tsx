@@ -262,7 +262,7 @@ export default function QuizPage() {
                 return (
                   <div
                     key={cat}
-                    className="bg-white rounded-2xl border border-border p-5 flex items-center justify-between gap-4"
+                    className="bg-white rounded-2xl border border-border p-5 flex items-center justify-between gap-4 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
                   >
                     <div className="flex-1 min-w-0">
                       <h3 className="text-sm font-bold text-secondary">{label}</h3>
@@ -307,7 +307,7 @@ export default function QuizPage() {
             </div>
           )}
 
-          <div className="mt-8 bg-blue-50 border border-blue-200 rounded-xl p-4">
+          <div className="mt-8 bg-blue-50 border border-blue-200 rounded-2xl p-4">
             <h3 className="text-sm font-semibold text-blue-800 mb-1">How it works</h3>
             <ul className="text-xs text-blue-700 space-y-1">
               <li>- 10 questions per quiz, drawn from real trade knowledge</li>
@@ -522,7 +522,7 @@ export default function QuizPage() {
               return (
                 <div
                   key={q.id}
-                  className={`rounded-xl border p-4 ${
+                  className={`rounded-2xl border p-4 transition-all duration-300 hover:shadow-md ${
                     result?.correct
                       ? "border-emerald-200 bg-emerald-50/30"
                       : "border-red-200 bg-red-50/30"

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 interface JobTemplate {
   id: string;
@@ -134,7 +135,7 @@ export default function TemplatesPage() {
         </div>
       ) : templates.length === 0 ? (
         /* Empty state */
-        <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-16 text-center">
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-16 text-center">
           <div className="text-4xl mb-4">📋</div>
           <h2 className="text-lg font-semibold text-slate-800 mb-2">No templates yet</h2>
           <p className="text-sm text-slate-500 max-w-xs mx-auto">
@@ -143,10 +144,10 @@ export default function TemplatesPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {templates.map((template) => (
+          {templates.map((template, i) => (
+            <ScrollReveal key={template.id} delay={i * 80}>
             <div
-              key={template.id}
-              className="bg-white rounded-xl shadow-sm border border-slate-100 p-5 flex flex-col gap-3 hover:shadow-md transition-shadow"
+              className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex flex-col gap-3 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
             >
               {/* Template name */}
               <div className="flex items-start justify-between gap-2">
@@ -190,6 +191,7 @@ export default function TemplatesPage() {
                 )}
               </div>
             </div>
+            </ScrollReveal>
           ))}
         </div>
       )}

@@ -19,8 +19,11 @@ export default function DashboardRedirect() {
   }, [user, loading, router]);
 
   return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+    <div className="flex items-center justify-center min-h-[60vh]" style={{ animation: "fadeInUp 0.4s ease-out" }}>
+      <div className="flex flex-col items-center gap-3">
+        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+        <p className="text-sm text-muted">Redirecting...</p>
+      </div>
     </div>
   );
 }

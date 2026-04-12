@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 interface SubscriptionPlan {
   id: string;
@@ -150,16 +151,16 @@ export default function SubscriptionsPage() {
       </section>
 
       {/* How it works */}
-      <section className="py-16 px-4 bg-slate-50">
+      <section className="py-20 px-4 bg-slate-50">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-center text-slate-900 mb-10">How it works</h2>
+          <h2 className="text-2xl font-bold text-center text-slate-900 mb-12">How it works</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {[
               { step: "1", icon: "📋", title: "Choose a plan", desc: "Pick a subscription tier that fits your home's needs and your schedule." },
               { step: "2", icon: "📅", title: "Schedule services", desc: "Log in, pick a service from the fixed-price menu, and choose your preferred date." },
               { step: "3", icon: "🔧", title: "Contractor arrives", desc: "A top-rated, vetted contractor shows up and gets the job done — at the fixed price." },
             ].map((item) => (
-              <div key={item.step} className="bg-white rounded-xl p-6 text-center shadow-sm border border-slate-100">
+              <div key={item.step} className="bg-white rounded-2xl p-6 text-center shadow-sm border border-slate-100 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                 <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
                   {item.icon}
                 </div>
@@ -173,7 +174,7 @@ export default function SubscriptionsPage() {
       </section>
 
       {/* Plans */}
-      <section id="plans" className="py-16 px-4">
+      <section id="plans" className="py-20 px-4">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl font-bold text-center text-slate-900 mb-2">Choose your plan</h2>
           <p className="text-center text-slate-500 mb-10">No contracts. Cancel anytime.</p>
@@ -191,7 +192,7 @@ export default function SubscriptionsPage() {
                 return (
                   <div
                     key={plan.id}
-                    className={`relative rounded-2xl border-2 p-7 flex flex-col ${colors.card} shadow-sm hover:shadow-md transition-shadow`}
+                    className={`relative rounded-2xl border-2 p-7 flex flex-col ${colors.card} shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300`}
                   >
                     {isRecommended && (
                       <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
@@ -267,7 +268,7 @@ export default function SubscriptionsPage() {
       </section>
 
       {/* Fixed-price services menu */}
-      <section className="py-16 px-4 bg-slate-50">
+      <section className="py-20 px-4 bg-slate-50">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl font-bold text-slate-900 mb-2">Fixed-price service menu</h2>
           <p className="text-slate-500 mb-8">Every service at a transparent, guaranteed price. No surprise quotes.</p>
@@ -280,7 +281,7 @@ export default function SubscriptionsPage() {
               {services.map((svc) => (
                 <div
                   key={svc.id}
-                  className="bg-white rounded-xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-shadow"
+                  className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
                 >
                   <div className="text-3xl mb-3">{svc.icon}</div>
                   <h3 className="font-semibold text-slate-900 mb-1">{svc.name}</h3>
@@ -301,14 +302,14 @@ export default function SubscriptionsPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-16 px-4">
+      <section className="py-20 px-4">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-2xl font-bold text-slate-900 mb-8 text-center">Frequently asked questions</h2>
           <div className="space-y-3">
             {FAQS.map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm"
+                className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}

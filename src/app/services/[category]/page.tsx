@@ -93,7 +93,7 @@ export default async function CategoryPage({ params }: Props) {
             <Link
               key={city.slug}
               href={`/services/${slug}/${city.slug}`}
-              className="group bg-white rounded-lg border border-gray-200 px-4 py-3 text-center shadow-sm hover:shadow-md hover:border-blue-300 transition-all"
+              className="group bg-white rounded-xl border border-gray-200 px-4 py-3 text-center shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-blue-300 transition-all duration-300"
             >
               <span className="text-sm font-semibold text-gray-900 group-hover:text-blue-800 transition-colors">
                 {city.name}
@@ -130,8 +130,8 @@ export default async function CategoryPage({ params }: Props) {
                 desc: "Choose the pro that fits your budget and timeline. Pay securely through Trovaar escrow protection.",
               },
             ].map((item) => (
-              <div key={item.step} className="text-center">
-                <div className="w-12 h-12 bg-blue-800 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+              <div key={item.step} className="text-center p-6 rounded-2xl hover:bg-blue-50/50 transition-colors duration-300">
+                <div className="w-14 h-14 bg-blue-800 text-white rounded-2xl flex items-center justify-center text-xl font-bold mx-auto mb-4 shadow-md">
                   {item.step}
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -170,7 +170,7 @@ export default async function CategoryPage({ params }: Props) {
             ].map((item) => (
               <div
                 key={item.title}
-                className="bg-white rounded-xl border border-gray-200 p-6 text-center shadow-sm"
+                className="bg-white rounded-2xl border border-gray-200 p-6 text-center shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
               >
                 <div className="text-3xl mb-3">{item.icon}</div>
                 <h3 className="font-semibold text-gray-900 mb-2">
@@ -192,7 +192,7 @@ export default async function CategoryPage({ params }: Props) {
             </h2>
             <div className="space-y-6">
               {category.faqs.map((faq, i) => (
-                <div key={i} className="border-b border-gray-200 pb-6">
+                <div key={i} className="border-b border-gray-200 pb-6 hover:pl-2 transition-all duration-200">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">
                     {faq.question}
                   </h3>

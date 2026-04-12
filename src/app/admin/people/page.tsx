@@ -281,7 +281,7 @@ function DetailDrawer({ personId, onClose }: { personId: string; onClose: () => 
                   {/* ID + Insurance documents */}
                   <div className="grid grid-cols-2 gap-4">
                     {/* ID Verification */}
-                    <div className="border border-slate-200 rounded-xl p-4">
+                    <div className="border border-slate-200 rounded-2xl p-4">
                       <div className="flex items-center justify-between mb-2">
                         <p className="text-xs font-bold text-slate-600 uppercase tracking-wide">ID Verification</p>
                         {vBadge(vStatus)}
@@ -298,7 +298,7 @@ function DetailDrawer({ personId, onClose }: { personId: string; onClose: () => 
                     </div>
 
                     {/* Insurance */}
-                    <div className="border border-slate-200 rounded-xl p-4">
+                    <div className="border border-slate-200 rounded-2xl p-4">
                       <div className="flex items-center justify-between mb-2">
                         <p className="text-xs font-bold text-slate-600 uppercase tracking-wide">Insurance</p>
                         {vBadge(iStatus)}
@@ -329,7 +329,7 @@ function DetailDrawer({ personId, onClose }: { personId: string; onClose: () => 
                   </div>
 
                   {/* Earnings */}
-                  <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-4">
+                  <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-4">
                     <p className="text-xs font-bold text-emerald-700 uppercase tracking-wide mb-3">Earnings Summary</p>
                     <div className="grid grid-cols-3 gap-3">
                       <div className="text-center">
@@ -421,7 +421,7 @@ function DetailDrawer({ personId, onClose }: { personId: string; onClose: () => 
                   </div>
 
                   {/* Spend */}
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4">
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-4">
                     <p className="text-xs font-bold text-blue-700 uppercase tracking-wide mb-2">Spend Summary</p>
                     <p className="text-2xl font-bold text-blue-700">{fmtUSD(data.spend?.total_spent_cents ?? 0)}</p>
                     <p className="text-xs text-blue-500 mt-0.5">Total spent across {data.spend?.completed_jobs ?? 0} completed jobs</p>
@@ -578,7 +578,7 @@ export default function AdminPeoplePage() {
       </div>
 
       {/* Search + sort + filter chips */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 mb-6 space-y-3">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 mb-6 space-y-3">
         <div className="flex gap-3">
           <input type="text" value={search} onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") fetchPeople(1, search); }}
@@ -607,7 +607,7 @@ export default function AdminPeoplePage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-16">
             <div className="animate-spin w-8 h-8 border-4 border-slate-300 border-t-slate-700 rounded-full" />

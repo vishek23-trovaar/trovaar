@@ -4,6 +4,7 @@ import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import Card from "@/components/ui/Card";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 import { CATEGORIES, CATEGORY_GROUPS, CONTRACTOR_TYPES } from "@/lib/constants";
 
 function getCategoryIcon(value: string): string {
@@ -112,9 +113,10 @@ export default function CertificatePage({ params }: { params: Promise<{ id: stri
   const generatedDate = new Date(cert.generatedAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
+    <div className="max-w-2xl mx-auto px-4 py-10">
       {/* Print/Back nav — hidden on print */}
-      <div className="flex items-center justify-between mb-6 print:hidden">
+      <ScrollReveal>
+      <div className="flex items-center justify-between mb-8 print:hidden">
         <Link href={`/jobs/${id}`} className="text-sm text-primary hover:underline">← Back to job</Link>
         <button
           onClick={handlePrint}
@@ -127,9 +129,11 @@ export default function CertificatePage({ params }: { params: Promise<{ id: stri
           Print / Save PDF
         </button>
       </div>
+      </ScrollReveal>
 
       {/* Certificate */}
-      <div className="bg-white border-4 border-primary/20 rounded-2xl shadow-xl overflow-hidden print:border-2 print:shadow-none print:rounded-none">
+      <ScrollReveal delay={100}>
+      <div className="bg-white border-4 border-primary/20 rounded-2xl shadow-xl overflow-hidden print:border-2 print:shadow-none print:rounded-none hover:shadow-2xl transition-shadow duration-500">
 
         {/* Header banner */}
         <div className="bg-gradient-to-r from-primary to-accent px-8 py-6 text-white text-center">
@@ -176,7 +180,7 @@ export default function CertificatePage({ params }: { params: Promise<{ id: stri
           </div>
 
           {/* Details */}
-          <div className="bg-gray-50 rounded-xl p-4 space-y-3">
+          <div className="bg-gray-50 rounded-2xl p-5 space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-sm text-muted">Date Completed</span>
               <span className="text-sm font-semibold text-secondary">{completedDate}</span>
@@ -222,6 +226,7 @@ export default function CertificatePage({ params }: { params: Promise<{ id: stri
           </div>
         </div>
       </div>
+      </ScrollReveal>
     </div>
   );
 }

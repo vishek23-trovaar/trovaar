@@ -9,7 +9,7 @@ export default function TermsOfServicePage() {
   return (
     <div className="space-y-10">
 
-      <section>
+      <section className="rounded-2xl bg-white/70 p-6 -mx-2 hover:bg-white/90 transition-colors duration-200">
         <h2 className="text-xl font-semibold text-secondary mb-3">1. Acceptance of Terms</h2>
         <p className="text-muted leading-relaxed">
           By accessing or using the Trovaar platform, website, or any associated mobile applications
@@ -583,7 +583,7 @@ export default function TermsOfServicePage() {
         <p className="text-muted leading-relaxed">
           If you have any questions about these Terms of Service, please contact us:
         </p>
-        <div className="mt-3 p-4 bg-slate-50 rounded-lg text-muted text-sm space-y-1">
+        <div className="mt-3 p-4 bg-slate-50 rounded-2xl text-muted text-sm space-y-1 border border-slate-100">
           <p><strong className="text-secondary">Trovaar, Inc.</strong></p>
           <p>Legal Department</p>
           <p>Email: <a href="mailto:legal@trovaar.com" className="text-primary hover:underline">legal@trovaar.com</a></p>

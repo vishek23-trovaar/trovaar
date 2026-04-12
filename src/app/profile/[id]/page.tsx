@@ -6,6 +6,7 @@ import { CATEGORIES, CONTRACTOR_TYPES, QUALIFICATION_TYPES, getPlatformTier } fr
 import { QUIZ_CATEGORIES } from "@/lib/quiz-questions";
 import { Qualification } from "@/types";
 import { useAuth } from "@/context/AuthContext";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -265,7 +266,8 @@ export default function ContractorProfilePage({
       <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
 
         {/* ── 1. Hero card ───────────────────────────────────────────────────── */}
-        <div className="bg-white shadow-sm rounded-2xl border border-border p-6">
+        <ScrollReveal>
+        <div className="bg-white shadow-sm rounded-2xl border border-border p-6 hover:shadow-md transition-shadow duration-300">
           <div className="flex items-start gap-5">
             {/* Avatar */}
             <div className="shrink-0">
@@ -416,10 +418,12 @@ export default function ContractorProfilePage({
             </div>
           </div>
         </div>
+        </ScrollReveal>
 
         {/* ── 2. About ───────────────────────────────────────────────────────── */}
         {(profile.about_me || profile.bio) && (
-          <div className="bg-white rounded-2xl border border-border p-6">
+          <ScrollReveal delay={100}>
+          <div className="bg-white rounded-2xl border border-border p-6 hover:shadow-sm transition-shadow duration-300">
             <h2 className="text-base font-bold text-secondary mb-3">About {firstName}</h2>
             <p className="text-secondary leading-relaxed">{profile.about_me || profile.bio}</p>
             {contractorTypeDef && contractorTypeDef.value !== "independent" && (
@@ -428,10 +432,12 @@ export default function ContractorProfilePage({
               </p>
             )}
           </div>
+          </ScrollReveal>
         )}
 
         {/* ── 3. Credentials & Verification ─────────────────────────────────── */}
-        <div className="bg-white rounded-2xl border border-border p-6">
+        <ScrollReveal delay={150}>
+        <div className="bg-white rounded-2xl border border-border p-6 hover:shadow-sm transition-shadow duration-300">
           <h2 className="text-base font-bold text-secondary mb-4">Credentials &amp; Trust</h2>
           <div className="space-y-3">
 
@@ -514,10 +520,12 @@ export default function ContractorProfilePage({
             </div>
           </div>
         </div>
+        </ScrollReveal>
 
         {/* ── Skills Assessment Scores ───────────────────────────────────── */}
         {quizScores.length > 0 && (
-          <div className="bg-white rounded-2xl border border-border p-6">
+          <ScrollReveal delay={200}>
+          <div className="bg-white rounded-2xl border border-border p-6 hover:shadow-sm transition-shadow duration-300">
             <h2 className="text-base font-bold text-secondary mb-4">Skills Assessment</h2>
             <div className="flex flex-wrap gap-3">
               {quizScores.map((s) => (
@@ -550,6 +558,7 @@ export default function ContractorProfilePage({
               ))}
             </div>
           </div>
+          </ScrollReveal>
         )}
 
         {/* ── 3b. Certifications ─────────────────────────────────────────── */}
@@ -630,7 +639,8 @@ export default function ContractorProfilePage({
 
         {/* ── 4. Services ───────────────────────────────────────────────────── */}
         {categories.length > 0 && (
-          <div className="bg-white rounded-2xl border border-border p-6">
+          <ScrollReveal delay={200}>
+          <div className="bg-white rounded-2xl border border-border p-6 hover:shadow-sm transition-shadow duration-300">
             <h2 className="text-base font-bold text-secondary mb-4">Services Offered</h2>
             <div className="flex flex-wrap gap-2">
               {categories.map((cat) => {
@@ -646,10 +656,12 @@ export default function ContractorProfilePage({
               })}
             </div>
           </div>
+          </ScrollReveal>
         )}
 
         {/* ── 5. Portfolio ──────────────────────────────────────────────────── */}
-        <div className="bg-white rounded-2xl border border-border p-6">
+        <ScrollReveal delay={250}>
+        <div className="bg-white rounded-2xl border border-border p-6 hover:shadow-sm transition-shadow duration-300">
           <h2 className="text-base font-bold text-secondary mb-1">Work Portfolio</h2>
           <p className="text-sm text-muted mb-5">Before &amp; after photos from completed projects.</p>
           <PortfolioManager contractorId={id} editable={false} />
@@ -692,9 +704,11 @@ export default function ContractorProfilePage({
             </div>
           )}
         </div>
+        </ScrollReveal>
 
         {/* ── 6. Reviews ────────────────────────────────────────────────────── */}
-        <div className="bg-white rounded-2xl border border-border p-6">
+        <ScrollReveal delay={300}>
+        <div className="bg-white rounded-2xl border border-border p-6 hover:shadow-sm transition-shadow duration-300">
           <h2 className="text-base font-bold text-secondary mb-4">
             Reviews{profile.rating_count > 0 ? ` (${profile.rating_count})` : ""}
           </h2>
@@ -791,6 +805,7 @@ export default function ContractorProfilePage({
             </>
           )}
         </div>
+        </ScrollReveal>
 
       </div>
     </div>

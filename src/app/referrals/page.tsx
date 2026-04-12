@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 import Link from "next/link";
 
 interface Referral {
@@ -85,25 +86,28 @@ export default function ReferralsPage() {
     : "";
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Header */}
+      <ScrollReveal>
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Referral Program</h1>
         <p className="text-gray-500 text-sm mt-1">
           Invite friends and earn rewards when they join Trovaar
         </p>
       </div>
+      </ScrollReveal>
 
       {/* Reward Structure */}
+      <ScrollReveal delay={100}>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-        <div className="bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-200 rounded-xl p-5">
+        <div className="bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
           <div className="text-3xl mb-2">🎁</div>
           <h3 className="font-bold text-indigo-900 text-lg">You Earn $25</h3>
           <p className="text-sm text-indigo-700 mt-1">
             When your referred friend completes their first job on Trovaar
           </p>
         </div>
-        <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl p-5">
+        <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
           <div className="text-3xl mb-2">🤝</div>
           <h3 className="font-bold text-emerald-900 text-lg">They Get $10</h3>
           <p className="text-sm text-emerald-700 mt-1">
@@ -111,10 +115,12 @@ export default function ReferralsPage() {
           </p>
         </div>
       </div>
+      </ScrollReveal>
 
       {/* Referral Code Card */}
       {data?.referralCode && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-8">
+        <ScrollReveal delay={150}>
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 mb-8 hover:shadow-md transition-shadow duration-300">
           <h2 className="font-semibold text-gray-900 mb-4">Your Referral Code</h2>
 
           <div className="flex items-center gap-3 mb-4">
@@ -147,33 +153,36 @@ export default function ReferralsPage() {
             </div>
           </div>
         </div>
+        </ScrollReveal>
       )}
 
       {/* Stats */}
+      <ScrollReveal delay={200}>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 text-center">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-md transition-shadow duration-300">
           <p className="text-xl font-bold text-indigo-600">{data?.totalReferred ?? 0}</p>
           <p className="text-xs text-gray-500 mt-1">Total Invited</p>
         </div>
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 text-center">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-md transition-shadow duration-300">
           <p className="text-xl font-bold text-blue-600">
             {data?.referrals?.filter((r) => r.completedFirstJob).length ?? 0}
           </p>
           <p className="text-xs text-gray-500 mt-1">Completed 1st Job</p>
         </div>
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 text-center">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-md transition-shadow duration-300">
           <p className="text-xl font-bold text-green-600">
             ${((data?.totalEarnedCents ?? 0) / 100).toFixed(2)}
           </p>
           <p className="text-xs text-gray-500 mt-1">Total Earned</p>
         </div>
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 text-center">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-md transition-shadow duration-300">
           <p className="text-xl font-bold text-amber-600">
             ${((data?.pendingRewardsCents ?? 0) / 100).toFixed(2)}
           </p>
           <p className="text-xs text-gray-500 mt-1">Pending Rewards</p>
         </div>
       </div>
+      </ScrollReveal>
 
       {/* Credit Balance */}
       {data && data.creditBalanceCents > 0 && (
@@ -187,7 +196,8 @@ export default function ReferralsPage() {
       )}
 
       {/* Referral List */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <ScrollReveal delay={250}>
+      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-100">
           <h2 className="font-semibold text-gray-900">Your Referrals</h2>
         </div>
@@ -230,9 +240,11 @@ export default function ReferralsPage() {
           </div>
         )}
       </div>
+      </ScrollReveal>
 
       {/* How It Works */}
-      <div className="mt-8 bg-gray-50 rounded-xl border border-gray-100 p-6">
+      <ScrollReveal delay={300}>
+      <div className="mt-8 bg-gray-50 rounded-2xl border border-gray-100 p-6">
         <h3 className="font-semibold text-gray-900 mb-4">How It Works</h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="flex items-start gap-3">
@@ -258,6 +270,7 @@ export default function ReferralsPage() {
           </div>
         </div>
       </div>
+      </ScrollReveal>
     </div>
   );
 }

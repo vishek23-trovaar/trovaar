@@ -10,7 +10,7 @@ export default function GuaranteePage() {
     <div className="space-y-10">
 
       {/* Hero badge */}
-      <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-xl px-5 py-4">
+      <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-2xl px-5 py-4 shadow-sm">
         <svg className="w-8 h-8 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
             d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
@@ -51,7 +51,7 @@ export default function GuaranteePage() {
             { step: "3", icon: "💵", title: "Client Selects a Tip (Optional)", desc: "After reviewing, the client can optionally tip the contractor. Tips are voluntary but are the truest signal of satisfaction. High tip rates earn contractors \"Top Rated\" badges." },
             { step: "4", icon: "✅", title: "Escrow Released", desc: "Once the review and tip selection are complete, the contractor's full bid amount (plus any tip) is released. The 20% platform fee is retained by Trovaar." },
           ].map((item) => (
-            <div key={item.step} className="flex items-start gap-4 bg-slate-50 rounded-xl p-4 border border-slate-100">
+            <div key={item.step} className="flex items-start gap-4 bg-slate-50 rounded-2xl p-4 border border-slate-100 hover:shadow-sm hover:bg-slate-50/80 transition-all duration-200">
               <span className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-sm font-bold flex-shrink-0">{item.step}</span>
               <div>
                 <h3 className="font-semibold text-secondary">{item.icon} {item.title}</h3>
@@ -66,7 +66,7 @@ export default function GuaranteePage() {
       <section>
         <h2 className="text-xl font-semibold text-secondary mb-4">How You&apos;re Protected</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="bg-slate-50 rounded-xl p-5 border border-slate-100">
+          <div className="bg-slate-50 rounded-2xl p-5 border border-slate-100 hover:shadow-sm transition-shadow duration-200">
             <div className="text-2xl mb-2">🔒</div>
             <h3 className="font-semibold text-secondary mb-1">Escrow Holds Until You Review</h3>
             <p className="text-sm text-muted">
@@ -74,7 +74,7 @@ export default function GuaranteePage() {
               by completing the mandatory review process.
             </p>
           </div>
-          <div className="bg-slate-50 rounded-xl p-5 border border-slate-100">
+          <div className="bg-slate-50 rounded-2xl p-5 border border-slate-100 hover:shadow-sm transition-shadow duration-200">
             <div className="text-2xl mb-2">🔄</div>
             <h3 className="font-semibold text-secondary mb-1">Re-Service Matching</h3>
             <p className="text-sm text-muted">
@@ -82,7 +82,7 @@ export default function GuaranteePage() {
               contractor to fix it. The repair cost comes from the original contractor&apos;s payout — not you, and not the platform.
             </p>
           </div>
-          <div className="bg-slate-50 rounded-xl p-5 border border-slate-100">
+          <div className="bg-slate-50 rounded-2xl p-5 border border-slate-100 hover:shadow-sm transition-shadow duration-200">
             <div className="text-2xl mb-2">📸</div>
             <h3 className="font-semibold text-secondary mb-1">Photo Verification</h3>
             <p className="text-sm text-muted">
@@ -90,7 +90,7 @@ export default function GuaranteePage() {
               This creates a visual record that protects both parties in case of a dispute.
             </p>
           </div>
-          <div className="bg-slate-50 rounded-xl p-5 border border-slate-100">
+          <div className="bg-slate-50 rounded-2xl p-5 border border-slate-100 hover:shadow-sm transition-shadow duration-200">
             <div className="text-2xl mb-2">⚖️</div>
             <h3 className="font-semibold text-secondary mb-1">Fair Mediation</h3>
             <p className="text-sm text-muted">
@@ -322,7 +322,7 @@ export default function GuaranteePage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-blue-50 border border-blue-200 rounded-xl p-6">
+      <section className="bg-blue-50 border border-blue-200 rounded-2xl p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-blue-800 mb-2">Questions?</h2>
         <p className="text-sm text-blue-700">
           If you have questions about our Resolution Guarantee or need help with an ongoing dispute,

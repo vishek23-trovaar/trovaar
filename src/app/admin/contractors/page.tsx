@@ -174,7 +174,7 @@ export default function AdminContractorsPage() {
       </div>
 
       {/* Search + filter */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm mb-6 p-4">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm mb-6 p-4">
         <div className="flex flex-col sm:flex-row gap-3">
           <input
             type="text"
@@ -207,7 +207,7 @@ export default function AdminContractorsPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-16">
             <div className="animate-spin w-8 h-8 border-4 border-slate-300 border-t-slate-700 rounded-full" />

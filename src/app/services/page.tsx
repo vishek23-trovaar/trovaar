@@ -40,18 +40,19 @@ export default function ServicesIndexPage() {
       </section>
 
       {/* Category Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <h2 className="text-2xl font-bold text-gray-900 mb-10 text-center">
           All Service Categories
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {SEO_CATEGORIES.map((cat) => (
+          {SEO_CATEGORIES.map((cat, i) => (
             <Link
               key={cat.slug}
               href={`/services/${cat.slug}`}
-              className="group bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md hover:border-blue-300 transition-all"
+              className="group bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-blue-300 transition-all duration-300"
+              style={{ animation: `fadeInUp 0.5s ease-out ${Math.min(i * 0.05, 0.4)}s both` }}
             >
-              <div className="text-3xl mb-3">{cat.icon}</div>
+              <div className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-200">{cat.icon}</div>
               <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-800 transition-colors">
                 {cat.name}
               </h3>
@@ -62,9 +63,9 @@ export default function ServicesIndexPage() {
       </section>
 
       {/* How It Works */}
-      <section className="bg-white py-16 border-t border-gray-200">
+      <section className="bg-white py-20 border-t border-gray-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-10 text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-12 text-center">
             How Trovaar Works
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -84,9 +85,9 @@ export default function ServicesIndexPage() {
                 title: "Hire the Best Pro",
                 desc: "Choose the pro that fits your budget and timeline. Pay securely through Trovaar escrow protection.",
               },
-            ].map((item) => (
-              <div key={item.step} className="text-center">
-                <div className="w-12 h-12 bg-blue-800 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+            ].map((item, i) => (
+              <div key={item.step} className="text-center p-6 rounded-2xl hover:bg-blue-50/50 transition-colors duration-300" style={{ animation: `fadeInUp 0.5s ease-out ${i * 0.15}s both` }}>
+                <div className="w-14 h-14 bg-blue-800 text-white rounded-2xl flex items-center justify-center text-xl font-bold mx-auto mb-4 shadow-md">
                   {item.step}
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
@@ -98,9 +99,9 @@ export default function ServicesIndexPage() {
       </section>
 
       {/* Trust Signals */}
-      <section className="bg-gray-50 py-16 border-t border-gray-200">
+      <section className="bg-gray-50 py-20 border-t border-gray-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-10 text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-12 text-center">
             Why Homeowners Trust Trovaar
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
@@ -118,7 +119,7 @@ export default function ServicesIndexPage() {
                 desc: "Every dispute gets a fair resolution. 48-hour escrow review, re-service matching, and admin mediation.",
               },
             ].map((item) => (
-              <div key={item.title} className="bg-white rounded-xl border border-gray-200 p-6 text-center shadow-sm">
+              <div key={item.title} className="bg-white rounded-2xl border border-gray-200 p-6 text-center shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                 <h3 className="font-semibold text-gray-900 mb-2">{item.title}</h3>
                 <p className="text-sm text-gray-600">{item.desc}</p>
               </div>

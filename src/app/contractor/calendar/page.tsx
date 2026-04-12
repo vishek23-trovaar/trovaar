@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 interface CalendarJob {
   id: string;
@@ -233,7 +234,7 @@ export default function ContractorCalendarPage() {
               <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
             </div>
           ) : (
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
               {/* Day headers */}
               <div className="grid grid-cols-7 border-b border-gray-200">
                 {DAY_NAMES.map((d) => (
@@ -290,7 +291,8 @@ export default function ContractorCalendarPage() {
           )}
 
           {/* Weekly recurring availability */}
-          <div className="mt-6 bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+          <ScrollReveal delay={100}>
+          <div className="mt-6 bg-white rounded-2xl border border-gray-200 shadow-sm p-4">
             <h3 className="font-semibold text-gray-900 mb-3">Weekly Recurring Availability</h3>
             {weeklySlots.length === 0 ? (
               <p className="text-sm text-gray-500">No recurring schedule set.</p>
@@ -320,12 +322,13 @@ export default function ContractorCalendarPage() {
               + Add Weekly Schedule
             </button>
           </div>
+          </ScrollReveal>
         </div>
 
         {/* Day Detail Panel */}
         <div className="w-full lg:w-80 shrink-0">
           {selectedDate && selectedInfo ? (
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 sticky top-4">
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 sticky top-4">
               <h3 className="font-semibold text-gray-900">{selectedInfo.dayName}</h3>
               <p className="text-sm text-gray-500 mb-4">{selectedInfo.formatted}</p>
 
@@ -396,7 +399,7 @@ export default function ContractorCalendarPage() {
               </div>
             </div>
           ) : (
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 text-center">
+            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 text-center">
               <div className="text-3xl mb-2">📅</div>
               <p className="text-sm text-gray-500">Click a day to see details</p>
             </div>
@@ -407,7 +410,7 @@ export default function ContractorCalendarPage() {
       {/* Add Slot Modal */}
       {showAddForm && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={() => setShowAddForm(false)}>
-          <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               {formType === "weekly" ? "Add Weekly Schedule" : formType === "block" ? "Block Time" : "Add Availability"}
             </h3>

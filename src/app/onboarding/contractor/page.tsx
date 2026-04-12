@@ -227,7 +227,7 @@ export default function ContractorOnboarding() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 to-accent/5 flex items-start justify-center pt-12 px-4 pb-20">
-      <div className="w-full max-w-xl">
+      <div className="w-full max-w-xl" style={{ animation: "fadeInUp 0.6s ease-out" }}>
         {/* Progress */}
         <div className="flex items-center justify-center gap-2 mb-8">
           {STEP_LABELS.map((label, i) => {
@@ -240,7 +240,7 @@ export default function ContractorOnboarding() {
                   <div className={`h-0.5 w-8 ${isDone ? "bg-primary" : "bg-border"}`} />
                 )}
                 <div className="flex flex-col items-center gap-1">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
                     isDone ? "bg-primary text-white" :
                     isActive ? "bg-primary text-white ring-4 ring-primary/20" :
                     "bg-surface-dark text-muted"
@@ -258,7 +258,7 @@ export default function ContractorOnboarding() {
 
         {/* Step 1 — Profile */}
         {step === 1 && (
-          <Card className="p-8">
+          <Card className="p-8 shadow-md hover:shadow-lg transition-shadow duration-300">
             <h1 className="text-2xl font-bold text-secondary mb-1">Set up your profile</h1>
             <p className="text-muted text-sm mb-6">Help consumers find and trust you.</p>
 
@@ -605,7 +605,7 @@ export default function ContractorOnboarding() {
 
         {/* Step 2 — Services */}
         {step === 2 && (
-          <Card className="p-8">
+          <Card className="p-8 shadow-md hover:shadow-lg transition-shadow duration-300">
             <h1 className="text-2xl font-bold text-secondary mb-1">What do you do?</h1>
             <p className="text-muted text-sm mb-6">Select all service categories that apply. You&apos;ll see more relevant jobs in your feed.</p>
 
@@ -652,7 +652,7 @@ export default function ContractorOnboarding() {
 
         {/* Step 3 — Stripe */}
         {step === 3 && (
-          <Card className="p-8">
+          <Card className="p-8 shadow-md hover:shadow-lg transition-shadow duration-300">
             <div className="text-center mb-6">
               <div className="text-5xl mb-4">💳</div>
               <h1 className="text-2xl font-bold text-secondary mb-2">Set up payouts</h1>
@@ -704,7 +704,7 @@ export default function ContractorOnboarding() {
 
         {/* Step 4 — Identity Verification */}
         {step === 4 && (
-          <Card className="p-8">
+          <Card className="p-8 shadow-md hover:shadow-lg transition-shadow duration-300">
             <div className="text-center mb-6">
               <div className="text-5xl mb-4">🪪</div>
               <h1 className="text-2xl font-bold text-secondary mb-2">Verify Your Identity</h1>

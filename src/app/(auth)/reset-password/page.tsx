@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import AuthLayout from "@/components/layout/AuthLayout";
 
 function ResetPasswordForm() {
   const router = useRouter();
@@ -179,8 +180,8 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
-      <Card className="w-full max-w-md p-8">
+    <AuthLayout>
+      <Card className="w-full p-8">
         <div className="text-center mb-8">
           <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -196,6 +197,6 @@ export default function ResetPasswordPage() {
           <ResetPasswordForm />
         </Suspense>
       </Card>
-    </div>
+    </AuthLayout>
   );
 }

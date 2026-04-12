@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 const CONSUMER_REASONS = [
   { value: "work_not_completed", label: "Work was not completed" },
@@ -121,7 +122,7 @@ export default function DisputePage({ params }: { params: Promise<{ id: string }
   if (existingDispute) {
     return (
       <div className="max-w-lg mx-auto px-4 py-12">
-        <Card className="p-8 text-center">
+        <Card className="p-8 text-center rounded-2xl shadow-md">
           <div className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-4">
             <svg className="w-7 h-7 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
@@ -146,7 +147,8 @@ export default function DisputePage({ params }: { params: Promise<{ id: string }
 
   return (
     <div className="max-w-lg mx-auto px-4 py-12">
-      <div className="mb-6">
+      <ScrollReveal>
+      <div className="mb-8">
         <Link href={`/jobs/${id}`} className="text-sm text-primary hover:underline flex items-center gap-1">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -162,8 +164,10 @@ export default function DisputePage({ params }: { params: Promise<{ id: string }
           )}
         </p>
       </div>
+      </ScrollReveal>
 
-      <Card className="p-6">
+      <ScrollReveal delay={100}>
+      <Card className="p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300">
         {success ? (
           <div className="text-center py-6">
             <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-4">
@@ -194,10 +198,10 @@ export default function DisputePage({ params }: { params: Promise<{ id: string }
                 {reasons.map((r) => (
                   <label
                     key={r.value}
-                    className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
+                    className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all duration-300 ${
                       reason === r.value
-                        ? "border-primary bg-primary/5"
-                        : "border-border hover:border-primary/40"
+                        ? "border-primary bg-primary/5 shadow-sm"
+                        : "border-border hover:border-primary/40 hover:shadow-sm"
                     }`}
                   >
                     <input
@@ -230,7 +234,7 @@ export default function DisputePage({ params }: { params: Promise<{ id: string }
             </div>
 
             {/* Info box */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
               <div className="flex gap-2">
                 <svg className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -265,6 +269,7 @@ export default function DisputePage({ params }: { params: Promise<{ id: string }
           </form>
         )}
       </Card>
+      </ScrollReveal>
     </div>
   );
 }

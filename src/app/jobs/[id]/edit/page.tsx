@@ -6,6 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Card from "@/components/ui/Card";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 import ImageUploader from "@/components/jobs/ImageUploader";
 import { CATEGORY_GROUPS, URGENCY_LEVELS } from "@/lib/constants";
 import { JobWithBidCount } from "@/types";
@@ -130,15 +131,18 @@ export default function EditJobPage({ params }: { params: Promise<{ id: string }
   if (!job) return null;
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
-      <div className="mb-6">
+    <div className="max-w-2xl mx-auto px-4 py-10">
+      <ScrollReveal>
+      <div className="mb-8">
         <h1 className="text-2xl font-bold text-secondary">Edit Job</h1>
         <p className="text-muted text-sm mt-1">
           Changes are only allowed while no bid has been accepted.
         </p>
       </div>
+      </ScrollReveal>
 
-      <Card className="p-6 sm:p-8">
+      <ScrollReveal delay={100}>
+      <Card className="p-6 sm:p-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300">
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
             <div className="bg-red-50 text-danger text-sm p-3 rounded-lg">{error}</div>
@@ -271,6 +275,7 @@ export default function EditJobPage({ params }: { params: Promise<{ id: string }
           </div>
         </form>
       </Card>
+      </ScrollReveal>
     </div>
   );
 }

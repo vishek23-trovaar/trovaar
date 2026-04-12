@@ -19,6 +19,7 @@ import { CollaborationPanel } from "@/components/jobs/CollaborationPanel";
 import { ConsumerProtectPanel } from "@/components/jobs/ConsumerProtectPanel";
 import { CallLog } from "@/components/calls/CallLog";
 import GuaranteeBadge from "@/components/GuaranteeBadge";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 import { CATEGORIES, CATEGORY_GROUPS, URGENCY_LEVELS, PLATFORM_MARKUP } from "@/lib/constants";
 import { clientScanMessage } from "@/lib/messageScanner";
 import { JobWithBidCount, BidWithContractor, JobStatus, Review } from "@/types";
@@ -628,7 +629,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-4 py-10">
       {/* Lightbox */}
       {lightboxSrc && (
         <div
@@ -784,7 +785,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
       </div>
 
       {/* Status timeline */}
-      <Card className="px-4 py-3 mb-6">
+      <Card className="px-4 py-3 mb-6 rounded-2xl shadow-sm">
         <JobStatusTimeline status={job.status} scheduledArrivalAt={(job as unknown as { scheduled_arrival_at?: string | null }).scheduled_arrival_at} />
       </Card>
 
@@ -796,7 +797,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
         if (job.status === "completed") {
           return (
-            <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl px-5 py-4 mb-6">
+            <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-2xl px-5 py-4 mb-6">
               <span className="text-2xl">✅</span>
               <div>
                 <p className="font-semibold text-green-900 text-sm">Payment Released to Contractor</p>
@@ -811,7 +812,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
         if ((job as any).contractor_confirmed && !((job as any).consumer_confirmed)) {
           return (
-            <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-xl px-5 py-4 mb-6">
+            <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 mb-6">
               <span className="text-2xl">🔒</span>
               <div>
                 <p className="font-semibold text-amber-900 text-sm">Payment Secured in Escrow</p>
@@ -826,7 +827,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
         if (["accepted", "en_route", "arrived", "in_progress"].includes(job.status)) {
           return (
-            <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-xl px-5 py-4 mb-6">
+            <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-2xl px-5 py-4 mb-6">
               <span className="text-2xl">🔒</span>
               <div>
                 <p className="font-semibold text-blue-900 text-sm">Payment Secured in Escrow</p>
@@ -911,7 +912,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
           {/* Left: Photos + Description + Bids */}
           <div className="lg:col-span-2 space-y-6">
             {photos.length > 0 && (
-              <Card className="overflow-hidden">
+              <Card className="overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
                 <div className={`grid gap-2 p-2 ${photos.length > 1 ? "grid-cols-2" : "grid-cols-1"}`}>
                   {photos.map((photo, i) => {
                     const isVideo = photo.match(/\.(mp4|mov|webm)$/i);
@@ -935,7 +936,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
             )}
 
             {job.description && (
-              <Card className="p-6">
+              <Card className="p-6 rounded-2xl">
                 <h2 className="font-semibold text-secondary mb-2">Description</h2>
                 <p className="text-muted whitespace-pre-wrap">{job.description}</p>
               </Card>
@@ -943,7 +944,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
             {/* AI Q&A */}
             {aiQuestions.length > 0 && (
-              <Card className="p-6 border-violet-100 bg-violet-50/40">
+              <Card className="p-6 border-violet-100 bg-violet-50/40 rounded-2xl">
                 <div className="flex items-center gap-2 mb-4">
                   <span className="text-lg">✨</span>
                   <h2 className="font-semibold text-secondary text-sm">Additional Details</h2>
@@ -962,7 +963,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
             {/* Vision Board */}
             {hasVisionBoard && (
-              <Card className="p-6 border-pink-100 bg-gradient-to-br from-pink-50/50 to-purple-50/30">
+              <Card className="p-6 border-pink-100 bg-gradient-to-br from-pink-50/50 to-purple-50/30 rounded-2xl">
                 <div className="flex items-center gap-2 mb-4">
                   <span className="text-xl">🎯</span>
                   <h2 className="font-semibold text-secondary text-sm">Vision Board</h2>
@@ -1866,7 +1867,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
             {/* Location Map */}
             {job.latitude != null && job.longitude != null && (
-              <Card className="overflow-hidden">
+              <Card className="overflow-hidden rounded-2xl shadow-sm">
                 <div style={{ height: 200 }}>
                   <JobMap
                     jobs={[job]}
@@ -1900,7 +1901,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
             )}
 
             {/* Posted By */}
-            <Card className="p-6">
+            <Card className="p-6 rounded-2xl">
               <h3 className="font-semibold text-secondary mb-2">Posted By</h3>
               <p className="text-muted">{job.consumer_name}</p>
             </Card>

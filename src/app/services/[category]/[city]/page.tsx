@@ -150,8 +150,8 @@ export default async function ServiceCityPage({ params }: Props) {
                 desc: "Choose the pro that fits your budget and timeline. Pay securely through Trovaar escrow protection.",
               },
             ].map((item) => (
-              <div key={item.step} className="text-center">
-                <div className="w-14 h-14 bg-blue-800 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+              <div key={item.step} className="text-center p-6 rounded-2xl hover:bg-blue-50/50 transition-colors duration-300">
+                <div className="w-14 h-14 bg-blue-800 text-white rounded-2xl flex items-center justify-center text-xl font-bold mx-auto mb-4 shadow-md">
                   {item.step}
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -200,7 +200,7 @@ export default async function ServiceCityPage({ params }: Props) {
             ].map((item) => (
               <div
                 key={item.title}
-                className="bg-white rounded-xl border border-gray-200 p-6 text-center shadow-sm"
+                className="bg-white rounded-2xl border border-gray-200 p-6 text-center shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
               >
                 <div className="text-3xl mb-3">{item.icon}</div>
                 <h3 className="font-semibold text-gray-900 mb-2">
@@ -224,7 +224,7 @@ export default async function ServiceCityPage({ params }: Props) {
             </h2>
             <div className="space-y-6">
               {category.faqs.map((faq, i) => (
-                <div key={i} className="border-b border-gray-200 pb-6">
+                <div key={i} className="border-b border-gray-200 pb-6 hover:pl-2 transition-all duration-200">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">
                     {faq.question}
                   </h3>
@@ -247,7 +247,7 @@ export default async function ServiceCityPage({ params }: Props) {
               <Link
                 key={c.slug}
                 href={`/services/${catSlug}/${c.slug}`}
-                className="text-sm bg-white border border-gray-200 rounded-full px-4 py-2 text-gray-700 hover:border-blue-300 hover:text-blue-800 transition-colors"
+                className="text-sm bg-white border border-gray-200 rounded-full px-4 py-2 text-gray-700 hover:border-blue-300 hover:text-blue-800 hover:shadow-sm transition-all duration-200"
               >
                 {c.name}, {c.stateAbbr}
               </Link>

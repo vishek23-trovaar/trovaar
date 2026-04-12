@@ -177,7 +177,7 @@ export default function AnalyticsEventsPage() {
             ].map((card) => (
               <div
                 key={card.label}
-                className="bg-white rounded-xl border border-slate-200 p-4"
+                className="bg-white rounded-2xl border border-slate-200 p-4 hover:shadow-lg transition-all duration-300"
               >
                 <div className="text-xs font-medium text-slate-500 uppercase tracking-wide">
                   {card.label}
@@ -192,7 +192,7 @@ export default function AnalyticsEventsPage() {
 
           {/* Funnel Visualization */}
           {funnelSteps.length > 0 && (
-            <div className="bg-white rounded-xl border border-slate-200 p-6">
+            <div className="bg-white rounded-2xl border border-slate-200 p-6">
               <h2 className="text-lg font-semibold text-slate-800 mb-4">
                 Conversion Funnel
               </h2>
@@ -235,7 +235,7 @@ export default function AnalyticsEventsPage() {
 
           {/* Daily Event Timeline (CSS-only bar chart) */}
           {data && data.daily.length > 0 && (
-            <div className="bg-white rounded-xl border border-slate-200 p-6">
+            <div className="bg-white rounded-2xl border border-slate-200 p-6">
               <h2 className="text-lg font-semibold text-slate-800 mb-4">
                 Daily Event Volume (Last 30 Days)
               </h2>
@@ -273,7 +273,7 @@ export default function AnalyticsEventsPage() {
 
           {/* Top Events Table */}
           {data && data.summary.length > 0 && (
-            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
               <div className="px-6 py-4 border-b border-slate-100">
                 <h2 className="text-lg font-semibold text-slate-800">
                   Top Events
@@ -314,7 +314,7 @@ export default function AnalyticsEventsPage() {
 
           {/* Top Active Users */}
           {data && data.topUsers.length > 0 && (
-            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
               <div className="px-6 py-4 border-b border-slate-100">
                 <h2 className="text-lg font-semibold text-slate-800">
                   Most Active Users (Last 30 Days)
@@ -349,7 +349,7 @@ export default function AnalyticsEventsPage() {
 
           {/* Empty state */}
           {data && data.summary.length === 0 && (
-            <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
+            <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
               <div className="text-slate-400 text-lg mb-2">No events tracked yet</div>
               <p className="text-sm text-slate-400">
                 Analytics events will appear here as users interact with the platform.

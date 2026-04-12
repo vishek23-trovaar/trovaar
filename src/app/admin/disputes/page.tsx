@@ -434,7 +434,7 @@ export default function AdminDisputesPage() {
               )}
 
               {/* Job details card */}
-              <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4">
+              <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-4">
                 <h3 className="text-sm font-bold text-slate-800">Job Details</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
                   <div>
@@ -457,7 +457,7 @@ export default function AdminDisputesPage() {
               </div>
 
               {/* Parties info */}
-              <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4">
+              <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-4">
                 <h3 className="text-sm font-bold text-slate-800">Parties Involved</h3>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div className="bg-slate-50 rounded-lg p-3">
@@ -482,7 +482,7 @@ export default function AdminDisputesPage() {
               </div>
 
               {/* Dispute reason */}
-              <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-3">
+              <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-3">
                 <h3 className="text-sm font-bold text-slate-800">Dispute Reason</h3>
                 <div className="bg-red-50 border border-red-100 rounded-lg p-3">
                   <p className="text-sm font-semibold text-red-800">{selected.reason}</p>
@@ -493,7 +493,7 @@ export default function AdminDisputesPage() {
               </div>
 
               {/* Timeline */}
-              <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-3">
+              <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-3">
                 <h3 className="text-sm font-bold text-slate-800">Event Timeline</h3>
                 <div className="relative pl-6 space-y-4">
                   <div className="absolute left-2 top-1 bottom-1 w-0.5 bg-slate-200" />
@@ -542,7 +542,7 @@ export default function AdminDisputesPage() {
               </div>
 
               {/* Message history */}
-              <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-3">
+              <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-3">
                 <h3 className="text-sm font-bold text-slate-800">Message History</h3>
                 {messagesLoading ? (
                   <div className="flex justify-center py-6">
@@ -577,7 +577,7 @@ export default function AdminDisputesPage() {
 
               {/* Current resolution */}
               {selected.resolution_type && selected.resolution_type !== "pending" ? (
-                <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-3">
+                <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-3">
                   <h3 className="text-sm font-bold text-slate-800">Current Resolution Proposal</h3>
                   <div className="grid grid-cols-3 gap-3 text-sm">
                     <div>
@@ -629,7 +629,7 @@ export default function AdminDisputesPage() {
 
               {/* Admin resolution form */}
               {selected.final_resolution !== 1 && selected.status !== "rejected" && (
-                <div className="bg-white rounded-xl border border-indigo-200 p-5 space-y-4">
+                <div className="bg-white rounded-2xl border border-indigo-200 p-5 space-y-4">
                   <h3 className="text-sm font-bold text-indigo-800">Propose / Update Resolution</h3>
 
                   <div>

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 interface Invoice {
   id: number;
@@ -90,24 +91,26 @@ export default function ContractorInvoicesPage() {
 
       {/* Stats */}
       {stats && (
+        <ScrollReveal delay={0}>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 text-center">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
             <p className="text-xl font-bold text-gray-900">{stats.count}</p>
             <p className="text-xs text-gray-500 mt-1">Total Invoices</p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 text-center">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
             <p className="text-xl font-bold text-indigo-600">{formatCents(stats.total_invoiced)}</p>
             <p className="text-xs text-gray-500 mt-1">Total Invoiced</p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 text-center">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
             <p className="text-xl font-bold text-green-600">{formatCents(stats.total_paid)}</p>
             <p className="text-xs text-gray-500 mt-1">Paid</p>
           </div>
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 text-center">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
             <p className="text-xl font-bold text-amber-600">{formatCents(stats.total_outstanding)}</p>
             <p className="text-xs text-gray-500 mt-1">Outstanding</p>
           </div>
         </div>
+        </ScrollReveal>
       )}
 
       {/* Filter */}
@@ -137,7 +140,8 @@ export default function ContractorInvoicesPage() {
           <p className="text-sm text-gray-500 mt-1">Invoices are auto-created when jobs are completed.</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+        <ScrollReveal delay={100}>
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
           {/* Table header */}
           <div className="hidden sm:grid grid-cols-12 gap-4 px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-medium text-gray-500 uppercase">
             <div className="col-span-2">Invoice #</div>
@@ -152,7 +156,7 @@ export default function ContractorInvoicesPage() {
               <Link
                 key={inv.id}
                 href={`/contractor/invoices/${inv.id}`}
-                className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-4 px-4 py-3 hover:bg-gray-50 transition-colors items-center"
+                className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-4 px-4 py-3 hover:bg-gray-50 transition-all duration-200 items-center"
               >
                 <div className="sm:col-span-2">
                   <p className="text-sm font-mono font-medium text-gray-900">{inv.invoice_number}</p>
@@ -176,6 +180,7 @@ export default function ContractorInvoicesPage() {
             ))}
           </div>
         </div>
+        </ScrollReveal>
       )}
     </div>
   );
