@@ -280,17 +280,11 @@ function PostJobContent() {
         })
       );
       const { latitude, longitude } = position.coords;
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
-        { headers: { "User-Agent": "Trovaar App" } }
-      );
+      const res = await fetch(`/api/geocode/reverse?lat=${latitude}&lon=${longitude}`);
       if (!res.ok) throw new Error("Geocoding failed");
       const data = await res.json();
-      const addr = data.address || {};
-      const city = addr.city ?? addr.town ?? addr.village ?? addr.county ?? "";
-      const state = addr.state ?? "";
-      if (!city && !state) { setGeoError("Could not determine city. Please enter manually."); return; }
-      setLocation(city && state ? `${city}, ${state}` : city || state);
+      if (!data.location) { setGeoError("Could not determine city. Please enter manually."); return; }
+      setLocation(data.location);
     } catch (err) {
       if (err instanceof GeolocationPositionError) {
         if (err.code === 1) setGeoError("Location access denied.");

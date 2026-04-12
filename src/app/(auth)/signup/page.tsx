@@ -102,30 +102,29 @@ function SignupForm() {
     }
     setGeoLoading(true);
     setGeoError("");
+
+    // Wrap geolocation in a promise with a hard timeout
+    let settled = false;
+    const settle = () => { settled = true; };
+
+    const geoTimeout = setTimeout(() => {
+      if (!settled) {
+        settle();
+        setGeoLoading(false);
+        setGeoError("Location request timed out — please type your city manually");
+      }
+    }, 15000);
+
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
+        if (settled) return;
         try {
           const { latitude, longitude } = pos.coords;
-          const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`,
-            {
-              headers: {
-                "Accept-Language": "en-US,en",
-                "User-Agent": "Trovaar/1.0 (trovaar.com)",
-              },
-            }
-          );
+          const res = await fetch(`/api/geocode/reverse?lat=${latitude}&lon=${longitude}`);
           if (res.ok) {
             const data = await res.json();
-            const addr = data.address ?? {};
-            const city = addr.city || addr.town || addr.village || addr.suburb || addr.county || "";
-            const state = addr.state || addr.region || "";
-            if (city && state) {
-              setLocation(`${city}, ${state}`);
-            } else if (state) {
-              setLocation(state);
-            } else if (addr.country) {
-              setLocation(addr.country);
+            if (data.location) {
+              setLocation(data.location);
             } else {
               setGeoError("Could not determine your city — please type it manually");
             }
@@ -135,10 +134,15 @@ function SignupForm() {
         } catch {
           setGeoError("Could not determine your location — please type it manually");
         } finally {
+          settle();
+          clearTimeout(geoTimeout);
           setGeoLoading(false);
         }
       },
       (err) => {
+        if (settled) return;
+        settle();
+        clearTimeout(geoTimeout);
         if (err.code === 1) {
           setGeoError("Location access denied — please type your city manually");
         } else if (err.code === 3) {
