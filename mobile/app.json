@@ -16,7 +16,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.trovaar.app",
-      "buildNumber": "7",
+      "buildNumber": "12",
       "infoPlist": {
         "NSCameraUsageDescription": "Trovaar uses your camera to take photos of jobs you want to post.",
         "NSPhotoLibraryUsageDescription": "Trovaar uses your photo library to attach images to job postings.",
@@ -24,7 +24,8 @@
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Trovaar uses your location to find nearby contractors."
       },
       "config": {
-        "usesNonExemptEncryption": false
+        "usesNonExemptEncryption": false,
+        "googleMapsApiKey": "AIzaSyDCHOBlfhWEv6mzXV68rEW117xWr0VFfhs"
       },
       "usesAppleSignIn": true
     },
@@ -33,8 +34,13 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#2563eb"
       },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDCHOBlfhWEv6mzXV68rEW117xWr0VFfhs"
+        }
+      },
       "package": "com.trovaar.app",
-      "versionCode": 1,
+      "versionCode": 3,
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.READ_EXTERNAL_STORAGE",
@@ -68,6 +74,12 @@
         "origin": false
       }
     },
-    "owner": "vishek23"
+    "owner": "vishek23",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/6ec5e52e-08be-486e-83ef-6f630649627d"
+    }
   }
 }

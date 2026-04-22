@@ -19,7 +19,7 @@ import { useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/api";
-import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from '../../lib/theme';
+import { colors, typography, spacing, radius, shadows, getCategoryIcon } from '../../lib/theme';
 
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>["name"];

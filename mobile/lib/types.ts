@@ -9,16 +9,18 @@ export interface Job {
   title: string;
   description: string;
   category: string;
-  urgency: string;
+  urgency: UrgencyLevel;
   location: string;
-  status: string;
+  status: JobStatus;
   budget_min?: number;
   budget_max?: number;
   photos?: string;
   bid_count: number;
   latitude?: number;
   longitude?: number;
+  location_masked?: boolean;
   consumer_name?: string;
+  distance_miles?: number;
   payment_status?: string;
   contractor_confirmed?: number;
   consumer_confirmed?: number;
@@ -47,7 +49,7 @@ export interface Bid {
   timeline_days: number;
   availability_date: string;
   message?: string;
-  status: string;
+  status: BidStatus;
   created_at: string;
 }
 

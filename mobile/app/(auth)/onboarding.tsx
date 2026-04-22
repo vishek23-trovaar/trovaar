@@ -4,22 +4,17 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  Dimensions,
   Pressable,
   Animated,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import TrovaarLogo from "@/components/TrovaarLogo";
-import { Button } from "@/components/ui";
+import { LinearGradient } from "expo-linear-gradient";
 import { colors, typography, spacing, radius, shadows } from "../../lib/theme";
-
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 interface Page {
   icon: keyof typeof Ionicons.glyphMap;
-  emoji: string;
   title: string;
   description: string;
   color: string;
@@ -28,62 +23,55 @@ interface Page {
 const CLIENT_PAGES: Page[] = [
   {
     icon: "briefcase-outline",
-    emoji: "",
     title: "Post any job",
     description:
       "Snap a photo, describe what you need, and get bids from qualified pros in minutes.",
-    color: "#3b82f6",
+    color: "#3B82F6",
   },
   {
     icon: "checkmark-done-outline",
-    emoji: "",
     title: "Compare & choose",
     description:
       "Review bids from verified professionals. Compare prices, ratings, and availability.",
-    color: "#059669",
+    color: "#10B981",
   },
   {
     icon: "shield-checkmark-outline",
-    emoji: "",
     title: "Fair pricing, no bias",
     description:
-      "Your personal details stay hidden until you accept a bid. Every quote is based on the job — not who you are. No one gets overcharged.",
-    color: "#dc2626",
+      "Your details stay hidden until you accept a bid. Every quote is based on the job — not who you are.",
+    color: "#EF4444",
   },
   {
     icon: "star-outline",
-    emoji: "",
     title: "Get it done",
     description:
       "Track progress in real time, pay securely through the app, and leave a review.",
-    color: "#d97706",
+    color: "#F59E0B",
   },
 ];
 
 const PRO_PAGES: Page[] = [
   {
     icon: "map-outline",
-    emoji: "",
     title: "Find jobs near you",
     description:
       "Browse live jobs in your area. Filter by category, urgency, and budget to find the right fit.",
-    color: "#7c3aed",
+    color: "#7C3AED",
   },
   {
     icon: "cash-outline",
-    emoji: "",
     title: "Bid & win work",
     description:
       "Set your own price, timeline, and availability. Win jobs based on your skills and reputation.",
-    color: "#0891b2",
+    color: "#0891B2",
   },
   {
     icon: "trending-up-outline",
-    emoji: "",
     title: "Grow your business",
     description:
       "Build a 5-star portfolio, earn steady income, and get repeat clients — no monthly fees, ever.",
-    color: "#059669",
+    color: "#10B981",
   },
 ];
 
@@ -112,144 +100,333 @@ export default function OnboardingScreen() {
     router.replace("/(auth)/login");
   };
 
-  // ── Role Picker Screen ──
+  // ── Role Picker Screen (Dark theme matching web hero) ──
   if (mode === null) {
     return (
-      <SafeAreaView style={styles.safe}>
-        <Animated.View style={[styles.pickerScreen, { opacity: fadeAnim }]}>
-          {/* Top spacer */}
-          <View style={{ flex: 1 }} />
+      <View style={styles.darkContainer}>
+        <LinearGradient
+          colors={["#0F172A", "#131D35", "#0F172A"]}
+          style={StyleSheet.absoluteFill}
+        />
 
-          {/* Centered Logo */}
-          <View style={styles.logoCentered}>
-            <View style={styles.logoBig}>
-              <TrovaarLogo size={52} />
+        {/* Glow behind logo */}
+        <View style={styles.glowCircle} />
+
+        <SafeAreaView style={styles.darkSafe}>
+          <Animated.View style={[styles.pickerScreen, { opacity: fadeAnim }]}>
+            {/* Top spacer */}
+            <View style={{ flex: 1 }} />
+
+            {/* Logo area */}
+            <View style={styles.logoCentered}>
+              <View style={styles.iconBadge}>
+                <LinearGradient
+                  colors={["#2563EB", "#1D4ED8"]}
+                  style={styles.iconGradient}
+                >
+                  <Ionicons name="construct" size={28} color="#FFFFFF" />
+                </LinearGradient>
+              </View>
+              <Text style={styles.logoText}>Trovaar</Text>
+              <Text style={styles.logoTagline}>
+                The network that connects{"\n"}
+                <Text style={styles.taglineAccent}>every skilled trade</Text> to
+                every job.
+              </Text>
             </View>
-            <Text style={styles.logoTextBig}>Trovaar</Text>
-            <Text style={styles.logoTagline}>Stop searching, start finding.</Text>
-          </View>
 
-          {/* Spacer */}
-          <View style={{ flex: 0.6 }} />
+            {/* Spacer */}
+            <View style={{ flex: 0.6 }} />
 
-          {/* Role Cards */}
-          <View style={styles.pickerCards}>
-            <Text style={styles.pickerQuestion}>I want to...</Text>
+            {/* Role Cards */}
+            <View style={styles.pickerCards}>
+              <Text style={styles.pickerQuestion}>I want to...</Text>
 
-            <Pressable
-              style={styles.roleCard}
-              onPress={() => setMode("client")}
-            >
-              <View style={[styles.roleIconBox, { backgroundColor: "#EFF6FF" }]}>
-                <Ionicons name="home" size={30} color={colors.primaryLight} />
-              </View>
-              <View style={styles.roleTextBox}>
-                <Text style={styles.roleTitle}>Hire a professional</Text>
-                <Text style={styles.roleNote}>Post jobs that need to be performed</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={22} color={colors.muted} />
-            </Pressable>
+              <Pressable
+                style={({ pressed }) => [
+                  styles.roleCard,
+                  pressed && styles.roleCardPressed,
+                ]}
+                onPress={() => setMode("client")}
+              >
+                <View style={[styles.roleIconBox, { backgroundColor: "rgba(37,99,235,0.12)" }]}>
+                  <Ionicons name="home" size={26} color="#3B82F6" />
+                </View>
+                <View style={styles.roleTextBox}>
+                  <Text style={styles.roleTitle}>Hire a professional</Text>
+                  <Text style={styles.roleNote}>
+                    Post jobs that need to be performed
+                  </Text>
+                </View>
+                <Ionicons name="chevron-forward" size={20} color="#475569" />
+              </Pressable>
 
-            <Pressable
-              style={styles.roleCard}
-              onPress={() => setMode("pro")}
-            >
-              <View style={[styles.roleIconBox, { backgroundColor: "#f5f3ff" }]}>
-                <Ionicons name="construct" size={30} color="#7c3aed" />
-              </View>
-              <View style={styles.roleTextBox}>
-                <Text style={styles.roleTitle}>Find work</Text>
-                <Text style={styles.roleNote}>I have skills to get the job done</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={22} color={colors.muted} />
-            </Pressable>
-          </View>
+              <Pressable
+                style={({ pressed }) => [
+                  styles.roleCard,
+                  pressed && styles.roleCardPressed,
+                ]}
+                onPress={() => setMode("pro")}
+              >
+                <View style={[styles.roleIconBox, { backgroundColor: "rgba(124,58,237,0.12)" }]}>
+                  <Ionicons name="construct" size={26} color="#7C3AED" />
+                </View>
+                <View style={styles.roleTextBox}>
+                  <Text style={styles.roleTitle}>Find work</Text>
+                  <Text style={styles.roleNote}>
+                    I have skills to get the job done
+                  </Text>
+                </View>
+                <Ionicons name="chevron-forward" size={20} color="#475569" />
+              </Pressable>
+            </View>
 
-          {/* Bottom */}
-          <View style={styles.pickerBottom}>
-            <Pressable onPress={goToLogin} style={styles.loginRow}>
-              <Text style={styles.loginText}>Already have an account? </Text>
-              <Text style={styles.loginLink}>Log In</Text>
-            </Pressable>
-            <Text style={styles.sloganText}>The network that connects every skilled trade to every job.</Text>
-          </View>
-        </Animated.View>
-      </SafeAreaView>
+            {/* Bottom */}
+            <View style={styles.pickerBottom}>
+              <Pressable onPress={goToLogin} style={styles.loginRow}>
+                <Text style={styles.loginTextDark}>
+                  Already have an account?{" "}
+                </Text>
+                <Text style={styles.loginLinkDark}>Log In</Text>
+              </Pressable>
+            </View>
+          </Animated.View>
+        </SafeAreaView>
+      </View>
     );
   }
 
-  // ── Onboarding — Stacked Cards with Tabs ──
+  // ── Onboarding — Feature Cards (Light theme) ──
   return (
     <SafeAreaView style={styles.safe}>
       <Animated.View style={{ flex: 1, opacity: fadeAnim }}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Pressable onPress={() => setMode(null)} style={styles.backBtn}>
-          <Ionicons name="arrow-back" size={22} color={colors.secondary} />
-        </Pressable>
-        <Pressable onPress={goToLogin}>
-          <Text style={styles.skipText}>Skip</Text>
-        </Pressable>
-      </View>
-
-      {/* Tabs */}
-      <View style={styles.tabRow}>
-        <Pressable
-          style={[styles.tab, mode === "client" && styles.tabActive]}
-          onPress={() => setMode("client")}
-        >
-          <Ionicons name="home-outline" size={16} color={mode === "client" ? colors.white : colors.muted} />
-          <Text style={[styles.tabText, mode === "client" && styles.tabTextActive]}>For Clients</Text>
-        </Pressable>
-        <Pressable
-          style={[styles.tab, mode === "pro" && styles.tabActivePro]}
-          onPress={() => setMode("pro")}
-        >
-          <Ionicons name="construct-outline" size={16} color={mode === "pro" ? colors.white : colors.muted} />
-          <Text style={[styles.tabText, mode === "pro" && styles.tabTextActive]}>For Pros</Text>
-        </Pressable>
-      </View>
-
-      {/* Feature Cards */}
-      <ScrollView
-        style={styles.cardScroll}
-        contentContainerStyle={styles.cardScrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        {pages.map((page, idx) => (
-          <View key={idx} style={styles.featureCard}>
-            <View style={[styles.featureIcon, { backgroundColor: page.color + "15" }]}>
-              <Ionicons name={page.icon} size={28} color={page.color} />
-            </View>
-            <View style={styles.featureText}>
-              <Text style={styles.featureTitle}>{page.title}</Text>
-              <Text style={styles.featureDesc}>{page.description}</Text>
-            </View>
-          </View>
-        ))}
-      </ScrollView>
-
-      {/* Bottom */}
-      <View style={styles.bottom}>
-        <View style={styles.buttonArea}>
-          <Button
-            title="Get Started"
-            onPress={goToSignup}
-            size="lg"
-          />
+        {/* Header */}
+        <View style={styles.header}>
+          <Pressable onPress={() => setMode(null)} style={styles.backBtn}>
+            <Ionicons name="arrow-back" size={22} color={colors.secondary} />
+          </Pressable>
+          <Pressable onPress={goToLogin}>
+            <Text style={styles.skipText}>Skip</Text>
+          </Pressable>
         </View>
 
-        <Pressable onPress={goToLogin} style={styles.loginRow}>
-          <Text style={styles.loginText}>Already have an account? </Text>
-          <Text style={styles.loginLink}>Log In</Text>
-        </Pressable>
-      </View>
+        {/* Tabs */}
+        <View style={styles.tabRow}>
+          <Pressable
+            style={[styles.tab, mode === "client" && styles.tabActive]}
+            onPress={() => setMode("client")}
+          >
+            <Ionicons
+              name="home-outline"
+              size={16}
+              color={mode === "client" ? colors.white : colors.muted}
+            />
+            <Text
+              style={[
+                styles.tabText,
+                mode === "client" && styles.tabTextActive,
+              ]}
+            >
+              For Clients
+            </Text>
+          </Pressable>
+          <Pressable
+            style={[styles.tab, mode === "pro" && styles.tabActivePro]}
+            onPress={() => setMode("pro")}
+          >
+            <Ionicons
+              name="construct-outline"
+              size={16}
+              color={mode === "pro" ? colors.white : colors.muted}
+            />
+            <Text
+              style={[
+                styles.tabText,
+                mode === "pro" && styles.tabTextActive,
+              ]}
+            >
+              For Pros
+            </Text>
+          </Pressable>
+        </View>
+
+        {/* Feature Cards */}
+        <ScrollView
+          style={styles.cardScroll}
+          contentContainerStyle={styles.cardScrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          {pages.map((page, idx) => (
+            <View key={idx} style={styles.featureCard}>
+              <View
+                style={[
+                  styles.featureIcon,
+                  { backgroundColor: page.color + "12" },
+                ]}
+              >
+                <Ionicons name={page.icon} size={26} color={page.color} />
+              </View>
+              <View style={styles.featureText}>
+                <Text style={styles.featureTitle}>{page.title}</Text>
+                <Text style={styles.featureDesc}>{page.description}</Text>
+              </View>
+            </View>
+          ))}
+        </ScrollView>
+
+        {/* Bottom */}
+        <View style={styles.bottom}>
+          <Pressable style={styles.getStartedBtn} onPress={goToSignup}>
+            <LinearGradient
+              colors={["#2563EB", "#1D4ED8"]}
+              style={styles.getStartedGradient}
+            >
+              <Text style={styles.getStartedText}>Get Started</Text>
+              <Ionicons name="arrow-forward" size={18} color="#FFFFFF" />
+            </LinearGradient>
+          </Pressable>
+
+          <Pressable onPress={goToLogin} style={styles.loginRow}>
+            <Text style={styles.loginText}>
+              Already have an account?{" "}
+            </Text>
+            <Text style={styles.loginLink}>Log In</Text>
+          </Pressable>
+        </View>
       </Animated.View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  // ── Dark theme (Role Picker) ──
+  darkContainer: {
+    flex: 1,
+    backgroundColor: "#0F172A",
+  },
+  darkSafe: {
+    flex: 1,
+  },
+  glowCircle: {
+    position: "absolute",
+    width: 280,
+    height: 280,
+    borderRadius: 140,
+    backgroundColor: "#2563EB",
+    opacity: 0.06,
+    top: "22%",
+    alignSelf: "center",
+  },
+  pickerScreen: {
+    flex: 1,
+    paddingHorizontal: spacing["3xl"],
+  },
+  logoCentered: {
+    alignItems: "center",
+  },
+  iconBadge: {
+    width: 64,
+    height: 64,
+    borderRadius: 20,
+    marginBottom: 20,
+    shadowColor: "#2563EB",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.4,
+    shadowRadius: 20,
+    elevation: 12,
+  },
+  iconGradient: {
+    width: 64,
+    height: 64,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  logoText: {
+    fontSize: 38,
+    fontWeight: "800",
+    color: "#FFFFFF",
+    letterSpacing: -1,
+    marginBottom: spacing.lg,
+  },
+  logoTagline: {
+    fontSize: 15,
+    fontWeight: "500",
+    color: "#94A3B8",
+    textAlign: "center",
+    lineHeight: 22,
+    letterSpacing: 0.2,
+  },
+  taglineAccent: {
+    color: "#818CF8",
+    fontWeight: "700",
+  },
+  pickerCards: {
+    paddingHorizontal: 0,
+  },
+  pickerQuestion: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    marginBottom: spacing.xl,
+  },
+  roleCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 16,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.08)",
+    backgroundColor: "rgba(255,255,255,0.04)",
+    borderRadius: radius.lg,
+    marginBottom: spacing.lg,
+    gap: 14,
+  },
+  roleCardPressed: {
+    backgroundColor: "rgba(255,255,255,0.08)",
+  },
+  roleIconBox: {
+    width: 52,
+    height: 52,
+    borderRadius: radius.lg,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  roleTextBox: {
+    flex: 1,
+  },
+  roleTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    marginBottom: 3,
+  },
+  roleNote: {
+    fontSize: 13,
+    color: "#94A3B8",
+    lineHeight: 18,
+  },
+  pickerBottom: {
+    flex: 0.6,
+    justifyContent: "flex-end",
+    paddingBottom: spacing["4xl"],
+    alignItems: "center",
+  },
+  loginRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    paddingVertical: spacing.md,
+  },
+  loginTextDark: {
+    fontSize: 14,
+    color: "#64748B",
+  },
+  loginLinkDark: {
+    fontSize: 14,
+    color: "#3B82F6",
+    fontWeight: "700",
+  },
+
+  // ── Light theme (Feature Cards) ──
   safe: {
     flex: 1,
     backgroundColor: colors.white,
@@ -273,100 +450,6 @@ const styles = StyleSheet.create({
     ...typography.body,
     color: colors.muted,
     fontWeight: "600",
-  },
-
-  // ── Role Picker ──
-  pickerScreen: {
-    flex: 1,
-    paddingHorizontal: spacing["3xl"],
-  },
-  logoCentered: {
-    alignItems: "center",
-  },
-  logoBig: {
-    width: 80,
-    height: 80,
-    borderRadius: spacing["3xl"],
-    backgroundColor: colors.white,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: spacing.xl,
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 16,
-    elevation: 12,
-  },
-  logoTextBig: {
-    fontSize: 38,
-    fontWeight: "900",
-    color: colors.secondary,
-    letterSpacing: -1,
-    marginBottom: spacing.smd,
-  },
-  logoTagline: {
-    ...typography.body,
-    color: colors.muted,
-    fontWeight: "500",
-    letterSpacing: 0.2,
-  },
-  pickerCards: {
-    paddingHorizontal: 0,
-  },
-  pickerQuestion: {
-    ...typography.h3,
-    color: colors.secondary,
-    marginBottom: spacing.xl,
-  },
-  pickerBottom: {
-    flex: 0.8,
-    justifyContent: "flex-end",
-    paddingBottom: spacing["4xl"],
-    alignItems: "center",
-  },
-  sloganText: {
-    ...typography.caption,
-    color: "#94A3B8",
-    textAlign: "center",
-    marginTop: spacing.xl,
-    lineHeight: 18,
-    paddingHorizontal: spacing["2xl"],
-  },
-  roleCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 18,
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    borderRadius: radius.lg,
-    marginBottom: spacing.xl,
-    gap: 14,
-  },
-  roleIconBox: {
-    width: 56,
-    height: 56,
-    borderRadius: radius.xl,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  roleTextBox: {
-    flex: 1,
-  },
-  roleTitle: {
-    fontSize: 17,
-    fontWeight: "700",
-    color: colors.secondary,
-    marginBottom: 3,
-  },
-  roleNote: {
-    ...typography.bodySmall,
-    color: colors.muted,
-    lineHeight: 18,
-  },
-  pickerContainer: {
-    flex: 1,
-    paddingHorizontal: spacing["3xl"],
-    justifyContent: "center",
   },
 
   // ── Tabs ──
@@ -449,29 +532,28 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing["3xl"],
     paddingBottom: spacing.xl,
   },
-  dotsRow: {
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: spacing.md,
-    marginBottom: spacing["3xl"],
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: radius.full,
-    backgroundColor: colors.border,
-  },
-  dotActive: {
-    width: 24,
-    backgroundColor: colors.primary,
-  },
-  buttonArea: {
+  getStartedBtn: {
     marginBottom: spacing.xl,
+    borderRadius: radius.lg,
+    overflow: "hidden",
+    shadowColor: "#2563EB",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 6,
   },
-  loginRow: {
+  getStartedGradient: {
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "center",
-    paddingVertical: spacing.md,
+    gap: 8,
+    paddingVertical: 16,
+    borderRadius: radius.lg,
+  },
+  getStartedText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#FFFFFF",
   },
   loginText: {
     fontSize: 14,

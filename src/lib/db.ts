@@ -342,10 +342,11 @@ export async function initializeDatabase(): Promise<void> {
       rating INTEGER NOT NULL CHECK(rating BETWEEN 1 AND 5),
       comment TEXT,
       photos TEXT NOT NULL DEFAULT '[]',
+      review_type TEXT NOT NULL DEFAULT 'consumer_to_contractor' CHECK(review_type IN ('consumer_to_contractor', 'contractor_to_consumer')),
       response TEXT,
       response_at TIMESTAMPTZ,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      UNIQUE(job_id, reviewer_id),
+      UNIQUE(job_id, reviewer_id, review_type),
       FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,
       FOREIGN KEY (reviewer_id) REFERENCES users(id) ON DELETE CASCADE,
       FOREIGN KEY (contractor_id) REFERENCES users(id) ON DELETE CASCADE
@@ -531,6 +532,7 @@ export async function initializeDatabase(): Promise<void> {
       job_id TEXT NOT NULL,
       contractor_id TEXT NOT NULL,
       receipt_url TEXT NOT NULL,
+      receipt_type TEXT NOT NULL DEFAULT 'receipt' CHECK(receipt_type IN ('receipt', 'before_photo', 'after_photo', 'document')),
       amount_cents INTEGER,
       description TEXT,
       uploaded_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -564,10 +566,13 @@ export async function initializeDatabase(): Promise<void> {
     );
 
     CREATE TABLE IF NOT EXISTS admin_categories (
-      category TEXT PRIMARY KEY,
-      display_name TEXT NOT NULL,
+      value TEXT PRIMARY KEY,
+      label TEXT NOT NULL,
+      group_label TEXT NOT NULL DEFAULT '',
+      icon TEXT NOT NULL DEFAULT '🔧',
+      active INTEGER NOT NULL DEFAULT 1,
+      sort_order INTEGER NOT NULL DEFAULT 0,
       platform_fee_percent REAL NOT NULL DEFAULT 20.0,
-      enabled INTEGER NOT NULL DEFAULT 1,
       min_bid_cents INTEGER DEFAULT 0,
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
@@ -703,8 +708,10 @@ export async function initializeDatabase(): Promise<void> {
       status TEXT NOT NULL DEFAULT 'active' CHECK(status IN ('active', 'cancelled', 'past_due', 'paused')),
       current_period_start TIMESTAMPTZ,
       current_period_end TIMESTAMPTZ,
+      cancel_at_period_end INTEGER NOT NULL DEFAULT 0,
       visits_used INTEGER NOT NULL DEFAULT 0,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
       FOREIGN KEY (plan_id) REFERENCES subscription_plans(id)
     );
@@ -1372,6 +1379,40 @@ export async function initializeDatabase(): Promise<void> {
     `DO $$ BEGIN
        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='messages' AND column_name='message_type') THEN
          ALTER TABLE messages ADD COLUMN message_type TEXT NOT NULL DEFAULT 'text';
+       END IF;
+     END $$`,
+    // Add cancel_at_period_end and updated_at to user_subscriptions
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='user_subscriptions' AND column_name='cancel_at_period_end') THEN
+         ALTER TABLE user_subscriptions ADD COLUMN cancel_at_period_end INTEGER NOT NULL DEFAULT 0;
+       END IF;
+     END $$`,
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='user_subscriptions' AND column_name='updated_at') THEN
+         ALTER TABLE user_subscriptions ADD COLUMN updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
+       END IF;
+     END $$`,
+    // Add receipt_type to job_receipts
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='job_receipts' AND column_name='receipt_type') THEN
+         ALTER TABLE job_receipts ADD COLUMN receipt_type TEXT NOT NULL DEFAULT 'receipt';
+       END IF;
+     END $$`,
+    // Add review_type to reviews
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='reviews' AND column_name='review_type') THEN
+         ALTER TABLE reviews ADD COLUMN review_type TEXT NOT NULL DEFAULT 'consumer_to_contractor';
+       END IF;
+     END $$`,
+    // Migrate admin_categories from old schema to new schema
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='admin_categories' AND column_name='value') THEN
+         ALTER TABLE admin_categories RENAME COLUMN category TO value;
+         ALTER TABLE admin_categories RENAME COLUMN display_name TO label;
+         ALTER TABLE admin_categories ADD COLUMN group_label TEXT NOT NULL DEFAULT '';
+         ALTER TABLE admin_categories ADD COLUMN icon TEXT NOT NULL DEFAULT '🔧';
+         ALTER TABLE admin_categories ADD COLUMN active INTEGER NOT NULL DEFAULT 1;
+         ALTER TABLE admin_categories ADD COLUMN sort_order INTEGER NOT NULL DEFAULT 0;
        END IF;
      END $$`,
 

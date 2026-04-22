@@ -19,7 +19,7 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/api";
-import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from '../../lib/theme';
+import { colors, typography, spacing, radius, shadows, getCategoryIcon } from '../../lib/theme';
 
 
 const CATEGORIES = [
@@ -198,7 +198,7 @@ export default function TemplatesScreen() {
 
   const fetchTemplates = useCallback(async () => {
     try {
-      const { data } = await api<{ templates: Template[] }>("/api/templates");
+      const { data } = await api<{ templates: Template[] }>("/api/job-templates");
       setTemplates(data.templates || []);
     } catch {
       setTemplates([]);
@@ -270,7 +270,7 @@ export default function TemplatesScreen() {
           body: JSON.stringify(body),
         });
       } else {
-        await api("/api/templates", {
+        await api("/api/job-templates", {
           method: "POST",
           body: JSON.stringify(body),
         });

@@ -15,24 +15,14 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import { colors } from "../../lib/theme";
 
 const COLORS = {
-  primary: "#2563eb",
-  primaryLight: "#3b82f6",
-  primaryBg: "#eff6ff",
-  secondary: "#1e293b",
-  muted: "#64748b",
-  mutedLight: "#94a3b8",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  white: "#ffffff",
-  success: "#16a34a",
-  successBg: "#f0fdf4",
-  danger: "#dc2626",
-  warning: "#d97706",
-  warningBg: "#fffbeb",
-  purple: "#7c3aed",
-  purpleBg: "#f5f3ff",
+  ...colors,
+  primaryBg: "#EFF6FF",
+  mutedLight: "#94A3B8",
+  successBg: "#F0FDF4",
+  warningBg: "#FFFBEB",
 };
 
 interface ReferralFriend {

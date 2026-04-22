@@ -14,7 +14,7 @@ import {
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
-import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from '../../../lib/theme';
+import { colors, typography, spacing, radius, shadows, getCategoryIcon } from '../../../lib/theme';
 
 
 type Urgency = "normal" | "urgent";
@@ -81,23 +81,10 @@ export default function ChangeOrderScreen() {
 
     setSubmitting(true);
     try {
-      // Try primary endpoint first, fall back to singular
-      try {
-        await api(`/api/jobs/${jobId}/change-orders`, {
-          method: "POST",
-          body: JSON.stringify(payload),
-        });
-      } catch (primaryErr: unknown) {
-        const err = primaryErr as { status?: number };
-        if (err?.status === 404) {
-          await api(`/api/jobs/${jobId}/change-order`, {
-            method: "POST",
-            body: JSON.stringify(payload),
-          });
-        } else {
-          throw primaryErr;
-        }
-      }
+      await api(`/api/jobs/${jobId}/change-order`, {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
 
       Alert.alert(
         "Request Sent",

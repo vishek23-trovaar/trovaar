@@ -16,6 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/api";
 import { Job, Bid } from "@/lib/types";
+import { getCurrentLocation, haversineDistanceMiles, formatDistance } from "../../../lib/location";
 import * as ImagePicker from "expo-image-picker";
 import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from "../../../lib/theme";
 
@@ -194,12 +195,22 @@ export default function ContractorJobDetail() {
   const [portfolioPhotoCount, setPortfolioPhotoCount] = useState<number | null>(null);
   const [portfolioGateChecked, setPortfolioGateChecked] = useState(false);
 
+  // User location for distance display
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+
   // AI price estimate
   const [priceEstimate, setPriceEstimate] = useState<{ low: number; high: number; average: number } | null>(null);
   const [loadingEstimate, setLoadingEstimate] = useState(false);
 
   // Match score
   const [matchScore, setMatchScore] = useState<number | null>(null);
+
+  // Q&A Discussions
+  const [discussions, setDiscussions] = useState<{ id: string; parent_id: string | null; content: string; display_name: string; user_role: "consumer" | "contractor"; is_mine: boolean; is_owner: boolean; created_at: string }[]>([]);
+  const [questionText, setQuestionText] = useState("");
+  const [replyTo, setReplyTo] = useState<string | null>(null);
+  const [postingQuestion, setPostingQuestion] = useState(false);
+  const [showAllQuestions, setShowAllQuestions] = useState(false);
 
   // Enhanced bid form
   const [bidType, setBidType] = useState<"flat" | "itemized">("flat");
@@ -232,6 +243,13 @@ export default function ContractorJobDetail() {
   useEffect(() => {
     fetchJob();
   }, [fetchJob]);
+
+  // Fetch user location for distance display
+  useEffect(() => {
+    getCurrentLocation().then((loc) => {
+      if (loc) setUserLocation(loc);
+    });
+  }, []);
 
   // Portfolio gate check
   useEffect(() => {
@@ -270,6 +288,38 @@ export default function ContractorJobDetail() {
       }
     })();
   }, [job, user?.id, id]);
+
+  // Fetch discussions (Q&A)
+  const fetchDiscussions = useCallback(async () => {
+    try {
+      const { data } = await api<{ discussions: typeof discussions }>(`/api/jobs/${id}/discussions`);
+      setDiscussions(data.discussions || []);
+    } catch {
+      /* ignore */
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (job) fetchDiscussions();
+  }, [job, fetchDiscussions]);
+
+  const postQuestion = async () => {
+    const content = questionText.trim();
+    if (!content || postingQuestion) return;
+    setPostingQuestion(true);
+    try {
+      await api(`/api/jobs/${id}/discussions`, {
+        method: "POST",
+        body: JSON.stringify({ content, parent_id: replyTo || undefined }),
+      });
+      setQuestionText("");
+      setReplyTo(null);
+      fetchDiscussions();
+    } catch (err: unknown) {
+      Alert.alert("Error", (err as Error).message);
+    }
+    setPostingQuestion(false);
+  };
 
   const fetchPriceEstimate = async () => {
     if (!job) return;
@@ -440,6 +490,13 @@ export default function ContractorJobDetail() {
       })()
     : [];
 
+  // Calculate distance
+  const distanceMiles =
+    userLocation && job.latitude && job.longitude
+      ? haversineDistanceMiles(userLocation.lat, userLocation.lng, job.latitude, job.longitude)
+      : null;
+  const distanceText = distanceMiles !== null ? formatDistance(distanceMiles) : null;
+
   const isBidAccepted = myBid?.status === "accepted";
   const isActiveJob =
     isBidAccepted &&
@@ -500,9 +557,18 @@ export default function ContractorJobDetail() {
             color={COLORS.primaryLight}
           />
           <Text style={styles.infoLabel}>Location</Text>
-          <Text style={styles.infoValue}>
-            {job.location || "Not specified"}
-          </Text>
+          {distanceText ? (
+            <View style={styles.distanceRow}>
+              <Ionicons name="navigate-outline" size={14} color={COLORS.primary} />
+              <Text style={[styles.infoValue, { color: COLORS.primary }]}>
+                {distanceText}
+              </Text>
+            </View>
+          ) : (
+            <Text style={styles.infoValue}>
+              {job.location_masked ? "Approximate area" : (job.location || "Not specified")}
+            </Text>
+          )}
         </View>
         <View style={styles.infoCard}>
           <Ionicons
@@ -553,6 +619,167 @@ export default function ContractorJobDetail() {
               />
             ))}
           </ScrollView>
+        </View>
+      )}
+
+      {/* Reddit-style Q&A */}
+      {(job.status === "posted" || job.status === "bidding" || job.status === "accepted") && (
+        <View style={styles.qaSection}>
+          <View style={styles.qaSectionHeader}>
+            <Text style={styles.sectionTitle}>
+              Questions & Answers
+            </Text>
+            <Text style={styles.qaCount}>
+              {discussions.filter((d) => !d.parent_id).length} questions
+            </Text>
+          </View>
+
+          {/* Discussion threads */}
+          {(() => {
+            const topLevel = discussions.filter((d) => !d.parent_id);
+            const shown = showAllQuestions ? topLevel : topLevel.slice(0, 3);
+            return (
+              <>
+                {shown.length === 0 && (
+                  <View style={styles.qaEmpty}>
+                    <Ionicons name="chatbubble-ellipses-outline" size={32} color="#cbd5e1" />
+                    <Text style={styles.qaEmptyText}>No questions yet. Be the first to ask!</Text>
+                  </View>
+                )}
+                {shown.map((q) => {
+                  const replies = discussions.filter((d) => d.parent_id === q.id);
+                  return (
+                    <View key={q.id} style={styles.qaThread}>
+                      {/* Question */}
+                      <View style={styles.qaPost}>
+                        <View style={styles.qaPostHeader}>
+                          <View style={[styles.qaAvatar, q.is_owner && styles.qaAvatarOwner]}>
+                            <Text style={styles.qaAvatarText}>
+                              {q.is_owner ? "OP" : q.display_name.charAt(0).toUpperCase()}
+                            </Text>
+                          </View>
+                          <View style={{ flex: 1 }}>
+                            <View style={styles.qaNameRow}>
+                              <Text style={styles.qaName}>{q.display_name}</Text>
+                              {q.is_owner && (
+                                <View style={styles.qaOwnerBadge}>
+                                  <Text style={styles.qaOwnerBadgeText}>Homeowner</Text>
+                                </View>
+                              )}
+                              {q.is_mine && (
+                                <View style={styles.qaYouBadge}>
+                                  <Text style={styles.qaYouBadgeText}>You</Text>
+                                </View>
+                              )}
+                            </View>
+                            <Text style={styles.qaTime}>{timeAgo(q.created_at)}</Text>
+                          </View>
+                        </View>
+                        <Text style={styles.qaContent}>{q.content}</Text>
+                        <TouchableOpacity
+                          style={styles.qaReplyBtn}
+                          onPress={() => setReplyTo(replyTo === q.id ? null : q.id)}
+                          activeOpacity={0.7}
+                        >
+                          <Ionicons name="chatbubble-outline" size={14} color={COLORS.primary} />
+                          <Text style={styles.qaReplyBtnText}>
+                            {replies.length > 0 ? `${replies.length} ${replies.length === 1 ? "reply" : "replies"}` : "Reply"}
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+
+                      {/* Replies */}
+                      {replies.map((r) => (
+                        <View key={r.id} style={styles.qaReply}>
+                          <View style={styles.qaReplyLine} />
+                          <View style={{ flex: 1 }}>
+                            <View style={styles.qaPostHeader}>
+                              <View style={[styles.qaAvatarSmall, r.is_owner && styles.qaAvatarOwner]}>
+                                <Text style={styles.qaAvatarTextSmall}>
+                                  {r.is_owner ? "OP" : r.display_name.charAt(0).toUpperCase()}
+                                </Text>
+                              </View>
+                              <View style={{ flex: 1 }}>
+                                <View style={styles.qaNameRow}>
+                                  <Text style={[styles.qaName, { fontSize: 12 }]}>{r.display_name}</Text>
+                                  {r.is_owner && (
+                                    <View style={styles.qaOwnerBadge}>
+                                      <Text style={styles.qaOwnerBadgeText}>Homeowner</Text>
+                                    </View>
+                                  )}
+                                </View>
+                                <Text style={[styles.qaTime, { fontSize: 10 }]}>{timeAgo(r.created_at)}</Text>
+                              </View>
+                            </View>
+                            <Text style={[styles.qaContent, { fontSize: 13 }]}>{r.content}</Text>
+                          </View>
+                        </View>
+                      ))}
+
+                      {/* Reply input for this thread */}
+                      {replyTo === q.id && (
+                        <View style={styles.qaReplyInput}>
+                          <View style={styles.qaReplyLine} />
+                          <View style={styles.qaReplyInputInner}>
+                            <TextInput
+                              style={styles.qaInput}
+                              placeholder="Write a reply..."
+                              placeholderTextColor="#94a3b8"
+                              value={questionText}
+                              onChangeText={setQuestionText}
+                              multiline
+                            />
+                            <TouchableOpacity
+                              onPress={postQuestion}
+                              disabled={postingQuestion || !questionText.trim()}
+                              style={[styles.qaSendBtn, (!questionText.trim()) && { opacity: 0.4 }]}
+                            >
+                              {postingQuestion ? (
+                                <ActivityIndicator size="small" color={COLORS.primary} />
+                              ) : (
+                                <Ionicons name="send" size={18} color={COLORS.primary} />
+                              )}
+                            </TouchableOpacity>
+                          </View>
+                        </View>
+                      )}
+                    </View>
+                  );
+                })}
+                {topLevel.length > 3 && !showAllQuestions && (
+                  <TouchableOpacity style={styles.qaShowMore} onPress={() => setShowAllQuestions(true)}>
+                    <Text style={styles.qaShowMoreText}>Show all {topLevel.length} questions</Text>
+                    <Ionicons name="chevron-down" size={16} color={COLORS.primary} />
+                  </TouchableOpacity>
+                )}
+              </>
+            );
+          })()}
+
+          {/* Ask a question (top-level) */}
+          {!replyTo && (
+            <View style={styles.qaAskBox}>
+              <TextInput
+                style={styles.qaInput}
+                placeholder="Ask a question about this job..."
+                placeholderTextColor="#94a3b8"
+                value={questionText}
+                onChangeText={setQuestionText}
+                multiline
+              />
+              <TouchableOpacity
+                onPress={postQuestion}
+                disabled={postingQuestion || !questionText.trim()}
+                style={[styles.qaSendBtn, (!questionText.trim()) && { opacity: 0.4 }]}
+              >
+                {postingQuestion ? (
+                  <ActivityIndicator size="small" color={COLORS.white} />
+                ) : (
+                  <Ionicons name="send" size={18} color={COLORS.white} />
+                )}
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       )}
 
@@ -1167,6 +1394,7 @@ const styles = StyleSheet.create({
   },
   infoLabel: { fontSize: 12, color: COLORS.muted, fontWeight: "500" },
   infoValue: { fontSize: 14, fontWeight: "600", color: COLORS.secondary },
+  distanceRow: { flexDirection: "row", alignItems: "center", gap: 4 },
   urgencyPill: {
     paddingHorizontal: 10,
     paddingVertical: 4,
@@ -1640,4 +1868,197 @@ const styles = StyleSheet.create({
     color: COLORS.secondary,
   },
   clientMeta: { fontSize: 12, color: COLORS.muted, marginTop: 2 },
+
+  // Q&A Section
+  qaSection: {
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  qaSectionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 14,
+  },
+  qaCount: {
+    fontSize: 13,
+    color: COLORS.muted,
+    fontWeight: "500",
+  },
+  qaEmpty: {
+    alignItems: "center",
+    paddingVertical: 24,
+    gap: 8,
+  },
+  qaEmptyText: {
+    fontSize: 14,
+    color: "#94a3b8",
+    textAlign: "center",
+  },
+  qaThread: {
+    marginBottom: 14,
+    backgroundColor: COLORS.surface,
+    borderRadius: 14,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  qaPost: {
+    gap: 8,
+  },
+  qaPostHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  qaAvatar: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "#e2e8f0",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  qaAvatarOwner: {
+    backgroundColor: "#dbeafe",
+  },
+  qaAvatarText: {
+    fontSize: 12,
+    fontWeight: "700",
+    color: "#64748b",
+  },
+  qaAvatarSmall: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: "#e2e8f0",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  qaAvatarTextSmall: {
+    fontSize: 10,
+    fontWeight: "700",
+    color: "#64748b",
+  },
+  qaNameRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  qaName: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: COLORS.secondary,
+  },
+  qaOwnerBadge: {
+    backgroundColor: "#dbeafe",
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+    borderRadius: 4,
+  },
+  qaOwnerBadgeText: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: "#2563eb",
+  },
+  qaYouBadge: {
+    backgroundColor: "#f0fdf4",
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+    borderRadius: 4,
+  },
+  qaYouBadgeText: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: "#16a34a",
+  },
+  qaTime: {
+    fontSize: 11,
+    color: "#94a3b8",
+  },
+  qaContent: {
+    fontSize: 14,
+    color: "#334155",
+    lineHeight: 20,
+    paddingLeft: 40,
+  },
+  qaReplyBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    paddingLeft: 40,
+    paddingTop: 4,
+  },
+  qaReplyBtnText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: COLORS.primary,
+  },
+  qaReply: {
+    flexDirection: "row",
+    marginTop: 10,
+    marginLeft: 16,
+    gap: 10,
+  },
+  qaReplyLine: {
+    width: 2,
+    backgroundColor: "#e2e8f0",
+    borderRadius: 1,
+    minHeight: 24,
+  },
+  qaReplyInput: {
+    flexDirection: "row",
+    marginTop: 10,
+    marginLeft: 16,
+    gap: 10,
+  },
+  qaReplyInputInner: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "flex-end",
+    gap: 8,
+  },
+  qaAskBox: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+    gap: 8,
+    marginTop: 12,
+    backgroundColor: COLORS.surface,
+    borderRadius: 14,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  qaInput: {
+    flex: 1,
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    fontSize: 14,
+    color: COLORS.secondary,
+    maxHeight: 80,
+  },
+  qaSendBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: COLORS.primary,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  qaShowMore: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 4,
+    paddingVertical: 10,
+  },
+  qaShowMoreText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: COLORS.primary,
+  },
 });

@@ -14,25 +14,17 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import { colors } from "../../lib/theme";
 
 const COLORS = {
-  primary: "#2563eb",
-  primaryLight: "#3b82f6",
-  primaryBg: "#eff6ff",
-  secondary: "#1e293b",
-  muted: "#64748b",
-  mutedLight: "#94a3b8",
-  surface: "#f8fafc",
-  border: "#e2e8f0",
-  white: "#ffffff",
-  success: "#16a34a",
-  successBg: "#f0fdf4",
-  danger: "#dc2626",
-  dangerBg: "#fef2f2",
-  warning: "#d97706",
-  warningBg: "#fffbeb",
-  gold: "#b45309",
-  goldBg: "#fef3c7",
+  ...colors,
+  primaryBg: "#EFF6FF",
+  mutedLight: "#94A3B8",
+  successBg: "#F0FDF4",
+  dangerBg: "#FEF2F2",
+  warningBg: "#FFFBEB",
+  gold: colors.warning,
+  goldBg: "#FEF3C7",
 };
 
 interface Plan {

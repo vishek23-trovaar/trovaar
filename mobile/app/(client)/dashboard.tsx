@@ -162,7 +162,7 @@ export default function ClientDashboard() {
 
   const fetchSurge = useCallback(async () => {
     try {
-      const { data } = await api<{ categories: SurgeCategory[] }>("/api/surge");
+      const { data } = await api<{ categories: SurgeCategory[] }>("/api/insights/surge");
       setSurgeCategories((data.categories || []).filter((c) => c.multiplier > 1));
     } catch {
       // Surge info not available

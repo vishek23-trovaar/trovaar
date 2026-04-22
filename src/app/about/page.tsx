@@ -146,6 +146,61 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* Senior Protection */}
+      <section className="py-20 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="rounded-2xl overflow-hidden shadow-xl" style={{ background: "linear-gradient(135deg, #0a0f1e 0%, #1e1b4b 100%)" }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+              <div className="p-8 sm:p-10 border-b md:border-b-0 md:border-r border-white/10">
+                <div className="inline-flex items-center gap-2 bg-red-500/20 border border-red-400/30 rounded-full px-3 py-1 mb-5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
+                  <span className="text-red-300 text-xs font-semibold uppercase tracking-wide">Real Story</span>
+                </div>
+                <blockquote className="text-white/90 text-base sm:text-lg leading-relaxed mb-5">
+                  <p className="mb-3">
+                    An <strong className="text-white">86-year-old man</strong> was quoted <strong className="text-red-400">$11,000–$13,000</strong> to redo his bathroom.
+                  </p>
+                  <p className="mb-3">
+                    His son got quoted <strong className="text-green-400">$5,800–$7,000</strong> for the <em>exact same job</em>.
+                  </p>
+                  <p className="text-white/60 text-sm">
+                    That&apos;s not a coincidence. That&apos;s predatory pricing — targeting a senior who they assumed wouldn&apos;t question it, wouldn&apos;t shop around, and wouldn&apos;t have someone in his corner to catch it.
+                  </p>
+                </blockquote>
+                <p className="text-slate-400 text-xs">
+                  Senior citizens are targeted at every turn because they grew up in an era where you trusted professionals and didn&apos;t question the bill.<br />
+                  <strong className="text-slate-300">That trust is being weaponized against them every single day.</strong>
+                </p>
+              </div>
+              <div className="p-8 sm:p-10 flex flex-col justify-center">
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-3 leading-tight">
+                  Don&apos;t let them be<br />
+                  <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(90deg, #60a5fa, #818cf8)" }}>
+                    alone in that room.
+                  </span>
+                </h3>
+                <p className="text-slate-300 text-sm mb-6 leading-relaxed">
+                  Trovaar gives every consumer — young or old — transparent, competitive bids from verified pros. Post once, see real prices, compare without pressure.
+                </p>
+                <ul className="space-y-2">
+                  {[
+                    "Multiple bids on every job — no single-quote traps",
+                    "Verified contractor reviews & credentials",
+                    "Secure payment held until the job is done",
+                    "Free for consumers — always",
+                  ].map((point) => (
+                    <li key={point} className="flex items-start gap-2 text-sm text-slate-300">
+                      <span className="text-green-400 font-bold mt-0.5">✓</span>
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="bg-primary/5 py-20 px-4 text-center">
         <div className="max-w-xl mx-auto">

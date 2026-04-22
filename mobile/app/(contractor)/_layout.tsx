@@ -109,6 +109,7 @@ export default function ContractorLayout() {
         name="dashboard"
         options={{
           title: "Jobs",
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name={focused ? "briefcase" : "briefcase-outline"} size={24} color={color} />
           ),
@@ -126,7 +127,7 @@ export default function ContractorLayout() {
       <Tabs.Screen
         name="messages"
         options={{
-          title: "Messages",
+          title: "Inbox",
           tabBarIcon: ({ color, focused }) => (
             <View>
               <Ionicons name={focused ? "chatbubbles" : "chatbubbles-outline"} size={24} color={color} />

@@ -12,7 +12,7 @@ import {
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
-import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from '../../lib/theme';
+import { colors, typography, spacing, radius, shadows, getCategoryIcon } from '../../lib/theme';
 
 
 interface Notification {

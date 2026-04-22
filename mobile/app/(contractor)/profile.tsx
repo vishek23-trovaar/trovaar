@@ -18,7 +18,7 @@ import { useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "@/lib/auth";
 import { api, getToken, API_URL } from "@/lib/api";
-import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from "../../lib/theme";
+import { colors, typography, spacing, radius, shadows, getCategoryIcon } from "../../lib/theme";
 
 const COLORS = {
   primary: colors.primary,
@@ -300,30 +300,34 @@ export default function ContractorProfile() {
 
       // Fetch work history
       try {
-        const { data } = await api<{ work_history: WorkHistoryItem[] }>(
+        const { data } = await api<{ workHistory: WorkHistoryItem[] }>(
           `/api/contractors/${user.id}/work-history`
         );
-        setWorkHistory(data.work_history || []);
+        setWorkHistory(data.workHistory || []);
       } catch {
-        /* endpoint may not exist yet */
+        // Non-critical — profile still works without work history
       }
 
       // Fetch stats
       try {
         const { data } = await api<{
-          total_jobs: number;
-          avg_rating: number;
-          total_earnings: number;
-          completion_rate: number;
+          stats: {
+            completion_count: number;
+            acceptance_rate: number | null;
+            total_bids: number;
+            avg_response_hours: number;
+          } | null;
         }>(`/api/contractors/${user.id}/stats`);
-        setStats({
-          totalJobs: data.total_jobs || 0,
-          avgRating: data.avg_rating || 0,
-          totalEarnings: data.total_earnings || 0,
-          completionRate: data.completion_rate || 0,
-        });
+        if (data.stats) {
+          setStats({
+            totalJobs: data.stats.completion_count || 0,
+            avgRating: 0,
+            totalEarnings: 0,
+            completionRate: data.stats.acceptance_rate || 0,
+          });
+        }
       } catch {
-        /* endpoint may not exist yet */
+        // Non-critical — profile still works without stats
       }
 
       // Fetch portfolio count
@@ -403,7 +407,7 @@ export default function ContractorProfile() {
     if (!user?.id) return;
     setSaving(true);
     try {
-      await api(`/api/contractors/${user.id}/profile`, {
+      await api(`/api/contractors/${user.id}`, {
         method: "PATCH",
         body: JSON.stringify({ headline, bio }),
       });
@@ -1093,7 +1097,7 @@ export default function ContractorProfile() {
         <View style={styles.settingsCard}>
           <TouchableOpacity
             style={[styles.settingsRow, styles.settingsRowBorder]}
-            onPress={() => pickAndUploadDocument('/api/contractors/documents', 'background_check')}
+            onPress={() => pickAndUploadDocument(`/api/contractors/${user?.id}/id-document`, 'background_check')}
             activeOpacity={0.6}
             disabled={uploading === 'background_check'}
           >
@@ -1124,7 +1128,7 @@ export default function ContractorProfile() {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.settingsRow, styles.settingsRowBorder]}
-            onPress={() => pickAndUploadDocument('/api/contractors/documents', 'insurance')}
+            onPress={() => pickAndUploadDocument(`/api/contractors/${user?.id}/id-document`, 'insurance')}
             activeOpacity={0.6}
             disabled={uploading === 'insurance'}
           >
@@ -1155,7 +1159,7 @@ export default function ContractorProfile() {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.settingsRow}
-            onPress={() => pickAndUploadDocument('/api/contractors/documents', 'license')}
+            onPress={() => pickAndUploadDocument(`/api/contractors/${user?.id}/id-document`, 'license')}
             activeOpacity={0.6}
             disabled={uploading === 'license'}
           >

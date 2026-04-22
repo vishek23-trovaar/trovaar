@@ -37,12 +37,12 @@ export async function POST(request: NextRequest) {
         // Notify consumer
         const job = await db.prepare("SELECT consumer_id, title FROM jobs WHERE id = ?").get(jobId) as { consumer_id: string; title: string } | undefined;
         if (job) {
-          db.prepare("INSERT INTO notifications (id, user_id, type, title, message, job_id) VALUES (?, ?, ?, ?, ?, ?)")
+          await db.prepare("INSERT INTO notifications (id, user_id, type, title, message, job_id) VALUES (?, ?, ?, ?, ?, ?)")
             .run(uuidv4(), job.consumer_id, "payment_confirmed", "Payment confirmed ✅",
               `Your payment for "${job.title}" has been received and is held securely.`, jobId);
         }
         if (contractorId) {
-          db.prepare("INSERT INTO notifications (id, user_id, type, title, message, job_id) VALUES (?, ?, ?, ?, ?, ?)")
+          await db.prepare("INSERT INTO notifications (id, user_id, type, title, message, job_id) VALUES (?, ?, ?, ?, ?, ?)")
             .run(uuidv4(), contractorId, "payment_confirmed", "Payment received 💰",
               `The consumer has paid for "${job?.title}". Complete the job to receive your payout.`, jobId);
         }
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
         await db.prepare("UPDATE jobs SET payment_status = 'failed' WHERE payment_intent_id = ?").run(intent.id);
         const job = await db.prepare("SELECT consumer_id, title FROM jobs WHERE id = ?").get(jobId) as { consumer_id: string; title: string } | undefined;
         if (job) {
-          db.prepare("INSERT INTO notifications (id, user_id, type, title, message, job_id) VALUES (?, ?, ?, ?, ?, ?)")
+          await db.prepare("INSERT INTO notifications (id, user_id, type, title, message, job_id) VALUES (?, ?, ?, ?, ?, ?)")
             .run(uuidv4(), job.consumer_id, "payment_failed", "Payment failed ⚠️",
               `Payment for "${job.title}" failed. Please try again.`, jobId);
         }
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
     case "account.updated": {
       const account = event.data.object as { id: string; details_submitted: boolean; charges_enabled: boolean };
       if (account.details_submitted && account.charges_enabled) {
-        db.prepare("UPDATE contractor_profiles SET stripe_onboarding_complete = 1 WHERE stripe_account_id = ?")
+        await db.prepare("UPDATE contractor_profiles SET stripe_onboarding_complete = 1 WHERE stripe_account_id = ?")
           .run(account.id);
       }
       break;

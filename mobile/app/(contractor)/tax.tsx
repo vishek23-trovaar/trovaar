@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { api, ApiError, getToken, API_URL } from "@/lib/api";
-import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from "../../lib/theme";
+import { colors, typography, spacing, radius, shadows, getCategoryIcon } from "../../lib/theme";
 
 const COLORS = {
   primary: colors.primary,
@@ -122,7 +122,7 @@ export default function Tax() {
           const { data } = await api<{
             items?: EarningItem[];
             earnings?: EarningItem[];
-          }>(`/api/contractor/earnings?period=year`);
+          }>(`/api/earnings?period=year`);
           const items = data?.items || data?.earnings || [];
           setSummary(buildTaxFromEarnings(items, year));
         } catch {
@@ -163,7 +163,7 @@ export default function Tax() {
     try {
       const token = await getToken();
       const res = await fetch(
-        `${API_URL}/api/contractors/tax/export?year=${selectedYear}`,
+        `${API_URL}/api/contractor/tax?year=${selectedYear}&format=export`,
         {
           headers: {
             ...(token ? { Authorization: `Bearer ${token}` } : {}),

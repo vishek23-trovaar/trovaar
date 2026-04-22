@@ -18,7 +18,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
 import * as ImagePicker from "expo-image-picker";
 import VoiceJobRecorder from "@/components/VoiceJobRecorder";
-import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from '../../lib/theme';
+import { colors, typography, spacing, radius, shadows, getCategoryIcon } from '../../lib/theme';
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const TOTAL_STEPS = 3;

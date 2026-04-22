@@ -1,40 +1,100 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, Text, StyleSheet, Animated, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Animated,
+  Dimensions,
+} from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/lib/auth";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { colors, typography, spacing, radius, shadows } from "../lib/theme";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LinearGradient } from "expo-linear-gradient";
+import { Ionicons } from "@expo/vector-icons";
+import { colors, spacing } from "../lib/theme";
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function Index() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(0.85)).current;
-  const [hasSeenOnboarding, setHasSeenOnboarding] = useState<boolean | null>(null);
+  const scaleAnim = useRef(new Animated.Value(0.9)).current;
+  const taglineFade = useRef(new Animated.Value(0)).current;
+  const taglineSlide = useRef(new Animated.Value(12)).current;
+  const footerFade = useRef(new Animated.Value(0)).current;
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const [hasSeenOnboarding, setHasSeenOnboarding] = useState<boolean | null>(
+    null
+  );
   const navigated = useRef(false);
 
   useEffect(() => {
+    // Logo entrance
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 700,
+        duration: 600,
         useNativeDriver: true,
       }),
       Animated.spring(scaleAnim, {
         toValue: 1,
         useNativeDriver: true,
-        damping: 14,
-        stiffness: 120,
+        damping: 16,
+        stiffness: 140,
       }),
     ]).start();
-  }, [fadeAnim, scaleAnim]);
+
+    // Tagline enters after logo
+    setTimeout(() => {
+      Animated.parallel([
+        Animated.timing(taglineFade, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(taglineSlide, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }, 400);
+
+    // Footer fades in
+    setTimeout(() => {
+      Animated.timing(footerFade, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }).start();
+    }, 700);
+
+    // Subtle pulse on the icon
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, {
+          toValue: 1.04,
+          duration: 1800,
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnim, {
+          toValue: 1,
+          duration: 1800,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, [fadeAnim, scaleAnim, taglineFade, taglineSlide, footerFade, pulseAnim]);
 
   useEffect(() => {
-    AsyncStorage.getItem('hasSeenOnboarding').then((value) => {
-      setHasSeenOnboarding(value === 'true');
-    }).catch(() => {
-      setHasSeenOnboarding(false);
-    });
+    AsyncStorage.getItem("hasSeenOnboarding")
+      .then((value) => {
+        setHasSeenOnboarding(value === "true");
+      })
+      .catch(() => {
+        setHasSeenOnboarding(false);
+      });
   }, []);
 
   useEffect(() => {
@@ -46,7 +106,7 @@ export default function Index() {
 
       if (!user) {
         if (!hasSeenOnboarding) {
-          AsyncStorage.setItem('hasSeenOnboarding', 'true').catch(() => {});
+          AsyncStorage.setItem("hasSeenOnboarding", "true").catch(() => {});
           router.replace("/(auth)/onboarding");
         } else {
           router.replace("/(auth)/login");
@@ -56,35 +116,74 @@ export default function Index() {
       } else {
         router.replace("/(contractor)/dashboard");
       }
-    }, 2000);
+    }, 2200);
 
     return () => clearTimeout(timer);
   }, [user, loading, router, hasSeenOnboarding]);
 
   return (
     <View style={styles.container}>
-      <Animated.View
-        style={[
-          styles.content,
-          { opacity: fadeAnim, transform: [{ scale: scaleAnim }] },
-        ]}
-      >
-        <View style={styles.iconBadge}>
-          <Image
-            source={require("../assets/trovaar-logo.png")}
-            style={styles.logo}
-            resizeMode="contain"
-          />
-        </View>
-        <Text style={styles.brand}>trovaar</Text>
-        <Text style={styles.tagline}>Stop searching, start finding.</Text>
-      </Animated.View>
+      {/* Background gradient matching web hero */}
+      <LinearGradient
+        colors={["#0F172A", "#131D35", "#0F172A"]}
+        style={StyleSheet.absoluteFill}
+      />
 
-      <Animated.View style={[styles.footer, { opacity: fadeAnim }]}>
-        <View style={styles.dots}>
-          <View style={[styles.dot, styles.dotActive]} />
-          <View style={styles.dot} />
-          <View style={styles.dot} />
+      {/* Subtle grid overlay for depth */}
+      <View style={styles.gridOverlay} />
+
+      {/* Glow effect behind logo */}
+      <View style={styles.glowOuter} />
+      <View style={styles.glowInner} />
+
+      {/* Main content */}
+      <View style={styles.content}>
+        <Animated.View
+          style={[
+            styles.logoArea,
+            {
+              opacity: fadeAnim,
+              transform: [{ scale: scaleAnim }],
+            },
+          ]}
+        >
+          {/* Icon badge */}
+          <Animated.View
+            style={[styles.iconBadge, { transform: [{ scale: pulseAnim }] }]}
+          >
+            <LinearGradient
+              colors={["#2563EB", "#1D4ED8"]}
+              style={styles.iconGradient}
+            >
+              <Ionicons name="construct" size={28} color="#FFFFFF" />
+            </LinearGradient>
+          </Animated.View>
+
+          {/* Brand name */}
+          <Text style={styles.brand}>Trovaar</Text>
+        </Animated.View>
+
+        {/* Tagline */}
+        <Animated.View
+          style={{
+            opacity: taglineFade,
+            transform: [{ translateY: taglineSlide }],
+          }}
+        >
+          <Text style={styles.tagline}>
+            The network that connects{"\n"}
+            <Text style={styles.taglineAccent}>every skilled trade</Text> to
+            every job.
+          </Text>
+        </Animated.View>
+      </View>
+
+      {/* Footer */}
+      <Animated.View style={[styles.footer, { opacity: footerFade }]}>
+        {/* Live indicator matching web */}
+        <View style={styles.liveChip}>
+          <View style={styles.liveDot} />
+          <Text style={styles.liveText}>Live marketplace</Text>
         </View>
       </Animated.View>
     </View>
@@ -94,64 +193,107 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.secondary,
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: "#0F172A",
+  },
+  gridOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    opacity: 0.03,
+    // Simulated grid via border
+  },
+  glowOuter: {
+    position: "absolute",
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+    backgroundColor: "#2563EB",
+    opacity: 0.06,
+    top: SCREEN_HEIGHT * 0.3 - 150,
+    left: SCREEN_WIDTH * 0.5 - 150,
+  },
+  glowInner: {
+    position: "absolute",
+    width: 180,
+    height: 180,
+    borderRadius: 90,
+    backgroundColor: "#7C3AED",
+    opacity: 0.05,
+    top: SCREEN_HEIGHT * 0.3 - 90,
+    left: SCREEN_WIDTH * 0.5 - 90,
   },
   content: {
+    flex: 1,
+    justifyContent: "center",
     alignItems: "center",
+    paddingHorizontal: spacing["3xl"],
   },
-  wordmark: {
-    flexDirection: "row",
+  logoArea: {
     alignItems: "center",
-    gap: 14,
-    marginBottom: spacing.xl,
+    marginBottom: 24,
   },
   iconBadge: {
-    width: 56,
-    height: 56,
-    borderRadius: radius.xl,
-    backgroundColor: colors.primary,
+    width: 64,
+    height: 64,
+    borderRadius: 20,
+    marginBottom: 20,
+    shadowColor: "#2563EB",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.4,
+    shadowRadius: 20,
+    elevation: 12,
+  },
+  iconGradient: {
+    width: 64,
+    height: 64,
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.35,
-    shadowRadius: 12,
-    elevation: 8,
-  },
-  logo: {
-    width: 36,
-    height: 36,
   },
   brand: {
-    fontSize: 44,
-    fontWeight: "900",
-    color: colors.white,
-    letterSpacing: -1.5,
+    fontSize: 42,
+    fontWeight: "800",
+    color: "#FFFFFF",
+    letterSpacing: -1,
   },
   tagline: {
-    ...typography.body,
-    color: colors.muted,
+    fontSize: 16,
     fontWeight: "500",
-    letterSpacing: 0.3,
+    color: "#94A3B8",
+    textAlign: "center",
+    lineHeight: 24,
+    letterSpacing: 0.2,
+  },
+  taglineAccent: {
+    color: "#818CF8",
+    fontWeight: "700",
   },
   footer: {
     position: "absolute",
     bottom: 60,
+    left: 0,
+    right: 0,
+    alignItems: "center",
   },
-  dots: {
+  liveChip: {
     flexDirection: "row",
-    gap: spacing.md,
+    alignItems: "center",
+    gap: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 999,
+    backgroundColor: "rgba(255,255,255,0.05)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.08)",
   },
-  dot: {
+  liveDot: {
     width: 8,
     height: 8,
-    borderRadius: radius.full,
-    backgroundColor: "rgba(255,255,255,0.2)",
+    borderRadius: 4,
+    backgroundColor: "#10B981",
   },
-  dotActive: {
-    width: 24,
-    backgroundColor: colors.primary,
+  liveText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#64748B",
+    letterSpacing: 0.3,
   },
 });

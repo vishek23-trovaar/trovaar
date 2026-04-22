@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { api, ApiError } from "@/lib/api";
-import { colors, typography, spacing, radius, shadows, getStatusColor, getCategoryIcon } from "../../lib/theme";
+import { colors, typography, spacing, radius, shadows, getCategoryIcon } from "../../lib/theme";
 
 const COLORS = {
   primary: colors.primary,
