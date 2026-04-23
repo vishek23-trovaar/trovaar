@@ -35,7 +35,14 @@ import {
 } from "../../lib/theme";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
-const CARD_HEIGHT = Math.max(SCREEN_HEIGHT * 0.72, 480);
+// Chrome above the feed (header + search + chips + view segment) + tab bar + safe areas
+// Leave room for the feed card to fit comfortably in the viewport without clipping.
+const FEED_CHROME_HEIGHT = 280; // header(72) + search(60) + chips(52) + segment(62) + padding
+const TAB_BAR_HEIGHT = Platform.OS === "ios" ? 88 : 64;
+const CARD_HEIGHT = Math.max(
+  Math.min(SCREEN_HEIGHT - FEED_CHROME_HEIGHT - TAB_BAR_HEIGHT - 24, 620),
+  440
+);
 const ITEM_HEIGHT = CARD_HEIGHT + 16; // card + marginBottom
 
 type ViewMode = "cards" | "list" | "map";
@@ -179,8 +186,14 @@ function InstagramJobCard({
   const isHot = item.urgency === "emergency" || item.urgency === "high";
   let photos: string[] = [];
   try {
-    photos = item.photos ? (typeof item.photos === "string" ? JSON.parse(item.photos) : item.photos) : [];
-  } catch { /* malformed photos JSON */ }
+    if (item.photos) {
+      const parsed = typeof item.photos === "string" ? JSON.parse(item.photos) : item.photos;
+      photos = Array.isArray(parsed) ? parsed.filter((p) => typeof p === "string") : [];
+    }
+  } catch {
+    // Malformed photos JSON — fall through to empty array
+    photos = [];
+  }
   const hasPhoto = photos.length > 0;
   const emoji = getCatEmoji(item.category);
   const budgetText =
@@ -731,6 +744,72 @@ export default function ContractorDashboard() {
     );
   };
 
+  // ─────────────────────────────────────────────────────────────
+  // Uber-style full-screen map mode — map fills screen, chrome floats on top
+  // ─────────────────────────────────────────────────────────────
+  if (viewMode === "map") {
+    return (
+      <View style={{ flex: 1, backgroundColor: COLORS.surface }}>
+        {/* Full-screen map as background */}
+        <UberMapView jobs={filtered} userLocation={userLocation} onJobPress={navigateToJob} />
+
+        {/* Floating top chrome — search + view toggle */}
+        <SafeAreaView
+          edges={["top"]}
+          style={styles.mapFloatingTop}
+          pointerEvents="box-none"
+        >
+          <View style={styles.mapFloatingSearchWrap} pointerEvents="auto">
+            <View style={styles.mapFloatingSearch}>
+              <Ionicons name="search-outline" size={18} color={COLORS.mutedLight} />
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Search jobs near you..."
+                placeholderTextColor={COLORS.mutedLight}
+                value={search}
+                onChangeText={setSearch}
+              />
+              {search.length > 0 && (
+                <TouchableOpacity onPress={() => setSearch("")}>
+                  <Ionicons name="close-circle" size={18} color={COLORS.mutedLight} />
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+
+          <View style={styles.mapFloatingSegmentWrap} pointerEvents="auto">
+            {([
+              { key: "cards" as ViewMode, icon: "albums-outline" as keyof typeof Ionicons.glyphMap, label: "Feed" },
+              { key: "list" as ViewMode, icon: "list-outline" as keyof typeof Ionicons.glyphMap, label: "List" },
+              { key: "map" as ViewMode, icon: "map-outline" as keyof typeof Ionicons.glyphMap, label: "Map" },
+            ]).map((mode) => (
+              <TouchableOpacity
+                key={mode.key}
+                style={[styles.viewSegmentBtn, viewMode === mode.key && styles.viewSegmentBtnActive]}
+                onPress={() => setViewMode(mode.key)}
+                activeOpacity={0.7}
+              >
+                <Ionicons
+                  name={mode.icon}
+                  size={15}
+                  color={viewMode === mode.key ? COLORS.white : COLORS.muted}
+                />
+                <Text
+                  style={[
+                    styles.viewSegmentLabel,
+                    viewMode === mode.key && styles.viewSegmentLabelActive,
+                  ]}
+                >
+                  {mode.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </SafeAreaView>
+      </View>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.screen} edges={["top"]}>
     <Animated.View style={[styles.screenInner, { opacity: screenOpacity }]}>
@@ -853,20 +932,22 @@ export default function ContractorDashboard() {
         </View>
       )}
 
-      {/* ── Sort indicator + result count ── */}
-      <View style={styles.sortIndicator}>
-        <TouchableOpacity style={styles.sortBtn} onPress={() => setShowSortMenu(!showSortMenu)}>
-          <Ionicons name="swap-vertical-outline" size={14} color={COLORS.muted} />
-          <Text style={styles.sortLabel}>
-            {SORT_OPTIONS.find((o) => o.value === sortBy)?.label}
-          </Text>
-          <Ionicons name="chevron-down" size={12} color={COLORS.muted} />
-        </TouchableOpacity>
-        <View style={styles.resultCountWrap}>
-          <Text style={styles.resultCount}>{filtered.length}</Text>
-          <Text style={styles.resultLabel}> job{filtered.length !== 1 ? "s" : ""} available</Text>
+      {/* ── Sort indicator + result count (list view only — removed from feed/map to eliminate visual clutter) ── */}
+      {viewMode === "list" && (
+        <View style={styles.sortIndicator}>
+          <TouchableOpacity style={styles.sortBtn} onPress={() => setShowSortMenu(!showSortMenu)}>
+            <Ionicons name="swap-vertical-outline" size={14} color={COLORS.muted} />
+            <Text style={styles.sortLabel}>
+              {SORT_OPTIONS.find((o) => o.value === sortBy)?.label}
+            </Text>
+            <Ionicons name="chevron-down" size={12} color={COLORS.muted} />
+          </TouchableOpacity>
+          <View style={styles.resultCountWrap}>
+            <Text style={styles.resultCount}>{filtered.length}</Text>
+            <Text style={styles.resultLabel}> job{filtered.length !== 1 ? "s" : ""} available</Text>
+          </View>
         </View>
-      </View>
+      )}
 
       {/* ── Content based on view mode ── */}
       {loading ? (
@@ -886,7 +967,7 @@ export default function ContractorDashboard() {
           renderItem={({ item }) => (
             <InstagramJobCard item={item} onPress={() => navigateToJob(item)} />
           )}
-          contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
+          contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 8, paddingBottom: 24 }}
           showsVerticalScrollIndicator={false}
           snapToInterval={ITEM_HEIGHT}
           snapToAlignment="start"
@@ -1145,6 +1226,46 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primaryBg,
   },
   clearFilterText: { fontSize: 14, fontWeight: "600", color: COLORS.primary },
+
+  // Uber-style map floating chrome
+  mapFloatingTop: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10,
+  },
+  mapFloatingSearchWrap: {
+    marginHorizontal: 16,
+    marginTop: 8,
+  },
+  mapFloatingSearch: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: COLORS.white,
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: Platform.OS === "ios" ? 4 : 2,
+    gap: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    elevation: 6,
+  },
+  mapFloatingSegmentWrap: {
+    flexDirection: "row",
+    marginHorizontal: 16,
+    marginTop: 10,
+    backgroundColor: COLORS.white,
+    borderRadius: 14,
+    padding: 4,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
 });
 
 /* ── Instagram Card styles ── */
@@ -1419,10 +1540,10 @@ const mapStyles = StyleSheet.create({
     justifyContent: "center",
   },
   markerEmoji: { fontSize: 16 },
-  // Job count badge (top)
+  // Job count badge (top) — positioned below the floating search + segment chrome
   countBadge: {
     position: "absolute",
-    top: 16,
+    top: Platform.OS === "ios" ? 180 : 150,
     left: 16,
     flexDirection: "row",
     alignItems: "center",
@@ -1440,26 +1561,26 @@ const mapStyles = StyleSheet.create({
     borderColor: COLORS.border,
   },
   countText: { fontSize: 13, fontWeight: "700", color: COLORS.secondary },
-  // Recenter button
+  // Recenter button — positioned bottom-right like Uber (above the bottom card / tab bar)
   recenterBtn: {
     position: "absolute",
-    top: 16,
+    bottom: Platform.OS === "ios" ? 130 : 110,
     right: 16,
-    width: 44,
-    height: 44,
-    borderRadius: 14,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     backgroundColor: COLORS.white,
     alignItems: "center",
     justifyContent: "center",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.12,
-    shadowRadius: 6,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 6,
     borderWidth: 1,
     borderColor: COLORS.border,
   },
-  // Bottom floating card
+  // Bottom floating card — respects iOS home indicator & tab bar
   bottomCard: {
     position: "absolute",
     bottom: 0,
@@ -1469,7 +1590,7 @@ const mapStyles = StyleSheet.create({
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     padding: 20,
-    paddingBottom: 32,
+    paddingBottom: Platform.OS === "ios" ? 40 : 24,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: -4 },
     shadowOpacity: 0.15,

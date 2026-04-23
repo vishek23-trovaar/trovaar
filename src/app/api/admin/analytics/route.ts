@@ -13,9 +13,10 @@ export async function GET(request: NextRequest) {
   const rangeParam = url.searchParams.get("range");
   const daysParam = url.searchParams.get("days");
 
-  // Determine the number of days — supports both ?range=30d and ?days=30 formats
+  // Determine the number of days — supports both ?range=30d and ?days=30 formats.
+  // `count` is strictly clamped to a positive integer before interpolation to prevent SQL injection.
   let days: string[];
-  let sqlInterval: string;
+  let count: number;
   if (daysParam === null && rangeParam === null) {
     // No param = all time
     const firstRow = await db.prepare(
@@ -23,39 +24,34 @@ export async function GET(request: NextRequest) {
     ).get() as { d: string | null };
     const startDate = firstRow?.d ? new Date(firstRow.d) : new Date();
     const diffDays = Math.max(Math.ceil((Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 24)), 30);
-    const count = diffDays;
-    sqlInterval = `-${count} days`;
-    days = [];
-    for (let i = count - 1; i >= 0; i--) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      days.push(d.toISOString().slice(0, 10));
-    }
+    count = diffDays;
   } else if (rangeParam === "ytd") {
     const now = new Date();
     const startOfYear = new Date(now.getFullYear(), 0, 1);
     const diffMs = now.getTime() - startOfYear.getTime();
     const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-    const count = Math.max(diffDays, 1);
-    sqlInterval = `-${count} days`;
-    days = [];
-    for (let i = count - 1; i >= 0; i--) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      days.push(d.toISOString().slice(0, 10));
-    }
+    count = Math.max(diffDays, 1);
   } else {
     // Support ?days=7 or ?range=7d
     const countFromDays = daysParam ? parseInt(daysParam, 10) : 0;
     const countMap: Record<string, number> = { "7d": 7, "30d": 30, "90d": 90 };
-    const count = countFromDays > 0 ? countFromDays : (countMap[rangeParam ?? "30d"] ?? 30);
-    sqlInterval = `-${count} days`;
-    days = [];
-    for (let i = count - 1; i >= 0; i--) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      days.push(d.toISOString().slice(0, 10));
-    }
+    count = countFromDays > 0 ? countFromDays : (countMap[rangeParam ?? "30d"] ?? 30);
+  }
+
+  // Hard clamp: non-finite, non-positive, or huge values get safely coerced to 30 days.
+  // This is the ONLY place `count` is allowed to flow into SQL, so clamping here
+  // guarantees the interval string below is never user-controlled.
+  if (!Number.isFinite(count) || count < 1 || count > 3650) {
+    count = 30;
+  }
+  count = Math.floor(count);
+  const sqlInterval = `-${count} days`;
+
+  days = [];
+  for (let i = count - 1; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    days.push(d.toISOString().slice(0, 10));
   }
 
   // Daily signups for the selected range
