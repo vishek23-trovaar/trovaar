@@ -2,7 +2,7 @@
 // Shared theme constants matching the web application
 
 // ---------------------------------------------------------------------------
-// Colors
+// Colors — light (default, exported as `colors` for backward compatibility)
 // ---------------------------------------------------------------------------
 
 export const colors = {
@@ -20,6 +20,32 @@ export const colors = {
   warning: '#F59E0B',
   white: '#FFFFFF',
 } as const;
+
+// ---------------------------------------------------------------------------
+// Colors — dark palette. Keep keys identical to `colors` so either palette
+// can be swapped in via the useAppTheme() hook without branching at use sites.
+// ---------------------------------------------------------------------------
+
+// Deliberately typed as Record<K, string> (not `as const`) so TypeScript
+// treats dark and light palettes as structurally compatible when swapped
+// through a single union type.
+export type ColorPalette = { [K in keyof typeof colors]: string };
+
+export const darkColors: ColorPalette = {
+  primary: '#3B82F6',
+  primaryDark: '#2563EB',
+  primaryLight: '#60A5FA',
+  secondary: '#F8FAFC',
+  text: '#F8FAFC',
+  surface: '#0F172A',
+  surfaceDark: '#1E293B',
+  border: '#334155',
+  muted: '#94A3B8',
+  success: '#34D399',
+  danger: '#F87171',
+  warning: '#FBBF24',
+  white: '#0F172A', // intentional: 'white' semantically means "card bg" in RN styles here
+};
 
 // ---------------------------------------------------------------------------
 // Status badge colors

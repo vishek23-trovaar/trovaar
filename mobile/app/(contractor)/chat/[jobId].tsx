@@ -17,6 +17,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { Message } from "@/lib/types";
+import Skeleton from "@/components/ui/Skeleton";
 import {
   colors,
   radius,
@@ -565,8 +566,26 @@ export default function ChatThread() {
 
   if (loading) {
     return (
-      <View style={[styles.screen, styles.center]}>
-        <ActivityIndicator size="large" color={colors.primary} />
+      <View style={styles.screen}>
+        <View style={{ padding: 16 }}>
+          {[
+            { side: "left", w: 180 },
+            { side: "right", w: 240 },
+            { side: "left", w: 140 },
+            { side: "right", w: 200 },
+            { side: "left", w: 220 },
+          ].map((m, i) => (
+            <View
+              key={i}
+              style={{
+                alignSelf: m.side === "right" ? "flex-end" : "flex-start",
+                marginBottom: 10,
+              }}
+            >
+              <Skeleton width={m.w} height={40} borderRadius={18} />
+            </View>
+          ))}
+        </View>
       </View>
     );
   }

@@ -7,12 +7,12 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Alert,
   Pressable,
   Animated,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/lib/auth";
+import { useToast } from "@/lib/toast";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { Button, Input } from "@/components/ui";
@@ -23,6 +23,7 @@ import * as AppleAuthentication from "expo-apple-authentication";
 export default function LoginScreen() {
   const { login, refreshUser } = useAuth();
   const router = useRouter();
+  const toast = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -54,7 +55,7 @@ export default function LoginScreen() {
       await login(email, password);
       router.replace("/");
     } catch (err: unknown) {
-      Alert.alert("Login Failed", (err instanceof Error && err.message) ? err.message : 'Something went wrong. Please try again.');
+      toast.error((err instanceof Error && err.message) ? err.message : 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -82,7 +83,7 @@ export default function LoginScreen() {
       const data = await res.json();
 
       if (!res.ok) {
-        Alert.alert("Sign In Failed", data.error || "Apple sign-in failed");
+        toast.error(data.error || "Apple sign-in failed");
         return;
       }
 
@@ -97,7 +98,7 @@ export default function LoginScreen() {
       }
     } catch (err: unknown) {
       if ((err as { code?: string }).code === "ERR_REQUEST_CANCELED") return;
-      Alert.alert("Apple Sign In", "Something went wrong. Please try again.");
+      toast.error("Apple Sign-In failed. Please try again.");
     }
   };
 

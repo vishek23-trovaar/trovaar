@@ -13,6 +13,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import { useToast } from "@/lib/toast";
 import { colors, typography, spacing, radius, shadows, getCategoryIcon } from '../../../lib/theme';
 
 
@@ -51,6 +52,7 @@ export default function CheckoutScreen() {
   const { jobId } = useLocalSearchParams<{ jobId: string }>();
   const { user } = useAuth();
   const router = useRouter();
+  const toast = useToast();
   const [job, setJob] = useState<JobSummary | null>(null);
   const [acceptedBid, setAcceptedBid] = useState<BidSummary | null>(null);
   const [loading, setLoading] = useState(true);
@@ -69,7 +71,7 @@ export default function CheckoutScreen() {
       const accepted = (bidRes.data.bids || []).find((b) => b.status === "accepted");
       setAcceptedBid(accepted || null);
     } catch {
-      Alert.alert("Error", "Could not load job details.");
+      toast.error("Could not load job details.");
     }
     setLoading(false);
   }, [jobId]);
@@ -101,7 +103,7 @@ export default function CheckoutScreen() {
         [{ text: "View Job", onPress: () => router.replace(`/(client)/job/${jobId}` as never) }]
       );
     } catch (err: unknown) {
-      Alert.alert("Payment Error", (err as Error).message);
+      toast.error((err as Error).message || "Payment failed. Please try again.");
     }
     setProcessing(false);
   };

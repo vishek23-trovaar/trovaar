@@ -176,7 +176,14 @@ export default function ContractorOnboarding() {
     }
   }
 
-  function skipStripeAndContinue() {
+  async function skipStripeAndContinue() {
+    // Fire-and-forget: persist the skip so we don't nag on next login.
+    // UI doesn't block on this — the user shouldn't wait for a network round-trip to move forward.
+    void fetch("/api/onboarding/skip", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ step: "stripe" }),
+    }).catch(() => {});
     setStep(4);
   }
 
@@ -211,7 +218,12 @@ export default function ContractorOnboarding() {
     }
   }
 
-  function skipVerification() {
+  async function skipVerification() {
+    void fetch("/api/onboarding/skip", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ step: "identity" }),
+    }).catch(() => {});
     router.push("/contractor/dashboard");
   }
 

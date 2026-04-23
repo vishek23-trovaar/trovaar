@@ -19,6 +19,7 @@ import { useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/api";
+import { useAppTheme } from "@/lib/appTheme";
 import { colors, typography, spacing, radius, shadows, getCategoryIcon } from '../../lib/theme';
 
 
@@ -65,13 +66,20 @@ function SectionHeader({ title, danger }: { title: string; danger?: boolean }) {
 export default function ClientProfile() {
   const { user, logout, refreshUser } = useAuth();
   const router = useRouter();
+  const { mode, setMode, isDark } = useAppTheme();
   const screenOpacity = useRef(new Animated.Value(0)).current;
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [location, setLocation] = useState("");
   const [avatarUri, setAvatarUri] = useState<string | null>(null);
   const [notifications, setNotifications] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
+  // Dark mode reflects the app theme. Toggling flips the persisted mode
+  // between "light" and "dark" (user explicitly overrides system).
+  const darkMode = isDark;
+  const setDarkMode = (on: boolean) => setMode(on ? "dark" : "light");
+  // Reference `mode` so no-op lint doesn't complain if we later add UI
+  // distinguishing "system" from explicit overrides.
+  void mode;
   const [saving, setSaving] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [loading, setLoading] = useState(true);

@@ -19,6 +19,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { Message } from "@/lib/types";
+import Skeleton from "@/components/ui/Skeleton";
 import { colors, shadows, radius } from "../../../lib/theme";
 
 // ---------------------------------------------------------------------------
@@ -459,9 +460,28 @@ export default function ChatThread() {
   // -----------------------------------------------------------------------
 
   if (loading) {
+    // Chat skeleton: alternating left/right bubbles so the load state already feels like a chat.
     return (
-      <View style={[styles.screen, styles.center]}>
-        <ActivityIndicator size="large" color={colors.primary} />
+      <View style={styles.screen}>
+        <View style={{ padding: 16 }}>
+          {[
+            { side: "left", w: 180 },
+            { side: "right", w: 240 },
+            { side: "left", w: 140 },
+            { side: "right", w: 200 },
+            { side: "left", w: 220 },
+          ].map((m, i) => (
+            <View
+              key={i}
+              style={{
+                alignSelf: m.side === "right" ? "flex-end" : "flex-start",
+                marginBottom: 10,
+              }}
+            >
+              <Skeleton width={m.w} height={40} borderRadius={18} />
+            </View>
+          ))}
+        </View>
       </View>
     );
   }

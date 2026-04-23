@@ -6,12 +6,12 @@ import {
   TouchableOpacity,
   StyleSheet,
   RefreshControl,
-  ActivityIndicator,
   Animated,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
+import Skeleton from "@/components/ui/Skeleton";
 import { colors, typography, spacing, radius, shadows, getCategoryIcon } from "../../lib/theme";
 
 const COLORS = {
@@ -128,8 +128,17 @@ export default function ContractorNotifications() {
 
   if (loading) {
     return (
-      <Animated.View style={[styles.screen, styles.center, { opacity: screenOpacity }]}>
-        <ActivityIndicator size="large" color={COLORS.primary} />
+      <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
+        {[1, 2, 3, 4, 5].map((i) => (
+          <View key={i} style={styles.row}>
+            <Skeleton width={40} height={40} borderRadius={20} />
+            <View style={styles.body}>
+              <Skeleton width={"60%" as unknown as number} height={14} style={{ marginBottom: 8 }} />
+              <Skeleton width={"90%" as unknown as number} height={12} style={{ marginBottom: 6 }} />
+              <Skeleton width={60} height={10} />
+            </View>
+          </View>
+        ))}
       </Animated.View>
     );
   }

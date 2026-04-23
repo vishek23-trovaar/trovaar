@@ -1415,6 +1415,18 @@ export async function initializeDatabase(): Promise<void> {
          ALTER TABLE admin_categories ADD COLUMN sort_order INTEGER NOT NULL DEFAULT 0;
        END IF;
      END $$`,
+    // Contractor onboarding skip flags — persist so users aren't nagged on every login.
+    // Timestamp columns let us re-prompt them after a grace period (e.g. 30 days) if desired.
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='contractor_profiles' AND column_name='skip_stripe_onboarding_at') THEN
+         ALTER TABLE contractor_profiles ADD COLUMN skip_stripe_onboarding_at TIMESTAMPTZ;
+       END IF;
+     END $$`,
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='contractor_profiles' AND column_name='skip_identity_verification_at') THEN
+         ALTER TABLE contractor_profiles ADD COLUMN skip_identity_verification_at TIMESTAMPTZ;
+       END IF;
+     END $$`,
 
   ];
 

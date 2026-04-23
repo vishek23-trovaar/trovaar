@@ -2,8 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { hashPassword, revokeUserTokens } from "@/lib/auth";
 import { authLogger as logger } from "@/lib/logger";
+import { checkRateLimit } from "@/lib/rate-limit-api";
 
 export async function POST(request: NextRequest) {
+  // Rate-limit password reset attempts per-IP. 5 tries per 15 min blocks
+  // token-guessing / brute-force without punishing a user who mistypes once.
+  const rateLimitResponse = checkRateLimit(request, {
+    maxRequests: 5,
+    windowMs: 15 * 60 * 1000,
+    keyPrefix: "auth-reset",
+  });
+  if (rateLimitResponse) return rateLimitResponse;
+
   try {
     const { token, password } = await request.json();
 

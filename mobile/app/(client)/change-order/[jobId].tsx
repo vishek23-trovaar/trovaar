@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  Alert,
   ActivityIndicator,
   Platform,
   KeyboardAvoidingView,
@@ -14,6 +13,7 @@ import {
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "@/lib/api";
+import { useToast } from "@/lib/toast";
 import { colors, typography, spacing, radius, shadows, getCategoryIcon } from '../../../lib/theme';
 
 
@@ -31,6 +31,7 @@ interface JobData {
 
 export default function ChangeOrderScreen() {
   const router = useRouter();
+  const toast = useToast();
   const { jobId } = useLocalSearchParams<{ jobId: string }>();
 
   const [job, setJob] = useState<JobData | null>(null);
@@ -61,7 +62,7 @@ export default function ChangeOrderScreen() {
 
   const handleSubmit = async () => {
     if (!canSubmit) {
-      Alert.alert("Required", "Please describe the additional work needed.");
+      toast.error("Please describe the additional work needed.");
       return;
     }
 
@@ -69,7 +70,7 @@ export default function ChangeOrderScreen() {
       ? parseFloat(estimatedCost)
       : undefined;
     if (estimatedCost.trim() && (isNaN(parsedCost!) || parsedCost! < 0)) {
-      Alert.alert("Invalid amount", "Please enter a valid estimated cost.");
+      toast.error("Please enter a valid estimated cost.");
       return;
     }
 
@@ -86,13 +87,10 @@ export default function ChangeOrderScreen() {
         body: JSON.stringify(payload),
       });
 
-      Alert.alert(
-        "Request Sent",
-        "Change order sent to contractor. They'll respond with a quote.",
-        [{ text: "OK", onPress: () => router.back() }]
-      );
+      toast.success("Change order sent to contractor. They'll respond with a quote.");
+      router.back();
     } catch (err: unknown) {
-      Alert.alert("Error", (err as Error).message || "Failed to submit change order");
+      toast.error((err as Error).message || "Failed to submit change order");
     } finally {
       setSubmitting(false);
     }

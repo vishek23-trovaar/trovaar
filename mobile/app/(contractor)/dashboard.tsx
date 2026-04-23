@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo, memo } from "react";
 import {
   View,
   Text,
@@ -353,6 +353,45 @@ const URGENCY_PIN_COLORS: Record<string, string> = {
   low: "#94A3B8",
 };
 
+/**
+ * Memoized marker — re-renders only when the job's identity or urgency changes.
+ * With 200+ markers this cuts re-render cost from O(n) on every parent state
+ * change (e.g. selecting a job) to ~0.
+ */
+const MapMarker = memo(
+  function MapMarker({
+    job,
+    onPress,
+  }: {
+    job: Job;
+    onPress: (job: Job) => void;
+  }) {
+    const pinColor = URGENCY_PIN_COLORS[job.urgency] || URGENCY_PIN_COLORS.low;
+    const handlePress = useCallback(() => onPress(job), [job, onPress]);
+    return (
+      <Marker
+        identifier={job.id}
+        coordinate={{ latitude: job.latitude!, longitude: job.longitude! }}
+        onPress={handlePress}
+        tracksViewChanges={false}
+      >
+        <View style={[mapStyles.markerOuter, { borderColor: pinColor }]}>
+          <View style={[mapStyles.markerInner, { backgroundColor: pinColor }]}>
+            <Text style={mapStyles.markerEmoji}>{getCatEmoji(job.category)}</Text>
+          </View>
+        </View>
+      </Marker>
+    );
+  },
+  (prev, next) =>
+    prev.job.id === next.job.id &&
+    prev.job.urgency === next.job.urgency &&
+    prev.job.category === next.job.category &&
+    prev.job.latitude === next.job.latitude &&
+    prev.job.longitude === next.job.longitude &&
+    prev.onPress === next.onPress
+);
+
 function UberMapView({
   jobs,
   userLocation,
@@ -366,14 +405,22 @@ function UberMapView({
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const slideAnim = useRef(new Animated.Value(200)).current;
 
-  const jobsWithCoords = jobs.filter((j) => j.latitude && j.longitude);
+  // Memoize filtered jobs — otherwise every render creates a new array reference,
+  // breaking memoization for children that depend on it.
+  const jobsWithCoords = useMemo(
+    () => jobs.filter((j) => j.latitude && j.longitude),
+    [jobs]
+  );
 
-  const initialRegion: Region = {
-    latitude: userLocation?.lat ?? 37.78,
-    longitude: userLocation?.lng ?? -122.42,
-    latitudeDelta: 0.12,
-    longitudeDelta: 0.12,
-  };
+  const initialRegion: Region = useMemo(
+    () => ({
+      latitude: userLocation?.lat ?? 37.78,
+      longitude: userLocation?.lng ?? -122.42,
+      latitudeDelta: 0.12,
+      longitudeDelta: 0.12,
+    }),
+    [userLocation?.lat, userLocation?.lng]
+  );
 
   // Fit map to show all markers after they load
   useEffect(() => {
@@ -387,7 +434,7 @@ function UberMapView({
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [jobsWithCoords.length]);
+  }, [jobsWithCoords]);
 
   // Animate the bottom card in/out
   useEffect(() => {
@@ -399,7 +446,8 @@ function UberMapView({
     }).start();
   }, [selectedJob, slideAnim]);
 
-  const handleMarkerPress = (job: Job) => {
+  // Stable handler reference so MapMarker memoization actually holds.
+  const handleMarkerPress = useCallback((job: Job) => {
     setSelectedJob(job);
     if (job.latitude && job.longitude && mapRef.current) {
       mapRef.current.animateToRegion(
@@ -412,9 +460,9 @@ function UberMapView({
         400
       );
     }
-  };
+  }, []);
 
-  const recenterMap = () => {
+  const recenterMap = useCallback(() => {
     if (userLocation && mapRef.current) {
       mapRef.current.animateToRegion(
         {
@@ -426,7 +474,9 @@ function UberMapView({
         500
       );
     }
-  };
+  }, [userLocation]);
+
+  const clearSelected = useCallback(() => setSelectedJob(null), []);
 
   return (
     <View style={mapStyles.container}>
@@ -439,28 +489,11 @@ function UberMapView({
         showsMyLocationButton={false}
         showsCompass={false}
         showsPointsOfInterest={false}
-        onPress={() => setSelectedJob(null)}
+        onPress={clearSelected}
       >
-        {jobsWithCoords.map((job) => {
-          const pinColor = URGENCY_PIN_COLORS[job.urgency] || URGENCY_PIN_COLORS.low;
-          return (
-            <Marker
-              key={job.id}
-              identifier={job.id}
-              coordinate={{
-                latitude: job.latitude!,
-                longitude: job.longitude!,
-              }}
-              onPress={() => handleMarkerPress(job)}
-            >
-              <View style={[mapStyles.markerOuter, { borderColor: pinColor }]}>
-                <View style={[mapStyles.markerInner, { backgroundColor: pinColor }]}>
-                  <Text style={mapStyles.markerEmoji}>{getCatEmoji(job.category)}</Text>
-                </View>
-              </View>
-            </Marker>
-          );
-        })}
+        {jobsWithCoords.map((job) => (
+          <MapMarker key={job.id} job={job} onPress={handleMarkerPress} />
+        ))}
       </RNMapView>
 
       {/* Job count badge */}
@@ -981,11 +1014,8 @@ export default function ContractorDashboard() {
             <EmptyState search={search} activeCategory={activeCategory} onClear={() => { setSearch(""); setActiveCategory("all"); }} />
           }
         />
-      ) : viewMode === "map" ? (
-        /* ── Uber-Style Map View ── */
-        <UberMapView jobs={filtered} userLocation={userLocation} onJobPress={navigateToJob} />
       ) : (
-        /* ── List View (original) ── */
+        /* ── List View (original) — "map" is handled by the early return above, so only "list" reaches here ── */
         <FlatList
           data={filtered}
           keyExtractor={(j) => j.id}

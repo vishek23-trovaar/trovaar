@@ -16,6 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/api";
 import { Job } from "@/lib/types";
+import { cacheRead, cacheWrite } from "@/lib/cache";
 import { colors, typography, spacing, radius, shadows, getStatusColor, getUrgencyColor, getCategoryIcon } from '../../lib/theme';
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
@@ -148,28 +149,53 @@ export default function ClientDashboard() {
     Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
   }, [screenOpacity]);
 
+  const jobsCacheKey = user?.id ? `client-jobs:${user.id}` : null;
+  const surgeCacheKey = "client-surge";
+
   const fetchJobs = useCallback(async () => {
     try {
       const { data } = await api<{ jobs: Job[] }>(
         "/api/jobs?status=posted,bidding,accepted,in_progress,completed&limit=50"
       );
-      setJobs((data.jobs || []).filter((j) => j.consumer_id === user?.id));
+      const mine = (data.jobs || []).filter((j) => j.consumer_id === user?.id);
+      setJobs(mine);
+      if (jobsCacheKey) void cacheWrite(jobsCacheKey, mine);
     } catch (err) {
       if (__DEV__) console.error("[ClientDashboard] error:", err);
     }
     setLoading(false);
-  }, [user?.id]);
+  }, [user?.id, jobsCacheKey]);
 
   const fetchSurge = useCallback(async () => {
     try {
       const { data } = await api<{ categories: SurgeCategory[] }>("/api/insights/surge");
-      setSurgeCategories((data.categories || []).filter((c) => c.multiplier > 1));
+      const surging = (data.categories || []).filter((c) => c.multiplier > 1);
+      setSurgeCategories(surging);
+      void cacheWrite(surgeCacheKey, surging);
     } catch {
       // Surge info not available
     }
   }, []);
 
-  useEffect(() => { fetchJobs(); fetchSurge(); }, [fetchJobs, fetchSurge]);
+  // Stale-while-revalidate: paint from cache immediately, then refetch.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      if (jobsCacheKey) {
+        const cachedJobs = await cacheRead<Job[]>(jobsCacheKey);
+        if (!cancelled && cachedJobs && cachedJobs.length > 0) {
+          setJobs(cachedJobs);
+          setLoading(false); // hide skeleton early; fresh data will overwrite
+        }
+      }
+      const cachedSurge = await cacheRead<SurgeCategory[]>(surgeCacheKey);
+      if (!cancelled && cachedSurge) setSurgeCategories(cachedSurge);
+      // Kick off fresh fetches in the background.
+      fetchJobs();
+      fetchSurge();
+    })();
+    return () => { cancelled = true; };
+  }, [fetchJobs, fetchSurge, jobsCacheKey]);
 
   const onRefresh = async () => {
     setRefreshing(true);

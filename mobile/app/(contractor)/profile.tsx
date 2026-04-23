@@ -18,6 +18,7 @@ import { useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "@/lib/auth";
 import { api, getToken, API_URL } from "@/lib/api";
+import { useAppTheme } from "@/lib/appTheme";
 import { colors, typography, spacing, radius, shadows, getCategoryIcon } from "../../lib/theme";
 
 const COLORS = {
@@ -211,6 +212,7 @@ function TrustBadge({
 export default function ContractorProfile() {
   const { user, logout, refreshUser } = useAuth();
   const router = useRouter();
+  const { setMode, isDark } = useAppTheme();
   const screenOpacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -222,7 +224,8 @@ export default function ContractorProfile() {
   const [location, setLocation] = useState("");
   const [avatarUri, setAvatarUri] = useState<string | null>(null);
   const [notifications, setNotifications] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
+  const darkMode = isDark;
+  const setDarkMode = (on: boolean) => setMode(on ? "dark" : "light");
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
 
