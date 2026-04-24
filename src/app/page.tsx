@@ -23,8 +23,6 @@ import {
   DollarSign,
 } from "lucide-react";
 
-const PREVIEW_COUNT = 4;
-
 /* ═══════════════════════════════════════════════════════════════════════════
  * Shared helpers
  * ═══════════════════════════════════════════════════════════════════════════ */
@@ -379,61 +377,157 @@ function QuoteBusterSection() {
  * ═══════════════════════════════════════════════════════════════════════════ */
 
 function CategorySection() {
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [query, setQuery] = useState("");
 
-  function toggle(label: string) {
-    setExpanded((prev) => ({ ...prev, [label]: !prev[label] }));
-  }
+  const totalCategories = CATEGORY_GROUPS.reduce((sum, g) => sum + g.categories.length, 0);
+  const activeGroup = CATEGORY_GROUPS[activeIdx];
+
+  // When searching, flatten and filter all categories. Otherwise show active group.
+  const trimmedQuery = query.trim().toLowerCase();
+  const isSearching = trimmedQuery.length > 0;
+  const searchResults = isSearching
+    ? CATEGORY_GROUPS.flatMap((g) =>
+        g.categories
+          .filter((c) => c.label.toLowerCase().includes(trimmedQuery))
+          .map((c) => ({ ...c, groupLabel: g.label, groupIcon: g.icon }))
+      ).slice(0, 60)
+    : [];
 
   return (
-    <section className="py-20" style={{ background: "#f8fafc" }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <ScrollReveal>
-          <h2 className="text-3xl font-bold text-center text-slate-900 mb-3">Every trade. Every job.</h2>
-          <p className="text-center text-slate-500 mb-14 max-w-xl mx-auto">
-            Home, auto, or commercial — skilled pros are ready in every category.
-          </p>
-        </ScrollReveal>
-        <ScrollReveal>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {CATEGORY_GROUPS.map((group) => {
-              const isExpanded = !!expanded[group.label];
-              const visible = isExpanded ? group.categories : group.categories.slice(0, PREVIEW_COUNT);
-              const remaining = group.categories.length - PREVIEW_COUNT;
+    <section className="py-20 relative overflow-hidden" style={{ background: "#f8fafc" }}>
+      {/* Subtle decorative blob */}
+      <div aria-hidden className="absolute -top-32 -right-32 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl pointer-events-none" />
+      <div aria-hidden className="absolute -bottom-32 -left-32 w-96 h-96 bg-indigo-200/30 rounded-full blur-3xl pointer-events-none" />
 
-              return (
-                <div key={group.label} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
-                  <div className="text-2xl mb-2">{group.icon}</div>
-                  <h3 className="font-semibold text-slate-900 mb-4 group-hover:text-blue-600 transition-colors">{group.label}</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {visible.map((cat) => (
-                      <Link
-                        key={cat.value}
-                        href={`/jobs?category=${cat.value}`}
-                        className="px-2.5 py-1 rounded-full text-xs bg-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white transition-all duration-200 hover:shadow-md hover:shadow-blue-500/20"
-                      >
-                        {cat.label}
-                      </Link>
-                    ))}
-                  </div>
-                  {remaining > 0 && (
-                    <button
-                      onClick={() => toggle(group.label)}
-                      className="mt-3 text-xs text-blue-600 hover:underline cursor-pointer font-medium"
-                    >
-                      {isExpanded ? "Show less" : `See all ${group.categories.length} services →`}
-                    </button>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-          <div className="text-center mt-10">
-            <Link href="/jobs">
-              <Button variant="outline" size="lg">Browse Live Jobs</Button>
-            </Link>
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <ScrollReveal>
+          <div className="text-center mb-10">
+            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 mb-3">
+              Every trade. Every job.
+            </h2>
+            <p className="text-lg text-slate-500 max-w-2xl mx-auto">
+              <span className="font-semibold text-slate-700 tabular-nums">{totalCategories}</span> services across{" "}
+              <span className="font-semibold text-slate-700">{CATEGORY_GROUPS.length}</span> categories — home, auto, commercial, and everything in between.
+            </p>
           </div>
         </ScrollReveal>
+
+        {/* Search input — instant filter across everything */}
+        <ScrollReveal>
+          <div className="max-w-xl mx-auto mb-8">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search any service — try 'plumbing', 'detail', 'massage'..."
+                className="w-full pl-12 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl text-slate-900 placeholder:text-slate-400 shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-500/15 focus:border-blue-500 transition-all"
+              />
+              {query && (
+                <button
+                  onClick={() => setQuery("")}
+                  aria-label="Clear search"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs font-medium px-2 py-1 rounded hover:bg-slate-100"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+          </div>
+        </ScrollReveal>
+
+        {/* Group tabs — hidden during search, scrollable on mobile */}
+        {!isSearching && (
+          <ScrollReveal>
+            <div className="-mx-4 sm:mx-0 mb-8">
+              <div className="flex gap-2 overflow-x-auto px-4 sm:px-0 sm:flex-wrap sm:justify-center pb-2 scrollbar-hide">
+                {CATEGORY_GROUPS.map((group, i) => {
+                  const isActive = i === activeIdx;
+                  return (
+                    <button
+                      key={group.label}
+                      onClick={() => setActiveIdx(i)}
+                      className={`shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200 ${
+                        isActive
+                          ? "bg-slate-900 text-white border-slate-900 shadow-md shadow-slate-900/10"
+                          : "bg-white text-slate-700 border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+                      }`}
+                    >
+                      <span className="text-base leading-none">{group.icon}</span>
+                      <span>{group.label}</span>
+                      <span className={`text-xs tabular-nums ${isActive ? "text-slate-300" : "text-slate-400"}`}>
+                        {group.categories.length}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </ScrollReveal>
+        )}
+
+        {/* Chip wall — fades in on tab change or shows search results */}
+        <div className="bg-white/70 backdrop-blur-sm rounded-3xl border border-slate-200/70 p-6 sm:p-8 shadow-sm">
+          {isSearching ? (
+            searchResults.length === 0 ? (
+              <div className="py-10 text-center text-slate-500">
+                <p className="text-sm">
+                  No services match <span className="font-semibold text-slate-700">&ldquo;{query}&rdquo;</span> — yet.
+                </p>
+                <p className="text-xs mt-1 text-slate-400">Try a broader term, or browse by category.</p>
+              </div>
+            ) : (
+              <>
+                <p className="text-xs text-slate-500 mb-4">
+                  <span className="font-semibold text-slate-700 tabular-nums">{searchResults.length}</span> match{searchResults.length === 1 ? "" : "es"} for &ldquo;{query}&rdquo;
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {searchResults.map((cat, i) => (
+                    <Link
+                      key={cat.value}
+                      href={`/jobs?category=${cat.value}`}
+                      className="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm bg-white border border-slate-200 text-slate-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 hover:shadow-md hover:shadow-blue-500/20 transition-all"
+                      style={{ animation: `fadeInUp 0.3s ease-out ${Math.min(i * 15, 300)}ms both` }}
+                    >
+                      <span className="text-xs opacity-60 group-hover:opacity-100">{cat.groupIcon}</span>
+                      {cat.label}
+                    </Link>
+                  ))}
+                </div>
+              </>
+            )
+          ) : (
+            <div key={activeIdx /* re-mount triggers fade-in */}>
+              <div className="flex items-center gap-2 mb-5">
+                <span className="text-2xl leading-none">{activeGroup.icon}</span>
+                <h3 className="font-semibold text-slate-900">{activeGroup.label}</h3>
+                <span className="text-xs text-slate-400 tabular-nums">
+                  · {activeGroup.categories.length} service{activeGroup.categories.length === 1 ? "" : "s"}
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {activeGroup.categories.map((cat, i) => (
+                  <Link
+                    key={cat.value}
+                    href={`/jobs?category=${cat.value}`}
+                    className="px-3 py-1.5 rounded-full text-sm bg-white border border-slate-200 text-slate-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 hover:shadow-md hover:shadow-blue-500/20 transition-all"
+                    style={{ animation: `fadeInUp 0.35s ease-out ${Math.min(i * 18, 400)}ms both` }}
+                  >
+                    {cat.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="text-center mt-10">
+          <Link href="/jobs">
+            <Button variant="outline" size="lg">Browse Live Jobs</Button>
+          </Link>
+        </div>
       </div>
     </section>
   );
