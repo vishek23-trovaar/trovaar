@@ -141,6 +141,25 @@ export async function PATCH(
     // Notify the winning contractor
     notifyBidAccepted(bid.contractor_id, bid.job_title, bid.job_id);
 
+    // If the contractor hasn't finished Stripe onboarding, payment will be
+    // blocked at checkout (see /api/stripe/payment-intent). Warn them now —
+    // at acceptance — so they can fix it before the consumer hits the wall.
+    try {
+      const profile = await db.prepare(
+        "SELECT stripe_account_id, stripe_onboarding_complete FROM contractor_profiles WHERE user_id = ?"
+      ).get(bid.contractor_id) as { stripe_account_id: string | null; stripe_onboarding_complete: number } | undefined;
+      if (!profile?.stripe_account_id || !profile.stripe_onboarding_complete) {
+        await db.prepare(
+          "INSERT INTO notifications (id, user_id, type, title, message, job_id) VALUES (?, ?, ?, ?, ?, ?)"
+        ).run(
+          uuidv4(), bid.contractor_id, "stripe_onboarding_required",
+          "Finish payment setup to get paid 💳",
+          `Your bid on "${bid.job_title}" was accepted, but you can't receive payment until you complete Stripe onboarding in your profile. The consumer's payment is blocked until you do.`,
+          bid.job_id
+        );
+      }
+    } catch { /* non-blocking */ }
+
     // Send bid accepted email to contractor
     try {
       const contractor = await db.prepare("SELECT email, name FROM users WHERE id = ?").get(bid.contractor_id) as { email: string; name: string } | null;

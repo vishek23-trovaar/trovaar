@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, use, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { loadStripe } from "@stripe/stripe-js";
 import {
@@ -19,20 +19,17 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY 
 
 function CheckoutForm({
   jobId,
-  clientSecret,
   amountCents,
-  platformFeeCents,
-  contractorPayoutCents,
+  creditAppliedCents,
+  label,
 }: {
   jobId: string;
-  clientSecret: string;
   amountCents: number;
-  platformFeeCents: number;
-  contractorPayoutCents: number;
+  creditAppliedCents: number;
+  label: string;
 }) {
   const stripe = useStripe();
   const elements = useElements();
-  const router = useRouter();
   const [paying, setPaying] = useState(false);
   const [error, setError] = useState("");
 
@@ -61,17 +58,15 @@ function CheckoutForm({
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="bg-surface rounded-2xl p-4 space-y-2 text-sm">
         <div className="flex justify-between">
-          <span className="text-muted">Job payment</span>
-          <span className="font-medium text-secondary">${(amountCents / 100).toFixed(2)}</span>
+          <span className="text-muted">{label}</span>
+          <span className="font-medium text-secondary">${((amountCents + creditAppliedCents) / 100).toFixed(2)}</span>
         </div>
-        <div className="flex justify-between text-xs text-muted">
-          <span>Platform fee (20%)</span>
-          <span>${(platformFeeCents / 100).toFixed(2)}</span>
-        </div>
-        <div className="flex justify-between text-xs text-muted">
-          <span>Contractor payout (80%)</span>
-          <span>${(contractorPayoutCents / 100).toFixed(2)}</span>
-        </div>
+        {creditAppliedCents > 0 && (
+          <div className="flex justify-between text-xs text-green-600">
+            <span>Referral credit applied</span>
+            <span>−${(creditAppliedCents / 100).toFixed(2)}</span>
+          </div>
+        )}
         <div className="border-t border-border pt-2 flex justify-between font-semibold text-secondary">
           <span>Total charged</span>
           <span>${(amountCents / 100).toFixed(2)}</span>
@@ -95,36 +90,47 @@ function CheckoutForm({
   );
 }
 
-export default function PayPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+function PayPageInner({ id }: { id: string }) {
   const { user } = useAuth();
-  const router = useRouter();
+  const searchParams = useSearchParams();
+  const changeOrderId = searchParams.get("changeOrder");
+
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [amountCents, setAmountCents] = useState(0);
-  const [platformFeeCents, setPlatformFeeCents] = useState(0);
-  const [contractorPayoutCents, setContractorPayoutCents] = useState(0);
+  const [creditAppliedCents, setCreditAppliedCents] = useState(0);
+  const [label, setLabel] = useState("Job payment");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     if (!user) return;
-    async function createIntent() {
+    async function initPayment() {
       try {
-        const res = await fetch("/api/stripe/payment-intent", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ jobId: id }),
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          setError(data.error || "Failed to initialize payment");
+        if (changeOrderId) {
+          // Change-order payment: intent was created at approval time
+          const res = await fetch(`/api/jobs/${id}/change-order/pay-intent?order_id=${changeOrderId}`);
+          const data = await res.json();
+          if (!res.ok) {
+            setError(data.error || "Failed to initialize payment");
+          } else {
+            setClientSecret(data.clientSecret);
+            setAmountCents(data.amountCents);
+            setLabel(`Change order: ${data.title}`);
+          }
         } else {
-          setClientSecret(data.clientSecret);
-          setAmountCents(data.amountCents || data.platformFeeCents + data.contractorPayoutCents);
-          setPlatformFeeCents(data.platformFeeCents);
-          setContractorPayoutCents(data.contractorPayoutCents);
-          // Fetch actual amount from intent
-          setAmountCents(data.platformFeeCents + data.contractorPayoutCents);
+          const res = await fetch("/api/stripe/payment-intent", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ jobId: id }),
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            setError(data.error || "Failed to initialize payment");
+          } else {
+            setClientSecret(data.clientSecret);
+            setAmountCents(data.chargeCents ?? 0);
+            setCreditAppliedCents(data.creditAppliedCents ?? 0);
+          }
         }
       } catch {
         setError("Something went wrong");
@@ -132,8 +138,8 @@ export default function PayPage({ params }: { params: Promise<{ id: string }> })
         setLoading(false);
       }
     }
-    createIntent();
-  }, [id, user]);
+    initPayment();
+  }, [id, user, changeOrderId]);
 
   if (!user || user.role !== "consumer") {
     return (
@@ -150,9 +156,13 @@ export default function PayPage({ params }: { params: Promise<{ id: string }> })
         <Link href={`/jobs/${id}`} className="text-sm text-primary hover:underline">
           ← Back to job
         </Link>
-        <h1 className="text-2xl font-bold text-secondary mt-3">Complete Payment</h1>
+        <h1 className="text-2xl font-bold text-secondary mt-3">
+          {changeOrderId ? "Pay for Change Order" : "Complete Payment"}
+        </h1>
         <p className="text-muted text-sm mt-1">
-          Payment is held securely and released to the contractor upon job completion.
+          {changeOrderId
+            ? "This pays for the additional work you approved."
+            : "Payment is held securely and released to the contractor upon job completion."}
         </p>
       </div>
       </ScrollReveal>
@@ -180,15 +190,23 @@ export default function PayPage({ params }: { params: Promise<{ id: string }> })
           >
             <CheckoutForm
               jobId={id}
-              clientSecret={clientSecret}
               amountCents={amountCents}
-              platformFeeCents={platformFeeCents}
-              contractorPayoutCents={contractorPayoutCents}
+              creditAppliedCents={creditAppliedCents}
+              label={label}
             />
           </Elements>
         ) : null}
       </Card>
       </ScrollReveal>
     </div>
+  );
+}
+
+export default function PayPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  return (
+    <Suspense fallback={<div className="max-w-md mx-auto px-4 py-12" />}>
+      <PayPageInner id={id} />
+    </Suspense>
   );
 }

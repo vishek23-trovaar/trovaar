@@ -422,13 +422,16 @@ export async function initializeDatabase(): Promise<void> {
       job_id TEXT NOT NULL,
       bid_id TEXT NOT NULL,
       contractor_id TEXT NOT NULL,
-      reason TEXT NOT NULL,
-      old_price INTEGER NOT NULL,
-      new_price INTEGER NOT NULL,
-      old_timeline_days INTEGER,
-      new_timeline_days INTEGER,
+      title TEXT NOT NULL,
+      description TEXT NOT NULL,
+      additional_cost_cents INTEGER NOT NULL DEFAULT 0,
+      materials_json TEXT,
       status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending', 'approved', 'rejected')),
+      rejection_reason TEXT,
+      payment_intent_id TEXT,
+      payment_status TEXT NOT NULL DEFAULT 'none',
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,
       FOREIGN KEY (bid_id) REFERENCES bids(id) ON DELETE CASCADE,
       FOREIGN KEY (contractor_id) REFERENCES users(id) ON DELETE CASCADE
@@ -626,31 +629,25 @@ export async function initializeDatabase(): Promise<void> {
 
     CREATE TABLE IF NOT EXISTS group_jobs (
       id TEXT PRIMARY KEY,
-      organizer_id TEXT NOT NULL,
-      title TEXT NOT NULL,
-      description TEXT,
       category TEXT NOT NULL,
-      location TEXT NOT NULL,
-      latitude REAL,
-      longitude REAL,
-      max_participants INTEGER NOT NULL DEFAULT 10,
+      zip_code TEXT NOT NULL,
+      lead_job_id TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'forming' CHECK(status IN ('forming', 'active', 'completed', 'cancelled')),
       min_participants INTEGER NOT NULL DEFAULT 2,
-      deadline TIMESTAMPTZ NOT NULL,
-      status TEXT NOT NULL DEFAULT 'recruiting' CHECK(status IN ('recruiting', 'ready', 'matched', 'in_progress', 'completed', 'cancelled')),
+      max_participants INTEGER NOT NULL DEFAULT 8,
+      participant_count INTEGER NOT NULL DEFAULT 1,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      FOREIGN KEY (organizer_id) REFERENCES users(id) ON DELETE CASCADE
+      expires_at TIMESTAMPTZ
     );
 
     CREATE TABLE IF NOT EXISTS group_job_participants (
       id TEXT PRIMARY KEY,
       group_job_id TEXT NOT NULL,
-      user_id TEXT NOT NULL,
-      address TEXT,
-      notes TEXT,
+      job_id TEXT NOT NULL,
+      consumer_id TEXT NOT NULL,
       joined_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      UNIQUE(group_job_id, user_id),
-      FOREIGN KEY (group_job_id) REFERENCES group_jobs(id) ON DELETE CASCADE,
-      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      UNIQUE(group_job_id, consumer_id),
+      FOREIGN KEY (group_job_id) REFERENCES group_jobs(id) ON DELETE CASCADE
     );
 
     CREATE TABLE IF NOT EXISTS group_job_bids (
@@ -1430,6 +1427,86 @@ export async function initializeDatabase(): Promise<void> {
     `DO $$ BEGIN
        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='contractor_profiles' AND column_name='skip_identity_verification_at') THEN
          ALTER TABLE contractor_profiles ADD COLUMN skip_identity_verification_at TIMESTAMPTZ;
+       END IF;
+     END $$`,
+    // Referral credits applied to a job's payment (burned in webhook on success)
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='jobs' AND column_name='credit_applied_cents') THEN
+         ALTER TABLE jobs ADD COLUMN credit_applied_cents INTEGER NOT NULL DEFAULT 0;
+       END IF;
+     END $$`,
+    // Forfeited completion bonds get docked from the contractor's next payout;
+    // recovered_at marks the bond as settled.
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='completion_bonds' AND column_name='recovered_at') THEN
+         ALTER TABLE completion_bonds ADD COLUMN recovered_at TIMESTAMPTZ;
+       END IF;
+     END $$`,
+    // Rebuild drifted tables. Two runtime tables were defined with shapes the
+    // code never used (change_orders with reason/old_price/new_price;
+    // group_jobs with organizer_id/title/deadline). Every INSERT against the
+    // old shapes failed — and those failures were swallowed by non-blocking
+    // try/catch — so an old-shape table is necessarily EMPTY and safe to drop.
+    // A table that already has the code's shape is left untouched.
+    `DO $$ BEGIN
+       IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name='change_orders')
+          AND NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='change_orders' AND column_name='title') THEN
+         DROP TABLE change_orders CASCADE;
+         CREATE TABLE change_orders (
+           id TEXT PRIMARY KEY,
+           job_id TEXT NOT NULL,
+           bid_id TEXT NOT NULL,
+           contractor_id TEXT NOT NULL,
+           title TEXT NOT NULL,
+           description TEXT NOT NULL,
+           additional_cost_cents INTEGER NOT NULL DEFAULT 0,
+           materials_json TEXT,
+           status TEXT NOT NULL DEFAULT 'pending',
+           rejection_reason TEXT,
+           payment_intent_id TEXT,
+           payment_status TEXT NOT NULL DEFAULT 'none',
+           created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+           updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+         );
+       END IF;
+     END $$`,
+    // Change-order payment columns (for tables that already had the right shape)
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='change_orders' AND column_name='payment_intent_id') THEN
+         ALTER TABLE change_orders ADD COLUMN payment_intent_id TEXT;
+       END IF;
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='change_orders' AND column_name='payment_status') THEN
+         ALTER TABLE change_orders ADD COLUMN payment_status TEXT NOT NULL DEFAULT 'none';
+       END IF;
+     END $$`,
+    `DO $$ BEGIN
+       IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name='group_jobs')
+          AND NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='group_jobs' AND column_name='zip_code') THEN
+         DROP TABLE group_jobs CASCADE;
+         CREATE TABLE group_jobs (
+           id TEXT PRIMARY KEY,
+           category TEXT NOT NULL,
+           zip_code TEXT NOT NULL,
+           lead_job_id TEXT NOT NULL,
+           status TEXT NOT NULL DEFAULT 'forming',
+           min_participants INTEGER NOT NULL DEFAULT 2,
+           max_participants INTEGER NOT NULL DEFAULT 8,
+           participant_count INTEGER NOT NULL DEFAULT 1,
+           created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+           expires_at TIMESTAMPTZ
+         );
+       END IF;
+       IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name='group_job_participants')
+          AND NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='group_job_participants' AND column_name='consumer_id') THEN
+         DROP TABLE group_job_participants CASCADE;
+         CREATE TABLE group_job_participants (
+           id TEXT PRIMARY KEY,
+           group_job_id TEXT NOT NULL,
+           job_id TEXT NOT NULL,
+           consumer_id TEXT NOT NULL,
+           joined_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+           UNIQUE(group_job_id, consumer_id)
+         );
        END IF;
      END $$`,
 

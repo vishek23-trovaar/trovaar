@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { getAuthPayload } from "@/lib/auth";
+import { stripe, calculateFees, isStripeConfigured } from "@/lib/stripe";
 import { randomUUID } from "crypto";
 
 // GET — list change orders for a job
@@ -93,10 +94,57 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     contractor_id: string;
     additional_cost_cents: number;
     title: string;
+    status: string;
   } | undefined;
   if (!order) return NextResponse.json({ error: "Change order not found" }, { status: 404 });
+  if (order.status !== "pending") {
+    return NextResponse.json({ error: "Change order has already been resolved" }, { status: 409 });
+  }
 
   const now = new Date().toISOString();
+
+  // Approving a change order with a cost means the consumer owes more money.
+  // Before this existed, additional_cost_cents was stored and silently never
+  // charged — the contractor did the extra work for free. Now approval
+  // creates a second PaymentIntent for the delta (same markup model as the
+  // main charge: consumer pays delta × 1.2, contractor nets the delta).
+  //
+  // capture_method is automatic (not manual like the main escrow intent):
+  // manual-capture authorizations expire after 7 days, and mid-job change
+  // orders routinely complete later than that.
+  let changeOrderPayment: { clientSecret: string | null; amountCents: number } | null = null;
+  if (action === "approved" && order.additional_cost_cents > 0) {
+    if (!isStripeConfigured) {
+      return NextResponse.json({ error: "Payments are not configured" }, { status: 503 });
+    }
+    const contractor = await db.prepare(
+      "SELECT stripe_account_id, stripe_onboarding_complete FROM contractor_profiles WHERE user_id = ?"
+    ).get(order.contractor_id) as { stripe_account_id: string | null; stripe_onboarding_complete: number } | undefined;
+
+    if (!contractor?.stripe_account_id || !contractor.stripe_onboarding_complete) {
+      return NextResponse.json(
+        { error: "The contractor hasn't finished setting up payouts. The change order can't be approved until they do." },
+        { status: 409 }
+      );
+    }
+
+    const { chargeCents, platformFeeCents } = calculateFees(order.additional_cost_cents);
+    const intent = await stripe.paymentIntents.create({
+      amount: chargeCents,
+      currency: "usd",
+      metadata: { jobId: id, changeOrderId: change_order_id, contractorId: order.contractor_id },
+      description: `Trovaar change order: ${order.title}`,
+      application_fee_amount: platformFeeCents,
+      transfer_data: { destination: contractor.stripe_account_id },
+    });
+
+    await db.prepare(
+      "UPDATE change_orders SET payment_intent_id = ?, payment_status = 'pending' WHERE id = ?"
+    ).run(intent.id, change_order_id);
+
+    changeOrderPayment = { clientSecret: intent.client_secret, amountCents: chargeCents };
+  }
+
   await db.prepare(`
     UPDATE change_orders SET status = ?, rejection_reason = ?, updated_at = ? WHERE id = ?
   `).run(action, action === "rejected" ? (rejection_reason || null) : null, now, change_order_id);
@@ -116,5 +164,10 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     now
   );
 
-  return NextResponse.json({ message: `Change order ${action}` });
+  return NextResponse.json({
+    message: `Change order ${action}`,
+    // When approved with a cost, the UI must confirm this payment with
+    // Stripe Elements (same flow as the main checkout) using clientSecret.
+    payment: changeOrderPayment,
+  });
 }

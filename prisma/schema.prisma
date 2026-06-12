@@ -234,6 +234,7 @@ model Job {
   paymentStatus         String     @default("unpaid") @map("payment_status")
   paymentIntentId       String?    @map("payment_intent_id")
   platformFeeCents      Int?       @map("platform_fee_cents")
+  creditAppliedCents    Int        @default(0) @map("credit_applied_cents")
   expiresAt             DateTime?  @map("expires_at")
   aiQuestions           Json?      @map("ai_questions")
   contractorConfirmed   Boolean    @default(false) @map("contractor_confirmed")
@@ -470,6 +471,8 @@ model ChangeOrder {
   materialsJson       Json?             @map("materials_json")
   status              ChangeOrderStatus @default(pending)
   rejectionReason     String?           @map("rejection_reason")
+  paymentIntentId     String?           @map("payment_intent_id")
+  paymentStatus       String            @default("none") @map("payment_status")
   createdAt           DateTime          @default(now()) @map("created_at")
   updatedAt           DateTime          @default(now()) @updatedAt @map("updated_at")
 
@@ -556,6 +559,7 @@ model CompletionBond {
   status       CompletionBondStatus @default(held)
   createdAt    DateTime            @default(now()) @map("created_at")
   resolvedAt   DateTime?           @map("resolved_at")
+  recoveredAt  DateTime?           @map("recovered_at")
 
   contractor User @relation(fields: [contractorId], references: [id])
 

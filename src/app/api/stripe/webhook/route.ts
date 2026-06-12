@@ -64,10 +64,47 @@ export async function POST(request: NextRequest) {
   try {
     switch (event.type) {
       case "payment_intent.succeeded": {
-        const intent = event.data.object as { id: string; metadata: { jobId?: string; contractorId?: string } };
-        const { jobId, contractorId } = intent.metadata;
+        const intent = event.data.object as {
+          id: string;
+          metadata: { jobId?: string; contractorId?: string; creditAppliedCents?: string; bondIds?: string; changeOrderId?: string };
+        };
+        const { jobId, contractorId, creditAppliedCents, bondIds, changeOrderId } = intent.metadata;
+
+        // Change-order payment (separate intent created at approval time)
+        if (changeOrderId) {
+          await db.prepare("UPDATE change_orders SET payment_status = 'paid' WHERE id = ?").run(changeOrderId);
+          if (contractorId) {
+            await db.prepare("INSERT INTO notifications (id, user_id, type, title, message, job_id) VALUES (?, ?, ?, ?, ?, ?)")
+              .run(uuidv4(), contractorId, "change_order_paid", "Change order paid 💰",
+                "The consumer has paid for the approved change order. You may proceed with the additional work.", jobId || null);
+          }
+          break;
+        }
+
         if (jobId) {
           await db.prepare("UPDATE jobs SET payment_status = 'paid' WHERE payment_intent_id = ?").run(intent.id);
+
+          // Burn the referral credits that were applied at intent creation.
+          // Done here (not at creation) so abandoned/failed payments don't
+          // consume credits. Event-level dedupe above makes this idempotent.
+          const credit = parseInt(creditAppliedCents || "0", 10);
+          if (credit > 0) {
+            const job = await db.prepare("SELECT consumer_id FROM jobs WHERE id = ?").get(jobId) as { consumer_id: string } | undefined;
+            if (job) {
+              await db.prepare(
+                "UPDATE users SET credit_balance_cents = GREATEST(credit_balance_cents - ?, 0) WHERE id = ?"
+              ).run(credit, job.consumer_id);
+            }
+          }
+
+          // Mark forfeited bonds as recovered — their amounts were added to
+          // the application fee of this now-successful payment.
+          if (bondIds) {
+            for (const bondId of bondIds.split(",").filter(Boolean)) {
+              await db.prepare("UPDATE completion_bonds SET recovered_at = NOW() WHERE id = ?").run(bondId);
+            }
+          }
+
           // Notify consumer
           const job = await db.prepare("SELECT consumer_id, title FROM jobs WHERE id = ?").get(jobId) as { consumer_id: string; title: string } | undefined;
           if (job) {

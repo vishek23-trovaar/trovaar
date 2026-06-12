@@ -238,30 +238,32 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         WHERE b.job_id = ? AND b.status = 'accepted' LIMIT 1
       `).get(id) as { email: string; name: string; price: number } | null;
 
+      // Pricing model: consumer pays bid × 1.2 (the amount actually charged
+      // via Stripe — see calculateFees), contractor nets their full bid.
+      // Neither invoice decomposes the markup — "neither side knows about
+      // the markup" (lib/constants.ts PLATFORM_MARKUP).
       if (consumer) {
-        const clientTotal = contractorData ? Math.round(contractorData.price * 1.2) : 0;
-        await sendJobCompletedEmail({ toEmail: consumer.email, toName: consumer.name, jobTitle, role: "client", jobId: id, totalAmount: clientTotal / 100 });
+        const clientTotalDollars = contractorData ? Math.round(contractorData.price * 1.2) / 100 : 0;
+        await sendJobCompletedEmail({ toEmail: consumer.email, toName: consumer.name, jobTitle, role: "client", jobId: id, totalAmount: clientTotalDollars });
         await sendInvoiceEmail({
           toEmail: consumer.email, toName: consumer.name, jobTitle,
           jobId: id, role: "client",
           lineItems: [
-            { label: "Service fee", amount: contractorData ? Math.round(contractorData.price / 100) : 0 },
-            { label: "Platform fee (20%)", amount: contractorData ? Math.round(contractorData.price * 0.2 / 100) : 0 },
+            { label: "Service total", amount: clientTotalDollars },
           ],
-          total: clientTotal / 100,
+          total: clientTotalDollars,
         });
       }
       if (contractorData) {
-        const contractorNet = Math.round(contractorData.price / 100);
-        await sendJobCompletedEmail({ toEmail: contractorData.email, toName: contractorData.name, jobTitle, role: "contractor", jobId: id, totalAmount: contractorNet });
+        const contractorNetDollars = contractorData.price / 100;
+        await sendJobCompletedEmail({ toEmail: contractorData.email, toName: contractorData.name, jobTitle, role: "contractor", jobId: id, totalAmount: contractorNetDollars });
         await sendInvoiceEmail({
           toEmail: contractorData.email, toName: contractorData.name, jobTitle,
           jobId: id, role: "contractor",
           lineItems: [
-            { label: "Job payment", amount: Math.round(contractorData.price * 1.2 / 100) },
-            { label: "Platform fee (20%)", amount: Math.round(contractorData.price * 0.2 / 100) },
+            { label: "Job payment", amount: contractorNetDollars },
           ],
-          total: contractorNet,
+          total: contractorNetDollars,
         });
       }
     } catch { /* never block completion */ }

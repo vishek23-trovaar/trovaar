@@ -2,7 +2,9 @@
 export const PLATFORM_MARKUP = 1.20;
 
 export function applyMarkup(price: number): number {
-  return Math.ceil(price * PLATFORM_MARKUP);
+  // Math.round (not ceil) so displayed prices match the charged amount —
+  // calculateFees() in lib/stripe.ts and every UI surface round.
+  return Math.round(price * PLATFORM_MARKUP);
 }
 
 export function removeMarkup(clientPrice: number): number {

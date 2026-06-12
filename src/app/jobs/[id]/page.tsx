@@ -342,7 +342,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
   async function handleChangeOrderAction(orderId: string, action: "approved" | "rejected") {
     setChangeOrderAction((prev) => ({ ...prev, [orderId]: true }));
     try {
-      await fetch(`/api/jobs/${id}/change-order`, {
+      const res = await fetch(`/api/jobs/${id}/change-order`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -351,6 +351,13 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
           rejection_reason: rejectionReason[orderId] || undefined,
         }),
       });
+      const data = await res.json().catch(() => null);
+      // Approved change orders with a cost require payment — send the
+      // consumer straight to the pay page for this order's intent.
+      if (res.ok && data?.payment?.clientSecret) {
+        router.push(`/jobs/${id}/pay?changeOrder=${orderId}`);
+        return;
+      }
       fetchChangeOrders();
     } finally {
       setChangeOrderAction((prev) => ({ ...prev, [orderId]: false }));

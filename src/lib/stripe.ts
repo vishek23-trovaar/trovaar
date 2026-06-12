@@ -10,7 +10,7 @@ export const stripe = new Stripe(
   { apiVersion: "2026-02-25.clover" }
 );
 
-export const PLATFORM_FEE_PERCENT = 20; // 20% platform fee
+export const PLATFORM_FEE_PERCENT = 20; // 20% markup on top of the contractor's bid
 export const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || "";
 
 /** True when running with real Stripe keys (not placeholder) */
@@ -27,9 +27,24 @@ export function requireStripeConfig() {
   }
 }
 
-/** Calculate platform fee and contractor payout given a bid price in cents */
+/**
+ * Trovaar's pricing model (see src/lib/constants.ts PLATFORM_MARKUP):
+ *
+ *   - bid.price is the CONTRACTOR'S NET ASK.
+ *   - The consumer is shown and charged bid × (1 + 20%).
+ *   - The contractor receives their full bid; the markup is the platform fee.
+ *   - Neither side's UI reveals the markup to the other.
+ *
+ * chargeCents is the PaymentIntent amount; platformFeeCents goes to
+ * application_fee_amount so the Connect transfer nets the contractor
+ * exactly their bid.
+ *
+ * (Before 2026-04 this function deducted the fee FROM the bid — consumers
+ * were undercharged 20% and contractors shorted 20% versus every UI surface.)
+ */
 export function calculateFees(bidPriceCents: number) {
-  const platformFeeCents = Math.round(bidPriceCents * PLATFORM_FEE_PERCENT / 100);
-  const contractorPayoutCents = bidPriceCents - platformFeeCents;
-  return { platformFeeCents, contractorPayoutCents };
+  const chargeCents = Math.round(bidPriceCents * (1 + PLATFORM_FEE_PERCENT / 100));
+  const platformFeeCents = chargeCents - bidPriceCents;
+  const contractorPayoutCents = bidPriceCents;
+  return { chargeCents, platformFeeCents, contractorPayoutCents };
 }
