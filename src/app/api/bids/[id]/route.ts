@@ -129,8 +129,8 @@ export async function PATCH(
       INSERT INTO contractor_stats (contractor_id, total_bids, accepted_bids, acceptance_rate, updated_at)
       VALUES (?, 1, 1, 1.0, CURRENT_TIMESTAMP)
       ON CONFLICT(contractor_id) DO UPDATE SET
-        accepted_bids = accepted_bids + 1,
-        acceptance_rate = CAST(accepted_bids + 1 AS REAL) / total_bids,
+        accepted_bids = contractor_stats.accepted_bids + 1,
+        acceptance_rate = CAST(contractor_stats.accepted_bids + 1 AS REAL) / NULLIF(contractor_stats.total_bids, 0),
         updated_at = CURRENT_TIMESTAMP
     `).run(bid.contractor_id);
 

@@ -19,7 +19,9 @@ export async function POST(request: NextRequest) {
   const db = getDb();
   await initializeDatabase();
   const id = crypto.randomUUID();
-  db.prepare(`INSERT INTO job_templates (id, consumer_id, name, title, description, category, urgency, location, budget_range, created_at)
+  // Was previously un-awaited — the route returned success:true even when the
+  // INSERT rejected (e.g. missing column), surfacing as an unhandledRejection.
+  await db.prepare(`INSERT INTO job_templates (id, consumer_id, name, title, description, category, urgency, location, budget_range, created_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`)
     .run(id, payload.userId, name, title, description ?? null, category, urgency ?? "medium", location ?? null, budget_range ?? null);
   return NextResponse.json({ success: true, id });

@@ -1,4 +1,5 @@
 import { getDb, initializeDatabase } from "@/lib/db";
+import { randomUUID } from "crypto";
 
 /**
  * Event names used throughout the application.
@@ -37,9 +38,10 @@ export async function trackEvent(
     const db = getDb();
   await initializeDatabase();
     await db.prepare(
-      `INSERT INTO analytics_events (event_name, user_id, job_id, properties, session_id)
-       VALUES (?, ?, ?, ?, ?)`
+      `INSERT INTO analytics_events (id, event_name, user_id, job_id, properties, session_id)
+       VALUES (?, ?, ?, ?, ?, ?)`
     ).run(
+      randomUUID(),
       eventName,
       opts?.userId ?? null,
       opts?.jobId ?? null,

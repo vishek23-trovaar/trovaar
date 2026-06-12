@@ -274,10 +274,10 @@ export async function POST(
       INSERT INTO contractor_stats (contractor_id, total_bids, avg_response_hours, updated_at)
       VALUES (?, 1, ?, CURRENT_TIMESTAMP)
       ON CONFLICT(contractor_id) DO UPDATE SET
-        total_bids = total_bids + 1,
+        total_bids = contractor_stats.total_bids + 1,
         avg_response_hours = CASE
-          WHEN avg_response_hours IS NULL THEN excluded.avg_response_hours
-          ELSE (avg_response_hours * total_bids + excluded.avg_response_hours) / (total_bids + 1)
+          WHEN contractor_stats.avg_response_hours IS NULL THEN excluded.avg_response_hours
+          ELSE (contractor_stats.avg_response_hours * contractor_stats.total_bids + excluded.avg_response_hours) / (contractor_stats.total_bids + 1)
         END,
         updated_at = CURRENT_TIMESTAMP
     `).run(payload.userId, responseHours);

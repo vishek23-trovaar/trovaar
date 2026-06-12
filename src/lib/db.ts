@@ -479,11 +479,27 @@ export async function initializeDatabase(): Promise<void> {
     CREATE TABLE IF NOT EXISTS contractor_stats (
       contractor_id TEXT PRIMARY KEY,
       avg_response_minutes REAL DEFAULT 0,
+      avg_response_hours REAL,
       total_bids INTEGER DEFAULT 0,
+      accepted_bids INTEGER DEFAULT 0,
+      acceptance_rate REAL,
       total_jobs_completed INTEGER DEFAULT 0,
       on_time_percentage REAL DEFAULT 100,
       badge TEXT DEFAULT 'none',
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      FOREIGN KEY (contractor_id) REFERENCES users(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS completion_bonds (
+      id TEXT PRIMARY KEY,
+      job_id TEXT NOT NULL UNIQUE,
+      contractor_id TEXT NOT NULL,
+      amount_cents INTEGER NOT NULL DEFAULT 1000,
+      status TEXT NOT NULL DEFAULT 'held' CHECK(status IN ('held', 'released', 'forfeited')),
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      resolved_at TIMESTAMPTZ,
+      recovered_at TIMESTAMPTZ,
+      FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,
       FOREIGN KEY (contractor_id) REFERENCES users(id) ON DELETE CASCADE
     );
 
@@ -778,10 +794,11 @@ export async function initializeDatabase(): Promise<void> {
 
     CREATE TABLE IF NOT EXISTS analytics_events (
       id TEXT PRIMARY KEY,
-      event_type TEXT NOT NULL,
+      event_name TEXT NOT NULL,
       user_id TEXT,
       job_id TEXT,
-      metadata TEXT DEFAULT '{}',
+      properties TEXT DEFAULT '{}',
+      session_id TEXT,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
 
@@ -907,6 +924,7 @@ export async function initializeDatabase(): Promise<void> {
       description TEXT,
       category TEXT NOT NULL,
       urgency TEXT NOT NULL DEFAULT 'medium',
+      location TEXT,
       budget_range TEXT,
       ai_questions TEXT,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -963,7 +981,7 @@ export async function initializeDatabase(): Promise<void> {
     "CREATE INDEX IF NOT EXISTS idx_portfolio_contractor ON portfolio_items(contractor_id)",
     "CREATE INDEX IF NOT EXISTS idx_call_logs_job ON call_logs(job_id)",
     "CREATE INDEX IF NOT EXISTS idx_help_requests_job ON help_requests(job_id)",
-    "CREATE INDEX IF NOT EXISTS idx_analytics_type ON analytics_events(event_type)",
+    "CREATE INDEX IF NOT EXISTS idx_analytics_name ON analytics_events(event_name)",
     "CREATE INDEX IF NOT EXISTS idx_analytics_created ON analytics_events(created_at)",
     "CREATE INDEX IF NOT EXISTS idx_certifications_contractor ON certifications(contractor_id)",
     "CREATE INDEX IF NOT EXISTS idx_work_history_contractor ON work_history(contractor_id)",
@@ -1433,6 +1451,101 @@ export async function initializeDatabase(): Promise<void> {
     `DO $$ BEGIN
        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='jobs' AND column_name='credit_applied_cents') THEN
          ALTER TABLE jobs ADD COLUMN credit_applied_cents INTEGER NOT NULL DEFAULT 0;
+       END IF;
+     END $$`,
+    // Bid/completion timestamps + certificate flag the code writes but the
+    // original jobs CREATE TABLE omitted. Their absence 500'd bid submission
+    // ("column first_bid_at does not exist") — i.e. bidding was fully broken.
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='jobs' AND column_name='first_bid_at') THEN
+         ALTER TABLE jobs ADD COLUMN first_bid_at TIMESTAMPTZ;
+       END IF;
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='jobs' AND column_name='accepted_bid_at') THEN
+         ALTER TABLE jobs ADD COLUMN accepted_bid_at TIMESTAMPTZ;
+       END IF;
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='jobs' AND column_name='certificate_generated') THEN
+         ALTER TABLE jobs ADD COLUMN certificate_generated INTEGER NOT NULL DEFAULT 0;
+       END IF;
+     END $$`,
+    // analytics_events was created with event_type/metadata but BOTH the
+    // writer (lib/analytics.ts) and the admin reader (admin/analytics/events)
+    // use event_name/properties/session_id — so analytics never recorded a
+    // single event. Add the real columns (table is empty since every insert
+    // failed) and backfill from the legacy columns if they hold any rows.
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='analytics_events' AND column_name='event_name') THEN
+         ALTER TABLE analytics_events ADD COLUMN event_name TEXT;
+         IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='analytics_events' AND column_name='event_type') THEN
+           UPDATE analytics_events SET event_name = event_type WHERE event_name IS NULL;
+         END IF;
+       END IF;
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='analytics_events' AND column_name='properties') THEN
+         ALTER TABLE analytics_events ADD COLUMN properties TEXT DEFAULT '{}';
+       END IF;
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='analytics_events' AND column_name='session_id') THEN
+         ALTER TABLE analytics_events ADD COLUMN session_id TEXT;
+       END IF;
+     END $$`,
+    // job_templates INSERT references a location column the CREATE TABLE omitted.
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='job_templates' AND column_name='location') THEN
+         ALTER TABLE job_templates ADD COLUMN location TEXT;
+       END IF;
+     END $$`,
+    // contractor_stats: code + Prisma use avg_response_hours / accepted_bids /
+    // acceptance_rate, but the runtime table only had avg_response_minutes.
+    // The missing avg_response_hours column 500'd bid submission (the
+    // contractor_stats upsert in the bids route).
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='contractor_stats' AND column_name='avg_response_hours') THEN
+         ALTER TABLE contractor_stats ADD COLUMN avg_response_hours REAL;
+       END IF;
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='contractor_stats' AND column_name='accepted_bids') THEN
+         ALTER TABLE contractor_stats ADD COLUMN accepted_bids INTEGER DEFAULT 0;
+       END IF;
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='contractor_stats' AND column_name='acceptance_rate') THEN
+         ALTER TABLE contractor_stats ADD COLUMN acceptance_rate REAL;
+       END IF;
+     END $$`,
+    // analytics_events.event_type was NOT NULL but the writer no longer sets it
+    // (writes event_name instead). Drop the constraint so legacy column stays
+    // null without blocking inserts.
+    `DO $$ BEGIN
+       IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='analytics_events' AND column_name='event_type' AND is_nullable='NO') THEN
+         ALTER TABLE analytics_events ALTER COLUMN event_type DROP NOT NULL;
+       END IF;
+     END $$`,
+    // Newer users columns present in CREATE TABLE but absent from DBs created
+    // before they were added (no prior migration). The bid-notify path queries
+    // phone_number/sms_alerts_enabled, which 500'd bid submission on the live
+    // DB. Added idempotently to stop the whack-a-mole.
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='phone_number') THEN
+         ALTER TABLE users ADD COLUMN phone_number TEXT;
+       END IF;
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='sms_alerts_enabled') THEN
+         ALTER TABLE users ADD COLUMN sms_alerts_enabled INTEGER NOT NULL DEFAULT 0;
+       END IF;
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='sms_bid_alerts') THEN
+         ALTER TABLE users ADD COLUMN sms_bid_alerts INTEGER NOT NULL DEFAULT 0;
+       END IF;
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='avatar_url') THEN
+         ALTER TABLE users ADD COLUMN avatar_url TEXT;
+       END IF;
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='phone_verified') THEN
+         ALTER TABLE users ADD COLUMN phone_verified INTEGER NOT NULL DEFAULT 0;
+       END IF;
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='phone_verify_code') THEN
+         ALTER TABLE users ADD COLUMN phone_verify_code TEXT;
+       END IF;
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='phone_verify_expires') THEN
+         ALTER TABLE users ADD COLUMN phone_verify_expires TEXT;
+       END IF;
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='consumer_rating') THEN
+         ALTER TABLE users ADD COLUMN consumer_rating REAL DEFAULT 0;
+       END IF;
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='consumer_rating_count') THEN
+         ALTER TABLE users ADD COLUMN consumer_rating_count INTEGER DEFAULT 0;
        END IF;
      END $$`,
     // Forfeited completion bonds get docked from the contractor's next payout;
