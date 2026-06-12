@@ -205,9 +205,14 @@ export async function POST(
     let { price } = body;
     const { timeline_days, availability_date, message, labor_cents, materials_json, parts_summary, equipment_json } = body;
 
-    // Parse price if passed as a string
+    // Parse price if passed as a string. Price is in cents and must be a
+    // whole integer — Stripe amounts are integer cents, and the bids.price
+    // column is INTEGER. Fractional values would silently round at insert.
     if (typeof price === 'string') {
       price = parseFloat(price);
+    }
+    if (typeof price === 'number') {
+      price = Math.round(price);
     }
 
     if (!timeline_days || !availability_date) {

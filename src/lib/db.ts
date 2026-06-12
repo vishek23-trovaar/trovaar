@@ -1005,6 +1005,11 @@ export async function initializeDatabase(): Promise<void> {
     "CREATE INDEX IF NOT EXISTS idx_job_templates_consumer ON job_templates(consumer_id)",
     "CREATE INDEX IF NOT EXISTS idx_match_score_cache_job ON match_score_cache(job_id)",
     "CREATE INDEX IF NOT EXISTS idx_match_score_cache_contractor ON match_score_cache(contractor_id)",
+    // Stripe webhook updates jobs by payment_intent_id — without this index
+    // every webhook delivery is a full jobs-table scan.
+    "CREATE INDEX IF NOT EXISTS idx_jobs_payment_intent ON jobs(payment_intent_id)",
+    // Inbox query: messages addressed to a user, newest first.
+    "CREATE INDEX IF NOT EXISTS idx_messages_receiver_created ON messages(receiver_id, created_at DESC)",
     "CREATE INDEX IF NOT EXISTS idx_match_score_cache_job_contractor ON match_score_cache(job_id, contractor_id)",
     "CREATE INDEX IF NOT EXISTS idx_skill_assessments_user ON skill_assessments(user_id)",
     "CREATE INDEX IF NOT EXISTS idx_skill_assessments_user_category ON skill_assessments(user_id, category)",

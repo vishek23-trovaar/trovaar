@@ -79,24 +79,30 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "You are already a participant in this group" }, { status: 409 });
     }
 
-    // Check max participants
-    if (group.participant_count >= group.max_participants) {
+    // Claim a spot atomically. The guarded UPDATE only succeeds while the
+    // group is forming AND has room — two concurrent joins can't both pass a
+    // read-then-check, because the guard is re-evaluated under the UPDATE's
+    // row lock. changes === 0 means we lost the race (or the group closed).
+    let claimed = false;
+    await db.transaction(async (tx) => {
+      const claim = await tx.prepare(
+        "UPDATE group_jobs SET participant_count = participant_count + 1 WHERE id = ? AND status = 'forming' AND participant_count < max_participants"
+      ).run(group_job_id);
+      if (claim.changes === 0) return; // full — leave claimed=false, tx commits no-op
+
+      await tx.prepare(
+        "INSERT INTO group_job_participants (id, group_job_id, job_id, consumer_id) VALUES (?, ?, ?, ?)"
+      ).run(uuidv4(), group_job_id, job_id, payload.userId);
+
+      // Close the group once the last spot is claimed
+      await tx.prepare(
+        "UPDATE group_jobs SET status = 'active' WHERE id = ? AND participant_count >= max_participants"
+      ).run(group_job_id);
+      claimed = true;
+    });
+
+    if (!claimed) {
       return NextResponse.json({ error: "This group is full" }, { status: 400 });
-    }
-
-    // Add participant
-    await db.prepare(
-      "INSERT INTO group_job_participants (id, group_job_id, job_id, consumer_id) VALUES (?, ?, ?, ?)"
-    ).run(uuidv4(), group_job_id, job_id, payload.userId);
-
-    // Increment participant count
-    await db.prepare(
-      "UPDATE group_jobs SET participant_count = participant_count + 1 WHERE id = ?"
-    ).run(group_job_id);
-
-    // If at max, close the group
-    if (group.participant_count + 1 >= group.max_participants) {
-      await db.prepare("UPDATE group_jobs SET status = 'active' WHERE id = ?").run(group_job_id);
     }
 
     const updatedGroup = await db.prepare("SELECT * FROM group_jobs WHERE id = ?").get(group_job_id);

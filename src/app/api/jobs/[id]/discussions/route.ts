@@ -75,6 +75,13 @@ export async function GET(
     return NextResponse.json({ error: "Job not found" }, { status: 404 });
   }
 
+  // Discussions are pre-bid Q&A: open to any contractor (prospective bidder)
+  // and the job owner. Other consumers have no business here — without this
+  // check, any logged-in user could iterate job IDs and read every thread.
+  if (payload.role !== "contractor" && payload.userId !== job.consumer_id) {
+    return NextResponse.json({ error: "Not authorized" }, { status: 403 });
+  }
+
   // Fetch all discussions with anonymized identity
   const rows = await db.prepare(`
     SELECT d.id, d.job_id, d.user_id, d.user_role, d.parent_id, d.content, d.created_at
@@ -135,6 +142,13 @@ export async function POST(
   const job = await db.prepare("SELECT id, consumer_id, status FROM jobs WHERE id = ?").get(jobId) as DbJob | undefined;
   if (!job) {
     return NextResponse.json({ error: "Job not found" }, { status: 404 });
+  }
+
+  // Same gate as GET — plus it closes an impersonation hole: a non-owner
+  // consumer posting here would be labelled "Contractor #N" (see user_role
+  // assignment below), letting consumers pose as contractors.
+  if (payload.role !== "contractor" && payload.userId !== job.consumer_id) {
+    return NextResponse.json({ error: "Not authorized" }, { status: 403 });
   }
 
   if (!["posted", "bidding", "accepted"].includes(job.status)) {

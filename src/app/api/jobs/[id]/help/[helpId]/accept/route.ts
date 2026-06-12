@@ -37,18 +37,30 @@ export async function POST(
 
   const now = new Date().toISOString();
 
-  await db.transaction(async (db) => {
-    // Accept this application
-    await db.prepare(
+  // The increment must be relative (spots_filled + 1) and guarded — the old
+  // code wrote `hr.spots_filled + 1` from a read taken BEFORE the transaction,
+  // so two concurrent accepts both computed the same value and the request
+  // over-filled past `spots`.
+  let accepted = false;
+  await db.transaction(async (tx) => {
+    const inc = await tx.prepare(
+      "UPDATE job_help_requests SET spots_filled = spots_filled + 1, updated_at = ? WHERE id = ? AND status = 'open' AND spots_filled < spots"
+    ).run(now, helpId);
+    if (inc.changes === 0) return; // all spots already filled — no-op commit
+
+    await tx.prepare(
       "UPDATE job_help_applications SET status = 'accepted' WHERE id = ?"
     ).run(app.id);
 
-    // Increment spots filled
-    const newFilled = hr.spots_filled + 1;
-    await db.prepare(
-      "UPDATE job_help_requests SET spots_filled = ?, status = ?, updated_at = ? WHERE id = ?"
-    ).run(newFilled, newFilled >= hr.spots ? "filled" : "open", now, helpId);
+    await tx.prepare(
+      "UPDATE job_help_requests SET status = 'filled' WHERE id = ? AND spots_filled >= spots"
+    ).run(helpId);
+    accepted = true;
   });
+
+  if (!accepted) {
+    return NextResponse.json({ error: "All spots have been filled" }, { status: 409 });
+  }
 
   // Notify the accepted helper
   const leadName = (await db.prepare("SELECT name FROM users WHERE id = ?").get(payload.userId) as { name: string } | undefined)?.name ?? "The lead contractor";

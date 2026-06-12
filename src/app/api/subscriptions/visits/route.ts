@@ -113,18 +113,40 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Service not found or inactive" }, { status: 404 });
     }
 
-    // Check visit limit for current period
+    // Check the visit limit and insert atomically. The COUNT-then-INSERT was
+    // racy: two concurrent requests could both see usedVisits = limit - 1 and
+    // both insert. FOR UPDATE on the subscription row serializes bookings
+    // per subscription, so the second request waits and re-counts correctly.
     const periodStart = subscription.current_period_start ?? new Date().toISOString().slice(0, 10);
-    const usedVisits = (
-      await db
-        .prepare(
-          `SELECT COUNT(*) as cnt FROM subscription_visits
-           WHERE subscription_id = ? AND status != 'cancelled' AND created_at >= ?`
-        )
-        .get(subscription.id, periodStart) as { cnt: number }
-    ).cnt;
+    const visitId = crypto.randomUUID();
+    let limitHit = false;
 
-    if (usedVisits >= subscription.visits_per_month) {
+    await db.transaction(async (tx) => {
+      await tx.prepare(
+        "SELECT id FROM user_subscriptions WHERE id = ? FOR UPDATE"
+      ).get(subscription.id);
+
+      const usedVisits = (
+        await tx
+          .prepare(
+            `SELECT COUNT(*) as cnt FROM subscription_visits
+             WHERE subscription_id = ? AND status != 'cancelled' AND created_at >= ?`
+          )
+          .get(subscription.id, periodStart) as { cnt: number }
+      ).cnt;
+
+      if (Number(usedVisits) >= subscription.visits_per_month) {
+        limitHit = true;
+        return;
+      }
+
+      await tx.prepare(
+        `INSERT INTO subscription_visits (id, subscription_id, service_id, scheduled_date, status, notes)
+         VALUES (?, ?, ?, ?, 'pending', ?)`
+      ).run(visitId, subscription.id, serviceId, scheduledDate, notes ?? null);
+    });
+
+    if (limitHit) {
       return NextResponse.json(
         {
           error: `You have used all ${subscription.visits_per_month} visits for this billing period.`,
@@ -132,13 +154,6 @@ export async function POST(request: NextRequest) {
         { status: 422 }
       );
     }
-
-    const visitId = crypto.randomUUID();
-
-    await db.prepare(
-      `INSERT INTO subscription_visits (id, subscription_id, service_id, scheduled_date, status, notes)
-       VALUES (?, ?, ?, ?, 'pending', ?)`
-    ).run(visitId, subscription.id, serviceId, scheduledDate, notes ?? null);
 
     return NextResponse.json({ success: true, visitId });
   } catch (err) {
