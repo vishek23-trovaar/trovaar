@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 
-function TrovaarIcon() { return <Image src="/trovaar-icon.png" alt="Trovaar" width={36} height={36} className="rounded-xl" />; }
+function TrovaarIcon() { return <Image src="/trovaar-icon.png" alt="Trovaar" width={36} height={36} className="w-9 h-9 rounded-xl" priority />; }
 
 function BellIcon() {
   return (

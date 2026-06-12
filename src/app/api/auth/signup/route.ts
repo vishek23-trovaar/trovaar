@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     const codeId = uuidv4();
     await db.prepare(
-      "INSERT INTO verification_codes (id, user_id, code, expires_at) VALUES (?, ?, ?, datetime('now', '+15 minutes'))"
+      "INSERT INTO verification_codes (id, user_id, code, expires_at) VALUES (?, ?, ?, (NOW() + INTERVAL '15 minutes'))"
     ).run(codeId, id, code);
 
     // Send verification email (non-blocking — don't fail signup if email fails)

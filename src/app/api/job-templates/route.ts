@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
   // Was previously un-awaited — the route returned success:true even when the
   // INSERT rejected (e.g. missing column), surfacing as an unhandledRejection.
   await db.prepare(`INSERT INTO job_templates (id, consumer_id, name, title, description, category, urgency, location, budget_range, created_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))`)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`)
     .run(id, payload.userId, name, title, description ?? null, category, urgency ?? "medium", location ?? null, budget_range ?? null);
   return NextResponse.json({ success: true, id });
 }

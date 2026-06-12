@@ -10,7 +10,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <Image src="/trovaar-icon.png" alt="Trovaar" width={36} height={36} className="rounded-xl" />
+              <Image src="/trovaar-icon.png" alt="Trovaar" width={36} height={36} className="w-9 h-9 rounded-xl" />
               <span className="text-lg font-bold">Trovaar</span>
             </div>
             <p className="text-slate-400 text-sm mb-6">

@@ -106,7 +106,7 @@ export async function PATCH(
     let accepted = false;
     await db.transaction(async (db) => {
       const result = await db.prepare(
-        "UPDATE jobs SET status = 'accepted', updated_at = datetime('now') WHERE id = ? AND status IN ('posted', 'bidding')"
+        "UPDATE jobs SET status = 'accepted', updated_at = NOW() WHERE id = ? AND status IN ('posted', 'bidding')"
       ).run(bid.job_id);
       if (result.changes === 0) {
         // Job was already accepted by another bid — abort

@@ -258,14 +258,14 @@ export async function POST(
     ).run(bidId, jobId, payload.userId, price, timeline_days, availability_date, message || null, labor_cents ?? null, materials_json ?? null, parts_summary ?? null, equipment_json ?? null);
 
     await db.prepare(
-      "UPDATE jobs SET status = 'bidding', updated_at = datetime('now') WHERE id = ? AND status = 'posted'"
+      "UPDATE jobs SET status = 'bidding', updated_at = NOW() WHERE id = ? AND status = 'posted'"
     ).run(jobId);
 
     try { trackEvent("bid_placed", { userId: payload.userId, jobId, properties: { price, timeline_days } }); } catch {}
 
     // Track first_bid_at for analytics (only set if not already set)
     await db.prepare(
-      "UPDATE jobs SET first_bid_at = datetime('now') WHERE id = ? AND first_bid_at IS NULL"
+      "UPDATE jobs SET first_bid_at = NOW() WHERE id = ? AND first_bid_at IS NULL"
     ).run(jobId);
 
     // Upsert contractor_stats with response time (Feature 23)

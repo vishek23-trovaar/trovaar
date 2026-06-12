@@ -87,7 +87,7 @@ export async function GET(request: NextRequest) {
     UPDATE jobs SET status = 'cancelled'
     WHERE status IN ('posted', 'bidding')
       AND expires_at IS NOT NULL
-      AND expires_at < datetime('now')
+      AND expires_at < NOW()
       AND (SELECT COUNT(*) FROM bids WHERE job_id = jobs.id) = 0
   `).run();
 
@@ -380,7 +380,7 @@ export async function POST(request: NextRequest) {
         const existingGroup = await db.prepare(`
           SELECT * FROM group_jobs
           WHERE category = ? AND zip_code = ? AND status = 'forming'
-          AND expires_at > datetime('now')
+          AND expires_at > NOW()
           LIMIT 1
         `).get(category, zip) as GroupJob | undefined;
 
@@ -396,14 +396,14 @@ export async function POST(request: NextRequest) {
           const similarJobs = await db.prepare(`
             SELECT COUNT(*) as count FROM jobs
             WHERE category = ? AND location LIKE ? AND status = 'open'
-            AND created_at >= datetime('now', '-7 days')
+            AND created_at >= (NOW() - INTERVAL '7 days')
             AND consumer_id != ?
           `).get(category, `%${zip}%`, payload.userId) as { count: number };
 
           if (similarJobs.count >= 1) {
             const groupId = uuidv4();
             await db.prepare(
-              "INSERT INTO group_jobs (id, category, zip_code, lead_job_id, expires_at, participant_count) VALUES (?, ?, ?, ?, datetime('now', '+7 days'), 1)"
+              "INSERT INTO group_jobs (id, category, zip_code, lead_job_id, expires_at, participant_count) VALUES (?, ?, ?, ?, (NOW() + INTERVAL '7 days'), 1)"
             ).run(groupId, category, zip, id);
             await db.prepare(
               "INSERT INTO group_job_participants (id, group_job_id, job_id, consumer_id) VALUES (?, ?, ?, ?)"
@@ -437,7 +437,7 @@ export async function POST(request: NextRequest) {
           if (!cats.includes(category)) continue;
           await db.prepare(`
             INSERT INTO notifications (id, user_id, type, title, message, job_id, created_at)
-            VALUES (?, ?, 'new_job_alert', 'New Job Alert', ?, ?, datetime('now'))
+            VALUES (?, ?, 'new_job_alert', 'New Job Alert', ?, ?, NOW())
           `).run(
             uuidv4(),
             ac.user_id,

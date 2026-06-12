@@ -141,7 +141,7 @@ export async function PATCH(
 
     await db.prepare(`
       UPDATE jobs SET title = ?, description = ?, category = ?, urgency = ?,
-        location = ?, photos = ?, expected_completion_date = ?, updated_at = datetime('now')
+        location = ?, photos = ?, expected_completion_date = ?, updated_at = NOW()
       WHERE id = ?
     `).run(
       title,
@@ -155,12 +155,12 @@ export async function PATCH(
     );
   } else if (body.terms_accepted_at !== undefined) {
     // --- Record terms acceptance ---
-    await db.prepare("UPDATE jobs SET terms_accepted_at = ?, updated_at = datetime('now') WHERE id = ?")
+    await db.prepare("UPDATE jobs SET terms_accepted_at = ?, updated_at = NOW() WHERE id = ?")
       .run(body.terms_accepted_at, id);
   } else {
     // --- Status-only update ---
     const { status } = body;
-    await db.prepare("UPDATE jobs SET status = ?, updated_at = datetime('now') WHERE id = ?").run(status, id);
+    await db.prepare("UPDATE jobs SET status = ?, updated_at = NOW() WHERE id = ?").run(status, id);
   }
 
   const updated = await db.prepare("SELECT * FROM jobs WHERE id = ?").get(id);

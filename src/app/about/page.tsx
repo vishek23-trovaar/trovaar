@@ -22,7 +22,7 @@ export default function AboutPage() {
         />
         <div className="relative max-w-4xl mx-auto text-center" style={{ animation: "fadeInUp 0.7s ease-out" }}>
           <div className="flex items-center justify-center gap-3 mb-6">
-            <Image src="/trovaar-icon.png" alt="Trovaar" width={48} height={48} />
+            <Image src="/trovaar-icon.png" alt="Trovaar" width={48} height={48} className="w-12 h-12" />
             <span className="text-2xl font-bold text-white">Trovaar</span>
           </div>
           <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight text-white mb-4">

@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
     FROM group_jobs g
     JOIN jobs j ON j.id = g.lead_job_id
     WHERE g.category = ? AND g.zip_code = ? AND g.status = 'forming'
-    AND g.expires_at > datetime('now')
+    AND g.expires_at > NOW()
     ORDER BY g.participant_count DESC
   `).all(category, zip) as GroupJob[];
 
