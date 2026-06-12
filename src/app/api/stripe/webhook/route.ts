@@ -28,8 +28,39 @@ export async function POST(request: NextRequest) {
   const db = getDb();
   await initializeDatabase();
 
+  // Event-level idempotency. Stripe uses at-least-once delivery — retries on
+  // 5xx, network failures, signing failures. Without dedupe, a retried
+  // payment_intent.succeeded re-INSERTs duplicate "Payment confirmed ✅"
+  // notifications and re-credits the same payout.
+  //
+  // The dedupe table is created lazily so fresh deploys don't need a
+  // separate migration. We do the read-only check BEFORE the switch and
+  // record the event_id only AFTER successful processing — so a retry after
+  // a mid-handler crash still gets to run.
+  try {
+    await db.exec(`
+      CREATE TABLE IF NOT EXISTS stripe_webhook_events (
+        event_id TEXT PRIMARY KEY,
+        event_type TEXT NOT NULL,
+        received_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+    `);
+    const seen = await db
+      .prepare("SELECT 1 FROM stripe_webhook_events WHERE event_id = ?")
+      .get(event.id);
+    if (seen) {
+      logger.info({ eventId: event.id, eventType: event.type }, "Duplicate Stripe webhook event — already processed");
+      return NextResponse.json({ received: true, duplicate: true });
+    }
+  } catch (err) {
+    // If the dedupe check itself fails, log and continue. Worst case: we
+    // process a retry twice (the pre-existing behaviour). Better than
+    // rejecting the webhook over a transient DB hiccup.
+    logger.error({ err, eventId: event.id }, "Webhook idempotency check failed — processing anyway");
+  }
+
   // Wrap all DB operations in a single try/catch so a partial failure
-  // returns 500 and Stripe will retry the event (idempotent via payment_intent_id / account_id lookups).
+  // returns 500 and Stripe will retry the event.
   try {
     switch (event.type) {
       case "payment_intent.succeeded": {
@@ -80,6 +111,17 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     logger.error({ err, eventType: event.type, eventId: event.id }, "Webhook handler failed — returning 500 so Stripe retries");
     return NextResponse.json({ error: "Webhook handler failed" }, { status: 500 });
+  }
+
+  // Handler succeeded — mark the event consumed so future retries are skipped.
+  // INSERT OR IGNORE is belt-and-braces against the rare case where two
+  // retries race past the SELECT check above.
+  try {
+    await db
+      .prepare("INSERT OR IGNORE INTO stripe_webhook_events (event_id, event_type) VALUES (?, ?)")
+      .run(event.id, event.type);
+  } catch (err) {
+    logger.error({ err, eventId: event.id }, "Failed to record processed webhook event");
   }
 
   return NextResponse.json({ received: true });

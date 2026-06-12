@@ -7,28 +7,41 @@ import { sendEmergencyAlert } from "@/lib/email";
 import { sanitizeText, sanitizeDescription } from "@/lib/sanitize";
 import { trackEvent } from "@/lib/analytics";
 import { jobsLogger as logger } from "@/lib/logger";
+import { CATEGORIES as FALLBACK_CATEGORIES } from "@/lib/constants";
 
 const VALID_URGENCIES = ['low', 'medium', 'high', 'emergency'];
 
-const VALID_CATEGORIES = [
-  "plumbing", "electrical", "hvac", "roofing", "painting", "landscaping",
-  "tree_service", "cleaning", "moving", "carpentry", "flooring", "drywall",
-  "auto_repair", "auto_detailing", "auto_glass", "tires_wheels",
-  "pest_control", "appliance_repair", "locksmith", "security_cameras",
-  "smart_home_install", "computer_repair", "it_networking",
-  "photography", "videography", "personal_training", "yoga_instruction",
-  "massage_therapy", "nutrition_coaching", "dog_walking", "pet_sitting",
-  "pet_grooming", "pet_training", "event_setup", "event_staffing",
-  "welding", "powder_coating", "fiberglass_composite", "vinyl_wrap",
-  "pressure_washing", "window_cleaning", "gutter_cleaning",
-  "general_handyman", "boat_repair", "jetski_repair", "marine_fiberglass",
-  "marine_upholstery", "commercial_cleaning", "commercial_electrical",
-  "commercial_plumbing", "commercial_hvac", "commercial_glass",
-  "shower_glass", "mirror_install", "errands", "grocery_shopping",
-  "waiting_in_line", "personal_assistant", "moving_labor",
-  "furniture_moving", "heavy_lifting", "irrigation", "fencing",
-  "auto_windshield", "it_networking"
-];
+/**
+ * Validate a category against the admin_categories table (admin-managed).
+ * Falls back to the bundled constants list if the table is empty (fresh install).
+ * This was previously a hardcoded array, which silently drifted whenever an
+ * admin added a category via /api/admin/categories.
+ */
+async function isCategoryValid(
+  db: ReturnType<typeof getDb>,
+  category: string
+): Promise<boolean> {
+  try {
+    const row = await db
+      .prepare("SELECT 1 FROM admin_categories WHERE value = ? AND active = 1")
+      .get(category) as { 1: number } | undefined;
+    if (row) return true;
+
+    // Fallback for fresh installs where admin_categories isn't seeded yet.
+    // Once an admin loads /api/admin/categories the table is seeded from
+    // CATEGORY_GROUPS, after which this fallback no longer fires.
+    const tableEmpty = await db
+      .prepare("SELECT COUNT(*) as c FROM admin_categories")
+      .get() as { c: number } | undefined;
+    if (tableEmpty && Number(tableEmpty.c) === 0) {
+      return FALLBACK_CATEGORIES.some((c) => c.value === category);
+    }
+    return false;
+  } catch {
+    // Table missing entirely — fall back to constants
+    return FALLBACK_CATEGORIES.some((c) => c.value === category);
+  }
+}
 
 // ─── Address privacy helpers (used in GET list) ───────────────────────────────
 
@@ -268,10 +281,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Description must be 2000 characters or less" }, { status: 400 });
     }
 
-    if (!VALID_CATEGORIES.includes(category)) {
-      return NextResponse.json({ error: `Invalid category. Must be one of: ${VALID_CATEGORIES.join(', ')}` }, { status: 400 });
-    }
-
     if (urgency && !VALID_URGENCIES.includes(urgency)) {
       return NextResponse.json({ error: "Urgency must be one of: low, medium, high, emergency" }, { status: 400 });
     }
@@ -281,7 +290,11 @@ export async function POST(request: NextRequest) {
     const sanitizedLocation = sanitizeText(location);
 
     const db = getDb();
-  await initializeDatabase();
+    await initializeDatabase();
+
+    if (!(await isCategoryValid(db, category))) {
+      return NextResponse.json({ error: "Invalid category" }, { status: 400 });
+    }
     const id = uuidv4();
 
     const isEmergency = urgency === "emergency";

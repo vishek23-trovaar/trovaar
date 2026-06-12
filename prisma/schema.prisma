@@ -139,6 +139,8 @@ model User {
   // familyOverseerEmail    String?   @map("family_overseer_email")
   // familyOversightEnabled Boolean   @default(false) @map("family_oversight_enabled")
   accountNumber          String?   @unique @map("account_number")
+  tokenVersion           Int       @default(0) @map("token_version")
+  lastPasswordChange     DateTime? @map("last_password_change")
   createdAt              DateTime  @default(now()) @map("created_at")
 
   // Relations

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { getAuthPayload } from "@/lib/auth";
 
@@ -26,7 +27,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Verification code expired" }, { status: 400 });
   }
 
-  if (user.phone_verify_code !== String(code)) {
+  // Stored value is a bcrypt hash (see /api/auth/phone/send). Legacy plaintext
+  // codes from before this change look like a 6-digit string and won't match
+  // bcrypt.compare — those users get a graceful "request new code" path.
+  const stored = user.phone_verify_code;
+  const looksHashed = stored.startsWith("$2a$") || stored.startsWith("$2b$") || stored.startsWith("$2y$");
+  const ok = looksHashed
+    ? await bcrypt.compare(String(code), stored)
+    : false;
+
+  if (!ok) {
     return NextResponse.json({ error: "Invalid verification code" }, { status: 400 });
   }
 

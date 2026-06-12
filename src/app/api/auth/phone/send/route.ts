@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { getAuthPayload } from "@/lib/auth";
 import { getTwilioClient, TWILIO_PHONE, generateVerifyCode } from "@/lib/twilio";
@@ -17,11 +18,16 @@ export async function POST(request: NextRequest) {
   const code = generateVerifyCode();
   const expires = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 min
 
+  // Hash the code before persisting — plaintext codes meant anyone with DB
+  // read access (leaked backup, ORM misconfig, contractor with raw SQL) could
+  // take over accounts via the verify endpoint.
+  const codeHash = await bcrypt.hash(code, 10);
+
   const db = getDb();
   await initializeDatabase();
   await db.prepare(
     "UPDATE users SET phone_verify_code = ?, phone_verify_expires = ? WHERE id = ?"
-  ).run(code, expires, payload.userId);
+  ).run(codeHash, expires, payload.userId);
 
   const client = getTwilioClient();
   if (client) {
