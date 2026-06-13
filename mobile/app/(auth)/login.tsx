@@ -15,7 +15,7 @@ import { useAuth } from "@/lib/auth";
 import { useToast } from "@/lib/toast";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { Button, Input } from "@/components/ui";
+import { Button, Input, HeroBand, LiveEyebrow, ACCENT_HIGHLIGHT } from "@/components/ui";
 import { colors, typography, spacing, radius, shadows } from "../../lib/theme";
 import { API_URL, setToken } from "@/lib/api";
 import * as AppleAuthentication from "expo-apple-authentication";
@@ -103,29 +103,43 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <View style={styles.safe}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
         <Animated.ScrollView
-          contentContainerStyle={styles.container}
+          contentContainerStyle={styles.scroll}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
           style={{ opacity: fadeAnim }}
         >
-          {/* Logo */}
-          <View style={styles.logoBox}>
-            <View style={styles.logoIcon}>
-              <Image
-                source={require("../../assets/trovaar-logo.png")}
-                style={{ width: 40, height: 40 }}
-                resizeMode="contain"
-              />
-            </View>
-          </View>
+          {/* Midnight hero band — the brand moment (see DESIGN.md) */}
+          <HeroBand style={styles.hero}>
+            <SafeAreaView edges={["top"]}>
+              <LiveEyebrow />
+              <View style={styles.logoRow}>
+                <View style={styles.logoIcon}>
+                  <Image
+                    source={require("../../assets/trovaar-logo.png")}
+                    style={{ width: 30, height: 30 }}
+                    resizeMode="contain"
+                  />
+                </View>
+                <Text style={styles.wordmark}>Trovaar</Text>
+              </View>
+              <Text style={styles.heroTitle}>
+                Stop searching,{"\n"}
+                <Text style={{ color: ACCENT_HIGHLIGHT }}>start finding.</Text>
+              </Text>
+              <Text style={styles.heroSubtitle}>
+                Post a job, watch verified pros compete in real time.
+              </Text>
+            </SafeAreaView>
+          </HeroBand>
 
-          {/* Header */}
+          {/* Form card overlapping the hero */}
+          <View style={styles.container}>
           <Text style={styles.title}>Welcome back</Text>
           <Text style={styles.subtitle}>
             Sign in to continue to Trovaar
@@ -194,9 +208,10 @@ export default function LoginScreen() {
               <Text style={styles.footerLink}>Sign Up</Text>
             </Pressable>
           </View>
+          </View>
         </Animated.ScrollView>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -205,41 +220,69 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
   },
-  container: {
+  scroll: {
     flexGrow: 1,
-    justifyContent: "center",
-    paddingHorizontal: spacing["3xl"],
-    paddingVertical: spacing["4xl"],
   },
-  logoBox: {
+  hero: {
+    paddingHorizontal: spacing["3xl"],
+    paddingBottom: spacing["4xl"],
+  },
+  logoRow: {
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    marginBottom: spacing["3xl"],
+    gap: spacing.md,
+    marginTop: spacing["2xl"],
   },
   logoIcon: {
-    width: 64,
-    height: 64,
-    borderRadius: radius.xl,
-    backgroundColor: colors.secondary,
+    width: 44,
+    height: 44,
+    borderRadius: radius.lg,
+    backgroundColor: "rgba(255,255,255,0.1)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.15)",
     alignItems: "center",
     justifyContent: "center",
-    ...shadows.lg,
-    shadowColor: colors.secondary,
-    shadowOpacity: 0.3,
+  },
+  wordmark: {
+    fontSize: 22,
+    fontWeight: "800",
+    color: "#ffffff",
+    letterSpacing: -0.4,
+  },
+  heroTitle: {
+    fontSize: 36,
+    fontWeight: "800",
+    color: "#ffffff",
+    letterSpacing: -1,
+    lineHeight: 40,
+    marginTop: spacing["3xl"],
+  },
+  heroSubtitle: {
+    fontSize: 15,
+    color: colors.onDarkMuted,
+    marginTop: spacing.lg,
+    lineHeight: 22,
+  },
+  container: {
+    paddingHorizontal: spacing["3xl"],
+    paddingTop: spacing["3xl"],
+    paddingBottom: spacing["4xl"],
+    marginTop: -spacing["2xl"],
+    backgroundColor: colors.white,
+    borderTopLeftRadius: radius["2xl"],
+    borderTopRightRadius: radius["2xl"],
   },
   title: {
-    fontSize: 30,
+    fontSize: 24,
     fontWeight: "800",
     color: colors.secondary,
-    textAlign: "center",
     letterSpacing: -0.5,
   },
   subtitle: {
     ...typography.body,
     color: colors.muted,
-    textAlign: "center",
-    marginTop: spacing.md,
-    marginBottom: spacing["4xl"],
+    marginTop: spacing.sm,
+    marginBottom: spacing["3xl"],
   },
   form: {
     gap: spacing.md,

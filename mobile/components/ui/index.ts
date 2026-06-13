@@ -9,3 +9,4 @@ export { default as BottomSheet } from "./BottomSheet";
 export { default as SearchBar } from "./SearchBar";
 export { default as TabBar } from "./TabBar";
 export { default as StatusBadge } from "./StatusBadge";
+export { HeroBand, LiveEyebrow, ACCENT_HIGHLIGHT } from "./HeroBand";

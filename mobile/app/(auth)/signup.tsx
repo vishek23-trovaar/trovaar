@@ -15,7 +15,7 @@ import { useRouter } from "expo-router";
 import { useAuth } from "@/lib/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { Button, Input } from "@/components/ui";
+import { Button, Input, HeroBand } from "@/components/ui";
 import { colors, typography, spacing, radius, shadows } from "../../lib/theme";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -260,20 +260,26 @@ export default function SignupScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <View style={styles.safe}>
       <Animated.View style={{ flex: 1, opacity: fadeAnim }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <Pressable onPress={goBack} style={styles.backBtn}>
-            <Ionicons name="arrow-back" size={24} color={colors.secondary} />
-          </Pressable>
-          {renderDots()}
-          <View style={{ width: 40 }} />
-        </View>
+        {/* Midnight brand header (see DESIGN.md) */}
+        <HeroBand compact style={styles.heroHeader}>
+          <SafeAreaView edges={["top"]}>
+            <View style={styles.header}>
+              <Pressable onPress={goBack} style={styles.backBtn}>
+                <Ionicons name="arrow-back" size={22} color="#ffffff" />
+              </Pressable>
+              <Text style={styles.wordmark}>Trovaar</Text>
+              <View style={{ width: 40 }} />
+            </View>
+            <Text style={styles.heroTagline}>Create your account</Text>
+            <View style={styles.dotsWrap}>{renderDots()}</View>
+          </SafeAreaView>
+        </HeroBand>
 
         <ScrollView
           contentContainerStyle={styles.scrollContent}
@@ -296,7 +302,7 @@ export default function SignupScreen() {
         </View>
       </KeyboardAvoidingView>
       </Animated.View>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -305,18 +311,43 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
   },
+  heroHeader: {
+    paddingHorizontal: spacing.xl,
+    paddingBottom: spacing["2xl"],
+    borderBottomLeftRadius: radius["2xl"],
+    borderBottomRightRadius: radius["2xl"],
+  },
+  wordmark: {
+    fontSize: 20,
+    fontWeight: "800",
+    color: "#ffffff",
+    letterSpacing: -0.4,
+  },
+  heroTagline: {
+    fontSize: 26,
+    fontWeight: "800",
+    color: "#ffffff",
+    letterSpacing: -0.6,
+    paddingHorizontal: spacing.sm,
+    marginTop: spacing.lg,
+  },
+  dotsWrap: {
+    paddingHorizontal: spacing.sm,
+    marginTop: spacing.xl,
+  },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: spacing.xl,
-    paddingVertical: spacing.lg,
+    paddingTop: spacing.md,
   },
   backBtn: {
     width: 40,
     height: 40,
     borderRadius: radius.lg,
-    backgroundColor: colors.surfaceDark,
+    backgroundColor: "rgba(255,255,255,0.1)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.15)",
     alignItems: "center",
     justifyContent: "center",
   },
