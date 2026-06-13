@@ -44,6 +44,7 @@ export async function middleware(request: NextRequest) {
 
     const devOrigins = [
       "http://localhost:8081",
+      "http://localhost:8082", // Expo web preview (mobile app in browser)
       "http://localhost:3000",
       "http://localhost:3001",
     ];

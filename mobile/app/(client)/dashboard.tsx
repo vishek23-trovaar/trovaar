@@ -17,7 +17,9 @@ import { useAuth } from "@/lib/auth";
 import { api } from "@/lib/api";
 import { Job } from "@/lib/types";
 import { cacheRead, cacheWrite } from "@/lib/cache";
-import { colors, typography, spacing, radius, shadows, getStatusColor, getUrgencyColor, getCategoryIcon } from '../../lib/theme';
+import { colors, typography, spacing, radius, shadows, glass, getStatusColor, getUrgencyColor, getCategoryIcon } from '../../lib/theme';
+import { HeroBand } from "@/components/ui";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -143,9 +145,10 @@ export default function ClientDashboard() {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [surgeCategories, setSurgeCategories] = useState<SurgeCategory[]>([]);
-  const screenOpacity = useRef(new Animated.Value(0)).current;
+  const screenOpacity = useRef(new Animated.Value(Platform.OS === "web" ? 1 : 0)).current;
 
   useEffect(() => {
+    if (Platform.OS === "web") return;
     Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
   }, [screenOpacity]);
 
@@ -224,8 +227,9 @@ export default function ClientDashboard() {
         }
         ListHeaderComponent={
           <View>
-            {/* ── Hero Header ── */}
-            <View style={styles.heroCard}>
+            {/* ── Hero Header (midnight brand band) ── */}
+            <HeroBand style={styles.heroCard}>
+              <SafeAreaView edges={["top"]}>
               <View style={styles.heroTop}>
                 <View style={styles.avatarCircle}>
                   <Text style={styles.avatarLetter}>
@@ -237,14 +241,14 @@ export default function ClientDashboard() {
                   <Text style={styles.nameText}>{firstName}</Text>
                 </View>
                 <TouchableOpacity style={styles.notifBtn} onPress={() => router.push("/(client)/messages")}>
-                  <Ionicons name="notifications-outline" size={22} color={colors.text} />
+                  <Ionicons name="notifications-outline" size={22} color="#ffffff" />
                 </TouchableOpacity>
               </View>
 
-              {/* Mini Stats */}
+              {/* Mini Stats (glass) */}
               <View style={styles.miniStatsRow}>
                 <View style={styles.miniStat}>
-                  <Text style={[styles.miniStatValue, { color: colors.primaryLight }]}>{biddingJobs.length}</Text>
+                  <Text style={[styles.miniStatValue, { color: "#93C5FD" }]}>{biddingJobs.length}</Text>
                   <Text style={styles.miniStatLabel}>Awaiting Bids</Text>
                 </View>
                 <View style={styles.miniStatDivider} />
@@ -258,7 +262,8 @@ export default function ClientDashboard() {
                   <Text style={styles.miniStatLabel}>Completed</Text>
                 </View>
               </View>
-            </View>
+              </SafeAreaView>
+            </HeroBand>
 
             {/* ── Quick Actions ── */}
             <View style={styles.quickActionsRow}>
@@ -426,54 +431,60 @@ export default function ClientDashboard() {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.surface },
 
-  // Hero
+  // Hero (midnight gradient band)
   heroCard: {
-    backgroundColor: colors.white,
-    borderRadius: radius.lg,
-    padding: spacing['2xl'],
+    paddingHorizontal: spacing['2xl'],
+    paddingTop: spacing.md,
+    paddingBottom: spacing['3xl'],
     marginBottom: spacing.xl,
-    borderWidth: 1,
-    borderColor: colors.border,
-    ...shadows.lg,
+    borderBottomLeftRadius: radius['2xl'],
+    borderBottomRightRadius: radius['2xl'],
   },
   heroTop: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 20,
+    marginTop: spacing.lg,
   },
   avatarCircle: {
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: colors.primary,
+    backgroundColor: "rgba(255,255,255,0.12)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.18)",
     justifyContent: "center",
     alignItems: "center",
   },
   avatarLetter: { fontSize: 22, fontWeight: "700", color: colors.white },
-  greetingText: { fontSize: 14, color: colors.muted, fontWeight: "500" },
-  nameText: { fontSize: 24, fontWeight: "800", color: colors.text, marginTop: 2 },
+  greetingText: { fontSize: 14, color: colors.onDarkMuted, fontWeight: "500" },
+  nameText: { fontSize: 26, fontWeight: "800", color: "#ffffff", marginTop: 2, letterSpacing: -0.5 },
   notifBtn: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: colors.surface,
+    backgroundColor: "rgba(255,255,255,0.1)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.15)",
     justifyContent: "center",
     alignItems: "center",
   },
 
-  // Mini Stats
+  // Mini Stats (glass)
   miniStatsRow: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: colors.surface,
-    borderRadius: 14,
+    backgroundColor: glass.fill,
+    borderWidth: 1,
+    borderColor: glass.border,
+    borderRadius: 16,
     paddingVertical: 14,
     paddingHorizontal: 8,
   },
   miniStat: { flex: 1, alignItems: "center" },
   miniStatValue: { fontSize: 22, fontWeight: "800" },
-  miniStatLabel: { fontSize: 11, color: colors.muted, marginTop: 2, fontWeight: "500" },
-  miniStatDivider: { width: 1, height: 30, backgroundColor: colors.border },
+  miniStatLabel: { fontSize: 11, color: colors.onDarkMuted, marginTop: 2, fontWeight: "500" },
+  miniStatDivider: { width: 1, height: 30, backgroundColor: glass.border },
 
   // Quick Actions
   quickActionsRow: {
