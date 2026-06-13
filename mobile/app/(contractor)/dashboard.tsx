@@ -32,7 +32,9 @@ import {
   spacing,
   radius,
   shadows,
+  glass,
 } from "../../lib/theme";
+import { HeroBand } from "@/components/ui";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 // Chrome above the feed (header + search + chips + view segment) + tab bar + safe areas
@@ -612,9 +614,10 @@ export default function ContractorDashboard() {
   const [showSortMenu, setShowSortMenu] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("cards");
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
-  const screenOpacity = useRef(new Animated.Value(0)).current;
+  const screenOpacity = useRef(new Animated.Value(Platform.OS === "web" ? 1 : 0)).current;
 
   useEffect(() => {
+    if (Platform.OS === "web") return;
     Animated.timing(screenOpacity, { toValue: 1, duration: 400, useNativeDriver: true }).start();
   }, [screenOpacity]);
 
@@ -844,21 +847,25 @@ export default function ContractorDashboard() {
   }
 
   return (
-    <SafeAreaView style={styles.screen} edges={["top"]}>
+    <View style={styles.screen}>
     <Animated.View style={[styles.screenInner, { opacity: screenOpacity }]}>
-      {/* ── Header ── */}
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.headerGreeting}>Hey, {firstName}</Text>
-          <Text style={styles.headerTitle}>Find Jobs</Text>
-        </View>
-        <TouchableOpacity
-          style={styles.headerIconBtn}
-          onPress={() => setShowSortMenu(!showSortMenu)}
-        >
-          <Ionicons name="options-outline" size={20} color={COLORS.primary} />
-        </TouchableOpacity>
-      </View>
+      {/* ── Header (midnight brand band) ── */}
+      <HeroBand style={styles.headerBand}>
+        <SafeAreaView edges={["top"]}>
+          <View style={styles.header}>
+            <View>
+              <Text style={styles.headerGreeting}>Hey, {firstName}</Text>
+              <Text style={styles.headerTitle}>Find Jobs</Text>
+            </View>
+            <TouchableOpacity
+              style={styles.headerIconBtn}
+              onPress={() => setShowSortMenu(!showSortMenu)}
+            >
+              <Ionicons name="options-outline" size={20} color="#ffffff" />
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </HeroBand>
 
       {/* ── Search ── */}
       <View style={styles.searchContainer}>
@@ -885,23 +892,30 @@ export default function ContractorDashboard() {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.chipContainer}
       >
-        {CATEGORIES.map((cat) => (
-          <TouchableOpacity
-            key={cat.value}
-            style={[styles.chip, activeCategory === cat.value && styles.chipActive]}
-            onPress={() => setActiveCategory(cat.value)}
-            activeOpacity={0.7}
-          >
-            <Ionicons
-              name={cat.icon}
-              size={14}
-              color={activeCategory === cat.value ? COLORS.white : COLORS.muted}
-            />
-            <Text style={[styles.chipText, activeCategory === cat.value && styles.chipTextActive]}>
-              {cat.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
+        {CATEGORIES.map((cat) => {
+          const isActive = activeCategory === cat.value;
+          return (
+            <TouchableOpacity
+              key={cat.value}
+              style={[styles.chip, isActive && styles.chipActive]}
+              onPress={() => setActiveCategory(cat.value)}
+              activeOpacity={0.7}
+            >
+              <Ionicons
+                name={cat.icon}
+                size={16}
+                color={isActive ? COLORS.white : COLORS.muted}
+              />
+              <Text
+                style={[styles.chipText, isActive && styles.chipTextActive]}
+                numberOfLines={1}
+                allowFontScaling={false}
+              >
+                {cat.label}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
 
       {/* ── View mode segmented control ── */}
@@ -1031,7 +1045,7 @@ export default function ContractorDashboard() {
         />
       )}
     </Animated.View>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -1075,26 +1089,31 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: COLORS.surface },
   screenInner: { flex: 1 },
 
+  headerBand: {
+    paddingBottom: 18,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+  },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 20,
-    paddingTop: 16,
+    paddingTop: 14,
     paddingBottom: 4,
   },
-  headerGreeting: { fontSize: 14, color: COLORS.muted, fontWeight: "500" },
-  headerTitle: { fontSize: 28, fontWeight: "800", color: COLORS.secondary, marginTop: 2 },
+  headerGreeting: { fontSize: 14, color: "#94A3B8", fontWeight: "500" },
+  headerTitle: { fontSize: 28, fontWeight: "800", color: "#ffffff", marginTop: 2, letterSpacing: -0.5 },
   headerRight: { flexDirection: "row", gap: 8, alignItems: "center" },
   headerIconBtn: {
     width: 42,
     height: 42,
     borderRadius: 14,
-    backgroundColor: COLORS.white,
+    backgroundColor: "rgba(255,255,255,0.1)",
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: "rgba(255,255,255,0.15)",
   },
 
   // View segment control
@@ -1154,7 +1173,12 @@ const styles = StyleSheet.create({
   },
 
   // Category chips
-  chipContainer: { paddingHorizontal: 16, paddingBottom: 12, gap: 8 },
+  chipContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 4,
+    paddingBottom: 12,
+    alignItems: "center",
+  },
   chip: {
     flexDirection: "row",
     alignItems: "center",
@@ -1165,10 +1189,16 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
     backgroundColor: COLORS.white,
     marginRight: 8,
-    gap: 6,
+    minHeight: 36,
   },
   chipActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
-  chipText: { fontSize: 13, fontWeight: "600", color: COLORS.muted },
+  chipText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: COLORS.muted,
+    marginLeft: 6,
+    includeFontPadding: false,
+  },
   chipTextActive: { color: COLORS.white },
 
   // Sort dropdown
