@@ -223,9 +223,31 @@ export default function ContractorDashboard() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+      {/* Midnight hero band (see DESIGN.md) */}
+      <div
+        className="relative overflow-hidden rounded-3xl px-6 py-7 sm:px-8 sm:py-8 mb-6 text-white"
+        style={{ background: "linear-gradient(135deg, #0a0f1e 0%, #0f172a 50%, #1e1b4b 100%)" }}
+      >
+        <div aria-hidden className="absolute -top-24 -right-16 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 rounded-full px-3 py-1 mb-3 text-xs backdrop-blur-sm">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-400" />
+              </span>
+              <span className="text-slate-200">New jobs posted near you</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">Find work</h1>
+            <p className="text-slate-300 text-sm mt-1.5">Browse open jobs, manage bids, and grow your business.</p>
+          </div>
+          <Link
+            href="/jobs"
+            className="inline-flex items-center px-6 py-3 bg-white text-blue-700 text-sm font-bold rounded-full shadow-lg shadow-blue-900/30 hover:shadow-xl hover:bg-blue-50 transition-all"
+          >
+            Browse Jobs
+          </Link>
+        </div>
       </div>
 
       <PhoneVerifyWidget />
