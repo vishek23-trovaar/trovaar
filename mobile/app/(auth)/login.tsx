@@ -29,9 +29,12 @@ export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  // Start visible on web (no native driver there — a JS-fallback fade just
+  // keeps the page from going idle); animate the entrance on native.
+  const fadeAnim = useRef(new Animated.Value(Platform.OS === "web" ? 1 : 0)).current;
 
   useEffect(() => {
+    if (Platform.OS === "web") return;
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 400,

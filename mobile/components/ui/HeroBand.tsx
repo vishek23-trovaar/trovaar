@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, StyleProp, ViewStyle, Animated, Easing } from "react-native";
+import { View, Text, StyleSheet, StyleProp, ViewStyle, Animated, Easing, Platform } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { gradients, glass } from "../../lib/theme";
 
@@ -43,6 +43,10 @@ export function LiveEyebrow({ label = "Live marketplace — pros bidding now" }:
   const pulse = React.useRef(new Animated.Value(0)).current;
 
   React.useEffect(() => {
+    // Skip the infinite pulse on web — RN-web can't use the native driver, so
+    // the JS-thread loop pegs the renderer (and infinite animations are poor
+    // web citizens). Native gets the full ping animation.
+    if (Platform.OS === "web") return;
     const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(pulse, { toValue: 1, duration: 1100, easing: Easing.out(Easing.ease), useNativeDriver: true }),
