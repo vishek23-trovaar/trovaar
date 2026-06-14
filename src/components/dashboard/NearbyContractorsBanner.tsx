@@ -84,14 +84,10 @@ export default function NearbyContractorsBanner() {
   if (state === "error") return null;
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 text-white px-5 py-4 mb-6 shadow-lg">
-      {/* Subtle background circles */}
-      <div className="absolute -top-6 -right-6 w-32 h-32 rounded-full bg-white/5 pointer-events-none" />
-      <div className="absolute -bottom-8 right-16 w-24 h-24 rounded-full bg-white/5 pointer-events-none" />
-
+    <div className="relative overflow-hidden rounded-2xl bg-[#0f1011] border border-[#23252a] px-5 py-4 mb-6">
       <div className="relative flex items-center gap-4">
         {/* Icon */}
-        <div className="shrink-0 w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center text-2xl">
+        <div className="shrink-0 w-11 h-11 rounded-xl bg-[#3b82f6]/15 border border-[#3b82f6]/25 flex items-center justify-center text-2xl">
           📍
         </div>
 
@@ -99,33 +95,33 @@ export default function NearbyContractorsBanner() {
         <div className="flex-1 min-w-0">
           {state === "locating" && (
             <>
-              <p className="font-semibold text-sm leading-tight">Checking your area…</p>
-              <p className="text-xs text-blue-200 mt-0.5">Finding local contractors near you</p>
+              <p className="font-semibold text-sm leading-tight text-[#f7f8f8]">Checking your area…</p>
+              <p className="text-xs text-[#8a8f98] mt-0.5">Finding local contractors near you</p>
             </>
           )}
 
           {state === "loading" && (
             <>
-              <p className="font-semibold text-sm leading-tight flex items-center gap-2">
-                <span className="inline-block w-3 h-3 border-2 border-white/50 border-t-white rounded-full animate-spin" />
+              <p className="font-semibold text-sm leading-tight flex items-center gap-2 text-[#f7f8f8]">
+                <span className="inline-block w-3 h-3 border-2 border-[#3b82f6]/40 border-t-[#3b82f6] rounded-full animate-spin" />
                 Counting nearby contractors…
               </p>
-              <p className="text-xs text-blue-200 mt-0.5">Searching within 50 miles</p>
+              <p className="text-xs text-[#8a8f98] mt-0.5">Searching within 50 miles</p>
             </>
           )}
 
           {state === "ready" && (
             <>
-              <p className="font-bold text-lg leading-tight">
-                {animatedCount}{" "}
-                <span className="font-semibold text-white/90">
+              <p className="font-bold text-lg leading-tight text-[#f7f8f8]">
+                <span className="text-[#60a5fa]">{animatedCount}</span>{" "}
+                <span className="font-semibold text-[#f7f8f8]">
                   contractor{animatedCount !== 1 ? "s" : ""}
                 </span>{" "}
-                <span className="font-normal text-sm text-blue-100">
+                <span className="font-normal text-sm text-[#8a8f98]">
                   within {radiusMiles} miles
                 </span>
               </p>
-              <p className="text-xs text-blue-200 mt-0.5">
+              <p className="text-xs text-[#8a8f98] mt-0.5">
                 Ready to bid on your next job — post now!
               </p>
             </>
@@ -133,14 +129,14 @@ export default function NearbyContractorsBanner() {
 
           {state === "fallback" && (
             <>
-              <p className="font-bold text-lg leading-tight">
-                {animatedCount}{" "}
-                <span className="font-semibold text-white/90">
+              <p className="font-bold text-lg leading-tight text-[#f7f8f8]">
+                <span className="text-[#60a5fa]">{animatedCount}</span>{" "}
+                <span className="font-semibold text-[#f7f8f8]">
                   contractor{animatedCount !== 1 ? "s" : ""}
                 </span>{" "}
-                <span className="font-normal text-sm text-blue-100">on the platform</span>
+                <span className="font-normal text-sm text-[#8a8f98]">on the platform</span>
               </p>
-              <p className="text-xs text-blue-200 mt-0.5">
+              <p className="text-xs text-[#8a8f98] mt-0.5">
                 Enable location access to see contractors near you
               </p>
             </>
@@ -152,14 +148,14 @@ export default function NearbyContractorsBanner() {
           {(state === "ready" || state === "fallback") && (
             <div className="flex items-center gap-1.5">
               <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-400" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4ade80] opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#4ade80]" />
               </span>
-              <span className="text-xs font-medium text-green-300">Live</span>
+              <span className="text-xs font-medium text-[#4ade80]">Live</span>
             </div>
           )}
           {!isFallback && state === "ready" && count === 0 && (
-            <p className="text-xs text-blue-200 text-right max-w-[120px]">
+            <p className="text-xs text-[#8a8f98] text-right max-w-[120px]">
               Be the first to post in your area!
             </p>
           )}

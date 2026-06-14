@@ -13,6 +13,10 @@ import {
   Lock,
   ScrollText,
   Star,
+  Sparkles,
+  Wrench,
+  ClipboardCheck,
+  Award,
 } from "lucide-react";
 import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
@@ -93,6 +97,13 @@ const TRUST = [
   { icon: BadgeCheck, label: "ID verified" },
   { icon: Lock, label: "Secure escrow payments" },
   { icon: ScrollText, label: "Licensed where required" },
+];
+
+const TIERS = [
+  { icon: Wrench, name: "Independent Pro", body: "Skilled local pro taking jobs on the side — no formal credentials needed, just talent and fair pricing." },
+  { icon: ClipboardCheck, name: "Licensed Professional", body: "State- or trade-licensed for permitted, professional work." },
+  { icon: Award, name: "Certified Specialist", body: "Industry-certified, insured, and running jobs full-time." },
+  { icon: Star, name: "Master Tradesperson", body: "Top-rated with a proven track record — the pros clients trust most." },
 ];
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
@@ -350,6 +361,43 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* ── Quote Buster ── */}
+        <section className="mx-auto max-w-[1280px] px-6 pt-24 md:pt-32">
+          <div className="relative overflow-hidden rounded-[16px] p-8 md:p-12" style={{ backgroundColor: T.surface1, border: `1px solid ${T.hairline}` }}>
+            <div className="grid gap-10 md:grid-cols-[1.25fr_1fr] md:items-center">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full px-3 py-1" style={{ backgroundColor: T.surface3, border: `1px solid ${T.hairline}` }}>
+                  <Sparkles size={13} color={T.primary} strokeWidth={2} />
+                  <span style={{ ...ty.caption, color: T.inkMuted }}>Quote Buster</span>
+                </div>
+                <h2 style={ty.displayMd} className="mt-5 max-w-[18ch] text-balance">Already got a quote? Find out if it&apos;s fair.</h2>
+                <p style={{ ...ty.bodyLg, color: T.inkSubtle }} className="mt-4 max-w-[52ch]">
+                  Paste a price you were quoted and Trovaar checks it against real local bids — so you know in seconds whether you&apos;re being overcharged, before you commit a cent.
+                </p>
+                <Link href="/quote-buster" style={{ ...ty.button, backgroundColor: T.primary, color: T.onPrimary }} className="mt-8 inline-flex h-10 items-center gap-1.5 rounded-[8px] px-5 transition-colors hover:bg-[#828fff]">
+                  Check a quote<ArrowRight size={16} strokeWidth={2.2} />
+                </Link>
+              </div>
+              {/* mini visual: a flagged quote vs. fair range */}
+              <div className="rounded-[12px] p-5" style={{ backgroundColor: T.canvas, border: `1px solid ${T.hairline}` }}>
+                <div className="flex items-center justify-between">
+                  <span style={{ ...ty.caption, color: T.inkSubtle }}>Their quote</span>
+                  <span className="rounded-full px-2 py-0.5" style={{ ...ty.caption, backgroundColor: "rgba(248,113,113,0.14)", color: "#fca5a5" }}>58% high</span>
+                </div>
+                <div style={{ ...ty.displayMd, color: T.ink }} className="mt-1">$1,200</div>
+                <div className="my-4 h-px" style={{ backgroundColor: T.hairline }} />
+                <div className="flex items-center justify-between">
+                  <span style={{ ...ty.caption, color: T.inkSubtle }}>Fair local range</span>
+                  <span className="inline-flex items-center gap-1.5" style={{ ...ty.caption, color: T.success }}>
+                    <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: T.success }} />6 bids
+                  </span>
+                </div>
+                <div style={{ ...ty.headline, color: T.ink }} className="mt-1">$620 – $760</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ── Stats ── */}
         <section className="mx-auto max-w-[1280px] px-6 pt-24 md:pt-32">
           <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[16px] md:grid-cols-4" style={{ backgroundColor: T.hairline, border: `1px solid ${T.hairline}` }}>
@@ -359,6 +407,33 @@ export default function HomePage() {
                 <div style={{ ...ty.bodySm, color: T.inkSubtle }} className="mt-2">{label}</div>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* ── For professionals (tiers) ── */}
+        <section className="mx-auto max-w-[1280px] px-6 pt-24 md:pt-32">
+          <div className="max-w-[680px]">
+            <Eyebrow>For professionals</Eyebrow>
+            <h2 style={ty.displayLg} className="mt-4 text-balance">From hustle to mastery.</h2>
+            <p style={{ ...ty.subhead, color: T.inkSubtle }} className="mt-4">
+              Side jobs or a full-time trade business — there&apos;s a tier for your level. No lead fees, set your own rates, and build a reputation that wins better work.
+            </p>
+          </div>
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {TIERS.map(({ icon: Icon, name, body }) => (
+              <div key={name} className="rounded-[12px] p-6" style={{ backgroundColor: T.surface1, border: `1px solid ${T.hairline}` }}>
+                <span className="grid h-10 w-10 place-items-center rounded-[8px]" style={{ backgroundColor: T.surface3, border: `1px solid ${T.hairline}` }}>
+                  <Icon size={18} color={T.primary} strokeWidth={1.8} />
+                </span>
+                <h3 style={{ ...ty.bodyLg, color: T.ink, fontWeight: 600 }} className="mt-5">{name}</h3>
+                <p style={{ ...ty.bodySm, color: T.inkSubtle }} className="mt-2">{body}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-9">
+            <Link href="/signup?role=contractor" style={{ ...ty.button, backgroundColor: T.primary, color: T.onPrimary }} className="inline-flex h-10 items-center gap-1.5 rounded-[8px] px-5 transition-colors hover:bg-[#828fff]">
+              Join as a Pro<ArrowRight size={16} strokeWidth={2.2} />
+            </Link>
           </div>
         </section>
 

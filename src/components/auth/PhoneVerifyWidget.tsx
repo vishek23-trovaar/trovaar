@@ -119,20 +119,19 @@ export default function PhoneVerifyWidget({ compact = false }: { compact?: boole
     );
   }
 
-  // Full banner variant
+  // Full banner variant — Linear amber warning surface (tint + hairline, no gradient)
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-white px-5 py-4 mb-6 shadow-md">
-      <div className="absolute -top-4 -right-4 w-24 h-24 rounded-full bg-white/10 pointer-events-none" />
+    <div className="relative overflow-hidden rounded-2xl bg-[#fbbf24]/10 border border-[#fbbf24]/30 px-5 py-4 mb-6">
       <div className="relative flex items-center gap-4">
-        <div className="shrink-0 w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center text-2xl">📱</div>
+        <div className="shrink-0 w-11 h-11 rounded-xl bg-[#fbbf24]/15 flex items-center justify-center text-2xl">📱</div>
         <div className="flex-1 min-w-0">
-          <p className="font-bold text-sm">Verify your phone to activate your account number</p>
-          <p className="text-xs text-orange-100 mt-0.5">{user.phone}</p>
+          <p className="font-bold text-sm text-[#fbbf24]">Verify your phone to activate your account number</p>
+          <p className="text-xs text-[#fbbf24]/80 mt-0.5">{user.phone}</p>
           {step === "idle" && (
             <button
               onClick={sendCode}
               disabled={sending}
-              className="mt-2 px-4 py-1.5 bg-white text-orange-600 text-xs font-bold rounded-lg hover:bg-orange-50 disabled:opacity-60 transition-colors cursor-pointer"
+              className="mt-2 px-4 py-1.5 bg-amber-600 text-white text-xs font-bold rounded-lg hover:bg-amber-700 disabled:opacity-60 transition-colors cursor-pointer"
             >
               {sending ? "Sending…" : "Send Verification Code →"}
             </button>
@@ -146,23 +145,23 @@ export default function PhoneVerifyWidget({ compact = false }: { compact?: boole
                 value={code}
                 onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
                 placeholder="6-digit code"
-                className="w-28 px-2 py-1.5 rounded-lg text-sm font-mono text-center text-gray-900 focus:outline-none focus:ring-2 focus:ring-white/60"
+                className="w-28 px-2 py-1.5 rounded-lg text-sm font-mono text-center bg-[#141516] border border-[#fbbf24]/30 text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-amber-400"
               />
               <button
                 onClick={verifyCode}
                 disabled={verifying || code.length !== 6}
-                className="px-4 py-1.5 bg-white text-orange-600 text-xs font-bold rounded-lg hover:bg-orange-50 disabled:opacity-60 transition-colors cursor-pointer"
+                className="px-4 py-1.5 bg-amber-600 text-white text-xs font-bold rounded-lg hover:bg-amber-700 disabled:opacity-60 transition-colors cursor-pointer"
               >
                 {verifying ? "Verifying…" : "Verify ✓"}
               </button>
-              <button onClick={() => { setStep("idle"); setCode(""); setMsg(""); }} className="text-xs text-orange-100 hover:text-white underline cursor-pointer">
+              <button onClick={() => { setStep("idle"); setCode(""); setMsg(""); }} className="text-xs text-[#fbbf24] hover:underline cursor-pointer">
                 Resend
               </button>
             </div>
           )}
-          {msg && <p className="text-xs text-red-200 mt-1">{msg}</p>}
+          {msg && <p className="text-xs text-[#f87171] mt-1">{msg}</p>}
         </div>
-        <button onClick={() => setDismissed(true)} className="shrink-0 text-white/60 hover:text-white text-xl leading-none cursor-pointer" aria-label="Dismiss">×</button>
+        <button onClick={() => setDismissed(true)} className="shrink-0 text-[#fbbf24]/70 hover:text-[#fbbf24] text-xl leading-none cursor-pointer" aria-label="Dismiss">×</button>
       </div>
     </div>
   );
