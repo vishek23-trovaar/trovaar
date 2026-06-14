@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import PhoneVerifyWidget from "@/components/auth/PhoneVerifyWidget";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import PageHero from "@/components/ui/PageHero";
 
 interface ClientStats {
   totalJobs: number;
@@ -180,17 +181,10 @@ export default function ClientProfilePage() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
 
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <div className="w-16 h-16 rounded-2xl bg-emerald-100 flex items-center justify-center text-2xl font-bold text-emerald-700">
-          {user.name.charAt(0).toUpperCase()}
-        </div>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">{user.name}</h1>
-          <p className="text-sm text-gray-500">{user.email} · Member since {memberSince}</p>
-          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-emerald-100 text-emerald-700 mt-1">Client</span>
-        </div>
-      </div>
+      <PageHero
+        title="My Profile"
+        subtitle={`${user.name} · ${user.email}${memberSince ? ` · Member since ${memberSince}` : ""}`}
+      />
 
       {/* Phone verification prompt (compact) */}
       <PhoneVerifyWidget compact />

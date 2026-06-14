@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import PageHero from "@/components/ui/PageHero";
 
 interface TaxData {
   year: number;
@@ -88,22 +88,21 @@ export default function ContractorTaxPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <Link href="/contractor/dashboard" className="text-sm text-blue-600 hover:text-blue-800 mb-1 inline-block">&larr; Back to Dashboard</Link>
-          <h1 className="text-2xl font-bold text-gray-900">Tax Center</h1>
-          <p className="text-sm text-gray-500 mt-1">Track your earnings and 1099 tax information</p>
-        </div>
-        <select
-          value={year}
-          onChange={(e) => setYear(Number(e.target.value))}
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm font-medium bg-white"
-        >
-          {years.map((y) => (
-            <option key={y} value={y}>{y}</option>
-          ))}
-        </select>
-      </div>
+      <PageHero
+        title="Tax & Earnings"
+        subtitle="Track your earnings and 1099 tax information."
+        action={
+          <select
+            value={year}
+            onChange={(e) => setYear(Number(e.target.value))}
+            className="border border-white/20 rounded-full px-4 py-2.5 text-sm font-bold bg-white text-blue-700 shadow-lg shadow-blue-900/30 hover:bg-blue-50 transition-all cursor-pointer"
+          >
+            {years.map((y) => (
+              <option key={y} value={y}>{y}</option>
+            ))}
+          </select>
+        }
+      />
 
       {loading ? (
         <div className="flex items-center justify-center py-20">

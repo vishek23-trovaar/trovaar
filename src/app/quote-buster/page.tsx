@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import PageHero from "@/components/ui/PageHero";
 import { CATEGORY_GROUPS } from "@/lib/constants";
 
 interface QuoteBustResult {
@@ -115,31 +116,14 @@ export default function QuoteBusterPage() {
 
   return (
     <div className="bg-white min-h-screen">
-      {/* Hero */}
-      <section
-        className="relative overflow-hidden text-white py-16 sm:py-20"
-        style={{ background: "linear-gradient(135deg, #0a0f1e 0%, #0f172a 50%, #1d4ed8 100%)" }}
-      >
-        <div className="absolute inset-0 opacity-[0.04]" style={{
-          backgroundImage: "linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }} />
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 mb-6 text-sm">
-            <span className="text-xl">💰</span>
-            <span className="text-slate-200">Free price comparison tool</span>
-          </div>
-          <h1 className="text-4xl sm:text-5xl font-extrabold mb-4">
-            Quote Buster
-          </h1>
-          <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto">
-            Got a quote from a big company? Find out how much you could save
-            with a skilled local pro on Trovaar.
-          </p>
-        </div>
-      </section>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-8">
+        <PageHero
+          title="Quote Buster"
+          subtitle="Got a quote from a big company? Find out how much you could save with a skilled local pro on Trovaar."
+        />
+      </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* Form */}
           <ScrollReveal delay={100}>

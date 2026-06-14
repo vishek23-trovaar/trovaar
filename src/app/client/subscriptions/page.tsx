@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import PageHero from "@/components/ui/PageHero";
 
 interface Subscription {
   id: string;
@@ -233,13 +234,18 @@ export default function ClientSubscriptionsPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">My Subscription</h1>
-        <Link href="/subscriptions" className="text-sm text-emerald-600 hover:text-emerald-700 font-medium">
-          View all plans →
-        </Link>
-      </div>
+      <PageHero
+        title="Home Care Plans"
+        subtitle="Manage your recurring maintenance plan, schedule visits, and track your usage."
+        action={
+          <Link
+            href="/subscriptions"
+            className="inline-flex items-center px-5 py-2.5 bg-white text-blue-700 text-sm font-bold rounded-full shadow-lg shadow-blue-900/30 hover:bg-blue-50 transition-all"
+          >
+            View all plans
+          </Link>
+        }
+      />
 
       {/* Subscription card */}
       <ScrollReveal>

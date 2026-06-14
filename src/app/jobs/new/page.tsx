@@ -10,6 +10,7 @@ import { CATEGORY_GROUPS, URGENCY_LEVELS } from "@/lib/constants";
 import { useAuth } from "@/context/AuthContext";
 import { ConsumerSurgeBanner } from "@/components/insights/ConsumerSurgeBanner";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import PageHero from "@/components/ui/PageHero";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -433,14 +434,10 @@ function PostJobContent() {
     <div className="max-w-2xl mx-auto px-4 py-10">
 
       {/* Page header */}
-      <ScrollReveal>
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-secondary">Post a Job</h1>
-          <p className="text-muted text-sm mt-1">
-            Snap a photo — our AI figures out the rest. Skilled pros compete for your job.
-          </p>
-        </div>
-      </ScrollReveal>
+      <PageHero
+        title="Post a Job"
+        subtitle="Snap a photo — our AI figures out the rest. Skilled pros compete for your job."
+      />
 
       {/* Progress bar */}
       <ScrollReveal delay={100}>

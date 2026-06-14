@@ -6,6 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import { JobWithBidCount } from "@/types";
 import { CATEGORY_GROUPS } from "@/lib/constants";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import PageHero from "@/components/ui/PageHero";
 
 function getCategoryIcon(value: string): string {
   for (const g of CATEGORY_GROUPS) {
@@ -123,18 +124,18 @@ export default function ContractorBidsPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">My Bids</h1>
-          <p className="text-sm text-gray-500 mt-0.5">Track all your submitted bids</p>
-        </div>
-        <Link
-          href="/contractor/dashboard"
-          className="text-sm text-primary hover:underline font-medium"
-        >
-          Browse Jobs →
-        </Link>
-      </div>
+      <PageHero
+        title="My Bids"
+        subtitle="Track every bid you've submitted and see where each one stands."
+        action={
+          <Link
+            href="/contractor/dashboard"
+            className="inline-flex items-center px-5 py-2.5 bg-white text-blue-700 text-sm font-bold rounded-full shadow-lg shadow-blue-900/30 hover:bg-blue-50 transition-all"
+          >
+            Browse Jobs →
+          </Link>
+        }
+      />
 
       {/* Summary cards */}
       <ScrollReveal delay={0}>

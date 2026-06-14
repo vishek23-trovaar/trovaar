@@ -10,6 +10,7 @@ import PhoneVerifyWidget from "@/components/auth/PhoneVerifyWidget";
 import PortfolioManager from "@/components/portfolio/PortfolioManager";
 import CredentialUploader from "@/components/portfolio/CredentialUploader";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import PageHero from "@/components/ui/PageHero";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -635,42 +636,18 @@ export default function ContractorPerformancePage() {
       <div className="max-w-5xl mx-auto px-4 py-8">
 
         {/* ── Page header ─────────────────────────────────────────────────── */}
-        <div className="mb-6">
-          <Link
-            href="/contractor/dashboard"
-            className="inline-flex items-center gap-1 text-sm text-muted hover:text-secondary transition-colors mb-3"
-          >
-            ← Back to Dashboard
-          </Link>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="flex items-center gap-4">
-              {/* Avatar */}
-              <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center overflow-hidden shrink-0">
-                {profile?.profile_photo ? (
-                  <img
-                    src={profile.profile_photo}
-                    alt={user.name}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <span className="text-xl font-bold text-primary">
-                    {user.name.charAt(0).toUpperCase()}
-                  </span>
-                )}
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-secondary">My Performance</h1>
-                <p className="text-sm text-muted">{user.name}</p>
-              </div>
-            </div>
+        <PageHero
+          title="My Profile"
+          subtitle="Track your performance, portfolio, and verification all in one place."
+          action={
             <Link
               href={`/profile/${user.id}`}
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
+              className="inline-flex items-center px-5 py-2.5 bg-white text-blue-700 text-sm font-bold rounded-full shadow-lg shadow-blue-900/30 hover:bg-blue-50 transition-all"
             >
               View Public Profile →
             </Link>
-          </div>
-        </div>
+          }
+        />
 
         {/* ── Phone verification (compact) ───────────────────────────────── */}
         <div className="mb-4">

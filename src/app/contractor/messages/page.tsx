@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { CATEGORY_GROUPS } from "@/lib/constants";
+import PageHero from "@/components/ui/PageHero";
 
 interface Conversation {
   job_id: string;
@@ -232,7 +233,14 @@ export default function ContractorMessagesPage() {
   const totalUnread = conversations.reduce((s, c) => s + (c.unread_count || 0), 0);
 
   return (
-    <div className="h-[calc(100vh-64px)] flex bg-white">
+    <div className="flex flex-col h-[calc(100vh-64px)] bg-white">
+      <div className="px-4 sm:px-6 lg:px-8 pt-6">
+        <PageHero
+          title="Messages"
+          subtitle="Chat with clients about active jobs and accepted bids."
+        />
+      </div>
+      <div className="flex flex-1 min-h-0 bg-white">
       {/* Sidebar */}
       <div
         className={`${
@@ -240,7 +248,7 @@ export default function ContractorMessagesPage() {
         } md:flex flex-col w-full md:w-[360px] border-r border-gray-200 bg-white`}
       >
         <div className="px-4 py-4 border-b border-gray-100">
-          <h1 className="text-2xl font-bold text-gray-900">Chats</h1>
+          <h2 className="text-lg font-bold text-gray-900">Chats</h2>
           {totalUnread > 0 && (
             <p className="text-xs text-primary font-medium mt-0.5">
               {totalUnread} unread message{totalUnread !== 1 ? "s" : ""}
@@ -478,6 +486,7 @@ export default function ContractorMessagesPage() {
             </div>
           </>
         )}
+      </div>
       </div>
     </div>
   );

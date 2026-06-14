@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import PageHero from "@/components/ui/PageHero";
 
 const CATEGORY_EMOJIS: Record<string, string> = {
   plumbing: "🔧",
@@ -135,16 +136,17 @@ export default function NeighborhoodFeedPage() {
     <div className="bg-gray-50 min-h-screen">
       <div className="max-w-2xl mx-auto px-4 py-8">
         {/* Header */}
-        <div className="mb-6">
-          <Link
-            href="/client/dashboard"
-            className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-emerald-600 transition-colors mb-3"
-          >
-            &larr; Back to Dashboard
-          </Link>
-          <h1 className="text-2xl font-bold text-gray-900">Neighborhood Activity</h1>
-          <p className="text-sm text-gray-500 mt-1">See what services are trending near you</p>
-        </div>
+        <Link
+          href="/client/dashboard"
+          className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-emerald-600 transition-colors mb-3"
+        >
+          &larr; Back to Dashboard
+        </Link>
+        <PageHero
+          eyebrow="Live marketplace"
+          title="Neighborhood"
+          subtitle="See what services are trending and which contractors are busy near you."
+        />
 
         {/* Privacy notice */}
         <div className="flex items-start gap-2 bg-emerald-50 border border-emerald-200 rounded-xl p-3 mb-6 text-sm text-emerald-800">

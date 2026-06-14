@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { CATEGORY_GROUPS } from "@/lib/constants";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import PageHero from "@/components/ui/PageHero";
 
 function getCategoryLabel(value: string): string {
   for (const g of CATEGORY_GROUPS) {
@@ -89,10 +90,10 @@ export default function ContractorEarningsPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Earnings</h1>
-        <p className="text-sm text-gray-500 mt-0.5">Your completed jobs and payout history</p>
-      </div>
+      <PageHero
+        title="Earnings"
+        subtitle="Review your completed jobs and net payout history at a glance."
+      />
 
       {/* Summary cards */}
       <ScrollReveal delay={0}>

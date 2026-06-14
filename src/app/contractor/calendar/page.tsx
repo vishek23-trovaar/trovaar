@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import PageHero from "@/components/ui/PageHero";
 
 interface CalendarJob {
   id: string;
@@ -195,12 +196,10 @@ export default function ContractorCalendarPage() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <Link href="/contractor/dashboard" className="text-sm text-blue-600 hover:underline mb-1 inline-block">&larr; Dashboard</Link>
-          <h1 className="text-2xl font-bold text-gray-900">Calendar</h1>
-        </div>
-      </div>
+      <PageHero
+        title="Calendar"
+        subtitle="Manage your jobs and set your weekly and one-off availability."
+      />
 
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Calendar Grid */}

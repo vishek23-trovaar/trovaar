@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import PageHero from "@/components/ui/PageHero";
 
 interface JobTemplate {
   id: string;
@@ -121,13 +123,18 @@ export default function TemplatesPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-900">Job Templates</h1>
-        <p className="text-sm text-slate-500 mt-1">
-          Saved job configurations for quick posting
-        </p>
-      </div>
+      <PageHero
+        title="Job Templates"
+        subtitle="Saved job configurations you can reuse to post new jobs in seconds."
+        action={
+          <Link
+            href="/jobs/new"
+            className="inline-flex items-center px-5 py-2.5 bg-white text-blue-700 text-sm font-bold rounded-full shadow-lg shadow-blue-900/30 hover:bg-blue-50 transition-all"
+          >
+            + New Job
+          </Link>
+        }
+      />
 
       {loading ? (
         <div className="flex justify-center py-16">

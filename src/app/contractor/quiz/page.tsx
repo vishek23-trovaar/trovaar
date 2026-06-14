@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { CATEGORIES } from "@/lib/constants";
 import { QUIZ_CATEGORIES } from "@/lib/quiz-questions";
+import PageHero from "@/components/ui/PageHero";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -230,19 +231,10 @@ export default function QuizPage() {
       <div className="bg-white min-h-screen">
         <div className="max-w-2xl mx-auto px-4 py-8">
           {/* Header */}
-          <div className="mb-8">
-            <Link
-              href="/contractor/profile"
-              className="text-sm text-primary hover:underline mb-4 inline-block"
-            >
-              &larr; Back to Profile
-            </Link>
-            <h1 className="text-2xl font-bold text-secondary">Skills Assessment</h1>
-            <p className="text-muted mt-1">
-              Prove your trade knowledge and earn badges for your profile. Score 70% or
-              higher to display your badge publicly.
-            </p>
-          </div>
+          <PageHero
+            title="Skills Quiz"
+            subtitle="Prove your trade knowledge and earn badges — score 70%+ to display them publicly."
+          />
 
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 text-sm text-red-700">

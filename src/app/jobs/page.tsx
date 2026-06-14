@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import Button from "@/components/ui/Button";
+import PageHero from "@/components/ui/PageHero";
 import { CATEGORY_GROUPS, CATEGORIES } from "@/lib/constants";
 import { JobWithBidCount } from "@/types";
 import { useAuth } from "@/context/AuthContext";
@@ -144,6 +145,23 @@ function BrowseJobsContent() {
 
   return (
     <div className="flex flex-col" style={{ height: "calc(100dvh - 64px)" }}>
+
+      {/* ── Brand hero band ── */}
+      <div className="shrink-0 px-3 sm:px-4 pt-3">
+        <PageHero
+          title="Browse Jobs"
+          subtitle="Discover open jobs near you and send a winning bid."
+          eyebrow="Live marketplace"
+          action={
+            <Link
+              href="/jobs/new"
+              className="inline-flex items-center px-5 py-2.5 bg-white text-blue-700 text-sm font-bold rounded-full shadow-lg shadow-blue-900/30 hover:bg-blue-50 transition-all"
+            >
+              + Post a Job
+            </Link>
+          }
+        />
+      </div>
 
       {/* ── Filter bar ── */}
       <div className="bg-white border-b border-border px-3 sm:px-4 py-2.5 shrink-0 space-y-2">

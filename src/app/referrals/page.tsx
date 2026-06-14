@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import ScrollReveal from "@/components/ui/ScrollReveal";
+import PageHero from "@/components/ui/PageHero";
 import Link from "next/link";
 
 interface Referral {
@@ -88,14 +89,10 @@ export default function ReferralsPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Header */}
-      <ScrollReveal>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Referral Program</h1>
-        <p className="text-gray-500 text-sm mt-1">
-          Invite friends and earn rewards when they join Trovaar
-        </p>
-      </div>
-      </ScrollReveal>
+      <PageHero
+        title="Refer & Earn"
+        subtitle="Invite friends and earn rewards when they join Trovaar."
+      />
 
       {/* Reward Structure */}
       <ScrollReveal delay={100}>
