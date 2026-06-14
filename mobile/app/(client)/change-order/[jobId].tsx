@@ -174,7 +174,7 @@ export default function ChangeOrderScreen() {
         <TextInput
           style={[styles.textArea, !canSubmit && description.length > 0 && styles.textAreaError]}
           placeholder="Describe the additional work you'd like done..."
-          placeholderTextColor="#94a3b8"
+          placeholderTextColor="#8A8F98"
           value={description}
           onChangeText={setDescription}
           multiline
@@ -192,7 +192,7 @@ export default function ChangeOrderScreen() {
           <TextInput
             style={styles.costInput}
             placeholder="0.00"
-            placeholderTextColor="#94a3b8"
+            placeholderTextColor="#8A8F98"
             value={estimatedCost}
             onChangeText={(v) => {
               const clean = v.replace(/[^0-9.]/g, "");
@@ -228,7 +228,7 @@ export default function ChangeOrderScreen() {
                   color={
                     active
                       ? isUrgent
-                        ? "#d97706"
+                        ? "#FCD34D"
                         : colors.primary
                       : colors.muted
                   }
@@ -311,11 +311,11 @@ const styles = StyleSheet.create({
   // Info box
   infoBox: {
     flexDirection: "row",
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
     borderRadius: radius.lg,
     padding: 14,
     borderWidth: 1,
-    borderColor: "#93C5FD",
+    borderColor: "rgba(59,130,246,0.30)",
     gap: 10,
     marginBottom: 20,
   },
@@ -459,11 +459,11 @@ const styles = StyleSheet.create({
   },
   urgencyChipNormalActive: {
     borderColor: colors.primary,
-    backgroundColor: "#eff6ff",
+    backgroundColor: "rgba(59,130,246,0.14)",
   },
   urgencyChipUrgentActive: {
-    borderColor: "#d97706",
-    backgroundColor: "#fffbeb",
+    borderColor: "rgba(251,191,36,0.30)",
+    backgroundColor: "rgba(251,191,36,0.12)",
   },
   urgencyChipText: {
     fontSize: 15,
@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
     color: colors.primary,
   },
   urgentText: {
-    color: "#d97706",
+    color: "#FCD34D",
   },
 
   // Submit

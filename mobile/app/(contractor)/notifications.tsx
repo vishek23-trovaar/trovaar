@@ -17,21 +17,21 @@ import { colors, typography, spacing, radius, shadows, getCategoryIcon } from ".
 const COLORS = {
   primary: colors.primary,
   primaryLight: colors.primaryLight,
-  primaryBg: "#DBEAFE",
+  primaryBg: "rgba(59,130,246,0.14)",
   secondary: colors.text,
   muted: colors.muted,
-  mutedLight: "#94a3b8",
+  mutedLight: "#8A8F98",
   surface: colors.surface,
   border: colors.border,
   white: colors.white,
   success: colors.success,
-  successBg: "#f0fdf4",
+  successBg: "rgba(52,211,153,0.14)",
   warning: colors.warning,
-  warningBg: "#fffbeb",
+  warningBg: "rgba(251,191,36,0.12)",
   danger: colors.danger,
-  dangerBg: "#fef2f2",
-  purple: "#7c3aed",
-  purpleBg: "#f5f3ff",
+  dangerBg: "rgba(248,113,113,0.15)",
+  purple: "#818CF8",
+  purpleBg: "rgba(129,140,248,0.16)",
   unreadBg: "#DBEAFE",
 };
 
@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
   },
   separatorLine: {
     height: 1,
-    backgroundColor: "#f1f5f9",
+    backgroundColor: "#1A1B1F",
   },
   empty: {
     alignItems: "center",

@@ -43,7 +43,7 @@ function SettingsRow({ icon, label, onPress, rightElement, isLast, danger }: Set
       disabled={!onPress && !rightElement}
     >
       <View style={styles.settingsRowLeft}>
-        <View style={[styles.settingsIconWrap, danger && { backgroundColor: "#FEE2E2" }]}>
+        <View style={[styles.settingsIconWrap, danger && { backgroundColor: "rgba(248,113,113,0.15)" }]}>
           <Ionicons name={icon} size={20} color={danger ? colors.danger : colors.primary} />
         </View>
         <Text style={[styles.settingsLabel, danger && { color: colors.danger }]}>{label}</Text>
@@ -287,11 +287,11 @@ export default function ClientProfile() {
             <Ionicons
               name={phoneVerified ? "checkmark-circle" : "alert-circle-outline"}
               size={20}
-              color={phoneVerified ? colors.success : "#d97706"}
+              color={phoneVerified ? colors.success : "#FCD34D"}
             />
             <Text style={styles.verificationLabel}>Phone Verification</Text>
             <View style={[styles.verificationBadge, phoneVerified ? styles.verificationBadgeVerified : styles.verificationBadgePending]}>
-              <Text style={[styles.verificationBadgeText, phoneVerified ? { color: colors.success } : { color: "#d97706" }]}>
+              <Text style={[styles.verificationBadgeText, phoneVerified ? { color: colors.success } : { color: "#FCD34D" }]}>
                 {phoneVerified ? "Verified" : "Pending"}
               </Text>
             </View>
@@ -478,7 +478,7 @@ const styles = StyleSheet.create({
   profileEmail: { fontSize: 14, color: colors.muted, marginBottom: 12 },
   badgeRow: { flexDirection: "row", gap: 8, marginBottom: 8 },
   clientBadge: {
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
     paddingHorizontal: 14, paddingVertical: 5,
     borderRadius: 20,
   },
@@ -494,7 +494,7 @@ const styles = StyleSheet.create({
   },
   infoCard: {
     flex: 1,
-    backgroundColor: "#f8fafc",
+    backgroundColor: "#08090A",
     borderRadius: radius.lg,
     padding: 14,
     alignItems: "center",
@@ -518,7 +518,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 3,
     marginTop: 4,
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
     paddingHorizontal: 10,
     paddingVertical: 3,
     borderRadius: radius.md,
@@ -557,10 +557,10 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
   },
   verificationBadgeVerified: {
-    backgroundColor: "#D1FAE5",
+    backgroundColor: "rgba(52,211,153,0.14)",
   },
   verificationBadgePending: {
-    backgroundColor: "#FEF3C7",
+    backgroundColor: "rgba(251,191,36,0.12)",
   },
   verificationBadgeText: {
     fontSize: 12,
@@ -568,7 +568,7 @@ const styles = StyleSheet.create({
   },
   verifyBtn: {
     marginTop: 10,
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
     paddingVertical: 10,
     borderRadius: radius.md,
     alignItems: "center",
@@ -612,7 +612,7 @@ const styles = StyleSheet.create({
   settingsRowLeft: { flexDirection: "row", alignItems: "center", flex: 1 },
   settingsIconWrap: {
     width: 32, height: 32, borderRadius: radius.md,
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
     justifyContent: "center", alignItems: "center",
     marginRight: 12,
   },

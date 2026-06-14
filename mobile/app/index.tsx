@@ -4,16 +4,12 @@ import {
   Text,
   StyleSheet,
   Animated,
-  Dimensions,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/lib/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
-import { colors, spacing } from "../lib/theme";
-
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+import { spacing } from "../lib/theme";
 
 export default function Index() {
   const { user, loading } = useAuth();
@@ -123,19 +119,6 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
-      {/* Background gradient matching web hero */}
-      <LinearGradient
-        colors={["#0F172A", "#131D35", "#0F172A"]}
-        style={StyleSheet.absoluteFill}
-      />
-
-      {/* Subtle grid overlay for depth */}
-      <View style={styles.gridOverlay} />
-
-      {/* Glow effect behind logo */}
-      <View style={styles.glowOuter} />
-      <View style={styles.glowInner} />
-
       {/* Main content */}
       <View style={styles.content}>
         <Animated.View
@@ -147,16 +130,11 @@ export default function Index() {
             },
           ]}
         >
-          {/* Icon badge */}
+          {/* Icon badge — flat blue accent square (Linear) */}
           <Animated.View
             style={[styles.iconBadge, { transform: [{ scale: pulseAnim }] }]}
           >
-            <LinearGradient
-              colors={["#2563EB", "#1D4ED8"]}
-              style={styles.iconGradient}
-            >
-              <Ionicons name="construct" size={28} color="#FFFFFF" />
-            </LinearGradient>
+            <Ionicons name="construct" size={28} color="#FFFFFF" />
           </Animated.View>
 
           {/* Brand name */}
@@ -193,32 +171,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0F172A",
-  },
-  gridOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    opacity: 0.03,
-    // Simulated grid via border
-  },
-  glowOuter: {
-    position: "absolute",
-    width: 300,
-    height: 300,
-    borderRadius: 150,
-    backgroundColor: "#2563EB",
-    opacity: 0.06,
-    top: SCREEN_HEIGHT * 0.3 - 150,
-    left: SCREEN_WIDTH * 0.5 - 150,
-  },
-  glowInner: {
-    position: "absolute",
-    width: 180,
-    height: 180,
-    borderRadius: 90,
-    backgroundColor: "#7C3AED",
-    opacity: 0.05,
-    top: SCREEN_HEIGHT * 0.3 - 90,
-    left: SCREEN_WIDTH * 0.5 - 90,
+    backgroundColor: "#010102",
   },
   content: {
     flex: 1,
@@ -233,37 +186,28 @@ const styles = StyleSheet.create({
   iconBadge: {
     width: 64,
     height: 64,
-    borderRadius: 20,
+    borderRadius: 16,
     marginBottom: 20,
-    shadowColor: "#2563EB",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.4,
-    shadowRadius: 20,
-    elevation: 12,
-  },
-  iconGradient: {
-    width: 64,
-    height: 64,
-    borderRadius: 20,
+    backgroundColor: "#3B82F6",
     alignItems: "center",
     justifyContent: "center",
   },
   brand: {
     fontSize: 42,
     fontWeight: "800",
-    color: "#FFFFFF",
-    letterSpacing: -1,
+    color: "#F7F8F8",
+    letterSpacing: -1.6,
   },
   tagline: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#94A3B8",
+    color: "#8A8F98",
     textAlign: "center",
     lineHeight: 24,
-    letterSpacing: 0.2,
+    letterSpacing: -0.2,
   },
   taglineAccent: {
-    color: "#818CF8",
+    color: "#60A5FA",
     fontWeight: "700",
   },
   footer: {
@@ -280,20 +224,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 999,
-    backgroundColor: "rgba(255,255,255,0.05)",
+    backgroundColor: "#18191B",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.08)",
+    borderColor: "#23252A",
   },
   liveDot: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "#10B981",
+    backgroundColor: "#4ADE80",
   },
   liveText: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#64748B",
-    letterSpacing: 0.3,
+    color: "#8A8F98",
+    letterSpacing: 0.2,
   },
 });

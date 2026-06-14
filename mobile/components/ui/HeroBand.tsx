@@ -1,17 +1,15 @@
 import React from "react";
 import { View, Text, StyleSheet, StyleProp, ViewStyle, Animated, Easing, Platform } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { gradients, glass } from "../../lib/theme";
 
 // Accent color for inline headline highlights (the "every skilled trade" phrase).
-// A solid bright indigo reads as a premium highlight on midnight and — unlike
-// SVG gradient text — wraps naturally and needs no manual width measurement.
-export const ACCENT_HIGHLIGHT = "#93C5FD";
+// Linear's bright-blue accent, used sparingly on the deepest band.
+export const ACCENT_HIGHLIGHT = "#60A5FA";
 
 /**
- * The signature midnight-gradient brand surface (see DESIGN.md `hero-band`).
- * Used on auth screens and as dashboard header bands. Renders the 135° midnight
- * gradient with a soft blue glow.
+ * The brand header band (see DESIGN.md `hero-band`). In Linear there are no
+ * gradients or glows — this is a flat near-black charcoal surface separated
+ * from the content below by a single hairline border. Used on auth screens and
+ * as dashboard header bands.
  */
 export function HeroBand({
   children,
@@ -23,29 +21,23 @@ export function HeroBand({
   compact?: boolean;
 }) {
   return (
-    <LinearGradient
-      colors={(compact ? gradients.midnightCompact : gradients.midnight) as readonly [string, string, ...string[]]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={[styles.band, style]}
-    >
-      <View pointerEvents="none" style={styles.glow} />
+    <View style={[styles.band, compact && styles.bandCompact, style]}>
       {children}
-    </LinearGradient>
+    </View>
   );
 }
 
 /**
- * The "Live marketplace — pros bidding now" eyebrow with a pulsing green dot.
- * Trovaar's real-time signal.
+ * The "Live marketplace — pros bidding now" eyebrow with a pulsing green dot —
+ * Trovaar's real-time signal. The chip is a solid charcoal pill with a hairline
+ * border (no glass).
  */
 export function LiveEyebrow({ label = "Live marketplace — pros bidding now" }: { label?: string }) {
   const pulse = React.useRef(new Animated.Value(0)).current;
 
   React.useEffect(() => {
     // Skip the infinite pulse on web — RN-web can't use the native driver, so
-    // the JS-thread loop pegs the renderer (and infinite animations are poor
-    // web citizens). Native gets the full ping animation.
+    // the JS-thread loop pegs the renderer. Native gets the full ping.
     if (Platform.OS === "web") return;
     const loop = Animated.loop(
       Animated.sequence([
@@ -75,24 +67,21 @@ export function LiveEyebrow({ label = "Live marketplace — pros bidding now" }:
 
 const styles = StyleSheet.create({
   band: {
+    backgroundColor: "#0f1011",
+    borderBottomWidth: 1,
+    borderBottomColor: "#23252a",
     overflow: "hidden",
   },
-  glow: {
-    position: "absolute",
-    top: -120,
-    left: -60,
-    width: 360,
-    height: 360,
-    borderRadius: 180,
-    backgroundColor: "rgba(59,130,246,0.12)",
+  bandCompact: {
+    backgroundColor: "#0f1011",
   },
   eyebrow: {
     flexDirection: "row",
     alignItems: "center",
     alignSelf: "flex-start",
-    backgroundColor: glass.fill,
+    backgroundColor: "#18191b",
     borderWidth: 1,
-    borderColor: glass.border,
+    borderColor: "#23252a",
     borderRadius: 999,
     paddingHorizontal: 12,
     paddingVertical: 6,
@@ -118,8 +107,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#4ade80",
   },
   eyebrowText: {
-    color: "#e2e8f0",
+    color: "#c9cdd3",
     fontSize: 12,
     fontWeight: "600",
+    letterSpacing: -0.1,
   },
 });

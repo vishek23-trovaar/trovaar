@@ -26,13 +26,13 @@ interface Notification {
 }
 
 const NOTIF_ICONS: Record<string, { name: keyof typeof Ionicons.glyphMap; color: string; bg: string }> = {
-  new_bid: { name: "pricetag-outline", color: "#7c3aed", bg: "#f5f3ff" },
+  new_bid: { name: "pricetag-outline", color: "#93C5FD", bg: "rgba(129,140,248,0.16)" },
   bid_accepted: { name: "checkmark-circle-outline", color: colors.success, bg: "#D1FAE5" },
   job_completed: { name: "trophy-outline", color: colors.success, bg: "#D1FAE5" },
   payment_released: { name: "wallet-outline", color: colors.success, bg: "#D1FAE5" },
-  dispute_opened: { name: "warning-outline", color: colors.danger, bg: "#FEE2E2" },
-  message_received: { name: "chatbubble-outline", color: colors.primaryLight, bg: "#DBEAFE" },
-  review_received: { name: "star-outline", color: colors.warning, bg: "#FEF3C7" },
+  dispute_opened: { name: "warning-outline", color: colors.danger, bg: "rgba(248,113,113,0.15)" },
+  message_received: { name: "chatbubble-outline", color: colors.primaryLight, bg: "rgba(59,130,246,0.14)" },
+  review_received: { name: "star-outline", color: colors.warning, bg: "rgba(251,191,36,0.12)" },
 };
 
 function getNotifIcon(type: string) {
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   rowUnread: {
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
   },
   iconCircle: {
     width: 44,
@@ -274,7 +274,7 @@ const styles = StyleSheet.create({
   },
   separatorLine: {
     height: 1,
-    backgroundColor: "#f1f5f9",
+    backgroundColor: "#1A1B1F",
   },
   empty: {
     alignItems: "center",
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: 36,
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 16,

@@ -226,7 +226,7 @@ export default function DisputeScreen() {
               styles.textAreaError,
           ]}
           placeholder="Describe what happened..."
-          placeholderTextColor="#94a3b8"
+          placeholderTextColor="#8A8F98"
           value={description}
           onChangeText={setDescription}
           multiline
@@ -393,7 +393,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   reasonRowSelected: {
-    backgroundColor: "#eff6ff",
+    backgroundColor: "rgba(59,130,246,0.14)",
   },
   radioOuter: {
     width: 20,
@@ -457,11 +457,11 @@ const styles = StyleSheet.create({
   // Info box
   infoBox: {
     flexDirection: "row",
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
     borderRadius: radius.lg,
     padding: 14,
     borderWidth: 1,
-    borderColor: "#93C5FD",
+    borderColor: "rgba(59,130,246,0.30)",
     gap: 10,
     marginBottom: 28,
   },
@@ -509,7 +509,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: "#f0fdf4",
+    backgroundColor: "rgba(52,211,153,0.14)",
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 24,

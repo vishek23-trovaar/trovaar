@@ -42,16 +42,20 @@ const styles = StyleSheet.create({
   tab: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 100,
-    backgroundColor: "#f1f5f9",
+    borderRadius: 999,
+    backgroundColor: "#121316",
+    borderWidth: 1,
+    borderColor: "#23252a",
   },
   tabActive: {
-    backgroundColor: "#2563eb",
+    backgroundColor: "#3b82f6",
+    borderColor: "#3b82f6",
   },
   tabText: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#64748b",
+    color: "#8a8f98",
+    letterSpacing: -0.1,
   },
   tabTextActive: {
     color: "#ffffff",

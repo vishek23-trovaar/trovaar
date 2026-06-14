@@ -263,7 +263,7 @@ export default function Tax() {
               </View>
 
               <View style={styles.summaryCard}>
-                <View style={[styles.summaryCardIcon, { backgroundColor: "#fef2f2" }]}>
+                <View style={[styles.summaryCardIcon, { backgroundColor: "rgba(248,113,113,0.15)" }]}>
                   <Ionicons name="remove-circle-outline" size={20} color={COLORS.danger} />
                 </View>
                 <Text style={styles.summaryCardLabel}>Platform Fees</Text>
@@ -273,7 +273,7 @@ export default function Tax() {
               </View>
 
               <View style={styles.summaryCard}>
-                <View style={[styles.summaryCardIcon, { backgroundColor: "#f0fdf4" }]}>
+                <View style={[styles.summaryCardIcon, { backgroundColor: "rgba(52,211,153,0.14)" }]}>
                   <Ionicons name="wallet-outline" size={20} color={COLORS.success} />
                 </View>
                 <Text style={styles.summaryCardLabel}>Net Earnings</Text>
@@ -286,7 +286,7 @@ export default function Tax() {
                 <View
                   style={[
                     styles.summaryCardIcon,
-                    { backgroundColor: on1099Track ? "#fffbeb" : "#f0fdf4" },
+                    { backgroundColor: on1099Track ? "rgba(251,191,36,0.12)" : "rgba(52,211,153,0.14)" },
                   ]}
                 >
                   <Ionicons
@@ -441,7 +441,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1.5,
     borderColor: COLORS.border,
-    backgroundColor: "#fff",
+    backgroundColor: "#121316",
   },
   yearChipActive: {
     backgroundColor: COLORS.primary,
@@ -519,11 +519,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 8,
     marginBottom: 4,
-    backgroundColor: "#fffbeb",
+    backgroundColor: "rgba(251,191,36,0.12)",
     borderRadius: 16,
     padding: 12,
     borderWidth: 1,
-    borderColor: "#fde68a",
+    borderColor: "rgba(251,191,36,0.30)",
   },
   infoNoteText: {
     flex: 1,

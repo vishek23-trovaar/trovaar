@@ -24,23 +24,23 @@ const COLORS = {
   surface: colors.surface,
   border: colors.border,
   success: colors.success,
-  successLight: "#ecfdf5",
+  successLight: "rgba(52,211,153,0.14)",
   danger: colors.danger,
-  dangerLight: "#fef2f2",
+  dangerLight: "rgba(248,113,113,0.15)",
   white: colors.white,
   warning: colors.warning,
-  warningBg: "#fffbeb",
+  warningBg: "rgba(251,191,36,0.12)",
 };
 
 const QUIZ_CATEGORIES = [
   { id: "plumbing", label: "Plumbing", icon: "water-outline" as const, color: "#0ea5e9" },
-  { id: "electrical", label: "Electrical", icon: "flash-outline" as const, color: "#f59e0b" },
-  { id: "hvac", label: "HVAC", icon: "snow-outline" as const, color: "#6366f1" },
+  { id: "electrical", label: "Electrical", icon: "flash-outline" as const, color: "#FCD34D" },
+  { id: "hvac", label: "HVAC", icon: "snow-outline" as const, color: "#93C5FD" },
   { id: "painting", label: "Painting", icon: "color-palette-outline" as const, color: "#ec4899" },
-  { id: "carpentry", label: "Carpentry", icon: "hammer-outline" as const, color: "#d97706" },
-  { id: "roofing", label: "Roofing", icon: "home-outline" as const, color: "#64748b" },
+  { id: "carpentry", label: "Carpentry", icon: "hammer-outline" as const, color: "#FCD34D" },
+  { id: "roofing", label: "Roofing", icon: "home-outline" as const, color: "#8A8F98" },
   { id: "landscaping", label: "Landscaping", icon: "leaf-outline" as const, color: "#22c55e" },
-  { id: "general", label: "General Repair", icon: "construct-outline" as const, color: "#8b5cf6" },
+  { id: "general", label: "General Repair", icon: "construct-outline" as const, color: "#93C5FD" },
 ];
 
 interface Question {
@@ -76,7 +76,7 @@ function SkeletonLoader() {
   return (
     <Animated.View style={{ padding: 20, opacity }}>
       {[1, 2, 3, 4].map((i) => (
-        <View key={i} style={{ backgroundColor: "#e2e8f0", height: 100, borderRadius: 16, marginBottom: 12 }} />
+        <View key={i} style={{ backgroundColor: "#1A1B1F", height: 100, borderRadius: 16, marginBottom: 12 }} />
       ))}
     </Animated.View>
   );
@@ -471,16 +471,16 @@ const styles = StyleSheet.create({
   // Info card
   infoCard: {
     flexDirection: "row",
-    backgroundColor: "#eff6ff",
+    backgroundColor: "rgba(59,130,246,0.14)",
     borderRadius: 14,
     padding: 16,
     gap: 12,
     marginBottom: 24,
     borderWidth: 1,
-    borderColor: "#bfdbfe",
+    borderColor: "rgba(59,130,246,0.30)",
   },
   infoCardTitle: { fontSize: 14, fontWeight: "700", color: COLORS.primaryDark, marginBottom: 2 },
-  infoCardDesc: { fontSize: 13, color: "#475569", lineHeight: 18 },
+  infoCardDesc: { fontSize: 13, color: "#8A8F98", lineHeight: 18 },
 
   sectionTitle: { fontSize: 18, fontWeight: "700", color: COLORS.secondary, marginBottom: 14 },
 
@@ -559,7 +559,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: COLORS.border,
   },
-  optionCardSelected: { borderColor: COLORS.primary, backgroundColor: "#eff6ff" },
+  optionCardSelected: { borderColor: COLORS.primary, backgroundColor: "rgba(59,130,246,0.14)" },
   optionLetter: {
     width: 36,
     height: 36,
@@ -656,11 +656,11 @@ const styles = StyleSheet.create({
     gap: 12,
     marginBottom: 24,
     borderWidth: 1,
-    borderColor: "#fde68a",
+    borderColor: "rgba(251,191,36,0.30)",
     alignSelf: "stretch",
   },
   cooldownTitle: { fontSize: 14, fontWeight: "700", color: COLORS.warning, marginBottom: 2 },
-  cooldownText: { fontSize: 13, color: "#92400e", lineHeight: 18 },
+  cooldownText: { fontSize: 13, color: "#FCD34D", lineHeight: 18 },
 
   backToCategoriesBtn: {
     flexDirection: "row",

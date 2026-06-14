@@ -126,7 +126,7 @@ export default function ReviewScreen() {
                 key={i}
                 name={i <= rating ? "star" : "star-outline"}
                 size={28}
-                color={i <= rating ? "#f59e0b" : "#d1d5db"}
+                color={i <= rating ? "#FBBF24" : "#3A3A40"}
               />
             ))}
           </View>
@@ -178,7 +178,7 @@ export default function ReviewScreen() {
             <Text style={styles.contractorName}>{contractor.contractor_name || "Contractor"}</Text>
             {contractor.contractor_rating > 0 && (
               <View style={styles.existingRating}>
-                <Ionicons name="star" size={14} color="#f59e0b" />
+                <Ionicons name="star" size={14} color="#FCD34D" />
                 <Text style={styles.existingRatingText}>
                   {contractor.contractor_rating.toFixed(1)} average rating
                 </Text>
@@ -201,7 +201,7 @@ export default function ReviewScreen() {
                 <Ionicons
                   name={i <= rating ? "star" : "star-outline"}
                   size={44}
-                  color={i <= rating ? "#f59e0b" : "#d1d5db"}
+                  color={i <= rating ? "#FBBF24" : "#3A3A40"}
                 />
               </TouchableOpacity>
             ))}
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
   },
   contractorAvatar: {
-    width: 64, height: 64, borderRadius: 32, backgroundColor: "#DBEAFE",
+    width: 64, height: 64, borderRadius: 32, backgroundColor: "rgba(59,130,246,0.14)",
     justifyContent: "center", alignItems: "center", marginBottom: 12,
   },
   contractorAvatarText: { fontSize: 26, fontWeight: "700", color: colors.primary },

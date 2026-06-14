@@ -380,7 +380,7 @@ export default function TemplatesScreen() {
                 <View
                   style={[
                     styles.categoryBadge,
-                    { backgroundColor: "#DBEAFE" },
+                    { backgroundColor: "rgba(59,130,246,0.14)" },
                   ]}
                 >
                   <Text style={[styles.categoryBadgeText, { color: colors.primary }]}>
@@ -707,7 +707,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
     borderWidth: 1.5,
     borderColor: colors.primary,
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
   },
   editBtnText: {
     fontSize: 14,
@@ -742,7 +742,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 24,
@@ -879,7 +879,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.border,
   },
   pickerOptionActive: {
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
   },
   pickerOptionEmoji: { fontSize: 16 },
   pickerOptionText: {

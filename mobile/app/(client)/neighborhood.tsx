@@ -31,17 +31,17 @@ const CATEGORIES = [
 ];
 
 const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
-  Plumbing:         { bg: "#eff6ff", text: "#2563eb" },
+  Plumbing:         { bg: "rgba(59,130,246,0.14)", text: "#93C5FD" },
   Electrical:       { bg: "#fefce8", text: "#ca8a04" },
-  Landscaping:      { bg: "#f0fdf4", text: "#16a34a" },
+  Landscaping:      { bg: "rgba(52,211,153,0.14)", text: "#6EE7B7" },
   Cleaning:         { bg: "#f0f9ff", text: "#0284c7" },
   Painting:         { bg: "#fdf4ff", text: "#9333ea" },
   HVAC:             { bg: "#fff7ed", text: "#ea580c" },
-  Carpentry:        { bg: "#fdf6ec", text: "#b45309" },
-  Moving:           { bg: "#f5f3ff", text: "#7c3aed" },
-  "Pest Control":   { bg: "#fef2f2", text: "#dc2626" },
-  "General Handyman": { bg: "#f8fafc", text: "#475569" },
-  Other:            { bg: "#f8fafc", text: "#64748b" },
+  Carpentry:        { bg: "#fdf6ec", text: "#FCD34D" },
+  Moving:           { bg: "rgba(129,140,248,0.16)", text: "#A5B4FC" },
+  "Pest Control":   { bg: "rgba(248,113,113,0.15)", text: "#FCA5A5" },
+  "General Handyman": { bg: "rgba(138,143,152,0.14)", text: "#C0C4CC" },
+  Other:            { bg: "rgba(138,143,152,0.14)", text: "#C0C4CC" },
 };
 
 const CATEGORY_ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
-    backgroundColor: "#D1FAE5",
+    backgroundColor: "rgba(52,211,153,0.14)",
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: radius.lg,
@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     gap: 8,
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderBottomWidth: StyleSheet.hairlineWidth,
@@ -456,7 +456,7 @@ const styles = StyleSheet.create({
   },
   demoBadge: {
     alignSelf: "flex-start",
-    backgroundColor: "#fef9c3",
+    backgroundColor: "rgba(251,191,36,0.12)",
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 6,
@@ -465,7 +465,7 @@ const styles = StyleSheet.create({
   demoBadgeText: {
     fontSize: 10,
     fontWeight: "700",
-    color: "#a16207",
+    color: "#FCD34D",
     textTransform: "uppercase",
     letterSpacing: 0.5,
   },

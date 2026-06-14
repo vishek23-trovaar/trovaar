@@ -29,7 +29,7 @@ const COLORS = {
   success: colors.success,
   danger: colors.danger,
   warning: colors.warning,
-  star: "#f59e0b",
+  star: "#FBBF24",
 };
 
 const AVATAR_COLORS = [
@@ -592,7 +592,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1.5,
     borderColor: COLORS.border,
-    backgroundColor: "#fff",
+    backgroundColor: "#121316",
   },
   filterTabActive: {
     backgroundColor: COLORS.primary,
@@ -816,7 +816,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     fontSize: 15,
     color: COLORS.text,
-    backgroundColor: "#fff",
+    backgroundColor: "#121316",
     marginBottom: 12,
   },
   textArea: {

@@ -14,7 +14,6 @@ import {
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
@@ -408,14 +407,9 @@ export default function ChatThread() {
             {/* Bubble */}
             <View style={styles.bubbleColumn}>
               {isMine ? (
-                <LinearGradient
-                  colors={["#2563EB", "#1D4ED8"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={[styles.bubble, bubbleRadius]}
-                >
+                <View style={[styles.bubble, bubbleRadius, { backgroundColor: "#3B82F6" }]}>
                   <Text style={styles.bubbleTextMine}>{msg.content}</Text>
-                </LinearGradient>
+                </View>
               ) : (
                 <View style={[styles.bubble, styles.bubbleTheirs, bubbleRadius]}>
                   <Text style={styles.bubbleTextTheirs}>{msg.content}</Text>
@@ -733,7 +727,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   bubbleTheirs: {
-    backgroundColor: "#F1F5F9",
+    backgroundColor: "#1A1B1F",
   },
   bubbleTextMine: {
     fontSize: 15,
@@ -778,7 +772,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: "#EFF6FF",
+    backgroundColor: "rgba(59,130,246,0.14)",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,
@@ -811,7 +805,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
-    backgroundColor: "#F1F5F9",
+    backgroundColor: "#1A1B1F",
     borderRadius: 24,
     paddingHorizontal: 18,
     paddingTop: Platform.OS === "ios" ? 12 : 10,

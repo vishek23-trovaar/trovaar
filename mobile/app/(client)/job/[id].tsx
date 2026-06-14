@@ -25,19 +25,19 @@ import { colors, typography, spacing, radius, shadows, getStatusColor, getUrgenc
 
 
 const URGENCY_COLORS: Record<string, string> = {
-  low: "#64748b",
-  medium: "#2563eb",
-  high: "#d97706",
-  emergency: "#dc2626",
+  low: "#8A8F98",
+  medium: "#3B82F6",
+  high: "#FBBF24",
+  emergency: "#F87171",
 };
 
 const STATUS_COLORS: Record<string, string> = {
-  posted: "#2563eb",
-  bidding: "#7c3aed",
-  accepted: "#059669",
-  in_progress: "#d97706",
-  completed: "#16a34a",
-  cancelled: "#dc2626",
+  posted: "#3B82F6",
+  bidding: "#818CF8",
+  accepted: "#34D399",
+  in_progress: "#FBBF24",
+  completed: "#34D399",
+  cancelled: "#F87171",
 };
 
 const CATEGORY_EMOJIS: Record<string, string> = {
@@ -119,7 +119,7 @@ function renderStars(rating: number | undefined) {
         key={i}
         name={i <= r ? "star" : i - 0.5 <= r ? "star-half" : "star-outline"}
         size={14}
-        color={i <= r ? "#f59e0b" : "#d1d5db"}
+        color={i <= r ? "#FBBF24" : "#3A3A40"}
       />
     );
   }
@@ -140,7 +140,7 @@ function StarRatingInput({
           <Ionicons
             name={i <= rating ? "star" : "star-outline"}
             size={32}
-            color={i <= rating ? "#f59e0b" : "#d1d5db"}
+            color={i <= rating ? "#FBBF24" : "#3A3A40"}
           />
         </TouchableOpacity>
       ))}
@@ -703,7 +703,7 @@ export default function JobDetailScreen() {
                 {(priceEstimate || priceEstLoading) && (
                   <View style={styles.aiCard}>
                     <View style={styles.aiCardHeader}>
-                      <Ionicons name="sparkles" size={18} color={"#7c3aed"} />
+                      <Ionicons name="sparkles" size={18} color={"#93C5FD"} />
                       <Text style={styles.aiCardTitle}>AI Price Estimate</Text>
                     </View>
                     {priceEstLoading ? (
@@ -814,7 +814,7 @@ export default function JobDetailScreen() {
                     <TextInput
                       style={styles.reviewInput}
                       placeholder="Share your experience (optional)..."
-                      placeholderTextColor="#94a3b8"
+                      placeholderTextColor="#8A8F98"
                       value={reviewComment}
                       onChangeText={setReviewComment}
                       multiline
@@ -915,7 +915,7 @@ export default function JobDetailScreen() {
                 <View style={[styles.bidCard, isAccepted && styles.bidCardAccepted]}>
                   {isAccepted && (
                     <View style={styles.acceptedBanner}>
-                      <Ionicons name="checkmark-circle" size={14} color="#059669" />
+                      <Ionicons name="checkmark-circle" size={14} color="#6EE7B7" />
                       <Text style={styles.acceptedBannerText}>Accepted</Text>
                     </View>
                   )}
@@ -945,12 +945,12 @@ export default function JobDetailScreen() {
                           matchScore >= 50 ? styles.matchBadgeMed : styles.matchBadgeLow,
                         ]}>
                           <Ionicons name="sparkles" size={10} color={
-                            matchScore >= 80 ? "#059669" : matchScore >= 50 ? "#d97706" : "#64748b"
+                            matchScore >= 80 ? "#6EE7B7" : matchScore >= 50 ? "#FCD34D" : "#8A8F98"
                           } />
                           <Text style={[
                             styles.matchBadgeText,
-                            matchScore >= 80 ? { color: "#059669" } :
-                            matchScore >= 50 ? { color: "#d97706" } : { color: "#64748b" },
+                            matchScore >= 80 ? { color: "#6EE7B7" } :
+                            matchScore >= 50 ? { color: "#FCD34D" } : { color: "#8A8F98" },
                           ]}>
                             {matchScore}% match
                           </Text>
@@ -992,7 +992,7 @@ export default function JobDetailScreen() {
             }}
             ListEmptyComponent={
               <View style={styles.emptyTab}>
-                <Ionicons name="people-outline" size={40} color="#d1d5db" />
+                <Ionicons name="people-outline" size={40} color="#3A3A40" />
                 <Text style={styles.emptyTabText}>No bids yet</Text>
                 <Text style={styles.emptyTabSub}>Contractors will start bidding soon</Text>
               </View>
@@ -1026,7 +1026,7 @@ export default function JobDetailScreen() {
             }}
             ListEmptyComponent={
               <View style={styles.emptyTab}>
-                <Ionicons name="chatbubble-outline" size={40} color="#d1d5db" />
+                <Ionicons name="chatbubble-outline" size={40} color="#3A3A40" />
                 <Text style={styles.emptyTabText}>No messages yet</Text>
                 <Text style={styles.emptyTabSub}>Start a conversation about this job</Text>
               </View>
@@ -1036,7 +1036,7 @@ export default function JobDetailScreen() {
             <TextInput
               style={styles.msgTextInput}
               placeholder="Type a message..."
-              placeholderTextColor="#94a3b8"
+              placeholderTextColor="#8A8F98"
               value={msgText}
               onChangeText={setMsgText}
               multiline
@@ -1099,7 +1099,7 @@ export default function JobDetailScreen() {
 
           {(job.status === "posted" || job.status === "bidding") && (
             <TouchableOpacity style={styles.cancelBtn} onPress={cancelJob}>
-              <Ionicons name="close-circle-outline" size={20} color="#dc2626" />
+              <Ionicons name="close-circle-outline" size={20} color="#F87171" />
               <Text style={styles.cancelBtnText}>Cancel Job</Text>
             </TouchableOpacity>
           )}
@@ -1144,7 +1144,7 @@ export default function JobDetailScreen() {
             <TextInput
               style={styles.disputeInput}
               placeholder="Provide additional details..."
-              placeholderTextColor="#94a3b8"
+              placeholderTextColor="#8A8F98"
               value={disputeDescription}
               onChangeText={setDisputeDescription}
               multiline
@@ -1221,7 +1221,7 @@ const styles = StyleSheet.create({
   infoText: { fontSize: 12, color: colors.muted },
   urgencyDot: { width: 8, height: 8, borderRadius: 4 },
 
-  description: { fontSize: 14, color: "#475569", lineHeight: 21, marginTop: 6 },
+  description: { fontSize: 14, color: "#8A8F98", lineHeight: 21, marginTop: 6 },
 
   // Photos
   photoScroll: { marginTop: 12 },
@@ -1229,19 +1229,19 @@ const styles = StyleSheet.create({
 
   // Surge Banner
   surgeBanner: {
-    backgroundColor: "#FEF3C7",
+    backgroundColor: "rgba(251,191,36,0.12)",
     marginHorizontal: 16,
     marginTop: 12,
     borderRadius: radius.lg,
     padding: 14,
     borderWidth: 1.5,
-    borderColor: "#fde68a",
+    borderColor: "rgba(251,191,36,0.30)",
   },
   surgeRow: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 4 },
   surgeTitle: { fontSize: 15, fontWeight: "700", color: colors.warning, flex: 1 },
-  surgeMultiplier: { backgroundColor: "#fde68a", paddingHorizontal: 10, paddingVertical: 3, borderRadius: radius.lg },
-  surgeMultiplierText: { fontSize: 13, fontWeight: "800", color: "#92400e" },
-  surgeMessage: { fontSize: 13, color: "#92400e", lineHeight: 19 },
+  surgeMultiplier: { backgroundColor: "rgba(251,191,36,0.12)", paddingHorizontal: 10, paddingVertical: 3, borderRadius: radius.lg },
+  surgeMultiplierText: { fontSize: 13, fontWeight: "800", color: "#FCD34D" },
+  surgeMessage: { fontSize: 13, color: "#FCD34D", lineHeight: 19 },
 
   // Status Timeline
   timelineCard: {
@@ -1275,7 +1275,7 @@ const styles = StyleSheet.create({
 
   // AI Card
   aiCard: {
-    backgroundColor: "#f5f3ff",
+    backgroundColor: "#16181C",
     marginHorizontal: 16,
     marginTop: 12,
     borderRadius: radius.xl,
@@ -1284,7 +1284,7 @@ const styles = StyleSheet.create({
     borderColor: "#ddd6fe",
   },
   aiCardHeader: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 10 },
-  aiCardTitle: { fontSize: 15, fontWeight: "700", color: "#7c3aed" },
+  aiCardTitle: { fontSize: 15, fontWeight: "700", color: "#93C5FD" },
   aiPriceRow: { flexDirection: "row", alignItems: "baseline", gap: 8, marginBottom: 6 },
   aiPriceRange: { fontSize: 22, fontWeight: "800", color: colors.text },
   aiPriceLabel: { fontSize: 12, color: colors.muted, fontWeight: "500" },
@@ -1292,24 +1292,24 @@ const styles = StyleSheet.create({
 
   // Escrow Trust Banner
   escrowBanner: {
-    backgroundColor: "#D1FAE5",
+    backgroundColor: "rgba(52,211,153,0.14)",
     marginHorizontal: 16,
     marginTop: 12,
     borderRadius: radius.xl,
     padding: 16,
     borderWidth: 1.5,
-    borderColor: "#a7f3d0",
+    borderColor: "rgba(52,211,153,0.30)",
   },
   escrowHeader: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 6 },
   escrowTitle: { fontSize: 16, fontWeight: "800", color: colors.success },
   escrowAmount: { fontSize: 14, color: "#065f46", marginBottom: 14, lineHeight: 20 },
   escrowTimeline: { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between" },
   escrowStep: { alignItems: "center", flex: 1, position: "relative" },
-  escrowStepDot: { width: 28, height: 28, borderRadius: radius.lg, backgroundColor: "#d1d5db", justifyContent: "center", alignItems: "center", marginBottom: 4 },
+  escrowStepDot: { width: 28, height: 28, borderRadius: radius.lg, backgroundColor: "#3A3A40", justifyContent: "center", alignItems: "center", marginBottom: 4 },
   escrowStepDotDone: { backgroundColor: colors.success },
   escrowStepLabel: { fontSize: 10, color: colors.muted, textAlign: "center", fontWeight: "500" },
   escrowStepLabelDone: { color: colors.success, fontWeight: "700" },
-  escrowStepLine: { position: "absolute", top: 14, left: "60%", right: "-40%", height: 2, backgroundColor: "#d1d5db", zIndex: -1 },
+  escrowStepLine: { position: "absolute", top: 14, left: "60%", right: "-40%", height: 2, backgroundColor: "#3A3A40", zIndex: -1 },
   escrowStepLineDone: { backgroundColor: colors.success },
   payNowBtn: {
     flexDirection: "row",
@@ -1329,13 +1329,13 @@ const styles = StyleSheet.create({
     flexDirection: "row", alignItems: "center", justifyContent: "center",
     paddingVertical: 16, borderRadius: radius.lg, gap: 8,
     backgroundColor: colors.success,
-    shadowColor: "#059669", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 6,
+    shadowColor: "#6EE7B7", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 6,
   },
   confirmReleaseBtnText: { color: colors.white, fontSize: 15, fontWeight: "700" },
   reportIssueBtn: {
     flexDirection: "row", alignItems: "center", justifyContent: "center",
     paddingVertical: 12, borderRadius: radius.lg, gap: 6,
-    borderWidth: 1.5, borderColor: "#fecaca", backgroundColor: colors.white,
+    borderWidth: 1.5, borderColor: "rgba(248,113,113,0.30)", backgroundColor: colors.white,
   },
   reportIssueBtnText: { color: colors.danger, fontSize: 14, fontWeight: "600" },
 
@@ -1358,9 +1358,9 @@ const styles = StyleSheet.create({
 
   // Review Success
   reviewSuccess: {
-    alignItems: "center", backgroundColor: "#D1FAE5",
+    alignItems: "center", backgroundColor: "rgba(52,211,153,0.14)",
     marginHorizontal: 16, marginTop: 12, borderRadius: radius.xl, padding: 24,
-    borderWidth: 1.5, borderColor: "#a7f3d0",
+    borderWidth: 1.5, borderColor: "rgba(52,211,153,0.30)",
   },
   reviewSuccessTitle: { fontSize: 18, fontWeight: "800", color: colors.success, marginTop: 8 },
   reviewSuccessSubtitle: { fontSize: 14, color: "#065f46", marginTop: 4, textAlign: "center" },
@@ -1382,7 +1382,7 @@ const styles = StyleSheet.create({
   quickActionBtn: {
     flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center",
     gap: 6, borderWidth: 1.5, borderColor: colors.primary, borderRadius: radius.md,
-    paddingVertical: 10, backgroundColor: "#DBEAFE",
+    paddingVertical: 10, backgroundColor: "rgba(59,130,246,0.14)",
   },
   quickActionText: { color: colors.primary, fontWeight: "600", fontSize: 14 },
 
@@ -1408,7 +1408,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12, paddingVertical: 5, borderRadius: radius.lg,
     backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border,
   },
-  sortChipActive: { backgroundColor: "#DBEAFE", borderColor: colors.primary },
+  sortChipActive: { backgroundColor: "rgba(59,130,246,0.14)", borderColor: colors.primary },
   sortChipText: { fontSize: 12, color: colors.muted, fontWeight: "500" },
   sortChipTextActive: { color: colors.primary, fontWeight: "600" },
 
@@ -1420,42 +1420,42 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
     borderWidth: 1.5, borderColor: colors.border,
   },
-  bidCardAccepted: { borderColor: "#059669", borderWidth: 2 },
+  bidCardAccepted: { borderColor: "rgba(52,211,153,0.30)", borderWidth: 2 },
   acceptedBanner: {
     flexDirection: "row", alignItems: "center", gap: 4, marginBottom: 10,
-    backgroundColor: "#f0fdf4", alignSelf: "flex-start",
+    backgroundColor: "rgba(52,211,153,0.14)", alignSelf: "flex-start",
     paddingHorizontal: 10, paddingVertical: 4, borderRadius: radius.lg,
   },
-  acceptedBannerText: { fontSize: 12, fontWeight: "600", color: "#059669" },
+  acceptedBannerText: { fontSize: 12, fontWeight: "600", color: "#6EE7B7" },
   bidHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 },
   bidContractor: { flexDirection: "row", alignItems: "center", gap: 10, flex: 1 },
-  bidAvatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: "#DBEAFE", justifyContent: "center", alignItems: "center" },
+  bidAvatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(59,130,246,0.14)", justifyContent: "center", alignItems: "center" },
   bidAvatarText: { fontSize: 17, fontWeight: "700", color: colors.primary },
   bidName: { fontSize: 15, fontWeight: "600", color: colors.text, marginBottom: 2 },
   ratingNum: { fontSize: 12, color: colors.muted, fontWeight: "500" },
-  bidPrice: { fontSize: 22, fontWeight: "800", color: "#059669" },
+  bidPrice: { fontSize: 22, fontWeight: "800", color: "#6EE7B7" },
   matchBadge: {
     flexDirection: "row", alignItems: "center", gap: 3,
     paddingHorizontal: 8, paddingVertical: 3, borderRadius: radius.md, marginTop: 4,
   },
-  matchBadgeHigh: { backgroundColor: "#f0fdf4" },
-  matchBadgeMed: { backgroundColor: "#FEF3C7" },
+  matchBadgeHigh: { backgroundColor: "rgba(52,211,153,0.14)" },
+  matchBadgeMed: { backgroundColor: "rgba(251,191,36,0.12)" },
   matchBadgeLow: { backgroundColor: colors.surface },
   matchBadgeText: { fontSize: 11, fontWeight: "600" },
-  bidMsg: { fontSize: 13, color: "#475569", lineHeight: 19, marginBottom: 14 },
+  bidMsg: { fontSize: 13, color: "#8A8F98", lineHeight: 19, marginBottom: 14 },
   bidFooter: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
   bidTimelineWrap: { flexDirection: "row", alignItems: "center", gap: 5 },
   bidTimeline: { fontSize: 12, color: colors.muted },
   acceptBtn: {
     flexDirection: "row", alignItems: "center",
-    backgroundColor: "#059669", paddingHorizontal: 14, paddingVertical: 9,
+    backgroundColor: "#6EE7B7", paddingHorizontal: 14, paddingVertical: 9,
     borderRadius: radius.md, gap: 4,
   },
   acceptBtnText: { color: colors.white, fontSize: 13, fontWeight: "700" },
   declineBtn: {
     flexDirection: "row", alignItems: "center",
     backgroundColor: colors.white, paddingHorizontal: 14, paddingVertical: 9,
-    borderRadius: radius.md, gap: 4, borderWidth: 1.5, borderColor: "#fecaca",
+    borderRadius: radius.md, gap: 4, borderWidth: 1.5, borderColor: "rgba(248,113,113,0.30)",
   },
   declineBtnText: { color: colors.danger, fontSize: 13, fontWeight: "600" },
 
@@ -1465,7 +1465,7 @@ const styles = StyleSheet.create({
   msgReceived: { alignSelf: "flex-start", backgroundColor: colors.border, borderBottomLeftRadius: 4 },
   msgSenderName: { fontSize: 11, fontWeight: "600", color: colors.muted, marginBottom: 2 },
   msgContent: { fontSize: 15, color: colors.text, lineHeight: 20 },
-  msgTime: { fontSize: 10, color: "#94a3b8", marginTop: 4, textAlign: "right" },
+  msgTime: { fontSize: 10, color: "#8A8F98", marginTop: 4, textAlign: "right" },
   msgInputBar: {
     flexDirection: "row", padding: 12, backgroundColor: colors.white,
     borderTopWidth: 1, borderColor: colors.border, gap: 8, alignItems: "flex-end",
@@ -1483,7 +1483,7 @@ const styles = StyleSheet.create({
   },
   detailRow: { flexDirection: "row", alignItems: "center", padding: 16, gap: 12 },
   detailRowBorder: { borderBottomWidth: 1, borderColor: colors.border },
-  detailIconWrap: { width: 36, height: 36, borderRadius: radius.md, backgroundColor: "#DBEAFE", justifyContent: "center", alignItems: "center" },
+  detailIconWrap: { width: 36, height: 36, borderRadius: radius.md, backgroundColor: "rgba(59,130,246,0.14)", justifyContent: "center", alignItems: "center" },
   detailLabel: { fontSize: 12, color: colors.muted, fontWeight: "500", marginBottom: 2 },
   detailValue: { fontSize: 15, fontWeight: "600", color: colors.text, textTransform: "capitalize" },
 
@@ -1492,7 +1492,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
   },
   fullDescTitle: { fontSize: 15, fontWeight: "700", color: colors.text, marginBottom: 10 },
-  fullDescText: { fontSize: 14, color: "#475569", lineHeight: 22 },
+  fullDescText: { fontSize: 14, color: "#8A8F98", lineHeight: 22 },
 
   detailPhotosCard: {
     backgroundColor: colors.white, borderRadius: radius.xl, padding: 16, marginTop: 12,
@@ -1503,14 +1503,14 @@ const styles = StyleSheet.create({
   cancelBtn: {
     flexDirection: "row", alignItems: "center", justifyContent: "center",
     backgroundColor: colors.white, paddingVertical: 16, borderRadius: radius.lg, marginTop: 12, gap: 8,
-    borderWidth: 1.5, borderColor: "#fecaca",
+    borderWidth: 1.5, borderColor: "rgba(248,113,113,0.30)",
   },
-  cancelBtnText: { color: "#dc2626", fontSize: 16, fontWeight: "600" },
+  cancelBtnText: { color: "#F87171", fontSize: 16, fontWeight: "600" },
 
   // Empty tab
   emptyTab: { alignItems: "center", paddingVertical: 48 },
-  emptyTabText: { fontSize: 16, fontWeight: "600", color: "#94a3b8", marginTop: 12 },
-  emptyTabSub: { fontSize: 13, color: "#cbd5e1", marginTop: 4 },
+  emptyTabText: { fontSize: 16, fontWeight: "600", color: "#8A8F98", marginTop: 12 },
+  emptyTabSub: { fontSize: 13, color: "#8A8F98", marginTop: 4 },
 
   // Dispute Modal
   modalOverlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "flex-end" },
@@ -1522,7 +1522,7 @@ const styles = StyleSheet.create({
   modalTitle: { fontSize: 20, fontWeight: "800", color: colors.text },
   modalLabel: { fontSize: 14, fontWeight: "600", color: colors.text, marginBottom: 8 },
   disputeReasonBtn: { flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 10, paddingHorizontal: 4 },
-  disputeReasonBtnActive: { backgroundColor: "#DBEAFE", borderRadius: radius.md, paddingHorizontal: 10 },
+  disputeReasonBtnActive: { backgroundColor: "rgba(59,130,246,0.14)", borderRadius: radius.md, paddingHorizontal: 10 },
   disputeReasonText: { fontSize: 15, color: colors.text },
   disputeInput: {
     backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border,

@@ -89,15 +89,15 @@ export default function ResetPasswordScreen() {
 
   const passwordStrength = (() => {
     if (!password) return null;
-    if (password.length < 8) return { label: "Too short", color: "#dc2626" };
+    if (password.length < 8) return { label: "Too short", color: "#F87171" };
     const hasUpper = /[A-Z]/.test(password);
     const hasLower = /[a-z]/.test(password);
     const hasNumber = /[0-9]/.test(password);
     const hasSpecial = /[^A-Za-z0-9]/.test(password);
     const score = [hasUpper, hasLower, hasNumber, hasSpecial].filter(Boolean).length;
     if (score <= 2) return { label: "Weak", color: "#f97316" };
-    if (score === 3) return { label: "Good", color: "#2563eb" };
-    return { label: "Strong", color: "#16a34a" };
+    if (score === 3) return { label: "Good", color: "#3B82F6" };
+    return { label: "Strong", color: "#6EE7B7" };
   })();
 
   return (
@@ -146,7 +146,7 @@ export default function ResetPasswordScreen() {
                 <Ionicons
                   name="warning-outline"
                   size={18}
-                  color="#b45309"
+                  color="#FCD34D"
                 />
                 <Text style={styles.warningBannerText}>
                   No reset token found. Please use the link sent to your email.
@@ -192,7 +192,7 @@ export default function ResetPasswordScreen() {
                               backgroundColor:
                                 i <= filled
                                   ? passwordStrength.color
-                                  : "#e2e8f0",
+                                  : "#23252A",
                             },
                           ]}
                         />
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: radius.xl,
-    backgroundColor: "#EFF6FF",
+    backgroundColor: "rgba(59,130,246,0.14)",
     alignItems: "center",
     justifyContent: "center",
     marginBottom: spacing["3xl"],
@@ -308,9 +308,9 @@ const styles = StyleSheet.create({
   errorBanner: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FEF2F2",
+    backgroundColor: "rgba(248,113,113,0.15)",
     borderWidth: 1,
-    borderColor: "#FECACA",
+    borderColor: "rgba(248,113,113,0.30)",
     borderRadius: radius.md,
     paddingHorizontal: 14,
     paddingVertical: spacing.lg,
@@ -326,9 +326,9 @@ const styles = StyleSheet.create({
   warningBanner: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFFBEB",
+    backgroundColor: "rgba(251,191,36,0.12)",
     borderWidth: 1,
-    borderColor: "#FDE68A",
+    borderColor: "rgba(251,191,36,0.30)",
     borderRadius: radius.md,
     paddingHorizontal: 14,
     paddingVertical: spacing.lg,
@@ -338,7 +338,7 @@ const styles = StyleSheet.create({
   warningBannerText: {
     flex: 1,
     fontSize: 14,
-    color: "#B45309",
+    color: "#FCD34D",
     fontWeight: "500",
   },
   strengthRow: {

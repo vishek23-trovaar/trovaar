@@ -28,18 +28,18 @@ export default function SearchBar({
 
   return (
     <View style={styles.container}>
-      <Ionicons name="search" size={20} color="#94a3b8" style={styles.icon} />
+      <Ionicons name="search" size={20} color="#8a8f98" style={styles.icon} />
       <TextInput
         style={styles.input}
         placeholder={placeholder}
-        placeholderTextColor="#94a3b8"
+        placeholderTextColor="#6b7079"
         value={text}
         onChangeText={setText}
         autoCorrect={false}
       />
       {text.length > 0 && (
         <Pressable onPress={() => setText("")} style={styles.clear}>
-          <Ionicons name="close-circle" size={20} color="#94a3b8" />
+          <Ionicons name="close-circle" size={20} color="#8a8f98" />
         </Pressable>
       )}
     </View>
@@ -50,8 +50,10 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f1f5f9",
-    borderRadius: 12,
+    backgroundColor: "#1a1b1f",
+    borderWidth: 1,
+    borderColor: "#23252a",
+    borderRadius: 10,
     paddingHorizontal: 14,
     height: 48,
   },
@@ -61,7 +63,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    color: "#0f172a",
+    color: "#f7f8f8",
   },
   clear: {
     padding: 4,

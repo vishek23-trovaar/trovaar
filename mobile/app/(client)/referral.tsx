@@ -19,10 +19,10 @@ import { colors } from "../../lib/theme";
 
 const COLORS = {
   ...colors,
-  primaryBg: "#EFF6FF",
-  mutedLight: "#94A3B8",
-  successBg: "#F0FDF4",
-  warningBg: "#FFFBEB",
+  primaryBg: "rgba(59,130,246,0.14)",
+  mutedLight: "#8A8F98",
+  successBg: "rgba(52,211,153,0.14)",
+  warningBg: "rgba(251,191,36,0.12)",
 };
 
 interface ReferralFriend {
@@ -68,7 +68,7 @@ function SkeletonPulse({
   return (
     <Animated.View
       style={[
-        { width: width as number, height, borderRadius, backgroundColor: "#e2e8f0", opacity: animValue },
+        { width: width as number, height, borderRadius, backgroundColor: "#1A1B1F", opacity: animValue },
         style,
       ]}
     />

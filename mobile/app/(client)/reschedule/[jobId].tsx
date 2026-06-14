@@ -339,7 +339,7 @@ export default function RescheduleScreen() {
         <TextInput
           style={styles.notesInput}
           placeholder="Any notes for the contractor?"
-          placeholderTextColor="#94a3b8"
+          placeholderTextColor="#8A8F98"
           value={notes}
           onChangeText={setNotes}
           multiline
@@ -438,7 +438,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: radius.md,
-    backgroundColor: "#eff6ff",
+    backgroundColor: "rgba(59,130,246,0.14)",
     alignItems: "center",
     justifyContent: "center",
     marginTop: 2,
@@ -497,8 +497,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
   },
   dateChipWeekend: {
-    borderColor: "#e2e8f0",
-    backgroundColor: "#fafafa",
+    borderColor: "#23252A",
+    backgroundColor: "#08090A",
   },
   dateChipDay: {
     fontSize: 11,
@@ -522,7 +522,7 @@ const styles = StyleSheet.create({
     color: "#ffffff",
   },
   dateChipDayWeekend: {
-    color: "#94a3b8",
+    color: "#8A8F98",
   },
 
   // Selected date banner
@@ -556,7 +556,7 @@ const styles = StyleSheet.create({
   },
   timePrefChipActive: {
     borderColor: colors.primary,
-    backgroundColor: "#eff6ff",
+    backgroundColor: "rgba(59,130,246,0.14)",
   },
   timePrefLabel: {
     fontSize: 13,
@@ -568,7 +568,7 @@ const styles = StyleSheet.create({
   },
   timePrefSub: {
     fontSize: 11,
-    color: "#94a3b8",
+    color: "#8A8F98",
     textAlign: "center",
   },
   timePrefSubActive: {

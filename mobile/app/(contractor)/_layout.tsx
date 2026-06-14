@@ -20,7 +20,7 @@ const badgeStyles = StyleSheet.create({
     position: "absolute", top: -4, right: -10, minWidth: 18, height: 18, borderRadius: 9,
     backgroundColor: colors.danger, justifyContent: "center", alignItems: "center", paddingHorizontal: 4,
   },
-  badgeText: { color: colors.white, fontSize: 10, fontWeight: "700" },
+  badgeText: { color: "#ffffff", fontSize: 10, fontWeight: "700" },
 });
 
 function NotificationBell({ count, onPress }: { count: number; onPress: () => void }) {
@@ -41,9 +41,9 @@ const bellStyles = StyleSheet.create({
   badge: {
     position: "absolute", top: 2, right: 0, minWidth: 18, height: 18, borderRadius: 9,
     backgroundColor: colors.danger, justifyContent: "center", alignItems: "center",
-    paddingHorizontal: 4, borderWidth: 2, borderColor: colors.white,
+    paddingHorizontal: 4, borderWidth: 2, borderColor: "#0F1011",
   },
-  badgeText: { color: colors.white, fontSize: 10, fontWeight: "700" },
+  badgeText: { color: "#ffffff", fontSize: 10, fontWeight: "700" },
 });
 
 export default function ContractorLayout() {
@@ -80,25 +80,20 @@ export default function ContractorLayout() {
         tabBarInactiveTintColor: colors.muted,
         tabBarLabelStyle: { fontSize: 11, fontWeight: "600", marginTop: 2 },
         tabBarStyle: {
-          backgroundColor: colors.white,
-          borderTopWidth: StyleSheet.hairlineWidth,
+          backgroundColor: "#0F1011",
+          borderTopWidth: 1,
           borderTopColor: colors.border,
           paddingTop: 6,
           height: Platform.OS === "ios" ? 88 : 64,
-          ...Platform.select({
-            ios: { shadowColor: "#000", shadowOffset: { width: 0, height: -2 }, shadowOpacity: 0.05, shadowRadius: 8 },
-            android: { elevation: 8 },
-          }),
         },
         tabBarItemStyle: { paddingVertical: 4 },
         headerStyle: {
-          backgroundColor: colors.white,
-          ...Platform.select({
-            ios: { shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4 },
-            android: { elevation: 2 },
-          }),
+          backgroundColor: "#0F1011",
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border,
         },
-        headerTitleStyle: { fontWeight: "700", fontSize: 17, color: colors.text },
+        headerTitleStyle: { fontWeight: "700", fontSize: 17, color: colors.text, letterSpacing: -0.3 },
+        headerTintColor: colors.text,
         headerRight: () => (
           <NotificationBell count={notifUnreadCount} onPress={() => router.push("/(contractor)/notifications")} />
         ),

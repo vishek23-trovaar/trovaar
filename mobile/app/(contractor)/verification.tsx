@@ -27,12 +27,12 @@ const COLORS = {
   surface: colors.surface,
   border: colors.border,
   success: colors.success,
-  successLight: "#ecfdf5",
+  successLight: "rgba(52,211,153,0.14)",
   danger: colors.danger,
-  dangerLight: "#fef2f2",
+  dangerLight: "rgba(248,113,113,0.15)",
   white: colors.white,
   warning: colors.warning,
-  warningBg: "#fffbeb",
+  warningBg: "rgba(251,191,36,0.12)",
 };
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>["name"];
@@ -88,10 +88,10 @@ function SkeletonLoader() {
 
   return (
     <Animated.View style={{ padding: 20, opacity }}>
-      <View style={{ backgroundColor: "#e2e8f0", height: 60, borderRadius: 16, marginBottom: 16 }} />
+      <View style={{ backgroundColor: "#1A1B1F", height: 60, borderRadius: 16, marginBottom: 16 }} />
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
         {[1, 2, 3, 4, 5, 6].map((i) => (
-          <View key={i} style={{ backgroundColor: "#e2e8f0", height: 100, width: "47%", borderRadius: 16 }} />
+          <View key={i} style={{ backgroundColor: "#1A1B1F", height: 100, width: "47%", borderRadius: 16 }} />
         ))}
       </View>
     </Animated.View>
@@ -167,7 +167,7 @@ export default function VerificationScreen() {
   const getStatusBg = (status: string) => {
     if (status === "verified") return COLORS.successLight;
     if (status === "pending") return COLORS.warningBg;
-    return "#f1f5f9";
+    return "rgba(138,143,152,0.14)";
   };
 
   const getStatusLabel = (status: string) => {
@@ -343,7 +343,7 @@ export default function VerificationScreen() {
         {/* Identity Verification */}
         <View style={styles.actionCard}>
           <View style={styles.actionCardHeader}>
-            <View style={[styles.actionIconWrap, { backgroundColor: "#eff6ff" }]}>
+            <View style={[styles.actionIconWrap, { backgroundColor: "rgba(59,130,246,0.14)" }]}>
               <Ionicons name="id-card-outline" size={24} color={COLORS.primary} />
             </View>
             <View style={{ flex: 1 }}>
@@ -385,7 +385,7 @@ export default function VerificationScreen() {
         <View style={styles.actionCard}>
           <View style={styles.actionCardHeader}>
             <View
-              style={[styles.actionIconWrap, { backgroundColor: "#f0fdf4" }]}
+              style={[styles.actionIconWrap, { backgroundColor: "rgba(52,211,153,0.14)" }]}
             >
               <Ionicons
                 name="shield-checkmark-outline"
@@ -454,7 +454,7 @@ export default function VerificationScreen() {
         <View style={styles.actionCard}>
           <View style={styles.actionCardHeader}>
             <View
-              style={[styles.actionIconWrap, { backgroundColor: "#fffbeb" }]}
+              style={[styles.actionIconWrap, { backgroundColor: "rgba(251,191,36,0.12)" }]}
             >
               <Ionicons
                 name="ribbon-outline"
@@ -519,7 +519,7 @@ export default function VerificationScreen() {
                 value={licenseNumber}
                 onChangeText={setLicenseNumber}
                 placeholder="e.g., LC-123456"
-                placeholderTextColor="#94a3b8"
+                placeholderTextColor="#8A8F98"
               />
 
               <Text style={styles.licenseLabel}>State</Text>
@@ -796,7 +796,7 @@ const styles = StyleSheet.create({
   licenseLabel: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#334155",
+    color: "#8A8F98",
     marginBottom: 6,
     marginTop: 12,
   },
@@ -847,7 +847,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: COLORS.border,
   },
-  pickerItemActive: { backgroundColor: "#eff6ff" },
+  pickerItemActive: { backgroundColor: "rgba(59,130,246,0.14)" },
   pickerItemText: { fontSize: 15, color: COLORS.secondary },
 
   licenseFormButtons: {

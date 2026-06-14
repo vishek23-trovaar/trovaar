@@ -29,11 +29,11 @@ const COLORS = {
   surface: colors.surface,
   border: colors.border,
   success: colors.success,
-  successLight: "#ecfdf5",
+  successLight: "rgba(52,211,153,0.14)",
   danger: colors.danger,
   white: colors.white,
   warning: colors.warning,
-  warningBg: "#fffbeb",
+  warningBg: "rgba(251,191,36,0.12)",
 };
 
 const CATEGORIES = [
@@ -75,7 +75,7 @@ function SkeletonLoader() {
   return (
     <Animated.View style={{ padding: 20, opacity }}>
       {[1, 2, 3].map((i) => (
-        <View key={i} style={{ backgroundColor: "#e2e8f0", height: 180, borderRadius: 16, marginBottom: 16 }} />
+        <View key={i} style={{ backgroundColor: "#1A1B1F", height: 180, borderRadius: 16, marginBottom: 16 }} />
       ))}
     </Animated.View>
   );
@@ -336,7 +336,7 @@ export default function PortfolioScreen() {
               value={newTitle}
               onChangeText={setNewTitle}
               placeholder="e.g., Kitchen Remodel - Smith Residence"
-              placeholderTextColor="#94a3b8"
+              placeholderTextColor="#8A8F98"
             />
 
             <Text style={styles.label}>Category</Text>
@@ -374,7 +374,7 @@ export default function PortfolioScreen() {
               value={newDescription}
               onChangeText={setNewDescription}
               placeholder="Describe the project..."
-              placeholderTextColor="#94a3b8"
+              placeholderTextColor="#8A8F98"
               multiline
             />
 
@@ -434,7 +434,7 @@ export default function PortfolioScreen() {
         {items.length === 0 && !showAddForm ? (
           <View style={styles.emptyState}>
             <View style={styles.emptyIconWrap}>
-              <Ionicons name="images-outline" size={48} color="#cbd5e1" />
+              <Ionicons name="images-outline" size={48} color="#8A8F98" />
             </View>
             <Text style={styles.emptyTitle}>Add your first project to showcase your work</Text>
             <Text style={styles.emptySubtitle}>
@@ -552,11 +552,11 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderWidth: 1.5,
   },
-  gateCardSuccess: { backgroundColor: COLORS.successLight, borderColor: "#a7f3d0" },
-  gateCardWarning: { backgroundColor: COLORS.warningBg, borderColor: "#fde68a" },
+  gateCardSuccess: { backgroundColor: COLORS.successLight, borderColor: "rgba(52,211,153,0.30)" },
+  gateCardWarning: { backgroundColor: COLORS.warningBg, borderColor: "rgba(251,191,36,0.30)" },
   gateCardHeader: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 4 },
   gateCardTitle: { fontSize: 16, fontWeight: "700" },
-  gateCardDesc: { fontSize: 14, color: "#475569", lineHeight: 20, marginLeft: 30 },
+  gateCardDesc: { fontSize: 14, color: "#8A8F98", lineHeight: 20, marginLeft: 30 },
 
   // Category filter
   categoryScroll: { gap: 8, paddingRight: 16 },
@@ -583,7 +583,7 @@ const styles = StyleSheet.create({
     ...shadows.md,
   },
   formTitle: { fontSize: 20, fontWeight: "800", color: COLORS.secondary, marginBottom: 16 },
-  label: { fontSize: 13, fontWeight: "600", color: "#334155", marginBottom: 6, marginTop: 14 },
+  label: { fontSize: 13, fontWeight: "600", color: "#8A8F98", marginBottom: 6, marginTop: 14 },
   input: {
     backgroundColor: COLORS.surface,
     borderWidth: 1,
@@ -623,7 +623,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: COLORS.border,
   },
-  pickerItemActive: { backgroundColor: "#eff6ff" },
+  pickerItemActive: { backgroundColor: "rgba(59,130,246,0.14)" },
   pickerItemText: { fontSize: 15, color: COLORS.secondary },
 
   // Photo inputs
@@ -667,7 +667,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: "#f1f5f9",
+    backgroundColor: "#1A1B1F",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,
@@ -695,7 +695,7 @@ const styles = StyleSheet.create({
   },
   categoryGroupTitle: { fontSize: 18, fontWeight: "700", color: COLORS.secondary, textTransform: "capitalize" },
   categoryGroupBadge: {
-    backgroundColor: "#eff6ff",
+    backgroundColor: "rgba(59,130,246,0.14)",
     paddingHorizontal: 10,
     paddingVertical: 2,
     borderRadius: 10,
@@ -720,7 +720,7 @@ const styles = StyleSheet.create({
   },
   portfolioCardTitle: { fontSize: 16, fontWeight: "700", color: COLORS.secondary, flex: 1 },
   portfolioCardDate: { fontSize: 12, color: COLORS.muted },
-  portfolioCardDesc: { fontSize: 14, color: "#475569", lineHeight: 20, marginBottom: 12 },
+  portfolioCardDesc: { fontSize: 14, color: "#8A8F98", lineHeight: 20, marginBottom: 12 },
 
   photoSection: { marginBottom: 10 },
   photoSectionLabel: {
@@ -731,7 +731,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     letterSpacing: 0.5,
   },
-  portfolioPhoto: { width: 120, height: 90, borderRadius: 10, backgroundColor: "#e2e8f0" },
+  portfolioPhoto: { width: 120, height: 90, borderRadius: 10, backgroundColor: "#1A1B1F" },
 
   portfolioCardFooter: { flexDirection: "row", alignItems: "center", gap: 4, marginTop: 8 },
   portfolioCardPhotoCount: { fontSize: 12, color: COLORS.muted },

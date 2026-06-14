@@ -76,6 +76,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   image: {
-    backgroundColor: "#e2e8f0",
+    backgroundColor: "#1a1b1f",
   },
 });

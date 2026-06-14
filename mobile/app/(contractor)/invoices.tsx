@@ -61,10 +61,10 @@ const STATUS_CONFIG: Record<
   InvoiceStatus,
   { bg: string; text: string; label: string }
 > = {
-  draft: { bg: "#f1f5f9", text: COLORS.muted, label: "Draft" },
-  sent: { bg: "#eff6ff", text: COLORS.primary, label: "Sent" },
-  paid: { bg: "#f0fdf4", text: COLORS.success, label: "Paid" },
-  overdue: { bg: "#fef2f2", text: COLORS.danger, label: "Overdue" },
+  draft: { bg: "rgba(138,143,152,0.14)", text: COLORS.muted, label: "Draft" },
+  sent: { bg: "rgba(59,130,246,0.14)", text: COLORS.primary, label: "Sent" },
+  paid: { bg: "rgba(52,211,153,0.14)", text: COLORS.success, label: "Paid" },
+  overdue: { bg: "rgba(248,113,113,0.15)", text: COLORS.danger, label: "Overdue" },
 };
 
 const FILTER_TABS: { key: string; label: string }[] = [
@@ -670,7 +670,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1.5,
     borderColor: COLORS.border,
-    backgroundColor: "#fff",
+    backgroundColor: "#121316",
   },
   tabActive: {
     backgroundColor: COLORS.primary,
@@ -811,7 +811,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     fontSize: 15,
     color: COLORS.text,
-    backgroundColor: "#fff",
+    backgroundColor: "#121316",
     marginBottom: 16,
   },
   textArea: {
@@ -837,7 +837,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 1.5,
     borderColor: COLORS.border,
-    backgroundColor: "#fff",
+    backgroundColor: "#121316",
     minWidth: 120,
     maxWidth: 180,
   },

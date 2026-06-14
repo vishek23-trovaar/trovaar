@@ -29,13 +29,13 @@ const COLORS = {
   surface: colors.surface,
   border: colors.border,
   success: colors.success,
-  successLight: "#ecfdf5",
+  successLight: "rgba(52,211,153,0.14)",
   danger: colors.danger,
   white: colors.white,
   pro: colors.success,
-  proBg: "#ecfdf5",
+  proBg: "rgba(52,211,153,0.14)",
   warning: colors.warning,
-  warningBg: "#fffbeb",
+  warningBg: "rgba(251,191,36,0.12)",
 };
 
 type IoniconsName = React.ComponentProps<typeof Ionicons>["name"];
@@ -105,7 +105,7 @@ function SettingsRow({
         <View
           style={[
             styles.settingsIconWrap,
-            danger && { backgroundColor: "#fef2f2" },
+            danger && { backgroundColor: "rgba(248,113,113,0.15)" },
           ]}
         >
           <Ionicons
@@ -152,14 +152,14 @@ function VerificationBadge({
     status === "Verified"
       ? COLORS.success
       : status === "Pending"
-        ? "#f59e0b"
+        ? "#FBBF24"
         : COLORS.muted;
   const bg =
     status === "Verified"
       ? COLORS.proBg
       : status === "Pending"
-        ? "#fffbeb"
-        : "#f1f5f9";
+        ? "rgba(251,191,36,0.12)"
+        : "rgba(138,143,152,0.14)";
   return (
     <View style={[styles.verificationBadge, { backgroundColor: bg }]}>
       <Text style={[styles.verificationBadgeText, { color }]}>
@@ -603,7 +603,7 @@ export default function ContractorProfile() {
                   gap: 4,
                 }}
               >
-                <Ionicons name="star" size={16} color="#f59e0b" />
+                <Ionicons name="star" size={16} color="#FCD34D" />
                 <Text style={styles.statValue}>
                   {stats.avgRating > 0 ? stats.avgRating.toFixed(1) : "--"}
                 </Text>
@@ -694,12 +694,12 @@ export default function ContractorProfile() {
                   <Ionicons
                     name={score.passed ? "checkmark-circle" : "close-circle"}
                     size={18}
-                    color={score.passed ? COLORS.success : "#dc2626"}
+                    color={score.passed ? COLORS.success : "#F87171"}
                   />
                   <Text style={styles.quizScoreCategory}>{score.category}</Text>
                 </View>
-                <View style={[styles.quizScoreBadge, { backgroundColor: score.passed ? COLORS.successLight : "#fef2f2" }]}>
-                  <Text style={[styles.quizScorePercent, { color: score.passed ? COLORS.success : "#dc2626" }]}>
+                <View style={[styles.quizScoreBadge, { backgroundColor: score.passed ? COLORS.successLight : "rgba(248,113,113,0.15)" }]}>
+                  <Text style={[styles.quizScorePercent, { color: score.passed ? COLORS.success : "#F87171" }]}>
                     {Math.round(score.percentage)}%
                   </Text>
                 </View>
@@ -712,7 +712,7 @@ export default function ContractorProfile() {
             onPress={() => router.push("/(contractor)/quiz")}
             activeOpacity={0.7}
           >
-            <Ionicons name="school-outline" size={28} color="#d1d5db" />
+            <Ionicons name="school-outline" size={28} color="#3A3A40" />
             <Text style={styles.emptyCardText}>No quiz scores yet</Text>
             <Text style={styles.emptyCardSubtext}>Take a skills quiz to earn badges</Text>
           </TouchableOpacity>
@@ -837,7 +837,7 @@ export default function ContractorProfile() {
             <Ionicons
               name="medal-outline"
               size={28}
-              color="#d1d5db"
+              color="#3A3A40"
             />
             <Text style={styles.emptyCardText}>
               No certifications yet
@@ -886,7 +886,7 @@ export default function ContractorProfile() {
                         <Ionicons
                           name="star"
                           size={12}
-                          color="#f59e0b"
+                          color="#FCD34D"
                         />
                         <Text style={styles.workHistoryRating}>
                           {item.rating.toFixed(1)}
@@ -916,7 +916,7 @@ export default function ContractorProfile() {
             <Ionicons
               name="briefcase-outline"
               size={28}
-              color="#d1d5db"
+              color="#3A3A40"
             />
             <Text style={styles.emptyCardText}>No work history yet</Text>
             <Text style={styles.emptyCardSubtext}>
@@ -1515,10 +1515,10 @@ const styles = StyleSheet.create({
   },
   trustBadgeVerified: {
     backgroundColor: COLORS.successLight,
-    borderColor: "#a7f3d0",
+    borderColor: "rgba(52,211,153,0.30)",
   },
   trustBadgeUnverified: {
-    backgroundColor: "#f1f5f9",
+    backgroundColor: "#1A1B1F",
     borderColor: COLORS.border,
   },
   trustBadgeLabel: {
@@ -1545,7 +1545,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 10,
-    backgroundColor: "#eff6ff",
+    backgroundColor: "rgba(59,130,246,0.14)",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -1562,7 +1562,7 @@ const styles = StyleSheet.create({
   },
   certDate: {
     fontSize: 12,
-    color: "#94a3b8",
+    color: "#8A8F98",
   },
 
   // Empty card
@@ -1580,12 +1580,12 @@ const styles = StyleSheet.create({
   emptyCardText: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#94a3b8",
+    color: "#8A8F98",
     marginTop: 8,
   },
   emptyCardSubtext: {
     fontSize: 12,
-    color: "#cbd5e1",
+    color: "#8A8F98",
     marginTop: 2,
   },
 
@@ -1643,11 +1643,11 @@ const styles = StyleSheet.create({
   },
   workHistoryDate: {
     fontSize: 12,
-    color: "#94a3b8",
+    color: "#8A8F98",
   },
   workHistoryRating: {
     fontSize: 12,
-    color: "#f59e0b",
+    color: "#FCD34D",
     fontWeight: "600",
   },
   workHistoryAmount: {
@@ -1657,7 +1657,7 @@ const styles = StyleSheet.create({
   },
   workHistoryReview: {
     fontSize: 13,
-    color: "#475569",
+    color: "#8A8F98",
     fontStyle: "italic",
     marginTop: 6,
     lineHeight: 18,
@@ -1706,7 +1706,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 8,
-    backgroundColor: "#eff6ff",
+    backgroundColor: "rgba(59,130,246,0.14)",
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
@@ -1740,7 +1740,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
   },
   chipSelected: {
-    backgroundColor: "#eff6ff",
+    backgroundColor: "rgba(59,130,246,0.14)",
     borderColor: COLORS.primaryLight,
   },
   chipText: { fontSize: 14, color: COLORS.muted },
@@ -1776,7 +1776,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: COLORS.border,
   },
-  dropdownItemSelected: { backgroundColor: "#eff6ff" },
+  dropdownItemSelected: { backgroundColor: "rgba(59,130,246,0.14)" },
   dropdownItemText: { fontSize: 15, color: COLORS.secondary },
 
   // Bio
@@ -1842,19 +1842,19 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 16,
-    backgroundColor: "#eff6ff",
+    backgroundColor: "rgba(59,130,246,0.14)",
     justifyContent: "center",
     alignItems: "center",
   },
   portfolioPreviewTitle: { fontSize: 16, fontWeight: "700", color: COLORS.secondary },
   portfolioPreviewSub: { fontSize: 13, color: COLORS.muted, marginTop: 2 },
   portfolioGateBadge: {
-    backgroundColor: "#fffbeb",
+    backgroundColor: "rgba(251,191,36,0.12)",
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 10,
   },
-  portfolioGateText: { fontSize: 12, fontWeight: "600", color: "#d97706" },
+  portfolioGateText: { fontSize: 12, fontWeight: "600", color: "#FCD34D" },
 
   // Quiz Scores
   quizScoresList: {
@@ -1897,7 +1897,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 10,
-    backgroundColor: "#eff6ff",
+    backgroundColor: "rgba(59,130,246,0.14)",
     justifyContent: "center",
     alignItems: "center",
   },

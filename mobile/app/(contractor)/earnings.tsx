@@ -63,10 +63,10 @@ function SkeletonCard({ delay }: { delay: number }) {
   return (
     <Animated.View style={[styles.earningItem, { opacity }]}>
       <View style={{ flex: 1 }}>
-        <View style={{ width: "60%", height: 14, borderRadius: 7, backgroundColor: "#e2e8f0", marginBottom: 6 }} />
-        <View style={{ width: "30%", height: 12, borderRadius: 6, backgroundColor: "#e2e8f0" }} />
+        <View style={{ width: "60%", height: 14, borderRadius: 7, backgroundColor: "#1A1B1F", marginBottom: 6 }} />
+        <View style={{ width: "30%", height: 12, borderRadius: 6, backgroundColor: "#1A1B1F" }} />
       </View>
-      <View style={{ width: 60, height: 20, borderRadius: 6, backgroundColor: "#e2e8f0" }} />
+      <View style={{ width: 60, height: 20, borderRadius: 6, backgroundColor: "#1A1B1F" }} />
     </Animated.View>
   );
 }
@@ -252,7 +252,7 @@ export default function Earnings() {
   if (error && !loading) {
     return (
       <View style={[styles.screen, { justifyContent: 'center', alignItems: 'center' }]}>
-        <Text style={{ color: '#dc2626', fontSize: 15, textAlign: 'center', paddingHorizontal: 24 }}>{error}</Text>
+        <Text style={{ color: '#F87171', fontSize: 15, textAlign: 'center', paddingHorizontal: 24 }}>{error}</Text>
       </View>
     );
   }
@@ -262,8 +262,8 @@ export default function Earnings() {
       <Animated.View style={[styles.screen, { opacity: screenOpacity }]}>
         <View style={[styles.heroCard, { opacity: 0.5 }]}>
           <View style={styles.heroGradient}>
-            <View style={{ width: 100, height: 14, borderRadius: 7, backgroundColor: "rgba(255,255,255,0.3)", marginBottom: 8 }} />
-            <View style={{ width: 160, height: 36, borderRadius: 8, backgroundColor: "rgba(255,255,255,0.3)" }} />
+            <View style={{ width: 100, height: 14, borderRadius: 7, backgroundColor: "#18191B", marginBottom: 8 }} />
+            <View style={{ width: 160, height: 36, borderRadius: 8, backgroundColor: "#18191B" }} />
           </View>
         </View>
         <View style={{ padding: 16, gap: 8 }}>
@@ -345,7 +345,7 @@ const styles = StyleSheet.create({
   },
   statCardActive: {
     borderColor: colors.primary,
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
   },
   statLabel: {
     fontSize: 11,
@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   sectionTitle: { fontSize: 16, fontWeight: "700", color: COLORS.secondary },
-  sectionCount: { fontSize: 12, color: "#94a3b8" },
+  sectionCount: { fontSize: 12, color: "#8A8F98" },
 
   earningItem: {
     flexDirection: "row",
@@ -418,22 +418,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 14,
     gap: 12,
-    backgroundColor: "#fff",
+    backgroundColor: "#121316",
   },
   earningIcon: {
     width: 40,
     height: 40,
     borderRadius: 16,
-    backgroundColor: "#f1f5f9",
+    backgroundColor: "#1A1B1F",
     justifyContent: "center",
     alignItems: "center",
   },
   earningInfo: { flex: 1 },
   earningTitle: { fontSize: 14, fontWeight: "600", color: COLORS.secondary, marginBottom: 4 },
   earningMeta: { flexDirection: "row", alignItems: "center", gap: 8 },
-  earningDate: { fontSize: 12, color: "#94a3b8" },
+  earningDate: { fontSize: 12, color: "#8A8F98" },
   earningCategoryBadge: {
-    backgroundColor: "#f1f5f9",
+    backgroundColor: "#1A1B1F",
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 6,
@@ -451,12 +451,12 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: "#f1f5f9",
+    backgroundColor: "#1A1B1F",
     marginLeft: 72,
   },
 
   empty: { alignItems: "center", paddingVertical: 60 },
   emptyIcon: { fontSize: 56, marginBottom: 16 },
   emptyTitle: { fontSize: 18, fontWeight: "700", color: COLORS.secondary, marginBottom: 6 },
-  emptySubtitle: { fontSize: 14, color: "#94a3b8" },
+  emptySubtitle: { fontSize: 14, color: "#8A8F98" },
 });

@@ -31,11 +31,12 @@ export default function Input({
 }: InputProps) {
   const [focused, setFocused] = useState(false);
 
+  // Hairline well that brightens to the blue accent on focus (Linear pattern).
   const borderColor = error
-    ? "#dc2626"
+    ? "#f87171"
     : focused
-    ? "#2563eb"
-    : "#e2e8f0";
+    ? "#3b82f6"
+    : "#23252a";
 
   return (
     <View style={[styles.container, containerStyle]}>
@@ -45,24 +46,20 @@ export default function Input({
           <Ionicons
             name={leftIcon}
             size={20}
-            color={focused ? "#2563eb" : "#94a3b8"}
+            color={focused ? "#60a5fa" : "#8a8f98"}
             style={styles.leftIcon}
           />
         )}
         <TextInput
           style={[styles.input, leftIcon && { paddingLeft: 0 }]}
-          placeholderTextColor="#94a3b8"
+          placeholderTextColor="#6b7079"
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           {...rest}
         />
         {rightIcon && (
           <Pressable onPress={onRightIconPress} style={styles.rightIcon}>
-            <Ionicons
-              name={rightIcon}
-              size={20}
-              color="#94a3b8"
-            />
+            <Ionicons name={rightIcon} size={20} color="#8a8f98" />
           </Pressable>
         )}
       </View>
@@ -76,17 +73,18 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   label: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "600",
-    color: "#334155",
+    color: "#c9cdd3",
     marginBottom: 6,
+    letterSpacing: -0.1,
   },
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f8fafc",
-    borderWidth: 1.5,
-    borderRadius: 12,
+    backgroundColor: "#1a1b1f",
+    borderWidth: 1,
+    borderRadius: 10,
     paddingHorizontal: 14,
   },
   leftIcon: {
@@ -94,16 +92,16 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    paddingVertical: 14,
+    paddingVertical: 13,
     fontSize: 16,
-    color: "#0f172a",
+    color: "#f7f8f8",
   },
   rightIcon: {
     padding: 4,
   },
   error: {
     fontSize: 12,
-    color: "#dc2626",
+    color: "#f87171",
     marginTop: 4,
     marginLeft: 4,
   },

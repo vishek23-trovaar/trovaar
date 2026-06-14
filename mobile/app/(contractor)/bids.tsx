@@ -45,10 +45,10 @@ const TABS = [
 ];
 
 const STATUS_CONFIG: Record<string, { bg: string; text: string; icon: string }> = {
-  pending: { bg: "#fffbeb", text: "#d97706", icon: "time-outline" },
-  accepted: { bg: "#ecfdf5", text: "#059669", icon: "checkmark-circle-outline" },
-  rejected: { bg: "#fef2f2", text: "#dc2626", icon: "close-circle-outline" },
-  withdrawn: { bg: "#f1f5f9", text: "#64748b", icon: "arrow-undo-outline" },
+  pending: { bg: "rgba(251,191,36,0.12)", text: "#FCD34D", icon: "time-outline" },
+  accepted: { bg: "rgba(52,211,153,0.14)", text: "#6EE7B7", icon: "checkmark-circle-outline" },
+  rejected: { bg: "rgba(248,113,113,0.15)", text: "#FCA5A5", icon: "close-circle-outline" },
+  withdrawn: { bg: "rgba(138,143,152,0.14)", text: "#C0C4CC", icon: "arrow-undo-outline" },
 };
 
 const CATEGORY_EMOJIS: Record<string, string> = {
@@ -64,10 +64,10 @@ const CATEGORY_EMOJIS: Record<string, string> = {
 };
 
 const URGENCY_CONFIG: Record<string, { bg: string; text: string }> = {
-  low: { bg: "#f1f5f9", text: "#64748b" },
-  medium: { bg: "#eff6ff", text: "#2563eb" },
-  high: { bg: "#fffbeb", text: "#d97706" },
-  emergency: { bg: "#fef2f2", text: "#dc2626" },
+  low: { bg: "rgba(138,143,152,0.14)", text: "#C0C4CC" },
+  medium: { bg: "rgba(59,130,246,0.14)", text: "#93C5FD" },
+  high: { bg: "rgba(251,191,36,0.12)", text: "#FCD34D" },
+  emergency: { bg: "rgba(248,113,113,0.15)", text: "#FCA5A5" },
 };
 
 function timeAgo(dateStr: string): string {
@@ -111,13 +111,13 @@ function SkeletonCard({ delay }: { delay: number }) {
 
   return (
     <Animated.View style={[styles.card, { opacity }]}>
-      <View style={{ width: "70%", height: 16, borderRadius: 8, backgroundColor: "#e2e8f0", marginBottom: 10 }} />
+      <View style={{ width: "70%", height: 16, borderRadius: 8, backgroundColor: "#1A1B1F", marginBottom: 10 }} />
       <View style={{ flexDirection: "row", gap: 8, marginBottom: 12 }}>
-        <View style={{ width: 60, height: 22, borderRadius: 11, backgroundColor: "#e2e8f0" }} />
-        <View style={{ width: 50, height: 22, borderRadius: 11, backgroundColor: "#e2e8f0" }} />
+        <View style={{ width: 60, height: 22, borderRadius: 11, backgroundColor: "#1A1B1F" }} />
+        <View style={{ width: 50, height: 22, borderRadius: 11, backgroundColor: "#1A1B1F" }} />
       </View>
-      <View style={{ width: 80, height: 28, borderRadius: 6, backgroundColor: "#e2e8f0", marginBottom: 8 }} />
-      <View style={{ width: "40%", height: 12, borderRadius: 6, backgroundColor: "#e2e8f0" }} />
+      <View style={{ width: 80, height: 28, borderRadius: 6, backgroundColor: "#1A1B1F", marginBottom: 8 }} />
+      <View style={{ width: "40%", height: 12, borderRadius: 6, backgroundColor: "#1A1B1F" }} />
     </Animated.View>
   );
 }
@@ -254,7 +254,7 @@ export default function MyBids() {
         )}
 
         <Text style={styles.submittedTime}>
-          <Ionicons name="time-outline" size={11} color="#94a3b8" /> Bid submitted {timeAgo(item.created_at)}
+          <Ionicons name="time-outline" size={11} color="#8A8F98" /> Bid submitted {timeAgo(item.created_at)}
         </Text>
       </TouchableOpacity>
     );
@@ -340,7 +340,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#121316",
     borderWidth: 1.5,
     borderColor: COLORS.border,
     gap: 6,
@@ -352,14 +352,14 @@ const styles = StyleSheet.create({
   tabText: { fontSize: 13, fontWeight: "600", color: COLORS.muted },
   tabTextActive: { color: "#fff" },
   tabBadge: {
-    backgroundColor: "#e2e8f0",
+    backgroundColor: "#1A1B1F",
     borderRadius: 10,
     paddingHorizontal: 6,
     paddingVertical: 1,
     minWidth: 20,
     alignItems: "center",
   },
-  tabBadgeActive: { backgroundColor: "rgba(255,255,255,0.25)" },
+  tabBadgeActive: { backgroundColor: "#18191B" },
   tabBadgeText: { fontSize: 11, fontWeight: "700", color: COLORS.muted },
   tabBadgeTextActive: { color: "#fff" },
 
@@ -397,7 +397,7 @@ const styles = StyleSheet.create({
   categoryBadge: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f1f5f9",
+    backgroundColor: "#1A1B1F",
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 8,
@@ -435,10 +435,10 @@ const styles = StyleSheet.create({
   },
   timelineText: { fontSize: 13, color: COLORS.muted },
 
-  submittedTime: { fontSize: 12, color: "#94a3b8" },
+  submittedTime: { fontSize: 12, color: "#8A8F98" },
 
   empty: { alignItems: "center", paddingVertical: 80 },
   emptyIcon: { fontSize: 56, marginBottom: 16 },
   emptyTitle: { fontSize: 18, fontWeight: "700", color: COLORS.secondary, marginBottom: 6 },
-  emptySubtitle: { fontSize: 14, color: "#94a3b8" },
+  emptySubtitle: { fontSize: 14, color: "#8A8F98" },
 });

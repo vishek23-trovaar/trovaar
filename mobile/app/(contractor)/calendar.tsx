@@ -26,7 +26,7 @@ const COLORS = {
   success: colors.success,
   danger: colors.danger,
   today: colors.primary,
-  dimmed: "#cbd5e1",
+  dimmed: "#5A5F66",
 };
 
 const MONTH_NAMES = [
@@ -248,7 +248,7 @@ export default function ContractorCalendar() {
           <View
             style={[
               styles.jobDot,
-              isSelected && { backgroundColor: "#fff" },
+              isSelected && { backgroundColor: "#121316" },
             ]}
           />
         )}

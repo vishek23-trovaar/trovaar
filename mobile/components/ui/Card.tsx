@@ -1,10 +1,10 @@
 import React from "react";
 import { View, Pressable, StyleSheet, ViewStyle, StyleProp } from "react-native";
-import { glass } from "../../lib/theme";
 
-// default  — flat white card, hairline border, soft shadow (on light surfaces)
-// glass    — translucent card for layering on midnight gradient bands
-// elevated — white card with a stronger lift
+// Linear cards — flat charcoal surface, hairline border, no shadow wash.
+//  default  — raised card (#121316) on canvas, hairline border
+//  glass    — inset chip surface (#18191b) for layering on a band/card
+//  elevated — same surface with a stronger hairline (active/selected)
 type CardVariant = "default" | "glass" | "elevated";
 
 interface CardProps {
@@ -23,7 +23,11 @@ export default function Card({
   style,
 }: CardProps) {
   const variantStyle =
-    variant === "glass" ? styles.glass : variant === "elevated" ? styles.elevated : styles.card;
+    variant === "glass"
+      ? styles.glass
+      : variant === "elevated"
+      ? styles.elevated
+      : styles.card;
 
   const content = <View style={[variantStyle, { padding }, style]}>{children}</View>;
 
@@ -31,9 +35,7 @@ export default function Card({
     return (
       <Pressable
         onPress={onPress}
-        style={({ pressed }) => [
-          { opacity: pressed ? 0.95 : 1, transform: [{ scale: pressed ? 0.98 : 1 }] },
-        ]}
+        style={({ pressed }) => [{ opacity: pressed ? 0.85 : 1 }]}
       >
         {content}
       </Pressable>
@@ -45,31 +47,21 @@ export default function Card({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#ffffff",
-    borderRadius: 16,
-    shadowColor: "#0f172a",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-    elevation: 4,
+    backgroundColor: "#121316",
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
+    borderColor: "#23252a",
   },
   elevated: {
-    backgroundColor: "#ffffff",
-    borderRadius: 16,
-    shadowColor: "#0f172a",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.12,
-    shadowRadius: 20,
-    elevation: 8,
+    backgroundColor: "#121316",
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: "#f1f5f9",
+    borderColor: "#34343a",
   },
   glass: {
-    backgroundColor: glass.fill,
-    borderRadius: 20,
+    backgroundColor: "#18191b",
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: glass.border,
+    borderColor: "#23252a",
   },
 });

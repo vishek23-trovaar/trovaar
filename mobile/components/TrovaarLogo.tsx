@@ -32,16 +32,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 6,
   },
   brand: {
     fontSize: 28,
-    fontWeight: "900",
+    fontWeight: "800",
     color: colors.text,
-    letterSpacing: -1,
+    letterSpacing: -1.2,
   },
 });

@@ -43,28 +43,28 @@ const URGENCY_OPTIONS = [
     value: "low",
     label: "Low",
     icon: "time-outline" as const,
-    color: "#64748b",
+    color: "#8A8F98",
     desc: "Flexible timeline, no rush",
   },
   {
     value: "medium",
     label: "Medium",
     icon: "calendar-outline" as const,
-    color: "#2563eb",
+    color: "#3B82F6",
     desc: "Within the next week",
   },
   {
     value: "high",
     label: "High",
     icon: "alert-circle-outline" as const,
-    color: "#d97706",
+    color: "#FCD34D",
     desc: "Need it done in 1-2 days",
   },
   {
     value: "emergency",
     label: "Emergency",
     icon: "warning-outline" as const,
-    color: "#dc2626",
+    color: "#F87171",
     desc: "Need help right now!",
   },
 ];
@@ -364,7 +364,7 @@ export default function PostJobScreen() {
               activeOpacity={0.85}
             >
               <View style={styles.voiceIcon}>
-                <Ionicons name="mic" size={28} color="#7c3aed" />
+                <Ionicons name="mic" size={28} color="#93C5FD" />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={styles.voiceTitle}>
@@ -400,7 +400,7 @@ export default function PostJobScreen() {
                         <Ionicons
                           name="close-circle"
                           size={22}
-                          color="#dc2626"
+                          color="#F87171"
                         />
                       </TouchableOpacity>
                     </View>
@@ -520,7 +520,7 @@ export default function PostJobScreen() {
                 <Ionicons
                   name="sparkles"
                   size={16}
-                  color="#7c3aed"
+                  color="#93C5FD"
                 />
                 <Text style={styles.aiDetectedText}>
                   AI auto-detected these details. Edit as needed.
@@ -573,7 +573,7 @@ export default function PostJobScreen() {
             <TextInput
               style={styles.input}
               placeholder="e.g., Fix leaky kitchen faucet"
-              placeholderTextColor="#94a3b8"
+              placeholderTextColor="#8A8F98"
               value={title}
               onChangeText={setTitle}
             />
@@ -582,7 +582,7 @@ export default function PostJobScreen() {
             <TextInput
               style={[styles.input, styles.textArea]}
               placeholder="Describe the work needed in detail..."
-              placeholderTextColor="#94a3b8"
+              placeholderTextColor="#8A8F98"
               value={description}
               onChangeText={setDescription}
               multiline
@@ -746,7 +746,7 @@ export default function PostJobScreen() {
               <TextInput
                 style={[styles.input, styles.inputWithIcon]}
                 placeholder="City, State or ZIP"
-                placeholderTextColor="#94a3b8"
+                placeholderTextColor="#8A8F98"
                 value={location}
                 onChangeText={setLocation}
               />
@@ -838,7 +838,7 @@ const styles = StyleSheet.create({
   voiceCard: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f5f3ff",
+    backgroundColor: "#16181C",
     borderRadius: radius.xl,
     padding: 16,
     marginBottom: 20,
@@ -850,7 +850,7 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: radius.lg,
-    backgroundColor: "#ede9fe",
+    backgroundColor: "rgba(59,130,246,0.14)",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -866,7 +866,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   newBadge: {
-    backgroundColor: "#7c3aed",
+    backgroundColor: "#93C5FD",
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 6,
@@ -895,7 +895,7 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: 36,
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 12,
@@ -927,7 +927,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.lg,
     borderWidth: 1.5,
     borderColor: colors.primary,
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
     gap: 6,
   },
   uploadBtnText: {
@@ -968,11 +968,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#7c3aed",
+    backgroundColor: "#93C5FD",
     paddingVertical: 16,
     borderRadius: radius.lg,
     gap: 8,
-    shadowColor: "#7c3aed",
+    shadowColor: "#93C5FD",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -998,7 +998,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    backgroundColor: "#f5f3ff",
+    backgroundColor: "#16181C",
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderRadius: radius.lg,
@@ -1008,7 +1008,7 @@ const styles = StyleSheet.create({
   },
   aiDetectedText: {
     fontSize: 13,
-    color: "#7c3aed",
+    color: "#93C5FD",
     fontWeight: "600",
     flex: 1,
   },
@@ -1027,7 +1027,7 @@ const styles = StyleSheet.create({
   },
   categoryChipSelected: {
     borderColor: colors.primary,
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
   },
   categoryChipEmoji: {
     fontSize: 16,
@@ -1159,7 +1159,7 @@ const styles = StyleSheet.create({
   },
   summaryDesc: {
     fontSize: 14,
-    color: "#475569",
+    color: "#8A8F98",
     lineHeight: 20,
     marginBottom: 8,
   },

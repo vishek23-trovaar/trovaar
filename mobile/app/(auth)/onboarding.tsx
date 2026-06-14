@@ -10,7 +10,6 @@ import {
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import { colors, typography, spacing, radius, shadows } from "../../lib/theme";
 
 interface Page {
@@ -33,21 +32,21 @@ const CLIENT_PAGES: Page[] = [
     title: "Compare & choose",
     description:
       "Review bids from verified professionals. Compare prices, ratings, and availability.",
-    color: "#10B981",
+    color: "#6EE7B7",
   },
   {
     icon: "shield-checkmark-outline",
     title: "Fair pricing, no bias",
     description:
       "Your details stay hidden until you accept a bid. Every quote is based on the job — not who you are.",
-    color: "#EF4444",
+    color: "#F87171",
   },
   {
     icon: "star-outline",
     title: "Get it done",
     description:
       "Track progress in real time, pay securely through the app, and leave a review.",
-    color: "#F59E0B",
+    color: "#FCD34D",
   },
 ];
 
@@ -57,7 +56,7 @@ const PRO_PAGES: Page[] = [
     title: "Find jobs near you",
     description:
       "Browse live jobs in your area. Filter by category, urgency, and budget to find the right fit.",
-    color: "#7C3AED",
+    color: "#93C5FD",
   },
   {
     icon: "cash-outline",
@@ -71,7 +70,7 @@ const PRO_PAGES: Page[] = [
     title: "Grow your business",
     description:
       "Build a 5-star portfolio, earn steady income, and get repeat clients — no monthly fees, ever.",
-    color: "#10B981",
+    color: "#6EE7B7",
   },
 ];
 
@@ -104,14 +103,6 @@ export default function OnboardingScreen() {
   if (mode === null) {
     return (
       <View style={styles.darkContainer}>
-        <LinearGradient
-          colors={["#0F172A", "#131D35", "#0F172A"]}
-          style={StyleSheet.absoluteFill}
-        />
-
-        {/* Glow behind logo */}
-        <View style={styles.glowCircle} />
-
         <SafeAreaView style={styles.darkSafe}>
           <Animated.View style={[styles.pickerScreen, { opacity: fadeAnim }]}>
             {/* Top spacer */}
@@ -120,12 +111,7 @@ export default function OnboardingScreen() {
             {/* Logo area */}
             <View style={styles.logoCentered}>
               <View style={styles.iconBadge}>
-                <LinearGradient
-                  colors={["#2563EB", "#1D4ED8"]}
-                  style={styles.iconGradient}
-                >
-                  <Ionicons name="construct" size={28} color="#FFFFFF" />
-                </LinearGradient>
+                <Ionicons name="construct" size={28} color="#FFFFFF" />
               </View>
               <Text style={styles.logoText}>Trovaar</Text>
               <Text style={styles.logoTagline}>
@@ -149,7 +135,7 @@ export default function OnboardingScreen() {
                 ]}
                 onPress={() => setMode("client")}
               >
-                <View style={[styles.roleIconBox, { backgroundColor: "rgba(37,99,235,0.12)" }]}>
+                <View style={[styles.roleIconBox, { backgroundColor: "rgba(59,130,246,0.14)" }]}>
                   <Ionicons name="home" size={26} color="#3B82F6" />
                 </View>
                 <View style={styles.roleTextBox}>
@@ -158,7 +144,7 @@ export default function OnboardingScreen() {
                     Post jobs that need to be performed
                   </Text>
                 </View>
-                <Ionicons name="chevron-forward" size={20} color="#475569" />
+                <Ionicons name="chevron-forward" size={20} color="#8A8F98" />
               </Pressable>
 
               <Pressable
@@ -168,8 +154,8 @@ export default function OnboardingScreen() {
                 ]}
                 onPress={() => setMode("pro")}
               >
-                <View style={[styles.roleIconBox, { backgroundColor: "rgba(124,58,237,0.12)" }]}>
-                  <Ionicons name="construct" size={26} color="#7C3AED" />
+                <View style={[styles.roleIconBox, { backgroundColor: "rgba(59,130,246,0.14)" }]}>
+                  <Ionicons name="construct" size={26} color="#3B82F6" />
                 </View>
                 <View style={styles.roleTextBox}>
                   <Text style={styles.roleTitle}>Find work</Text>
@@ -177,7 +163,7 @@ export default function OnboardingScreen() {
                     I have skills to get the job done
                   </Text>
                 </View>
-                <Ionicons name="chevron-forward" size={20} color="#475569" />
+                <Ionicons name="chevron-forward" size={20} color="#8A8F98" />
               </Pressable>
             </View>
 
@@ -277,13 +263,10 @@ export default function OnboardingScreen() {
         {/* Bottom */}
         <View style={styles.bottom}>
           <Pressable style={styles.getStartedBtn} onPress={goToSignup}>
-            <LinearGradient
-              colors={["#2563EB", "#1D4ED8"]}
-              style={styles.getStartedGradient}
-            >
+            <View style={styles.getStartedGradient}>
               <Text style={styles.getStartedText}>Get Started</Text>
               <Ionicons name="arrow-forward" size={18} color="#FFFFFF" />
-            </LinearGradient>
+            </View>
           </Pressable>
 
           <Pressable onPress={goToLogin} style={styles.loginRow}>
@@ -302,20 +285,10 @@ const styles = StyleSheet.create({
   // ── Dark theme (Role Picker) ──
   darkContainer: {
     flex: 1,
-    backgroundColor: "#0F172A",
+    backgroundColor: colors.canvas,
   },
   darkSafe: {
     flex: 1,
-  },
-  glowCircle: {
-    position: "absolute",
-    width: 280,
-    height: 280,
-    borderRadius: 140,
-    backgroundColor: "#2563EB",
-    opacity: 0.06,
-    top: "22%",
-    alignSelf: "center",
   },
   pickerScreen: {
     flex: 1,
@@ -329,36 +302,27 @@ const styles = StyleSheet.create({
     height: 64,
     borderRadius: 20,
     marginBottom: 20,
-    shadowColor: "#2563EB",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.4,
-    shadowRadius: 20,
-    elevation: 12,
-  },
-  iconGradient: {
-    width: 64,
-    height: 64,
-    borderRadius: 20,
+    backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   logoText: {
     fontSize: 38,
     fontWeight: "800",
-    color: "#FFFFFF",
+    color: colors.text,
     letterSpacing: -1,
     marginBottom: spacing.lg,
   },
   logoTagline: {
     fontSize: 15,
     fontWeight: "500",
-    color: "#94A3B8",
+    color: colors.muted,
     textAlign: "center",
     lineHeight: 22,
     letterSpacing: 0.2,
   },
   taglineAccent: {
-    color: "#818CF8",
+    color: colors.primaryLight,
     fontWeight: "700",
   },
   pickerCards: {
@@ -367,7 +331,7 @@ const styles = StyleSheet.create({
   pickerQuestion: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: colors.text,
     marginBottom: spacing.xl,
   },
   roleCard: {
@@ -375,14 +339,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 16,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.08)",
-    backgroundColor: "rgba(255,255,255,0.04)",
+    borderColor: colors.border,
+    backgroundColor: colors.white,
     borderRadius: radius.lg,
     marginBottom: spacing.lg,
     gap: 14,
   },
   roleCardPressed: {
-    backgroundColor: "rgba(255,255,255,0.08)",
+    backgroundColor: colors.surfaceDark,
+    borderColor: colors.borderStrong,
   },
   roleIconBox: {
     width: 52,
@@ -402,7 +367,7 @@ const styles = StyleSheet.create({
   },
   roleNote: {
     fontSize: 13,
-    color: "#94A3B8",
+    color: "#8A8F98",
     lineHeight: 18,
   },
   pickerBottom: {
@@ -418,7 +383,7 @@ const styles = StyleSheet.create({
   },
   loginTextDark: {
     fontSize: 14,
-    color: "#64748B",
+    color: "#8A8F98",
   },
   loginLinkDark: {
     fontSize: 14,
@@ -474,7 +439,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
   },
   tabActivePro: {
-    backgroundColor: "#7C3AED",
+    backgroundColor: "#93C5FD",
   },
   tabText: {
     fontSize: 14,
@@ -536,7 +501,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xl,
     borderRadius: radius.lg,
     overflow: "hidden",
-    shadowColor: "#2563EB",
+    shadowColor: "#000000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 12,

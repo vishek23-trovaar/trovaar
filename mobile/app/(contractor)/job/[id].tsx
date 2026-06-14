@@ -28,7 +28,7 @@ const COLORS = {
   surface: colors.surface,
   border: colors.border,
   success: colors.success,
-  successLight: "#ecfdf5",
+  successLight: "rgba(52,211,153,0.14)",
   warning: colors.warning,
   danger: colors.danger,
   white: colors.white,
@@ -50,36 +50,36 @@ const URGENCY_CONFIG: Record<
   string,
   { bg: string; text: string; label: string }
 > = {
-  low: { bg: "#f1f5f9", text: "#64748b", label: "Low" },
-  medium: { bg: "#eff6ff", text: "#2563eb", label: "Medium" },
-  high: { bg: "#fffbeb", text: "#d97706", label: "High" },
-  emergency: { bg: "#fef2f2", text: "#dc2626", label: "Emergency" },
+  low: { bg: "rgba(138,143,152,0.14)", text: "#C0C4CC", label: "Low" },
+  medium: { bg: "rgba(59,130,246,0.14)", text: "#93C5FD", label: "Medium" },
+  high: { bg: "rgba(251,191,36,0.12)", text: "#FCD34D", label: "High" },
+  emergency: { bg: "rgba(248,113,113,0.15)", text: "#FCA5A5", label: "Emergency" },
 };
 
 const STATUS_CONFIG: Record<
   string,
   { bg: string; text: string; icon: string }
 > = {
-  pending: { bg: "#fffbeb", text: "#d97706", icon: "time-outline" },
+  pending: { bg: "rgba(251,191,36,0.12)", text: "#FCD34D", icon: "time-outline" },
   accepted: {
-    bg: "#ecfdf5",
-    text: "#059669",
+    bg: "rgba(52,211,153,0.14)",
+    text: "#6EE7B7",
     icon: "checkmark-circle-outline",
   },
-  rejected: { bg: "#fef2f2", text: "#dc2626", icon: "close-circle-outline" },
-  withdrawn: { bg: "#f1f5f9", text: "#64748b", icon: "arrow-undo-outline" },
+  rejected: { bg: "rgba(248,113,113,0.15)", text: "#FCA5A5", icon: "close-circle-outline" },
+  withdrawn: { bg: "rgba(138,143,152,0.14)", text: "#C0C4CC", icon: "arrow-undo-outline" },
 };
 
 const JOB_STATUS_CONFIG: Record<
   string,
   { bg: string; text: string; label: string }
 > = {
-  posted: { bg: "#eff6ff", text: "#2563eb", label: "Posted" },
-  bidding: { bg: "#f5f3ff", text: "#7c3aed", label: "Bidding" },
-  accepted: { bg: "#ecfdf5", text: "#059669", label: "Accepted" },
-  in_progress: { bg: "#fffbeb", text: "#d97706", label: "In Progress" },
-  completed: { bg: "#ecfdf5", text: "#16a34a", label: "Completed" },
-  cancelled: { bg: "#fef2f2", text: "#dc2626", label: "Cancelled" },
+  posted: { bg: "rgba(59,130,246,0.14)", text: "#93C5FD", label: "Posted" },
+  bidding: { bg: "rgba(129,140,248,0.16)", text: "#A5B4FC", label: "Bidding" },
+  accepted: { bg: "rgba(52,211,153,0.14)", text: "#6EE7B7", label: "Accepted" },
+  in_progress: { bg: "rgba(251,191,36,0.12)", text: "#FCD34D", label: "In Progress" },
+  completed: { bg: "rgba(52,211,153,0.14)", text: "#6EE7B7", label: "Completed" },
+  cancelled: { bg: "rgba(248,113,113,0.15)", text: "#FCA5A5", label: "Cancelled" },
 };
 
 function timeAgo(dateStr: string): string {
@@ -121,7 +121,7 @@ function SkeletonScreen() {
           width: 80,
           height: 32,
           borderRadius: 16,
-          backgroundColor: "#e2e8f0",
+          backgroundColor: "#1A1B1F",
           marginBottom: 12,
         }}
       />
@@ -130,7 +130,7 @@ function SkeletonScreen() {
           width: "80%",
           height: 24,
           borderRadius: 8,
-          backgroundColor: "#e2e8f0",
+          backgroundColor: "#1A1B1F",
           marginBottom: 10,
         }}
       />
@@ -139,7 +139,7 @@ function SkeletonScreen() {
           width: "100%",
           height: 60,
           borderRadius: 8,
-          backgroundColor: "#e2e8f0",
+          backgroundColor: "#1A1B1F",
           marginBottom: 20,
         }}
       />
@@ -149,7 +149,7 @@ function SkeletonScreen() {
             flex: 1,
             height: 80,
             borderRadius: 14,
-            backgroundColor: "#e2e8f0",
+            backgroundColor: "#1A1B1F",
           }}
         />
         <View
@@ -157,7 +157,7 @@ function SkeletonScreen() {
             flex: 1,
             height: 80,
             borderRadius: 14,
-            backgroundColor: "#e2e8f0",
+            backgroundColor: "#1A1B1F",
           }}
         />
       </View>
@@ -462,7 +462,7 @@ export default function ContractorJobDetail() {
   if (!job) {
     return (
       <View style={styles.centerScreen}>
-        <Ionicons name="alert-circle-outline" size={48} color="#94a3b8" />
+        <Ionicons name="alert-circle-outline" size={48} color="#8A8F98" />
         <Text style={styles.notFoundText}>Job not found</Text>
         <TouchableOpacity
           style={styles.backBtn}
@@ -542,7 +542,7 @@ export default function ContractorJobDetail() {
         ) : null}
         {matchScore !== null && matchScore > 0 && (
           <View style={styles.matchScoreBadge}>
-            <Ionicons name="sparkles" size={14} color="#7c3aed" />
+            <Ionicons name="sparkles" size={14} color="#93C5FD" />
             <Text style={styles.matchScoreText}>{matchScore}% match</Text>
           </View>
         )}
@@ -642,7 +642,7 @@ export default function ContractorJobDetail() {
               <>
                 {shown.length === 0 && (
                   <View style={styles.qaEmpty}>
-                    <Ionicons name="chatbubble-ellipses-outline" size={32} color="#cbd5e1" />
+                    <Ionicons name="chatbubble-ellipses-outline" size={32} color="#8A8F98" />
                     <Text style={styles.qaEmptyText}>No questions yet. Be the first to ask!</Text>
                   </View>
                 )}
@@ -724,7 +724,7 @@ export default function ContractorJobDetail() {
                             <TextInput
                               style={styles.qaInput}
                               placeholder="Write a reply..."
-                              placeholderTextColor="#94a3b8"
+                              placeholderTextColor="#8A8F98"
                               value={questionText}
                               onChangeText={setQuestionText}
                               multiline
@@ -762,7 +762,7 @@ export default function ContractorJobDetail() {
               <TextInput
                 style={styles.qaInput}
                 placeholder="Ask a question about this job..."
-                placeholderTextColor="#94a3b8"
+                placeholderTextColor="#8A8F98"
                 value={questionText}
                 onChangeText={setQuestionText}
                 multiline
@@ -1110,7 +1110,7 @@ export default function ContractorJobDetail() {
               {/* Portfolio Gate Warning */}
               {portfolioGateChecked && portfolioPhotoCount !== null && portfolioPhotoCount < 3 && (
                 <View style={styles.portfolioGateCard}>
-                  <Ionicons name="alert-circle" size={20} color="#d97706" />
+                  <Ionicons name="alert-circle" size={20} color="#FCD34D" />
                   <View style={{ flex: 1 }}>
                     <Text style={styles.portfolioGateTitle}>Portfolio Required</Text>
                     <Text style={styles.portfolioGateDesc}>
@@ -1184,7 +1184,7 @@ export default function ContractorJobDetail() {
                     <TextInput
                       style={styles.priceInput}
                       placeholder="0"
-                      placeholderTextColor="#94a3b8"
+                      placeholderTextColor="#8A8F98"
                       value={price}
                       onChangeText={setPrice}
                       keyboardType="numeric"
@@ -1199,7 +1199,7 @@ export default function ContractorJobDetail() {
                       <TextInput
                         style={[styles.input, { flex: 2 }]}
                         placeholder="Description"
-                        placeholderTextColor="#94a3b8"
+                        placeholderTextColor="#8A8F98"
                         value={item.description}
                         onChangeText={(v) => updateLineItem(idx, "description", v)}
                       />
@@ -1208,7 +1208,7 @@ export default function ContractorJobDetail() {
                         <TextInput
                           style={[styles.priceInput, { fontSize: 16 }]}
                           placeholder="0"
-                          placeholderTextColor="#94a3b8"
+                          placeholderTextColor="#8A8F98"
                           value={item.amount}
                           onChangeText={(v) => updateLineItem(idx, "amount", v)}
                           keyboardType="numeric"
@@ -1237,7 +1237,7 @@ export default function ContractorJobDetail() {
               <TextInput
                 style={styles.input}
                 placeholder="e.g., PVC fittings, copper pipe, sealant"
-                placeholderTextColor="#94a3b8"
+                placeholderTextColor="#8A8F98"
                 value={partsNeeded}
                 onChangeText={setPartsNeeded}
               />
@@ -1246,7 +1246,7 @@ export default function ContractorJobDetail() {
               <TextInput
                 style={styles.input}
                 placeholder="e.g., Pipe wrench, soldering kit"
-                placeholderTextColor="#94a3b8"
+                placeholderTextColor="#8A8F98"
                 value={equipmentList}
                 onChangeText={setEquipmentList}
               />
@@ -1255,7 +1255,7 @@ export default function ContractorJobDetail() {
               <TextInput
                 style={styles.input}
                 placeholder="e.g., 3"
-                placeholderTextColor="#94a3b8"
+                placeholderTextColor="#8A8F98"
                 value={timelineDays}
                 onChangeText={setTimelineDays}
                 keyboardType="numeric"
@@ -1265,7 +1265,7 @@ export default function ContractorJobDetail() {
               <TextInput
                 style={styles.input}
                 placeholder="e.g., 2-3 business days"
-                placeholderTextColor="#94a3b8"
+                placeholderTextColor="#8A8F98"
                 value={timeline}
                 onChangeText={setTimeline}
               />
@@ -1274,7 +1274,7 @@ export default function ContractorJobDetail() {
               <TextInput
                 style={styles.input}
                 placeholder="e.g., Tomorrow, March 15"
-                placeholderTextColor="#94a3b8"
+                placeholderTextColor="#8A8F98"
                 value={availabilityDate}
                 onChangeText={setAvailabilityDate}
               />
@@ -1283,7 +1283,7 @@ export default function ContractorJobDetail() {
               <TextInput
                 style={[styles.input, styles.messageInput]}
                 placeholder="Describe your approach and experience..."
-                placeholderTextColor="#94a3b8"
+                placeholderTextColor="#8A8F98"
                 value={message}
                 onChangeText={setMessage}
                 multiline
@@ -1327,7 +1327,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     gap: 12,
   },
-  notFoundText: { fontSize: 16, color: "#94a3b8", fontWeight: "500" },
+  notFoundText: { fontSize: 16, color: "#8A8F98", fontWeight: "500" },
   backBtn: {
     paddingHorizontal: 20,
     paddingVertical: 10,
@@ -1341,7 +1341,7 @@ const styles = StyleSheet.create({
   categoryBadge: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f1f5f9",
+    backgroundColor: "#1A1B1F",
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 16,
@@ -1374,7 +1374,7 @@ const styles = StyleSheet.create({
   },
   desc: {
     fontSize: 15,
-    color: "#475569",
+    color: "#8A8F98",
     lineHeight: 22,
   },
 
@@ -1415,7 +1415,7 @@ const styles = StyleSheet.create({
     height: 120,
     borderRadius: 16,
     marginRight: 10,
-    backgroundColor: "#e2e8f0",
+    backgroundColor: "#1A1B1F",
   },
 
   divider: {
@@ -1436,7 +1436,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 16,
     borderWidth: 1.5,
-    borderColor: "#a7f3d0",
+    borderColor: "rgba(52,211,153,0.30)",
   },
   escrowInfoHeader: {
     flexDirection: "row",
@@ -1524,7 +1524,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: "#a7f3d0",
+    borderColor: "rgba(52,211,153,0.30)",
   },
   completedBannerText: {
     fontSize: 14,
@@ -1588,7 +1588,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 32,
     borderWidth: 1.5,
-    borderColor: "#a7f3d0",
+    borderColor: "rgba(52,211,153,0.30)",
   },
   bidSubmittedIcon: {
     marginBottom: 12,
@@ -1665,7 +1665,7 @@ const styles = StyleSheet.create({
   existingBidMeta: { fontSize: 14, color: COLORS.muted, flex: 1 },
   existingBidTime: {
     fontSize: 12,
-    color: "#94a3b8",
+    color: "#8A8F98",
     marginTop: 8,
   },
 
@@ -1674,44 +1674,44 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     alignSelf: "flex-start",
-    backgroundColor: "#f5f3ff",
+    backgroundColor: "#16181C",
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 16,
     gap: 4,
     marginTop: 10,
   },
-  matchScoreText: { fontSize: 13, fontWeight: "700", color: "#7c3aed" },
+  matchScoreText: { fontSize: 13, fontWeight: "700", color: "#93C5FD" },
 
   // Portfolio Gate
   portfolioGateCard: {
     flexDirection: "row",
-    backgroundColor: "#fffbeb",
+    backgroundColor: "rgba(251,191,36,0.12)",
     borderRadius: 16,
     padding: 14,
     gap: 10,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: "#fde68a",
+    borderColor: "rgba(251,191,36,0.30)",
   },
-  portfolioGateTitle: { fontSize: 14, fontWeight: "700", color: "#d97706", marginBottom: 2 },
-  portfolioGateDesc: { fontSize: 13, color: "#92400e", lineHeight: 18 },
+  portfolioGateTitle: { fontSize: 14, fontWeight: "700", color: "#FCD34D", marginBottom: 2 },
+  portfolioGateDesc: { fontSize: 13, color: "#FCD34D", lineHeight: 18 },
 
   // AI Insight
   aiInsightBtn: {
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    backgroundColor: "#eff6ff",
+    backgroundColor: "rgba(59,130,246,0.14)",
     padding: 14,
     borderRadius: 16,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: "#bfdbfe",
+    borderColor: "rgba(59,130,246,0.30)",
   },
   aiInsightBtnText: { fontSize: 14, fontWeight: "600", color: COLORS.primaryLight },
   priceEstimateCard: {
-    backgroundColor: "#f8fafc",
+    backgroundColor: "#08090A",
     borderRadius: 16,
     padding: 14,
     marginBottom: 16,
@@ -1727,7 +1727,7 @@ const styles = StyleSheet.create({
   // Bid Type Toggle
   bidTypeToggle: {
     flexDirection: "row",
-    backgroundColor: "#f1f5f9",
+    backgroundColor: "#1A1B1F",
     borderRadius: 16,
     padding: 4,
     marginBottom: 14,
@@ -1778,14 +1778,14 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#334155",
+    color: "#8A8F98",
     marginBottom: 6,
     marginTop: 14,
   },
   priceInputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#121316",
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: 14,
@@ -1805,7 +1805,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   input: {
-    backgroundColor: "#fff",
+    backgroundColor: "#121316",
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: 14,
@@ -1853,7 +1853,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: "#eff6ff",
+    backgroundColor: "rgba(59,130,246,0.14)",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -1892,7 +1892,7 @@ const styles = StyleSheet.create({
   },
   qaEmptyText: {
     fontSize: 14,
-    color: "#94a3b8",
+    color: "#8A8F98",
     textAlign: "center",
   },
   qaThread: {
@@ -1915,30 +1915,30 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: "#e2e8f0",
+    backgroundColor: "#1A1B1F",
     justifyContent: "center",
     alignItems: "center",
   },
   qaAvatarOwner: {
-    backgroundColor: "#dbeafe",
+    backgroundColor: "rgba(59,130,246,0.14)",
   },
   qaAvatarText: {
     fontSize: 12,
     fontWeight: "700",
-    color: "#64748b",
+    color: "#8A8F98",
   },
   qaAvatarSmall: {
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: "#e2e8f0",
+    backgroundColor: "#1A1B1F",
     justifyContent: "center",
     alignItems: "center",
   },
   qaAvatarTextSmall: {
     fontSize: 10,
     fontWeight: "700",
-    color: "#64748b",
+    color: "#8A8F98",
   },
   qaNameRow: {
     flexDirection: "row",
@@ -1951,7 +1951,7 @@ const styles = StyleSheet.create({
     color: COLORS.secondary,
   },
   qaOwnerBadge: {
-    backgroundColor: "#dbeafe",
+    backgroundColor: "rgba(59,130,246,0.14)",
     paddingHorizontal: 6,
     paddingVertical: 1,
     borderRadius: 4,
@@ -1959,10 +1959,10 @@ const styles = StyleSheet.create({
   qaOwnerBadgeText: {
     fontSize: 10,
     fontWeight: "600",
-    color: "#2563eb",
+    color: "#3B82F6",
   },
   qaYouBadge: {
-    backgroundColor: "#f0fdf4",
+    backgroundColor: "rgba(52,211,153,0.14)",
     paddingHorizontal: 6,
     paddingVertical: 1,
     borderRadius: 4,
@@ -1970,15 +1970,15 @@ const styles = StyleSheet.create({
   qaYouBadgeText: {
     fontSize: 10,
     fontWeight: "600",
-    color: "#16a34a",
+    color: "#6EE7B7",
   },
   qaTime: {
     fontSize: 11,
-    color: "#94a3b8",
+    color: "#8A8F98",
   },
   qaContent: {
     fontSize: 14,
-    color: "#334155",
+    color: "#8A8F98",
     lineHeight: 20,
     paddingLeft: 40,
   },
@@ -2002,7 +2002,7 @@ const styles = StyleSheet.create({
   },
   qaReplyLine: {
     width: 2,
-    backgroundColor: "#e2e8f0",
+    backgroundColor: "#1A1B1F",
     borderRadius: 1,
     minHeight: 24,
   },
@@ -2031,7 +2031,7 @@ const styles = StyleSheet.create({
   },
   qaInput: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#121316",
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: 10,

@@ -119,7 +119,7 @@ export default function TipScreen() {
 
           <View style={styles.celebrationStars}>
             {[1, 2, 3, 4, 5].map((i) => (
-              <Ionicons key={i} name="star" size={28} color="#f59e0b" />
+              <Ionicons key={i} name="star" size={28} color="#FCD34D" />
             ))}
           </View>
 
@@ -226,7 +226,7 @@ export default function TipScreen() {
             <TextInput
               style={styles.customAmountInput}
               placeholder="0.00"
-              placeholderTextColor="#94a3b8"
+              placeholderTextColor="#8A8F98"
               value={customAmount}
               onChangeText={(v) => {
                 // Allow only valid decimal number input
@@ -248,7 +248,7 @@ export default function TipScreen() {
         <TextInput
           style={styles.messageInput}
           placeholder="Add a note..."
-          placeholderTextColor="#94a3b8"
+          placeholderTextColor="#8A8F98"
           value={message}
           onChangeText={setMessage}
           multiline
@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
   },
   amountChipActive: {
     borderColor: colors.primary,
-    backgroundColor: "#eff6ff",
+    backgroundColor: "rgba(59,130,246,0.14)",
   },
   amountChipText: {
     fontSize: 16,
@@ -461,17 +461,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "#f0fdf4",
+    backgroundColor: "rgba(52,211,153,0.14)",
     borderRadius: radius.lg,
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderWidth: 1,
-    borderColor: "#bbf7d0",
+    borderColor: "rgba(52,211,153,0.30)",
     marginTop: 16,
   },
   amountPreviewLabel: {
     fontSize: 15,
-    color: "#15803d",
+    color: "#6EE7B7",
     fontWeight: "500",
   },
   amountPreviewValue: {
@@ -518,7 +518,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: "#f0fdf4",
+    backgroundColor: "rgba(52,211,153,0.14)",
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 20,
@@ -530,13 +530,13 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   celebrationAmountBadge: {
-    backgroundColor: "#eff6ff",
+    backgroundColor: "rgba(59,130,246,0.14)",
     paddingHorizontal: 24,
     paddingVertical: 10,
     borderRadius: 20,
     marginBottom: 16,
     borderWidth: 1.5,
-    borderColor: "#bfdbfe",
+    borderColor: "rgba(59,130,246,0.30)",
   },
   celebrationAmount: {
     fontSize: 28,

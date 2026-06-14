@@ -26,7 +26,6 @@ import {
   typography,
   statusColors,
 } from "../../../lib/theme";
-import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // ---------------------------------------------------------------------------
@@ -501,13 +500,11 @@ export default function ChatThread() {
             ]}
           >
             {isMine ? (
-              <LinearGradient
-                colors={[colors.primary, colors.primaryDark]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
+              <View
                 style={[
                   styles.bubble,
                   styles.bubbleMine,
+                  { backgroundColor: colors.primary },
                   item.isLastInCluster && styles.bubbleMineTail,
                   item.isFirstInCluster && styles.bubbleMineFirst,
                 ]}
@@ -515,7 +512,7 @@ export default function ChatThread() {
                 <Text style={[styles.bubbleText, styles.bubbleTextMine]}>
                   {msg.content}
                 </Text>
-              </LinearGradient>
+              </View>
             ) : (
               <View
                 style={[
@@ -1004,7 +1001,7 @@ const styles = StyleSheet.create({
     width: 88,
     height: 88,
     borderRadius: 44,
-    backgroundColor: "#EFF6FF",
+    backgroundColor: "rgba(59,130,246,0.14)",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,
@@ -1013,7 +1010,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
     justifyContent: "center",
     alignItems: "center",
   },

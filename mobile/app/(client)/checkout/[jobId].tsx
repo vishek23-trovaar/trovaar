@@ -198,7 +198,7 @@ export default function CheckoutScreen() {
             <View style={{ flex: 1 }}>
               <Text style={styles.contractorName}>{acceptedBid.contractor_name || "Contractor"}</Text>
               <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
-                <Ionicons name="star" size={14} color="#f59e0b" />
+                <Ionicons name="star" size={14} color="#FCD34D" />
                 <Text style={styles.contractorRating}>
                   {acceptedBid.contractor_rating?.toFixed(1) || "New"}
                 </Text>
@@ -269,7 +269,7 @@ export default function CheckoutScreen() {
         {/* Escrow Explanation */}
         <View style={styles.escrowInfoCard}>
           <View style={styles.escrowInfoHeader}>
-            <Ionicons name="lock-closed" size={18} color={"#7c3aed"} />
+            <Ionicons name="lock-closed" size={18} color={"#93C5FD"} />
             <Text style={styles.escrowInfoTitle}>How Escrow Works</Text>
           </View>
           <View style={styles.escrowSteps}>
@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
 
   loadingText: { fontSize: 15, color: colors.muted, marginTop: 12 },
   errorText: { fontSize: 16, color: colors.muted, marginTop: 12, textAlign: "center" },
-  backBtn: { marginTop: 20, paddingHorizontal: 28, paddingVertical: 12, borderRadius: radius.lg, backgroundColor: "#DBEAFE" },
+  backBtn: { marginTop: 20, paddingHorizontal: 28, paddingVertical: 12, borderRadius: radius.lg, backgroundColor: "rgba(59,130,246,0.14)" },
   backBtnText: { color: colors.primary, fontSize: 15, fontWeight: "600" },
 
   // Success state
@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
   // Contractor
   contractorRow: { flexDirection: "row", alignItems: "center", gap: 12 },
   contractorAvatar: {
-    width: 48, height: 48, borderRadius: 24, backgroundColor: "#DBEAFE",
+    width: 48, height: 48, borderRadius: 24, backgroundColor: "rgba(59,130,246,0.14)",
     justifyContent: "center", alignItems: "center",
   },
   contractorAvatarText: { fontSize: 20, fontWeight: "700", color: colors.primary },
@@ -375,8 +375,8 @@ const styles = StyleSheet.create({
 
   // Guarantee
   guaranteeCard: {
-    backgroundColor: "#D1FAE5", borderRadius: radius.xl, padding: 18, marginBottom: 12,
-    borderWidth: 1.5, borderColor: "#a7f3d0",
+    backgroundColor: "rgba(52,211,153,0.14)", borderRadius: radius.xl, padding: 18, marginBottom: 12,
+    borderWidth: 1.5, borderColor: "rgba(52,211,153,0.30)",
   },
   guaranteeHeader: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 10 },
   guaranteeTitle: { fontSize: 16, fontWeight: "700", color: colors.success },
@@ -387,15 +387,15 @@ const styles = StyleSheet.create({
 
   // Escrow info
   escrowInfoCard: {
-    backgroundColor: "#f5f3ff", borderRadius: radius.xl, padding: 18, marginBottom: 12,
+    backgroundColor: "#16181C", borderRadius: radius.xl, padding: 18, marginBottom: 12,
     borderWidth: 1.5, borderColor: "#ddd6fe",
   },
   escrowInfoHeader: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 14 },
-  escrowInfoTitle: { fontSize: 16, fontWeight: "700", color: "#7c3aed" },
+  escrowInfoTitle: { fontSize: 16, fontWeight: "700", color: "#93C5FD" },
   escrowSteps: { gap: 12 },
   escrowStepRow: { flexDirection: "row", alignItems: "center", gap: 12 },
   escrowStepNum: {
-    width: 28, height: 28, borderRadius: radius.lg, backgroundColor: "#7c3aed",
+    width: 28, height: 28, borderRadius: radius.lg, backgroundColor: "#93C5FD",
     justifyContent: "center", alignItems: "center",
   },
   escrowStepNumText: { fontSize: 13, fontWeight: "700", color: colors.white },

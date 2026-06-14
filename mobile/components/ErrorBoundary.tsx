@@ -65,15 +65,15 @@ export default class ErrorBoundary extends React.Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#0f172a" },
+  container: { flex: 1, backgroundColor: "#010102" },
   inner: { flexGrow: 1, justifyContent: "center", padding: 24 },
   emoji: { fontSize: 56, textAlign: "center", marginBottom: 16 },
-  title: { color: "#fff", fontSize: 22, fontWeight: "700", textAlign: "center", marginBottom: 10 },
-  subtitle: { color: "#cbd5e1", fontSize: 15, textAlign: "center", lineHeight: 22, marginBottom: 28 },
-  devBox: { backgroundColor: "#1e293b", borderColor: "#334155", borderWidth: 1, borderRadius: 12, padding: 14, marginBottom: 28 },
+  title: { color: "#f7f8f8", fontSize: 22, fontWeight: "700", textAlign: "center", marginBottom: 10, letterSpacing: -0.4 },
+  subtitle: { color: "#c9cdd3", fontSize: 15, textAlign: "center", lineHeight: 22, marginBottom: 28 },
+  devBox: { backgroundColor: "#18191b", borderColor: "#23252a", borderWidth: 1, borderRadius: 12, padding: 14, marginBottom: 28 },
   devLabel: { color: "#fbbf24", fontSize: 11, fontWeight: "700", letterSpacing: 1, marginBottom: 8 },
   devText: { color: "#f87171", fontSize: 13, fontFamily: "monospace", marginBottom: 8 },
-  devStack: { color: "#94a3b8", fontSize: 11, fontFamily: "monospace", lineHeight: 16 },
-  button: { backgroundColor: "#2563eb", borderRadius: 12, paddingVertical: 14, alignItems: "center" },
+  devStack: { color: "#8a8f98", fontSize: 11, fontFamily: "monospace", lineHeight: 16 },
+  button: { backgroundColor: "#3b82f6", borderRadius: 10, paddingVertical: 14, alignItems: "center" },
   buttonText: { color: "#fff", fontSize: 16, fontWeight: "600" },
 });

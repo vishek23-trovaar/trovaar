@@ -241,7 +241,7 @@ export default function ClientDashboard() {
                   <Text style={styles.nameText}>{firstName}</Text>
                 </View>
                 <TouchableOpacity style={styles.notifBtn} onPress={() => router.push("/(client)/messages")}>
-                  <Ionicons name="notifications-outline" size={22} color="#ffffff" />
+                  <Ionicons name="notifications-outline" size={22} color={colors.text} />
                 </TouchableOpacity>
               </View>
 
@@ -271,28 +271,28 @@ export default function ClientDashboard() {
                 icon="add-circle-outline"
                 label="Post Job"
                 color={colors.primary}
-                bgColor={"#DBEAFE"}
+                bgColor={"rgba(59,130,246,0.14)"}
                 onPress={() => router.push("/(client)/post-job")}
               />
               <QuickAction
                 icon="chatbubbles-outline"
                 label="Messages"
-                color={"#7c3aed"}
-                bgColor={"#f5f3ff"}
+                color={colors.primary}
+                bgColor={"rgba(59,130,246,0.14)"}
                 onPress={() => router.push("/(client)/messages")}
               />
               <QuickAction
                 icon="person-outline"
                 label="Profile"
                 color={colors.success}
-                bgColor={"#D1FAE5"}
+                bgColor={"rgba(52,211,153,0.14)"}
                 onPress={() => router.push("/(client)/profile")}
               />
               <QuickAction
                 icon="cash-outline"
                 label="Quote Buster"
-                color={"#7c3aed"}
-                bgColor={"#f3e8ff"}
+                color={colors.primary}
+                bgColor={"rgba(59,130,246,0.14)"}
                 onPress={() => router.push("/(client)/quote-buster")}
               />
             </View>
@@ -301,7 +301,7 @@ export default function ClientDashboard() {
             {surgeCategories.length > 0 && (
               <View style={styles.surgeBanner}>
                 <View style={styles.surgeRow}>
-                  <Ionicons name="trending-up" size={18} color="#d97706" />
+                  <Ionicons name="trending-up" size={18} color={colors.warning} />
                   <Text style={styles.surgeTitle}>High Demand Right Now</Text>
                 </View>
                 <Text style={styles.surgeText}>
@@ -405,7 +405,7 @@ export default function ClientDashboard() {
               onPress={() => router.push("/(client)/post-job")}
               activeOpacity={0.85}
             >
-              <Ionicons name="add-outline" size={22} color={colors.white} />
+              <Ionicons name="add-outline" size={22} color="#ffffff" />
               <Text style={styles.emptyBtnText}>Post Your First Job</Text>
             </TouchableOpacity>
           </View>
@@ -450,22 +450,22 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: "rgba(255,255,255,0.12)",
+    backgroundColor: "#18191B",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.18)",
+    borderColor: colors.border,
     justifyContent: "center",
     alignItems: "center",
   },
-  avatarLetter: { fontSize: 22, fontWeight: "700", color: colors.white },
+  avatarLetter: { fontSize: 22, fontWeight: "700", color: colors.text },
   greetingText: { fontSize: 14, color: colors.onDarkMuted, fontWeight: "500" },
-  nameText: { fontSize: 26, fontWeight: "800", color: "#ffffff", marginTop: 2, letterSpacing: -0.5 },
+  nameText: { fontSize: 26, fontWeight: "800", color: colors.text, marginTop: 2, letterSpacing: -0.5 },
   notifBtn: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: "#18191B",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.15)",
+    borderColor: colors.border,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -514,8 +514,8 @@ const styles = StyleSheet.create({
   sectionCount: {
     fontSize: 12,
     fontWeight: "700",
-    color: colors.primary,
-    backgroundColor: "#DBEAFE",
+    color: "#93C5FD",
+    backgroundColor: "rgba(59,130,246,0.14)",
     paddingHorizontal: 10,
     paddingVertical: 3,
     borderRadius: 10,
@@ -530,7 +530,6 @@ const styles = StyleSheet.create({
     marginBottom: 14,
     borderWidth: 1,
     borderColor: colors.border,
-    ...shadows.md,
   },
   cardTop: {
     flexDirection: "row",
@@ -605,14 +604,16 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: "#DBEAFE",
+    backgroundColor: colors.surfaceDark,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   emptyCircle2: {
     position: "absolute",
     width: 90,
     height: 90,
     borderRadius: 45,
-    backgroundColor: colors.primary + "15",
+    backgroundColor: "rgba(59,130,246,0.14)",
   },
   emptyIconWrap: { zIndex: 1 },
   emptyTitle: {
@@ -642,12 +643,12 @@ const styles = StyleSheet.create({
 
   // Surge Banner
   surgeBanner: {
-    backgroundColor: "#fffbeb",
+    backgroundColor: "rgba(251,191,36,0.12)",
     borderRadius: 14,
     padding: 14,
     marginBottom: 16,
-    borderWidth: 1.5,
-    borderColor: "#fde68a",
+    borderWidth: 1,
+    borderColor: "rgba(251,191,36,0.30)",
   },
   surgeRow: {
     flexDirection: "row",
@@ -658,11 +659,11 @@ const styles = StyleSheet.create({
   surgeTitle: {
     fontSize: 14,
     fontWeight: "700",
-    color: "#d97706",
+    color: "#FCD34D",
   },
   surgeText: {
     fontSize: 13,
-    color: "#92400e",
+    color: "#FCD34D",
     lineHeight: 19,
     textTransform: "capitalize",
   },
@@ -677,7 +678,7 @@ const styles = StyleSheet.create({
     padding: 14,
     marginBottom: 16,
     borderWidth: 1.5,
-    borderColor: "#dbeafe",
+    borderColor: "rgba(59,130,246,0.30)",
   },
   referralLeft: {
     flexDirection: "row",

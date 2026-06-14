@@ -48,6 +48,6 @@ export default function Skeleton({
 
 const styles = StyleSheet.create({
   skeleton: {
-    backgroundColor: "#e2e8f0",
+    backgroundColor: "#1a1b1f",
   },
 });

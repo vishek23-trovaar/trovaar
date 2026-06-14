@@ -144,7 +144,7 @@ export default function ClientMessages() {
   if (error) {
     return (
       <View style={[styles.screen, { justifyContent: 'center', alignItems: 'center' }]}>
-        <Text style={{ color: '#dc2626', fontSize: 15, textAlign: 'center', paddingHorizontal: 24 }}>{error}</Text>
+        <Text style={{ color: '#F87171', fontSize: 15, textAlign: 'center', paddingHorizontal: 24 }}>{error}</Text>
       </View>
     );
   }
@@ -169,13 +169,13 @@ export default function ClientMessages() {
               <TextInput
                 style={styles.searchInput}
                 placeholder="Search conversations..."
-                placeholderTextColor="#94a3b8"
+                placeholderTextColor="#8A8F98"
                 value={searchQuery}
                 onChangeText={setSearchQuery}
               />
               {searchQuery.length > 0 && (
                 <TouchableOpacity onPress={() => setSearchQuery("")}>
-                  <Ionicons name="close-circle" size={18} color="#cbd5e1" />
+                  <Ionicons name="close-circle" size={18} color="#8A8F98" />
                 </TouchableOpacity>
               )}
             </View>
@@ -325,7 +325,7 @@ const styles = StyleSheet.create({
   },
   timeText: {
     fontSize: 12,
-    color: "#94a3b8",
+    color: "#8A8F98",
   },
   timeTextUnread: {
     color: colors.primary,
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
   },
   preview: {
     fontSize: 14,
-    color: "#94a3b8",
+    color: "#8A8F98",
     flex: 1,
     marginRight: 8,
   },
@@ -372,7 +372,7 @@ const styles = StyleSheet.create({
   },
   separatorLine: {
     height: 1,
-    backgroundColor: "#f1f5f9",
+    backgroundColor: "#1A1B1F",
   },
 
   // Empty State
@@ -385,7 +385,7 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: 36,
-    backgroundColor: "#eff6ff",
+    backgroundColor: "rgba(59,130,246,0.14)",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 16,

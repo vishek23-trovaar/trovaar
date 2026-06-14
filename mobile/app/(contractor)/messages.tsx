@@ -80,11 +80,11 @@ function SkeletonRow({ delay }: { delay: number }) {
 
   return (
     <Animated.View style={[styles.row, { opacity }]}>
-      <View style={{ width: 52, height: 52, borderRadius: 26, backgroundColor: "#e2e8f0" }} />
+      <View style={{ width: 52, height: 52, borderRadius: 26, backgroundColor: "#1A1B1F" }} />
       <View style={{ flex: 1, gap: 6 }}>
-        <View style={{ width: "50%", height: 14, borderRadius: 7, backgroundColor: "#e2e8f0" }} />
-        <View style={{ width: "70%", height: 12, borderRadius: 6, backgroundColor: "#e2e8f0" }} />
-        <View style={{ width: "40%", height: 12, borderRadius: 6, backgroundColor: "#e2e8f0" }} />
+        <View style={{ width: "50%", height: 14, borderRadius: 7, backgroundColor: "#1A1B1F" }} />
+        <View style={{ width: "70%", height: 12, borderRadius: 6, backgroundColor: "#1A1B1F" }} />
+        <View style={{ width: "40%", height: 12, borderRadius: 6, backgroundColor: "#1A1B1F" }} />
       </View>
     </Animated.View>
   );
@@ -238,7 +238,7 @@ export default function ContractorMessages() {
             )}
           </View>
         </View>
-        <Ionicons name="chevron-forward" size={16} color="#cbd5e1" />
+        <Ionicons name="chevron-forward" size={16} color="#8A8F98" />
       </TouchableOpacity>
     );
   };
@@ -251,7 +251,7 @@ export default function ContractorMessages() {
         onPress={() => router.push(`/(contractor)/job/${item.job_id}`)}
       >
         <View style={styles.qaAvatar}>
-          <Ionicons name="chatbubbles-outline" size={22} color="#7c3aed" />
+          <Ionicons name="chatbubbles-outline" size={22} color="#93C5FD" />
         </View>
         <View style={styles.body}>
           <View style={styles.topRow}>
@@ -278,7 +278,7 @@ export default function ContractorMessages() {
             {item.last_question}
           </Text>
         </View>
-        <Ionicons name="chevron-forward" size={16} color="#cbd5e1" />
+        <Ionicons name="chevron-forward" size={16} color="#8A8F98" />
       </TouchableOpacity>
     );
   };
@@ -286,7 +286,7 @@ export default function ContractorMessages() {
   if (error && tab === "direct") {
     return (
       <Animated.View style={[styles.screen, { justifyContent: "center", alignItems: "center", opacity: screenOpacity }]}>
-        <Text style={{ color: "#dc2626", fontSize: 15, textAlign: "center", paddingHorizontal: 24 }}>{error}</Text>
+        <Text style={{ color: "#F87171", fontSize: 15, textAlign: "center", paddingHorizontal: 24 }}>{error}</Text>
       </Animated.View>
     );
   }
@@ -344,17 +344,17 @@ export default function ContractorMessages() {
       {/* Search bar */}
       <View style={styles.searchContainer}>
         <View style={styles.searchBar}>
-          <Ionicons name="search-outline" size={18} color="#94a3b8" />
+          <Ionicons name="search-outline" size={18} color="#8A8F98" />
           <TextInput
             style={styles.searchInput}
             placeholder={tab === "direct" ? "Search conversations..." : "Search Q&A threads..."}
-            placeholderTextColor="#94a3b8"
+            placeholderTextColor="#8A8F98"
             value={search}
             onChangeText={setSearch}
           />
           {search.length > 0 && (
             <TouchableOpacity onPress={() => setSearch("")}>
-              <Ionicons name="close-circle" size={18} color="#94a3b8" />
+              <Ionicons name="close-circle" size={18} color="#8A8F98" />
             </TouchableOpacity>
           )}
         </View>
@@ -470,7 +470,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
   },
   segmentBtnActiveQA: {
-    backgroundColor: "#7c3aed",
+    backgroundColor: "#93C5FD",
   },
   segmentText: {
     fontSize: 14,
@@ -481,7 +481,7 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   segmentBadge: {
-    backgroundColor: "#e2e8f0",
+    backgroundColor: "#1A1B1F",
     borderRadius: 8,
     paddingHorizontal: 6,
     paddingVertical: 1,
@@ -489,10 +489,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   segmentBadgeActive: {
-    backgroundColor: "rgba(255,255,255,0.25)",
+    backgroundColor: "#18191B",
   },
   segmentBadgeActiveQA: {
-    backgroundColor: "rgba(255,255,255,0.25)",
+    backgroundColor: "#18191B",
   },
   segmentBadgeText: {
     fontSize: 11,
@@ -529,7 +529,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     padding: 16,
     borderBottomWidth: 1,
-    borderColor: "#f1f5f9",
+    borderColor: "#23252A",
     alignItems: "center",
     gap: 12,
   },
@@ -537,12 +537,12 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
     justifyContent: "center",
     alignItems: "center",
   },
   avatarUnread: {
-    backgroundColor: "#BFDBFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
   },
   avatarText: {
     fontSize: 20,
@@ -564,7 +564,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   nameBold: { fontWeight: "700" },
-  time: { fontSize: 12, color: "#94a3b8" },
+  time: { fontSize: 12, color: "#8A8F98" },
   timeUnread: { color: COLORS.primary, fontWeight: "600" },
   jobTitle: {
     fontSize: 12,
@@ -578,7 +578,7 @@ const styles = StyleSheet.create({
   },
   preview: {
     fontSize: 13,
-    color: "#94a3b8",
+    color: "#8A8F98",
     flex: 1,
   },
   previewBold: { color: COLORS.secondary, fontWeight: "500" },
@@ -597,7 +597,7 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: "#f5f3ff",
+    backgroundColor: "#16181C",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -607,21 +607,21 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   qaBadge: {
-    backgroundColor: "#f5f3ff",
+    backgroundColor: "#16181C",
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 6,
   },
   qaBadgeMine: {
-    backgroundColor: "#f0fdf4",
+    backgroundColor: "rgba(52,211,153,0.14)",
   },
   qaBadgeText: {
     fontSize: 11,
     fontWeight: "600",
-    color: "#7c3aed",
+    color: "#93C5FD",
   },
   qaBadgeTextMine: {
-    color: "#16a34a",
+    color: "#6EE7B7",
   },
   qaInfo: {
     flexDirection: "row",
@@ -629,9 +629,9 @@ const styles = StyleSheet.create({
     gap: 8,
     paddingHorizontal: 16,
     paddingVertical: 10,
-    backgroundColor: "#f8fafc",
+    backgroundColor: "#08090A",
     borderBottomWidth: 1,
-    borderColor: "#f1f5f9",
+    borderColor: "#23252A",
   },
   qaInfoText: {
     fontSize: 12,
@@ -644,5 +644,5 @@ const styles = StyleSheet.create({
   empty: { alignItems: "center", paddingVertical: 80 },
   emptyIcon: { fontSize: 56, marginBottom: 16 },
   emptyTitle: { fontSize: 18, fontWeight: "700", color: COLORS.secondary, marginBottom: 6 },
-  emptySubtitle: { fontSize: 14, color: "#94a3b8", textAlign: "center", paddingHorizontal: 40 },
+  emptySubtitle: { fontSize: 14, color: "#8A8F98", textAlign: "center", paddingHorizontal: 40 },
 });

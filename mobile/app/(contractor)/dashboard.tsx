@@ -52,23 +52,23 @@ type ViewMode = "cards" | "list" | "map";
 const COLORS = {
   primary: colors.primary,
   primaryLight: colors.primaryLight,
-  primaryBg: "#DBEAFE",
+  primaryBg: "rgba(59,130,246,0.14)",
   secondary: colors.text,
   muted: colors.muted,
-  mutedLight: "#94a3b8",
+  mutedLight: "#8A8F98",
   surface: colors.surface,
   border: colors.border,
   white: colors.white,
   success: colors.success,
-  successBg: "#f0fdf4",
+  successBg: "rgba(52,211,153,0.14)",
   warning: colors.warning,
-  warningBg: "#fffbeb",
+  warningBg: "rgba(251,191,36,0.12)",
   danger: colors.danger,
-  dangerBg: "#fef2f2",
-  purple: "#7c3aed",
-  purpleBg: "#f5f3ff",
-  cyan: "#0891b2",
-  cyanBg: "#ecfeff",
+  dangerBg: "rgba(248,113,113,0.15)",
+  purple: "#818CF8",
+  purpleBg: "rgba(129,140,248,0.16)",
+  cyan: "#22D3EE",
+  cyanBg: "rgba(34,211,238,0.14)",
 };
 
 const CATEGORIES = [
@@ -105,10 +105,10 @@ const SORT_OPTIONS = [
 ];
 
 const URGENCY_CONFIG: Record<string, { bg: string; text: string; label: string; dotColor: string; gradient: [string, string] }> = {
-  low: { bg: "#f1f5f9", text: "#64748b", label: "Low", dotColor: "#94a3b8", gradient: ["#94a3b8", "#64748b"] },
-  medium: { bg: "#eff6ff", text: "#2563eb", label: "Medium", dotColor: "#3b82f6", gradient: ["#3b82f6", "#2563eb"] },
-  high: { bg: "#fffbeb", text: "#d97706", label: "High", dotColor: "#f59e0b", gradient: ["#f59e0b", "#d97706"] },
-  emergency: { bg: "#fef2f2", text: "#dc2626", label: "Emergency", dotColor: "#ef4444", gradient: ["#ef4444", "#dc2626"] },
+  low: { bg: "rgba(138,143,152,0.16)", text: "#C0C4CC", label: "Low", dotColor: "#8A8F98", gradient: ["#8A8F98", "#8A8F98"] },
+  medium: { bg: "rgba(59,130,246,0.16)", text: "#93C5FD", label: "Medium", dotColor: "#3B82F6", gradient: ["#3B82F6", "#3B82F6"] },
+  high: { bg: "rgba(251,191,36,0.16)", text: "#FCD34D", label: "High", dotColor: "#FCD34D", gradient: ["#FBBF24", "#FBBF24"] },
+  emergency: { bg: "rgba(248,113,113,0.18)", text: "#FCA5A5", label: "Emergency", dotColor: "#F87171", gradient: ["#F87171", "#F87171"] },
 };
 
 function timeAgo(dateStr: string): string {
@@ -146,14 +146,14 @@ function SkeletonCard({ delay }: { delay: number }) {
   return (
     <Animated.View style={[listStyles.card, { opacity }]}>
       <View style={{ flexDirection: "row", gap: 10, marginBottom: 12 }}>
-        <View style={{ width: 32, height: 32, borderRadius: 10, backgroundColor: "#e2e8f0" }} />
+        <View style={{ width: 32, height: 32, borderRadius: 10, backgroundColor: "#1A1B1F" }} />
         <View style={{ flex: 1 }}>
-          <View style={{ width: "70%", height: 16, borderRadius: 8, backgroundColor: "#e2e8f0", marginBottom: 6 }} />
-          <View style={{ width: "40%", height: 12, borderRadius: 6, backgroundColor: "#e2e8f0" }} />
+          <View style={{ width: "70%", height: 16, borderRadius: 8, backgroundColor: "#1A1B1F", marginBottom: 6 }} />
+          <View style={{ width: "40%", height: 12, borderRadius: 6, backgroundColor: "#1A1B1F" }} />
         </View>
       </View>
-      <View style={{ width: "90%", height: 18, borderRadius: 9, backgroundColor: "#e2e8f0", marginBottom: 10 }} />
-      <View style={{ width: "60%", height: 14, borderRadius: 7, backgroundColor: "#e2e8f0" }} />
+      <View style={{ width: "90%", height: 18, borderRadius: 9, backgroundColor: "#1A1B1F", marginBottom: 10 }} />
+      <View style={{ width: "60%", height: 14, borderRadius: 7, backgroundColor: "#1A1B1F" }} />
     </Animated.View>
   );
 }
@@ -219,10 +219,7 @@ function InstagramJobCard({
           blurRadius={1}
         />
       ) : (
-        <LinearGradient
-          colors={["#0F172A", "#1E293B", "#0F172A"]}
-          style={cardStyles.bgGradient}
-        />
+        <View style={[cardStyles.bgGradient, { backgroundColor: "#16181C" }]} />
       )}
 
       {/* Overlay for readability */}
@@ -251,7 +248,7 @@ function InstagramJobCard({
         )}
         <View style={{ flex: 1 }} />
         <View style={cardStyles.timeBadge}>
-          <Ionicons name="time-outline" size={12} color="#94A3B8" />
+          <Ionicons name="time-outline" size={12} color="#8A8F98" />
           <Text style={cardStyles.timeText}>{timeAgo(item.created_at)}</Text>
         </View>
       </View>
@@ -275,7 +272,7 @@ function InstagramJobCard({
             </Text>
           </View>
           <View
-            style={[cardStyles.urgencyChip, { backgroundColor: urgency.bg + "CC" }]}
+            style={[cardStyles.urgencyChip, { backgroundColor: urgency.bg }]}
           >
             <View style={[cardStyles.urgencyDot, { backgroundColor: urgency.dotColor }]} />
             <Text style={[cardStyles.urgencyText, { color: urgency.text }]}>
@@ -300,7 +297,7 @@ function InstagramJobCard({
         <View style={cardStyles.pillsRow}>
           {/* Location / Distance */}
           <View style={cardStyles.pill}>
-            <Ionicons name="navigate-outline" size={13} color="#818CF8" />
+            <Ionicons name="navigate-outline" size={13} color="#93C5FD" />
             <Text style={cardStyles.pillText}>
               {item.distance_miles != null
                 ? formatDistance(item.distance_miles)
@@ -311,14 +308,14 @@ function InstagramJobCard({
           {/* Budget */}
           {budgetText && (
             <View style={cardStyles.pill}>
-              <Ionicons name="cash-outline" size={13} color="#10B981" />
+              <Ionicons name="cash-outline" size={13} color="#6EE7B7" />
               <Text style={cardStyles.pillText}>{budgetText}</Text>
             </View>
           )}
 
           {/* Bids */}
           <View style={cardStyles.pill}>
-            <Ionicons name="people-outline" size={13} color="#F59E0B" />
+            <Ionicons name="people-outline" size={13} color="#FCD34D" />
             <Text style={cardStyles.pillText}>
               {item.bid_count || 0} bid{(item.bid_count || 0) !== 1 ? "s" : ""}
             </Text>
@@ -332,7 +329,7 @@ function InstagramJobCard({
           activeOpacity={0.85}
         >
           <LinearGradient
-            colors={["#2563EB", "#1D4ED8"]}
+            colors={["#3B82F6", "#3B82F6"]}
             style={cardStyles.bidButtonGradient}
           >
             <Text style={cardStyles.bidButtonText}>View & Bid</Text>
@@ -349,10 +346,10 @@ function InstagramJobCard({
    ══════════════════════════════════════════════════════════════ */
 
 const URGENCY_PIN_COLORS: Record<string, string> = {
-  emergency: "#EF4444",
-  high: "#F59E0B",
-  medium: "#2563EB",
-  low: "#94A3B8",
+  emergency: "#F87171",
+  high: "#FBBF24",
+  medium: "#3B82F6",
+  low: "#8A8F98",
 };
 
 /**
@@ -525,7 +522,7 @@ function UberMapView({
           >
             <View style={mapStyles.bottomCardHandle} />
             <View style={mapStyles.bottomCardRow}>
-              <View style={[mapStyles.bottomCardDot, { backgroundColor: URGENCY_PIN_COLORS[selectedJob.urgency] || "#94A3B8" }]} />
+              <View style={[mapStyles.bottomCardDot, { backgroundColor: URGENCY_PIN_COLORS[selectedJob.urgency] || "#8A8F98" }]} />
               <Text style={mapStyles.bottomCardCategory}>
                 {getCatEmoji(selectedJob.category)}{" "}
                 {selectedJob.category?.replace(/_/g, " ")}
@@ -545,7 +542,7 @@ function UberMapView({
             <View style={mapStyles.bottomCardInfoRow}>
               {selectedJob.distance_miles != null && (
                 <View style={mapStyles.bottomCardPill}>
-                  <Ionicons name="navigate-outline" size={13} color="#818CF8" />
+                  <Ionicons name="navigate-outline" size={13} color="#93C5FD" />
                   <Text style={mapStyles.bottomCardPillText}>
                     {formatDistance(selectedJob.distance_miles)}
                   </Text>
@@ -553,7 +550,7 @@ function UberMapView({
               )}
               {(selectedJob.budget_min || selectedJob.budget_max) && (
                 <View style={mapStyles.bottomCardPill}>
-                  <Ionicons name="cash-outline" size={13} color="#10B981" />
+                  <Ionicons name="cash-outline" size={13} color="#6EE7B7" />
                   <Text style={mapStyles.bottomCardPillText}>
                     {selectedJob.budget_min && selectedJob.budget_max
                       ? `$${selectedJob.budget_min} – $${selectedJob.budget_max}`
@@ -562,7 +559,7 @@ function UberMapView({
                 </View>
               )}
               <View style={mapStyles.bottomCardPill}>
-                <Ionicons name="people-outline" size={13} color="#F59E0B" />
+                <Ionicons name="people-outline" size={13} color="#FCD34D" />
                 <Text style={mapStyles.bottomCardPillText}>
                   {selectedJob.bid_count || 0} bid{(selectedJob.bid_count || 0) !== 1 ? "s" : ""}
                 </Text>
@@ -574,7 +571,7 @@ function UberMapView({
               activeOpacity={0.85}
             >
               <LinearGradient
-                colors={["#2563EB", "#1D4ED8"]}
+                colors={["#3B82F6", "#3B82F6"]}
                 style={mapStyles.bottomCardBtnGradient}
               >
                 <Text style={mapStyles.bottomCardBtnText}>View & Bid</Text>
@@ -1102,18 +1099,18 @@ const styles = StyleSheet.create({
     paddingTop: 14,
     paddingBottom: 4,
   },
-  headerGreeting: { fontSize: 14, color: "#94A3B8", fontWeight: "500" },
+  headerGreeting: { fontSize: 14, color: "#8A8F98", fontWeight: "500" },
   headerTitle: { fontSize: 28, fontWeight: "800", color: "#ffffff", marginTop: 2, letterSpacing: -0.5 },
   headerRight: { flexDirection: "row", gap: 8, alignItems: "center" },
   headerIconBtn: {
     width: 42,
     height: 42,
     borderRadius: 14,
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: "#18191B",
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.15)",
+    borderColor: "#23252A",
   },
 
   // View segment control
@@ -1336,7 +1333,7 @@ const cardStyles = StyleSheet.create({
     borderRadius: 24,
     overflow: "hidden",
     marginBottom: 16,
-    backgroundColor: "#0F172A",
+    backgroundColor: "#08090A",
   },
   bgImage: {
     ...StyleSheet.absoluteFillObject,
@@ -1367,20 +1364,20 @@ const cardStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(239,68,68,0.3)",
   },
-  hotDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: "#EF4444" },
-  hotText: { fontSize: 11, fontWeight: "800", color: "#EF4444", letterSpacing: 0.8 },
+  hotDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: "#F87171" },
+  hotText: { fontSize: 11, fontWeight: "800", color: "#F87171", letterSpacing: 0.8 },
   timeBadge: {
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
-    backgroundColor: "rgba(255,255,255,0.08)",
+    backgroundColor: "#18191B",
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.06)",
+    borderColor: "#23252A",
   },
-  timeText: { fontSize: 12, color: "#94A3B8", fontWeight: "500" },
+  timeText: { fontSize: 12, color: "#8A8F98", fontWeight: "500" },
   photoCount: {
     position: "absolute",
     top: 20,
@@ -1411,12 +1408,12 @@ const cardStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: "#18191B",
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.08)",
+    borderColor: "#23252A",
   },
   categoryEmoji: { fontSize: 13 },
   categoryText: {
@@ -1444,7 +1441,7 @@ const cardStyles = StyleSheet.create({
   },
   description: {
     fontSize: 14,
-    color: "#CBD5E1",
+    color: "#8A8F98",
     lineHeight: 20,
     marginBottom: 14,
   },
@@ -1458,14 +1455,14 @@ const cardStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
-    backgroundColor: "rgba(255,255,255,0.08)",
+    backgroundColor: "#18191B",
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.06)",
+    borderColor: "#23252A",
   },
-  pillText: { fontSize: 12, color: "#CBD5E1", fontWeight: "500" },
+  pillText: { fontSize: 12, color: "#8A8F98", fontWeight: "500" },
   bidButton: {
     borderRadius: 14,
     overflow: "hidden",
@@ -1492,7 +1489,7 @@ const listStyles = StyleSheet.create({
     borderColor: colors.border,
     ...shadows.md,
   },
-  cardHot: { borderWidth: 1.5, borderColor: "#fecaca" },
+  cardHot: { borderWidth: 1.5, borderColor: "rgba(248,113,113,0.30)" },
   hotBadge: {
     flexDirection: "row",
     alignItems: "center",
@@ -1661,7 +1658,7 @@ const mapStyles = StyleSheet.create({
     width: 40,
     height: 4,
     borderRadius: 2,
-    backgroundColor: "#E2E8F0",
+    backgroundColor: "#1A1B1F",
     alignSelf: "center",
     marginBottom: 16,
   },
@@ -1743,7 +1740,7 @@ const mapStyles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(255,255,255,0.85)",
+    backgroundColor: "#18191B",
   },
   emptyCard: {
     alignItems: "center",

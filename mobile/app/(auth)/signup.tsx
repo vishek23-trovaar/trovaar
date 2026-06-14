@@ -345,9 +345,9 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: radius.lg,
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: "#18191B",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.15)",
+    borderColor: "#23252A",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -401,7 +401,7 @@ const styles = StyleSheet.create({
   },
   roleCardActive: {
     borderColor: colors.primary,
-    backgroundColor: "#EFF6FF",
+    backgroundColor: "rgba(59,130,246,0.14)",
     ...shadows.md,
   },
   roleIconBox: {

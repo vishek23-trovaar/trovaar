@@ -160,7 +160,7 @@ export default function QuoteBusterScreen() {
                 onPress={() => setQuoteImageUri(null)}
                 hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
               >
-                <Ionicons name="close-circle" size={26} color="#ef4444" />
+                <Ionicons name="close-circle" size={26} color="#F87171" />
               </TouchableOpacity>
             </View>
           ) : (
@@ -264,7 +264,7 @@ export default function QuoteBusterScreen() {
                   <Text style={[styles.barValue, { color: colors.danger }]}>{formatCurrency(result.originalQuote)}</Text>
                 </View>
                 <View style={styles.barBg}>
-                  <View style={[styles.barFill, { width: "100%", backgroundColor: "#fca5a5" }]} />
+                  <View style={[styles.barFill, { width: "100%", backgroundColor: "#F87171" }]} />
                 </View>
               </View>
 
@@ -347,7 +347,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 16,
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: spacing.lg,
@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 14,
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: spacing.sm,
@@ -411,7 +411,7 @@ const styles = StyleSheet.create({
   },
   categoryChipActive: {
     borderColor: colors.primary,
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
   },
   categoryEmoji: { fontSize: 16 },
   categoryLabel: { ...typography.caption, color: colors.muted },
@@ -454,7 +454,7 @@ const styles = StyleSheet.create({
   savingsCard: {
     backgroundColor: colors.white,
     borderWidth: 1,
-    borderColor: "#bbf7d0",
+    borderColor: "rgba(52,211,153,0.30)",
     borderRadius: radius.lg,
     padding: spacing["2xl"],
     alignItems: "center",
@@ -462,7 +462,7 @@ const styles = StyleSheet.create({
   },
   savingsLabel: { ...typography.caption, color: colors.success },
   savingsAmount: { fontSize: 40, fontWeight: "800", color: colors.success, marginVertical: 4 },
-  savingsPercent: { fontSize: 15, fontWeight: "700", color: "#34d399" },
+  savingsPercent: { fontSize: 15, fontWeight: "700", color: "#6EE7B7" },
 
   // Comparison card
   comparisonCard: {
@@ -495,9 +495,9 @@ const styles = StyleSheet.create({
 
   // Tips card
   tipsCard: {
-    backgroundColor: "#DBEAFE",
+    backgroundColor: "rgba(59,130,246,0.14)",
     borderWidth: 1,
-    borderColor: "#93c5fd",
+    borderColor: "rgba(59,130,246,0.30)",
     borderRadius: radius.lg,
     padding: spacing.xl,
   },
