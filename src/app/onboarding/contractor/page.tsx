@@ -292,7 +292,7 @@ export default function ContractorOnboarding() {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted"
+                  className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#0f1011] text-secondary placeholder-muted"
                   placeholder="Your full name"
                 />
               </div>
@@ -303,7 +303,7 @@ export default function ContractorOnboarding() {
                   type="text"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted"
+                  className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#0f1011] text-secondary placeholder-muted"
                   placeholder="e.g. Austin, TX"
                 />
               </div>
@@ -337,7 +337,7 @@ export default function ContractorOnboarding() {
                   max="60"
                   value={years}
                   onChange={(e) => setYears(parseInt(e.target.value) || 0)}
-                  className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary"
+                  className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#0f1011] text-secondary"
                 />
               </div>
 
@@ -348,18 +348,18 @@ export default function ContractorOnboarding() {
                   onChange={(e) => setBio(e.target.value)}
                   rows={3}
                   placeholder="Tell consumers a bit about yourself and your experience..."
-                  className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted text-sm"
+                  className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#0f1011] text-secondary placeholder-muted text-sm"
                 />
               </div>
             </div>
 
             {/* Platform Safety & Contact Policy */}
-            <div className="rounded-xl border-2 border-amber-200 bg-amber-50 p-5">
+            <div className="rounded-xl border-2 border-[#fbbf24]/30 bg-[#fbbf24]/10 p-5">
               <div className="flex items-start gap-3 mb-4">
                 <span className="text-2xl shrink-0">🔒</span>
                 <div>
-                  <h3 className="font-semibold text-amber-900 mb-1">Your Protection Policy</h3>
-                  <p className="text-sm text-amber-800 leading-relaxed">
+                  <h3 className="font-semibold text-[#fbbf24] mb-1">Your Protection Policy</h3>
+                  <p className="text-sm text-[#fbbf24] leading-relaxed">
                     All communication between you and clients <strong>must happen through the Trovaar platform</strong> — messaging, calling, and payment. This protects you legally and financially.
                   </p>
                 </div>
@@ -372,7 +372,7 @@ export default function ContractorOnboarding() {
                   "🚫 Accepting off-platform work from clients you met here violates our Terms of Service",
                   "✅ If a client tries to take you off-platform, report it — we'll handle it",
                 ].map((rule, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-amber-800">
+                  <li key={i} className="flex items-start gap-2 text-sm text-[#fbbf24]">
                     <span className="shrink-0">{rule.split(" ")[0]}</span>
                     <span>{rule.split(" ").slice(1).join(" ")}</span>
                   </li>
@@ -385,19 +385,19 @@ export default function ContractorOnboarding() {
                   onChange={(e) => setAcceptedPlatformRules(e.target.checked)}
                   className="w-4 h-4 mt-0.5 accent-amber-600"
                 />
-                <span className="text-sm font-medium text-amber-900">
+                <span className="text-sm font-medium text-[#fbbf24]">
                   I understand that all client communication must stay on-platform and I agree to these terms
                 </span>
               </label>
             </div>
 
             {/* Optional Background Check */}
-            <div className="rounded-xl border border-blue-200 bg-blue-50/50 p-5">
+            <div className="rounded-xl border border-[#3B82F6]/30 bg-[#3B82F6]/10 p-5">
               <div className="flex items-start gap-3 mb-3">
                 <span className="text-2xl shrink-0">🔍</span>
                 <div>
-                  <h3 className="font-semibold text-blue-900 mb-1">Background Check <span className="text-xs font-normal text-blue-600">(optional)</span></h3>
-                  <p className="text-sm text-blue-800 leading-relaxed">
+                  <h3 className="font-semibold text-[#60A5FA] mb-1">Background Check <span className="text-xs font-normal text-[#60A5FA]">(optional)</span></h3>
+                  <p className="text-sm text-[#60A5FA] leading-relaxed">
                     A background check adds a trust badge to your profile, helping you stand out and win more jobs. You can always request one later from your profile page.
                   </p>
                 </div>
@@ -409,19 +409,19 @@ export default function ContractorOnboarding() {
                   onChange={(e) => setRequestBgCheck(e.target.checked)}
                   className="w-4 h-4 mt-0.5 accent-blue-600"
                 />
-                <span className="text-sm font-medium text-blue-900">
+                <span className="text-sm font-medium text-[#60A5FA]">
                   Yes, request a background check for my profile
                 </span>
               </label>
             </div>
 
             {/* Portfolio Photos */}
-            <div className="rounded-xl border-2 border-blue-200 bg-blue-50/50 p-5">
+            <div className="rounded-xl border-2 border-[#3B82F6]/30 bg-[#3B82F6]/10 p-5">
               <div className="flex items-start gap-3 mb-4">
                 <span className="text-2xl shrink-0">&#128247;</span>
                 <div>
-                  <h3 className="font-semibold text-blue-900 mb-1">Work Photos <span className="text-xs font-normal text-blue-600">(required to bid)</span></h3>
-                  <p className="text-sm text-blue-800 leading-relaxed">
+                  <h3 className="font-semibold text-[#60A5FA] mb-1">Work Photos <span className="text-xs font-normal text-[#60A5FA]">(required to bid)</span></h3>
+                  <p className="text-sm text-[#60A5FA] leading-relaxed">
                     Upload at least 3 photos of your work to get started. Homeowners want to see the quality of your craftsmanship.
                   </p>
                 </div>
@@ -429,13 +429,13 @@ export default function ContractorOnboarding() {
 
               {/* Progress */}
               <div className="flex items-center gap-2 mb-4">
-                <div className="flex-1 h-2 bg-blue-200 rounded-full overflow-hidden">
+                <div className="flex-1 h-2 bg-[#3B82F6]/20 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-blue-500 rounded-full transition-all"
                     style={{ width: `${Math.min((portfolioUrls.length / 3) * 100, 100)}%` }}
                   />
                 </div>
-                <span className={`text-sm font-semibold ${portfolioUrls.length >= 3 ? "text-emerald-700" : "text-blue-800"}`}>
+                <span className={`text-sm font-semibold ${portfolioUrls.length >= 3 ? "text-[#34d399]" : "text-[#60A5FA]"}`}>
                   {portfolioUrls.length >= 3 ? `${portfolioUrls.length}/3 ✓ Ready to bid!` : `${portfolioUrls.length}/3 photos`}
                 </span>
               </div>
@@ -458,7 +458,7 @@ export default function ContractorOnboarding() {
                         &#215;
                       </button>
                       {photo.caption && (
-                        <p className="text-[10px] text-blue-700 mt-0.5 truncate">{photo.caption}</p>
+                        <p className="text-[10px] text-[#60A5FA] mt-0.5 truncate">{photo.caption}</p>
                       )}
                     </div>
                   ))}
@@ -468,14 +468,14 @@ export default function ContractorOnboarding() {
               {/* Add photo form */}
               <div className="space-y-2">
                 <div>
-                  <label className="block text-xs font-medium text-blue-800 mb-1">Photo URL</label>
+                  <label className="block text-xs font-medium text-[#60A5FA] mb-1">Photo URL</label>
                   <div className="flex gap-2">
                     <input
                       type="url"
                       value={newPhotoUrl}
                       onChange={(e) => setNewPhotoUrl(e.target.value)}
                       placeholder="https://example.com/my-work-photo.jpg"
-                      className="flex-1 px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
+                      className="flex-1 px-3 py-2 text-sm border border-border rounded-lg bg-[#0f1011] focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/40 focus:border-[#3B82F6]"
                     />
                     <button
                       type="button"
@@ -499,21 +499,21 @@ export default function ContractorOnboarding() {
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
-                    <label className="block text-xs font-medium text-blue-800 mb-1">Caption <span className="text-blue-500 font-normal">(optional)</span></label>
+                    <label className="block text-xs font-medium text-[#60A5FA] mb-1">Caption <span className="text-[#60A5FA] font-normal">(optional)</span></label>
                     <input
                       type="text"
                       value={newPhotoCaption}
                       onChange={(e) => setNewPhotoCaption(e.target.value)}
                       placeholder="e.g. Kitchen remodel"
-                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
+                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-[#0f1011] focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/40 focus:border-[#3B82F6]"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-blue-800 mb-1">Project Type</label>
+                    <label className="block text-xs font-medium text-[#60A5FA] mb-1">Project Type</label>
                     <select
                       value={newPhotoType}
                       onChange={(e) => setNewPhotoType(e.target.value)}
-                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400"
+                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-[#0f1011] focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/40 focus:border-[#3B82F6]"
                     >
                       <option value="before_after">Before &amp; After</option>
                       <option value="completed_work">Completed Work</option>
@@ -525,19 +525,19 @@ export default function ContractorOnboarding() {
               </div>
 
               {portfolioUrls.length === 0 && (
-                <p className="text-xs text-blue-600 mt-3 text-center">
+                <p className="text-xs text-[#60A5FA] mt-3 text-center">
                   You can skip this and add photos later, but you won&apos;t be able to bid on jobs until you have at least 3 work photos.
                 </p>
               )}
             </div>
 
             {/* Optional Trade License */}
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50/50 p-5">
+            <div className="rounded-xl border border-[#27a644]/30 bg-[#27a644]/10 p-5">
               <div className="flex items-start gap-3 mb-3">
                 <span className="text-2xl shrink-0">&#128203;</span>
                 <div>
-                  <h3 className="font-semibold text-emerald-900 mb-1">Trade License <span className="text-xs font-normal text-emerald-600">(optional)</span></h3>
-                  <p className="text-sm text-emerald-800 leading-relaxed">
+                  <h3 className="font-semibold text-[#34d399] mb-1">Trade License <span className="text-xs font-normal text-[#34d399]">(optional)</span></h3>
+                  <p className="text-sm text-[#34d399] leading-relaxed">
                     If you hold a state-issued trade license, adding it earns a verified badge on your profile. You can always add this later.
                   </p>
                 </div>
@@ -549,28 +549,28 @@ export default function ContractorOnboarding() {
                   onChange={(e) => setHasLicense(e.target.checked)}
                   className="w-4 h-4 mt-0.5 accent-emerald-600"
                 />
-                <span className="text-sm font-medium text-emerald-900">
+                <span className="text-sm font-medium text-[#34d399]">
                   Yes, I have a trade license
                 </span>
               </label>
               {hasLicense && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2 pl-7">
                   <div>
-                    <label className="block text-xs font-medium text-emerald-800 mb-1">License Number</label>
+                    <label className="block text-xs font-medium text-[#34d399] mb-1">License Number</label>
                     <input
                       type="text"
                       value={licenseNumber}
                       onChange={(e) => setLicenseNumber(e.target.value)}
                       placeholder="e.g., CFC1234567"
-                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400"
+                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-[#0f1011] focus:outline-none focus:ring-2 focus:ring-[#27a644]/30 focus:border-[#27a644]/60"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-emerald-800 mb-1">State</label>
+                    <label className="block text-xs font-medium text-[#34d399] mb-1">State</label>
                     <select
                       value={licenseState}
                       onChange={(e) => setLicenseState(e.target.value)}
-                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400"
+                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-[#0f1011] focus:outline-none focus:ring-2 focus:ring-[#27a644]/30 focus:border-[#27a644]/60"
                     >
                       <option value="">Select state...</option>
                       {["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY","DC"].map((s) => (
@@ -579,11 +579,11 @@ export default function ContractorOnboarding() {
                     </select>
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="block text-xs font-medium text-emerald-800 mb-1">License Type</label>
+                    <label className="block text-xs font-medium text-[#34d399] mb-1">License Type</label>
                     <select
                       value={licenseType}
                       onChange={(e) => setLicenseType(e.target.value)}
-                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400"
+                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-[#0f1011] focus:outline-none focus:ring-2 focus:ring-[#27a644]/30 focus:border-[#27a644]/60"
                     >
                       <option value="">Select license type...</option>
                       {["Plumbing","Electrical","HVAC","General Contractor","Roofing","Painting","Landscaping","Carpentry","Masonry","Welding","Fire Protection","Low Voltage","Solar/PV","Other"].map((t) => (
@@ -595,10 +595,10 @@ export default function ContractorOnboarding() {
               )}
             </div>
 
-            {error && <div className="mt-4 bg-red-50 text-red-700 text-sm p-3 rounded-lg">{error}</div>}
+            {error && <div className="mt-4 bg-[#f87171]/10 text-[#f87171] text-sm p-3 rounded-lg">{error}</div>}
 
             {!acceptedPlatformRules && (
-              <p className="text-xs text-amber-700 mt-3 text-center">
+              <p className="text-xs text-[#fbbf24] mt-3 text-center">
                 Please read and accept the Platform Rules above to continue.
               </p>
             )}
@@ -643,7 +643,7 @@ export default function ContractorOnboarding() {
 
             <p className="text-xs text-muted mb-4">{selectedCategories.length} selected</p>
 
-            {error && <div className="mb-4 bg-red-50 text-red-700 text-sm p-3 rounded-lg">{error}</div>}
+            {error && <div className="mb-4 bg-[#f87171]/10 text-[#f87171] text-sm p-3 rounded-lg">{error}</div>}
 
             <div className="flex gap-3">
               <Button variant="outline" onClick={() => setStep(1)} className="flex-1">
@@ -726,26 +726,26 @@ export default function ContractorOnboarding() {
             </div>
 
             {verificationStatus === "approved" && (
-              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-6 text-center">
+              <div className="bg-[#27a644]/10 border border-[#27a644]/30 rounded-xl p-4 mb-6 text-center">
                 <span className="text-3xl">&#9989;</span>
-                <p className="text-sm font-semibold text-emerald-700 mt-2">Identity Verified</p>
-                <p className="text-xs text-emerald-600 mt-1">Your identity has been confirmed.</p>
+                <p className="text-sm font-semibold text-[#34d399] mt-2">Identity Verified</p>
+                <p className="text-xs text-[#34d399] mt-1">Your identity has been confirmed.</p>
               </div>
             )}
 
             {verificationStatus === "pending" && (
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 text-center">
+              <div className="bg-[#fbbf24]/10 border border-[#fbbf24]/30 rounded-xl p-4 mb-6 text-center">
                 <span className="text-3xl">&#9203;</span>
-                <p className="text-sm font-semibold text-amber-700 mt-2">Verification in progress...</p>
-                <p className="text-xs text-amber-600 mt-1">We&apos;re reviewing your documents. This usually takes a few minutes.</p>
+                <p className="text-sm font-semibold text-[#fbbf24] mt-2">Verification in progress...</p>
+                <p className="text-xs text-[#fbbf24] mt-1">We&apos;re reviewing your documents. This usually takes a few minutes.</p>
               </div>
             )}
 
             {verificationStatus === "rejected" && (
-              <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 text-center">
+              <div className="bg-[#f87171]/10 border border-[#f87171]/30 rounded-xl p-4 mb-6 text-center">
                 <span className="text-3xl">&#10060;</span>
-                <p className="text-sm font-semibold text-red-700 mt-2">Verification failed</p>
-                <p className="text-xs text-red-600 mt-1">Please try again with a valid government ID.</p>
+                <p className="text-sm font-semibold text-[#f87171] mt-2">Verification failed</p>
+                <p className="text-xs text-[#f87171] mt-1">Please try again with a valid government ID.</p>
               </div>
             )}
 

@@ -50,15 +50,15 @@ function formatCategoryLabel(category: string): string {
 
 function UrgencyBadge({ urgency }: { urgency: string }) {
   const map: Record<string, string> = {
-    low: "bg-slate-100 text-slate-700",
-    medium: "bg-blue-100 text-blue-700",
-    high: "bg-amber-100 text-amber-700",
-    emergency: "bg-red-100 text-red-700",
+    low: "bg-[#18191a] text-[#d0d6e0]",
+    medium: "bg-[#3B82F6]/10 text-[#60A5FA]",
+    high: "bg-[#fbbf24]/10 text-[#fbbf24]",
+    emergency: "bg-[#f87171]/10 text-[#f87171]",
   };
   return (
     <span
       className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium capitalize ${
-        map[urgency] ?? "bg-gray-100 text-gray-600"
+        map[urgency] ?? "bg-[#141516] text-[#8a8f98]"
       }`}
     >
       {urgency}
@@ -142,10 +142,10 @@ export default function TemplatesPage() {
         </div>
       ) : templates.length === 0 ? (
         /* Empty state */
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-16 text-center">
+        <div className="bg-[#0f1011] rounded-2xl shadow-sm border border-[#23252a] p-16 text-center">
           <div className="text-4xl mb-4">📋</div>
-          <h2 className="text-lg font-semibold text-slate-800 mb-2">No templates yet</h2>
-          <p className="text-sm text-slate-500 max-w-xs mx-auto">
+          <h2 className="text-lg font-semibold text-[#d0d6e0] mb-2">No templates yet</h2>
+          <p className="text-sm text-[#8a8f98] max-w-xs mx-auto">
             Save a job as a template when posting to reuse it later
           </p>
         </div>
@@ -154,27 +154,27 @@ export default function TemplatesPage() {
           {templates.map((template, i) => (
             <ScrollReveal key={template.id} delay={i * 80}>
             <div
-              className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex flex-col gap-3 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+              className="bg-[#0f1011] rounded-2xl shadow-sm border border-[#23252a] p-5 flex flex-col gap-3 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
             >
               {/* Template name */}
               <div className="flex items-start justify-between gap-2">
-                <p className="font-bold text-slate-900 text-base leading-tight">
+                <p className="font-bold text-[#f7f8f8] text-base leading-tight">
                   {template.name}
                 </p>
                 <UrgencyBadge urgency={template.urgency} />
               </div>
 
               {/* Category */}
-              <p className="text-sm text-slate-500 flex items-center gap-1.5">
+              <p className="text-sm text-[#8a8f98] flex items-center gap-1.5">
                 <span>{getCategoryEmoji(template.category)}</span>
                 <span>{formatCategoryLabel(template.category)}</span>
               </p>
 
               {/* Title */}
-              <p className="text-sm text-slate-700 leading-snug">{template.title}</p>
+              <p className="text-sm text-[#d0d6e0] leading-snug">{template.title}</p>
 
               {/* Actions */}
-              <div className="flex items-center gap-2 mt-auto pt-2 border-t border-slate-100">
+              <div className="flex items-center gap-2 mt-auto pt-2 border-t border-[#23252a]">
                 <button
                   onClick={() => handlePostJob(template)}
                   className="flex-1 px-3 py-2 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 transition-colors"
@@ -191,7 +191,7 @@ export default function TemplatesPage() {
                 ) : (
                   <button
                     onClick={() => handleDeleteClick(template.id)}
-                    className="px-3 py-2 border border-slate-200 text-slate-500 text-sm font-medium rounded-lg hover:border-red-300 hover:text-red-600 transition-colors"
+                    className="px-3 py-2 border border-[#23252a] text-[#8a8f98] text-sm font-medium rounded-lg hover:border-[#f87171]/30 hover:text-[#f87171] transition-colors"
                   >
                     Delete
                   </button>

@@ -35,7 +35,7 @@ export default function NotFound() {
           </Link>
           <Link
             href="/jobs"
-            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg border border-border bg-white text-secondary text-sm font-semibold hover:border-primary/40 hover:bg-surface transition-colors"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg border border-border bg-[#0f1011] text-secondary text-sm font-semibold hover:border-primary/40 hover:bg-surface transition-colors"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />

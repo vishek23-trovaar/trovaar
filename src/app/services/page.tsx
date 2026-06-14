@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function ServicesIndexPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#010102]">
       {/* Hero */}
       <section className="bg-gradient-to-br from-blue-900 to-blue-700 text-white py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -32,7 +32,7 @@ export default function ServicesIndexPage() {
           </p>
           <Link
             href="/jobs/new"
-            className="inline-block bg-white text-blue-800 font-semibold px-8 py-3 rounded-lg shadow hover:bg-blue-50 transition-colors"
+            className="inline-block bg-[#0f1011] text-[#60A5FA] font-semibold px-8 py-3 rounded-lg shadow hover:bg-[#3B82F6]/15 transition-colors"
           >
             Post a Job Now
           </Link>
@@ -41,7 +41,7 @@ export default function ServicesIndexPage() {
 
       {/* Category Grid */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <h2 className="text-2xl font-bold text-gray-900 mb-10 text-center">
+        <h2 className="text-2xl font-bold text-[#f7f8f8] mb-10 text-center">
           All Service Categories
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -49,23 +49,23 @@ export default function ServicesIndexPage() {
             <Link
               key={cat.slug}
               href={`/services/${cat.slug}`}
-              className="group bg-white rounded-2xl border border-gray-200 p-6 shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-blue-300 transition-all duration-300"
+              className="group bg-[#0f1011] rounded-2xl border border-[#23252a] p-6 shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-[#3B82F6]/40 transition-all duration-300"
               style={{ animation: `fadeInUp 0.5s ease-out ${Math.min(i * 0.05, 0.4)}s both` }}
             >
               <div className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-200">{cat.icon}</div>
-              <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-800 transition-colors">
+              <h3 className="text-lg font-semibold text-[#f7f8f8] group-hover:text-[#60A5FA] transition-colors">
                 {cat.name}
               </h3>
-              <p className="text-sm text-gray-600 mt-1">{cat.shortDescription}</p>
+              <p className="text-sm text-[#8a8f98] mt-1">{cat.shortDescription}</p>
             </Link>
           ))}
         </div>
       </section>
 
       {/* How It Works */}
-      <section className="bg-white py-20 border-t border-gray-200">
+      <section className="bg-[#0f1011] py-20 border-t border-[#23252a]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-12 text-center">
+          <h2 className="text-2xl font-bold text-[#f7f8f8] mb-12 text-center">
             How Trovaar Works
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -86,12 +86,12 @@ export default function ServicesIndexPage() {
                 desc: "Choose the pro that fits your budget and timeline. Pay securely through Trovaar escrow protection.",
               },
             ].map((item, i) => (
-              <div key={item.step} className="text-center p-6 rounded-2xl hover:bg-blue-50/50 transition-colors duration-300" style={{ animation: `fadeInUp 0.5s ease-out ${i * 0.15}s both` }}>
+              <div key={item.step} className="text-center p-6 rounded-2xl hover:bg-[#3B82F6]/15 transition-colors duration-300" style={{ animation: `fadeInUp 0.5s ease-out ${i * 0.15}s both` }}>
                 <div className="w-14 h-14 bg-blue-800 text-white rounded-2xl flex items-center justify-center text-xl font-bold mx-auto mb-4 shadow-md">
                   {item.step}
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-gray-600 text-sm">{item.desc}</p>
+                <h3 className="text-lg font-semibold text-[#f7f8f8] mb-2">{item.title}</h3>
+                <p className="text-[#8a8f98] text-sm">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -99,9 +99,9 @@ export default function ServicesIndexPage() {
       </section>
 
       {/* Trust Signals */}
-      <section className="bg-gray-50 py-20 border-t border-gray-200">
+      <section className="bg-[#010102] py-20 border-t border-[#23252a]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-12 text-center">
+          <h2 className="text-2xl font-bold text-[#f7f8f8] mb-12 text-center">
             Why Homeowners Trust Trovaar
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
@@ -119,9 +119,9 @@ export default function ServicesIndexPage() {
                 desc: "Every dispute gets a fair resolution. 48-hour escrow review, re-service matching, and admin mediation.",
               },
             ].map((item) => (
-              <div key={item.title} className="bg-white rounded-2xl border border-gray-200 p-6 text-center shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-                <h3 className="font-semibold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-600">{item.desc}</p>
+              <div key={item.title} className="bg-[#0f1011] rounded-2xl border border-[#23252a] p-6 text-center shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+                <h3 className="font-semibold text-[#f7f8f8] mb-2">{item.title}</h3>
+                <p className="text-sm text-[#8a8f98]">{item.desc}</p>
               </div>
             ))}
           </div>

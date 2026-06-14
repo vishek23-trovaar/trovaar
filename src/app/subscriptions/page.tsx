@@ -41,22 +41,22 @@ function formatDuration(minutes: number): string {
 
 const COLOR_MAP: Record<string, { card: string; badge: string; button: string; ring: string }> = {
   slate: {
-    card: "bg-white border-slate-200",
-    badge: "bg-slate-100 text-slate-700",
-    button: "bg-slate-800 hover:bg-slate-900 text-white",
-    ring: "ring-slate-200",
+    card: "bg-[#0f1011] border-[#23252a]",
+    badge: "bg-[#141516] text-[#d0d6e0]",
+    button: "bg-[#0f1011] hover:bg-[#010102] text-white",
+    ring: "ring-[#23252a]",
   },
   emerald: {
-    card: "bg-white border-emerald-400 ring-2 ring-emerald-400",
-    badge: "bg-emerald-100 text-emerald-700",
+    card: "bg-[#0f1011] border-[#27a644]/50 ring-2 ring-[#27a644]/50",
+    badge: "bg-[#27a644]/10 text-[#34d399]",
     button: "bg-emerald-600 hover:bg-emerald-700 text-white",
-    ring: "ring-emerald-400",
+    ring: "ring-[#27a644]/50",
   },
   indigo: {
-    card: "bg-white border-indigo-300",
-    badge: "bg-indigo-100 text-indigo-700",
+    card: "bg-[#0f1011] border-[#3B82F6]/40",
+    badge: "bg-[#3B82F6]/10 text-[#60A5FA]",
     button: "bg-indigo-600 hover:bg-indigo-700 text-white",
-    ring: "ring-indigo-200",
+    ring: "ring-[#3B82F6]/30",
   },
 };
 
@@ -126,18 +126,18 @@ export default function SubscriptionsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#0f1011]">
       {/* Hero */}
-      <section className="bg-slate-900 text-white py-20 px-4">
+      <section className="bg-[#010102] text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-emerald-500/20 text-emerald-300 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
+          <div className="inline-flex items-center gap-2 bg-emerald-500/20 text-[#34d399] text-sm font-medium px-4 py-1.5 rounded-full mb-6">
             <span>🏠</span> Home Health Subscriptions
           </div>
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">
             Keep your home in peak condition{" "}
-            <span className="text-emerald-400">year-round</span>
+            <span className="text-[#34d399]">year-round</span>
           </h1>
-          <p className="text-lg text-slate-300 max-w-2xl mx-auto mb-8">
+          <p className="text-lg text-[#8a8f98] max-w-2xl mx-auto mb-8">
             Predictable monthly pricing. Vetted contractors. Fixed-price services.
             Never worry about deferred maintenance again.
           </p>
@@ -151,22 +151,22 @@ export default function SubscriptionsPage() {
       </section>
 
       {/* How it works */}
-      <section className="py-20 px-4 bg-slate-50">
+      <section className="py-20 px-4 bg-[#010102]">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-center text-slate-900 mb-12">How it works</h2>
+          <h2 className="text-2xl font-bold text-center text-[#f7f8f8] mb-12">How it works</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {[
               { step: "1", icon: "📋", title: "Choose a plan", desc: "Pick a subscription tier that fits your home's needs and your schedule." },
               { step: "2", icon: "📅", title: "Schedule services", desc: "Log in, pick a service from the fixed-price menu, and choose your preferred date." },
               { step: "3", icon: "🔧", title: "Contractor arrives", desc: "A top-rated, vetted contractor shows up and gets the job done — at the fixed price." },
             ].map((item) => (
-              <div key={item.step} className="bg-white rounded-2xl p-6 text-center shadow-sm border border-slate-100 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-                <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
+              <div key={item.step} className="bg-[#0f1011] rounded-2xl p-6 text-center shadow-sm border border-[#23252a] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+                <div className="w-12 h-12 bg-[#27a644]/10 rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
                   {item.icon}
                 </div>
-                <div className="text-xs font-bold text-emerald-600 mb-1">STEP {item.step}</div>
-                <h3 className="font-semibold text-slate-900 mb-2">{item.title}</h3>
-                <p className="text-sm text-slate-500">{item.desc}</p>
+                <div className="text-xs font-bold text-[#34d399] mb-1">STEP {item.step}</div>
+                <h3 className="font-semibold text-[#f7f8f8] mb-2">{item.title}</h3>
+                <p className="text-sm text-[#8a8f98]">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -176,12 +176,12 @@ export default function SubscriptionsPage() {
       {/* Plans */}
       <section id="plans" className="py-20 px-4">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl font-bold text-center text-slate-900 mb-2">Choose your plan</h2>
-          <p className="text-center text-slate-500 mb-10">No contracts. Cancel anytime.</p>
+          <h2 className="text-2xl font-bold text-center text-[#f7f8f8] mb-2">Choose your plan</h2>
+          <p className="text-center text-[#8a8f98] mb-10">No contracts. Cancel anytime.</p>
 
           {loading ? (
             <div className="flex justify-center py-12">
-              <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+              <div className="w-8 h-8 border-4 border-[#27a644]/60 border-t-transparent rounded-full animate-spin" />
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -203,51 +203,51 @@ export default function SubscriptionsPage() {
                     )}
 
                     <div className="mb-5">
-                      <h3 className="text-xl font-bold text-slate-900 mb-0.5">{plan.name}</h3>
+                      <h3 className="text-xl font-bold text-[#f7f8f8] mb-0.5">{plan.name}</h3>
                       {plan.tagline && (
                         <p className={`text-xs font-semibold uppercase tracking-wide ${colors.badge.replace("bg-", "text-").replace("-100", "-600")} mb-2`}>
                           {plan.tagline}
                         </p>
                       )}
                       <div className="flex items-end gap-1 mt-3 mb-1">
-                        <span className="text-4xl font-extrabold text-slate-900">
+                        <span className="text-4xl font-extrabold text-[#f7f8f8]">
                           {formatPrice(plan.price_cents)}
                         </span>
-                        <span className="text-slate-400 text-sm mb-1">/month</span>
+                        <span className="text-[#8a8f98] text-sm mb-1">/month</span>
                       </div>
                       {plan.description && (
-                        <p className="text-sm text-slate-500 mt-2">{plan.description}</p>
+                        <p className="text-sm text-[#8a8f98] mt-2">{plan.description}</p>
                       )}
                     </div>
 
                     <ul className="space-y-2.5 mb-6 flex-1">
-                      <li className="flex items-center gap-2 text-sm text-slate-700">
-                        <span className="text-emerald-500 font-bold">✓</span>
+                      <li className="flex items-center gap-2 text-sm text-[#d0d6e0]">
+                        <span className="text-[#34d399] font-bold">✓</span>
                         <strong>{plan.visits_per_month} visits</strong> per month
                       </li>
-                      <li className="flex items-center gap-2 text-sm text-slate-700">
-                        <span className="text-emerald-500 font-bold">✓</span>
+                      <li className="flex items-center gap-2 text-sm text-[#d0d6e0]">
+                        <span className="text-[#34d399] font-bold">✓</span>
                         All fixed-price services available
                       </li>
                       {plan.priority_booking ? (
-                        <li className="flex items-center gap-2 text-sm text-slate-700">
-                          <span className="text-emerald-500 font-bold">✓</span>
+                        <li className="flex items-center gap-2 text-sm text-[#d0d6e0]">
+                          <span className="text-[#34d399] font-bold">✓</span>
                           <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full ${colors.badge}`}>
                             ⚡ Priority booking
                           </span>
                         </li>
                       ) : (
-                        <li className="flex items-center gap-2 text-sm text-slate-400">
-                          <span className="text-slate-300">✗</span>
+                        <li className="flex items-center gap-2 text-sm text-[#8a8f98]">
+                          <span className="text-[#8a8f98]">✗</span>
                           Standard scheduling
                         </li>
                       )}
-                      <li className="flex items-center gap-2 text-sm text-slate-700">
-                        <span className="text-emerald-500 font-bold">✓</span>
+                      <li className="flex items-center gap-2 text-sm text-[#d0d6e0]">
+                        <span className="text-[#34d399] font-bold">✓</span>
                         Vetted, background-checked contractors
                       </li>
-                      <li className="flex items-center gap-2 text-sm text-slate-700">
-                        <span className="text-emerald-500 font-bold">✓</span>
+                      <li className="flex items-center gap-2 text-sm text-[#d0d6e0]">
+                        <span className="text-[#34d399] font-bold">✓</span>
                         Cancel anytime, no fees
                       </li>
                     </ul>
@@ -268,31 +268,31 @@ export default function SubscriptionsPage() {
       </section>
 
       {/* Fixed-price services menu */}
-      <section className="py-20 px-4 bg-slate-50">
+      <section className="py-20 px-4 bg-[#010102]">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">Fixed-price service menu</h2>
-          <p className="text-slate-500 mb-8">Every service at a transparent, guaranteed price. No surprise quotes.</p>
+          <h2 className="text-2xl font-bold text-[#f7f8f8] mb-2">Fixed-price service menu</h2>
+          <p className="text-[#8a8f98] mb-8">Every service at a transparent, guaranteed price. No surprise quotes.</p>
           {loading ? (
             <div className="flex justify-center py-8">
-              <div className="w-6 h-6 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+              <div className="w-6 h-6 border-4 border-[#27a644]/60 border-t-transparent rounded-full animate-spin" />
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {services.map((svc) => (
                 <div
                   key={svc.id}
-                  className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+                  className="bg-[#0f1011] rounded-2xl p-5 border border-[#23252a] shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
                 >
                   <div className="text-3xl mb-3">{svc.icon}</div>
-                  <h3 className="font-semibold text-slate-900 mb-1">{svc.name}</h3>
+                  <h3 className="font-semibold text-[#f7f8f8] mb-1">{svc.name}</h3>
                   {svc.description && (
-                    <p className="text-xs text-slate-500 mb-3 leading-relaxed">{svc.description}</p>
+                    <p className="text-xs text-[#8a8f98] mb-3 leading-relaxed">{svc.description}</p>
                   )}
                   <div className="flex items-center justify-between mt-auto">
-                    <span className="text-lg font-bold text-emerald-600">
+                    <span className="text-lg font-bold text-[#34d399]">
                       {formatPrice(svc.base_price_cents)}
                     </span>
-                    <span className="text-xs text-slate-400">{formatDuration(svc.duration_minutes)}</span>
+                    <span className="text-xs text-[#8a8f98]">{formatDuration(svc.duration_minutes)}</span>
                   </div>
                 </div>
               ))}
@@ -304,22 +304,22 @@ export default function SubscriptionsPage() {
       {/* FAQ */}
       <section className="py-20 px-4">
         <div className="max-w-2xl mx-auto">
-          <h2 className="text-2xl font-bold text-slate-900 mb-8 text-center">Frequently asked questions</h2>
+          <h2 className="text-2xl font-bold text-[#f7f8f8] mb-8 text-center">Frequently asked questions</h2>
           <div className="space-y-3">
             {FAQS.map((faq, idx) => (
               <div
                 key={idx}
-                className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
+                className="bg-[#0f1011] border border-[#23252a] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full text-left px-6 py-4 flex items-center justify-between gap-4 hover:bg-slate-50 transition-colors"
+                  className="w-full text-left px-6 py-4 flex items-center justify-between gap-4 hover:bg-[#141516] transition-colors"
                 >
-                  <span className="font-medium text-slate-900 text-sm">{faq.q}</span>
-                  <span className="text-slate-400 text-lg shrink-0">{openFaq === idx ? "−" : "+"}</span>
+                  <span className="font-medium text-[#f7f8f8] text-sm">{faq.q}</span>
+                  <span className="text-[#8a8f98] text-lg shrink-0">{openFaq === idx ? "−" : "+"}</span>
                 </button>
                 {openFaq === idx && (
-                  <div className="px-6 pb-5 text-sm text-slate-600 leading-relaxed border-t border-slate-100">
+                  <div className="px-6 pb-5 text-sm text-[#8a8f98] leading-relaxed border-t border-[#23252a]">
                     <p className="pt-4">{faq.a}</p>
                   </div>
                 )}
@@ -330,9 +330,9 @@ export default function SubscriptionsPage() {
       </section>
 
       {/* CTA footer */}
-      <section className="bg-slate-900 text-white py-16 px-4 text-center">
+      <section className="bg-[#010102] text-white py-16 px-4 text-center">
         <h2 className="text-3xl font-bold mb-3">Ready to protect your home?</h2>
-        <p className="text-slate-300 mb-8 max-w-md mx-auto">
+        <p className="text-[#8a8f98] mb-8 max-w-md mx-auto">
           Join hundreds of homeowners who stay ahead of maintenance with a Home Health plan.
         </p>
         {user ? (

@@ -24,9 +24,9 @@ function ResetPasswordForm() {
   if (!token) {
     return (
       <div className="text-center space-y-4">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-red-800 text-sm font-medium">Invalid reset link</p>
-          <p className="text-red-700 text-sm mt-1">
+        <div className="bg-[#f87171]/10 border border-[#f87171]/30 rounded-lg p-4">
+          <p className="text-[#f87171] text-sm font-medium">Invalid reset link</p>
+          <p className="text-[#f87171] text-sm mt-1">
             This password reset link is invalid or has expired.
           </p>
         </div>
@@ -79,9 +79,9 @@ function ResetPasswordForm() {
   if (success) {
     return (
       <div className="text-center space-y-4">
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <p className="text-green-800 text-sm font-medium">Password reset successfully!</p>
-          <p className="text-green-700 text-sm mt-1">
+        <div className="bg-[#27a644]/10 border border-[#27a644]/30 rounded-lg p-4">
+          <p className="text-[#34d399] text-sm font-medium">Password reset successfully!</p>
+          <p className="text-[#34d399] text-sm mt-1">
             You can now log in with your new password. Redirecting you to login...
           </p>
         </div>
@@ -95,7 +95,7 @@ function ResetPasswordForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
-        <div role="alert" aria-live="polite" className="bg-red-50 text-danger text-sm p-3 rounded-lg">
+        <div role="alert" aria-live="polite" className="bg-[#f87171]/10 text-danger text-sm p-3 rounded-lg">
           {error}
         </div>
       )}
@@ -116,7 +116,7 @@ function ResetPasswordForm() {
             placeholder="At least 8 characters"
             minLength={8}
             required
-            className="w-full px-4 py-2.5 pr-11 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted transition-colors duration-200"
+            className="w-full px-4 py-2.5 pr-11 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary placeholder-muted transition-colors duration-200"
           />
           <button
             type="button"
@@ -144,7 +144,7 @@ function ResetPasswordForm() {
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Re-enter your new password"
             required
-            className={`w-full px-4 py-2.5 pr-11 rounded-lg border focus:outline-none focus:ring-2 bg-white text-secondary placeholder-muted transition-colors duration-200 ${
+            className={`w-full px-4 py-2.5 pr-11 rounded-lg border focus:outline-none focus:ring-2 bg-[#141516] text-secondary placeholder-muted transition-colors duration-200 ${
               confirmPassword && password !== confirmPassword
                 ? "border-danger focus:ring-danger/20"
                 : "border-border focus:ring-primary/20 focus:border-primary"

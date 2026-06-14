@@ -35,14 +35,14 @@ const ACTION_LABELS: Record<string, string> = {
 };
 
 const ACTION_COLORS: Record<string, string> = {
-  suspend_user: "bg-red-100 text-red-700",
-  unsuspend_user: "bg-emerald-100 text-emerald-700",
-  make_admin: "bg-purple-100 text-purple-700",
-  remove_admin: "bg-amber-100 text-amber-700",
-  edit_user: "bg-blue-100 text-blue-700",
-  delete_user: "bg-red-200 text-red-800",
-  edit_job: "bg-blue-100 text-blue-700",
-  delete_job: "bg-red-200 text-red-800",
+  suspend_user: "bg-[#f87171]/10 text-[#f87171]",
+  unsuspend_user: "bg-[#27a644]/10 text-[#34d399]",
+  make_admin: "bg-[#3B82F6]/10 text-[#60A5FA]",
+  remove_admin: "bg-[#fbbf24]/10 text-[#fbbf24]",
+  edit_user: "bg-[#3B82F6]/10 text-[#60A5FA]",
+  delete_user: "bg-[#f87171]/20 text-[#f87171]",
+  edit_job: "bg-[#3B82F6]/10 text-[#60A5FA]",
+  delete_job: "bg-[#f87171]/20 text-[#f87171]",
 };
 
 function formatTimeAgo(dateStr: string): string {
@@ -125,8 +125,8 @@ export default function AdminAuditPage() {
     <div className="p-6 lg:p-8">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Audit Log</h1>
-        <p className="text-sm text-slate-500 mt-1">Track all admin actions on users and jobs</p>
+        <h1 className="text-2xl font-bold text-[#f7f8f8]">Audit Log</h1>
+        <p className="text-sm text-[#8a8f98] mt-1">Track all admin actions on users and jobs</p>
       </div>
 
       {/* Filters */}
@@ -137,8 +137,8 @@ export default function AdminAuditPage() {
             onClick={() => { setEntityTypeFilter(et); setPage(1); }}
             className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
               entityTypeFilter === et
-                ? "bg-slate-800 text-white"
-                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                ? "bg-[#0f1011] text-white"
+                : "bg-[#141516] text-[#8a8f98] hover:bg-[#18191a]"
             }`}
           >
             {et ? et.charAt(0).toUpperCase() + et.slice(1) + "s" : "All"}
@@ -148,40 +148,40 @@ export default function AdminAuditPage() {
 
       {/* Error */}
       {errorMsg && (
-        <div className="mb-4 bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700">
+        <div className="mb-4 bg-[#f87171]/10 border border-[#f87171]/30 rounded-xl p-3 text-sm text-[#f87171]">
           {errorMsg}
         </div>
       )}
 
       {/* Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+      <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] overflow-hidden">
         {loading ? (
           <div className="flex justify-center py-20">
-            <div className="animate-spin w-7 h-7 border-4 border-slate-400 border-t-transparent rounded-full" />
+            <div className="animate-spin w-7 h-7 border-4 border-[#23252a] border-t-transparent rounded-full" />
           </div>
         ) : !data || data.logs.length === 0 ? (
           <div className="py-20 text-center">
             <p className="text-4xl mb-3">📝</p>
-            <p className="font-semibold text-slate-600">No audit log entries yet</p>
-            <p className="text-sm text-slate-400 mt-1">Actions taken by admins will appear here.</p>
+            <p className="font-semibold text-[#8a8f98]">No audit log entries yet</p>
+            <p className="text-sm text-[#8a8f98] mt-1">Actions taken by admins will appear here.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="text-left px-5 py-3 font-semibold text-slate-600 whitespace-nowrap">Time</th>
-                  <th className="text-left px-5 py-3 font-semibold text-slate-600 whitespace-nowrap">Action</th>
-                  <th className="text-left px-5 py-3 font-semibold text-slate-600 whitespace-nowrap">Entity</th>
-                  <th className="text-left px-5 py-3 font-semibold text-slate-600 whitespace-nowrap">Old Value</th>
-                  <th className="text-left px-5 py-3 font-semibold text-slate-600 whitespace-nowrap">New Value</th>
-                  <th className="text-right px-5 py-3 font-semibold text-slate-600 whitespace-nowrap">Undo</th>
+                <tr className="bg-[#010102] border-b border-[#23252a]">
+                  <th className="text-left px-5 py-3 font-semibold text-[#8a8f98] whitespace-nowrap">Time</th>
+                  <th className="text-left px-5 py-3 font-semibold text-[#8a8f98] whitespace-nowrap">Action</th>
+                  <th className="text-left px-5 py-3 font-semibold text-[#8a8f98] whitespace-nowrap">Entity</th>
+                  <th className="text-left px-5 py-3 font-semibold text-[#8a8f98] whitespace-nowrap">Old Value</th>
+                  <th className="text-left px-5 py-3 font-semibold text-[#8a8f98] whitespace-nowrap">New Value</th>
+                  <th className="text-right px-5 py-3 font-semibold text-[#8a8f98] whitespace-nowrap">Undo</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#23252a]">
                 {data.logs.map((log) => (
-                  <tr key={log.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-5 py-3 text-slate-500 whitespace-nowrap">
+                  <tr key={log.id} className="hover:bg-[#141516] transition-colors">
+                    <td className="px-5 py-3 text-[#8a8f98] whitespace-nowrap">
                       <span title={new Date(log.created_at).toLocaleString()}>
                         {formatTimeAgo(log.created_at)}
                       </span>
@@ -189,43 +189,43 @@ export default function AdminAuditPage() {
                     <td className="px-5 py-3 whitespace-nowrap">
                       <span
                         className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
-                          ACTION_COLORS[log.action] ?? "bg-slate-100 text-slate-700"
+                          ACTION_COLORS[log.action] ?? "bg-[#141516] text-[#d0d6e0]"
                         }`}
                       >
                         {ACTION_LABELS[log.action] ?? log.action}
                       </span>
                     </td>
                     <td className="px-5 py-3">
-                      <div className="font-medium text-slate-800 truncate max-w-[160px]" title={log.entity_label ?? log.entity_id}>
+                      <div className="font-medium text-[#d0d6e0] truncate max-w-[160px]" title={log.entity_label ?? log.entity_id}>
                         {log.entity_label ?? log.entity_id}
                       </div>
-                      <div className="text-xs text-slate-400 capitalize">{log.entity_type}</div>
+                      <div className="text-xs text-[#8a8f98] capitalize">{log.entity_type}</div>
                     </td>
-                    <td className="px-5 py-3 text-slate-500 text-xs">
+                    <td className="px-5 py-3 text-[#8a8f98] text-xs">
                       <span className="truncate block max-w-[180px]" title={valueSummary(log.old_value)}>
                         {valueSummary(log.old_value)}
                       </span>
                     </td>
-                    <td className="px-5 py-3 text-slate-500 text-xs">
+                    <td className="px-5 py-3 text-[#8a8f98] text-xs">
                       <span className="truncate block max-w-[180px]" title={valueSummary(log.new_value)}>
                         {valueSummary(log.new_value)}
                       </span>
                     </td>
                     <td className="px-5 py-3 text-right">
                       {log.reversed ? (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-[#27a644]/10 text-[#34d399]">
                           Undone
                         </span>
                       ) : log.reversible ? (
                         <button
                           onClick={() => handleUndo(log.id)}
                           disabled={undoing === log.id}
-                          className="px-3 py-1 text-xs font-semibold bg-amber-100 text-amber-800 rounded-lg hover:bg-amber-200 disabled:opacity-50 transition-colors"
+                          className="px-3 py-1 text-xs font-semibold bg-[#fbbf24]/10 text-[#fbbf24] rounded-lg hover:bg-[#fbbf24]/20 disabled:opacity-50 transition-colors"
                         >
                           {undoing === log.id ? "Undoing..." : "Undo"}
                         </button>
                       ) : (
-                        <span className="text-xs text-slate-300">—</span>
+                        <span className="text-xs text-[#8a8f98]">—</span>
                       )}
                     </td>
                   </tr>
@@ -239,21 +239,21 @@ export default function AdminAuditPage() {
       {/* Pagination */}
       {data && data.pages > 1 && (
         <div className="flex items-center justify-between mt-5">
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-[#8a8f98]">
             Showing {(page - 1) * data.limit + 1}–{Math.min(page * data.limit, data.total)} of {data.total}
           </p>
           <div className="flex gap-2">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="px-3 py-1.5 text-sm bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40 transition-colors"
+              className="px-3 py-1.5 text-sm bg-[#0f1011] border border-[#23252a] rounded-lg hover:bg-[#141516] disabled:opacity-40 transition-colors"
             >
               Previous
             </button>
             <button
               onClick={() => setPage((p) => Math.min(data.pages, p + 1))}
               disabled={page === data.pages}
-              className="px-3 py-1.5 text-sm bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40 transition-colors"
+              className="px-3 py-1.5 text-sm bg-[#0f1011] border border-[#23252a] rounded-lg hover:bg-[#141516] disabled:opacity-40 transition-colors"
             >
               Next
             </button>

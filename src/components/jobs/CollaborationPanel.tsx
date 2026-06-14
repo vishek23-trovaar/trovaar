@@ -157,27 +157,27 @@ export function CollaborationPanel({ jobId, isLeadContractor, jobStatus }: Props
 
       {/* Post form */}
       {canPost && showForm && (
-        <Card className="p-4 border-2 border-indigo-200 bg-indigo-50/50">
+        <Card className="p-4 border-2 border-[#3B82F6]/30 bg-[#3B82F6]/5">
           <p className="text-sm font-semibold text-secondary mb-3">Post a Help Request</p>
-          {error && <p className="text-danger text-xs mb-2 bg-red-50 rounded p-2">{error}</p>}
+          {error && <p className="text-danger text-xs mb-2 bg-[#f87171]/10 rounded p-2">{error}</p>}
           <form onSubmit={handlePost} className="space-y-3">
             <div>
               <label className="block text-xs font-medium text-secondary mb-1">What do you need help with? *</label>
               <input type="text" value={title} onChange={e => setTitle(e.target.value)} required
                 placeholder="e.g. Roofing crew for 2 days, Drywall finishing, Electrical rough-in"
-                className="w-full px-3 py-2 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white" />
+                className="w-full px-3 py-2 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 bg-[#141516] text-[#f7f8f8]" />
             </div>
             <div>
               <label className="block text-xs font-medium text-secondary mb-1">Details</label>
               <textarea value={description} onChange={e => setDescription(e.target.value)} rows={3}
                 placeholder="Describe what the helper will be doing, timeline, and any specific requirements."
-                className="w-full px-3 py-2 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white resize-none" />
+                className="w-full px-3 py-2 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 bg-[#141516] text-[#f7f8f8] resize-none" />
             </div>
             <div>
               <label className="block text-xs font-medium text-secondary mb-1">Skills / Tools Needed</label>
               <input type="text" value={skillsNeeded} onChange={e => setSkillsNeeded(e.target.value)}
                 placeholder="e.g. Must have own tools, OSHA 10 preferred, CDL required"
-                className="w-full px-3 py-2 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white" />
+                className="w-full px-3 py-2 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 bg-[#141516] text-[#f7f8f8]" />
             </div>
             <div className="grid grid-cols-3 gap-3">
               <div>
@@ -186,18 +186,18 @@ export function CollaborationPanel({ jobId, isLeadContractor, jobStatus }: Props
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted text-sm">$</span>
                   <input type="number" min="1" step="0.01" value={pay} onChange={e => setPay(e.target.value)} required
                     placeholder="0.00"
-                    className="w-full pl-7 pr-3 py-2 rounded-lg border border-border text-sm focus:outline-none bg-white" />
+                    className="w-full pl-7 pr-3 py-2 rounded-lg border border-border text-sm focus:outline-none bg-[#141516] text-[#f7f8f8]" />
                 </div>
               </div>
               <div>
                 <label className="block text-xs font-medium text-secondary mb-1">Spots Needed</label>
                 <input type="number" min="1" max="20" value={spots} onChange={e => setSpots(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-border text-sm focus:outline-none bg-white" />
+                  className="w-full px-3 py-2 rounded-lg border border-border text-sm focus:outline-none bg-[#141516] text-[#f7f8f8]" />
               </div>
               <div>
                 <label className="block text-xs font-medium text-secondary mb-1">Date Needed</label>
                 <input type="date" value={dateNeeded} onChange={e => setDateNeeded(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-border text-sm focus:outline-none bg-white" />
+                  className="w-full px-3 py-2 rounded-lg border border-border text-sm focus:outline-none bg-[#141516] text-[#f7f8f8]" />
               </div>
             </div>
             <div className="flex gap-2 pt-1">
@@ -230,7 +230,7 @@ export function CollaborationPanel({ jobId, isLeadContractor, jobStatus }: Props
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-1">
                       <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-                        hr.status === "filled" ? "bg-green-100 text-green-700" : "bg-indigo-100 text-indigo-700"
+                        hr.status === "filled" ? "bg-[#27a644]/10 text-[#34d399]" : "bg-[#3B82F6]/10 text-[#60A5FA]"
                       }`}>
                         {hr.status === "filled" ? "✅ Filled" : "🔵 Open"}
                       </span>
@@ -238,7 +238,7 @@ export function CollaborationPanel({ jobId, isLeadContractor, jobStatus }: Props
                         {hr.spots_filled}/{hr.spots} spot{hr.spots !== 1 ? "s" : ""} filled
                       </span>
                       {hr.pending_applications > 0 && (
-                        <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-semibold">
+                        <span className="text-xs bg-[#fbbf24]/10 text-[#fbbf24] px-2 py-0.5 rounded-full font-semibold">
                           {hr.pending_applications} applicant{hr.pending_applications !== 1 ? "s" : ""}
                         </span>
                       )}
@@ -271,7 +271,7 @@ export function CollaborationPanel({ jobId, isLeadContractor, jobStatus }: Props
                       {hr.status === "open" && (
                         <button
                           onClick={() => cancelRequest(hr.id)}
-                          className="text-xs text-muted hover:text-danger px-2 py-1.5 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
+                          className="text-xs text-muted hover:text-danger px-2 py-1.5 rounded-lg hover:bg-[#f87171]/10 transition-colors cursor-pointer"
                         >
                           Cancel
                         </button>
@@ -287,8 +287,8 @@ export function CollaborationPanel({ jobId, isLeadContractor, jobStatus }: Props
                     <div className="flex flex-wrap gap-2">
                       {acceptedApps.map(app => (
                         <Link key={app.id} href={`/profile/${app.applicant_id}`}
-                          className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-2.5 py-1.5 hover:bg-green-100 transition-colors">
-                          <div className="w-6 h-6 rounded-full bg-green-200 flex items-center justify-center text-xs font-bold text-green-800 flex-shrink-0">
+                          className="flex items-center gap-2 bg-[#27a644]/10 border border-[#27a644]/30 rounded-lg px-2.5 py-1.5 hover:bg-[#27a644]/15 transition-colors">
+                          <div className="w-6 h-6 rounded-full bg-[#27a644]/20 flex items-center justify-center text-xs font-bold text-[#34d399] flex-shrink-0">
                             {app.applicant_name.charAt(0).toUpperCase()}
                           </div>
                           <div>

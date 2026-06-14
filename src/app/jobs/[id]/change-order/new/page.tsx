@@ -113,9 +113,9 @@ export default function NewChangeOrderPage({ params }: { params: Promise<{ id: s
 
       <ScrollReveal delay={100}>
       <Card className="p-6 space-y-5 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300">
-        {error && <div className="bg-red-50 text-danger text-sm p-3 rounded-lg">{error}</div>}
+        {error && <div className="bg-[#f87171]/10 text-danger text-sm p-3 rounded-lg">{error}</div>}
 
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+        <div className="rounded-2xl border border-[#fbbf24]/30 bg-[#fbbf24]/10 p-4 text-sm text-[#fbbf24]">
           ⚠️ <strong>Important:</strong> Work requiring this change order must <strong>not</strong> proceed until the consumer approves it.
           Submitting means you've identified new scope, not that you've already done the work.
         </div>
@@ -136,7 +136,7 @@ export default function NewChangeOrderPage({ params }: { params: Promise<{ id: s
             placeholder="Describe what was discovered, why additional work/materials are needed, and how it affects the job."
             rows={4}
             required
-            className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted"
+            className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary placeholder-muted"
           />
         </div>
 
@@ -164,7 +164,7 @@ export default function NewChangeOrderPage({ params }: { params: Promise<{ id: s
                 value={additionalCost}
                 onChange={(e) => setAdditionalCost(e.target.value)}
                 placeholder="0.00"
-                className="w-full pl-8 pr-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white"
+                className="w-full pl-8 pr-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 bg-[#141516]"
               />
             </div>
           )}
@@ -178,14 +178,14 @@ export default function NewChangeOrderPage({ params }: { params: Promise<{ id: s
                 <div key={i} className="grid grid-cols-[1fr_70px_100px_28px] gap-2 px-3 py-2 border-b border-border last:border-0 items-center">
                   <input type="text" value={m.description} onChange={(e) => updateMaterial(i, "description", e.target.value)}
                     placeholder="Material description"
-                    className="text-sm px-2 py-1.5 rounded border border-border bg-white focus:outline-none focus:ring-1 focus:ring-primary/30" />
+                    className="text-sm px-2 py-1.5 rounded border border-border bg-[#141516] focus:outline-none focus:ring-1 focus:ring-primary/30" />
                   <input type="number" min="1" step="0.5" value={m.quantity} onChange={(e) => updateMaterial(i, "quantity", e.target.value)}
-                    className="text-sm px-2 py-1.5 rounded border border-border bg-white text-center focus:outline-none" />
+                    className="text-sm px-2 py-1.5 rounded border border-border bg-[#141516] text-center focus:outline-none" />
                   <div className="relative">
                     <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted text-xs">$</span>
                     <input type="number" min="0" step="0.01" value={m.unit_price} onChange={(e) => updateMaterial(i, "unit_price", e.target.value)}
                       placeholder="0.00"
-                      className="text-sm pl-5 pr-2 py-1.5 rounded border border-border bg-white w-full focus:outline-none" />
+                      className="text-sm pl-5 pr-2 py-1.5 rounded border border-border bg-[#141516] w-full focus:outline-none" />
                   </div>
                   <button type="button" onClick={() => removeMaterial(i)} disabled={materials.length === 1}
                     className="text-muted hover:text-danger disabled:opacity-30 cursor-pointer text-lg leading-none">×</button>
@@ -209,7 +209,7 @@ export default function NewChangeOrderPage({ params }: { params: Promise<{ id: s
         </div>
 
         {additionalCostCents > 0 && (
-          <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm text-amber-800">
+          <div className="rounded-lg bg-[#fbbf24]/10 border border-[#fbbf24]/30 p-3 text-sm text-[#fbbf24]">
             This change order adds <strong>${(additionalCostCents / 100).toFixed(2)}</strong> to the job total. Consumer approval is required.
           </div>
         )}

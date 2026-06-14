@@ -75,8 +75,8 @@ export default function ImageUploader({ images, onImagesChange, maxImages = 5, l
         </label>
       )}
       {error && (
-        <div className="mb-2 p-3 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-sm text-red-700">{error}</p>
+        <div className="mb-2 p-3 bg-[#f87171]/10 border border-[#f87171]/30 rounded-lg">
+          <p className="text-sm text-[#f87171]">{error}</p>
         </div>
       )}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">

@@ -26,10 +26,10 @@ const SORT_OPTIONS: { value: SortOption; label: string }[] = [
 const URGENCY_ORDER: Record<string, number> = { emergency: 0, high: 1, medium: 2, low: 3 };
 
 const URGENCY_PILL: Record<string, string> = {
-  low:       "bg-gray-100 text-gray-600",
-  medium:    "bg-blue-100 text-blue-700",
-  high:      "bg-amber-100 text-amber-700",
-  emergency: "bg-red-100 text-red-700",
+  low:       "bg-[#141516] text-[#8a8f98]",
+  medium:    "bg-[#3B82F6]/10 text-[#60A5FA]",
+  high:      "bg-[#fbbf24]/10 text-[#fbbf24]",
+  emergency: "bg-[#f87171]/10 text-[#f87171]",
 };
 
 function BrowseJobsContent() {
@@ -155,7 +155,7 @@ function BrowseJobsContent() {
           action={
             <Link
               href="/jobs/new"
-              className="inline-flex items-center px-5 py-2.5 bg-white text-blue-700 text-sm font-bold rounded-full shadow-lg shadow-blue-900/30 hover:bg-blue-50 transition-all"
+              className="inline-flex items-center px-5 py-2.5 bg-white text-[#60A5FA] text-sm font-bold rounded-full shadow-lg shadow-blue-900/30 hover:bg-blue-50 transition-all"
             >
               + Post a Job
             </Link>
@@ -164,7 +164,7 @@ function BrowseJobsContent() {
       </div>
 
       {/* ── Filter bar ── */}
-      <div className="bg-white border-b border-border px-3 sm:px-4 py-2.5 shrink-0 space-y-2">
+      <div className="bg-[#0f1011] border-b border-border px-3 sm:px-4 py-2.5 shrink-0 space-y-2">
         <div className="flex flex-wrap items-center gap-2">
 
           {/* Sidebar toggle — desktop only */}
@@ -193,7 +193,7 @@ function BrowseJobsContent() {
               placeholder="Search jobs…"
               className="w-full pl-9 pr-7 py-1.5 text-sm rounded-lg border border-border
                 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary
-                bg-white text-secondary placeholder-muted"
+                bg-[#141516] text-secondary placeholder-muted"
             />
             {searchInput && (
               <button
@@ -216,7 +216,7 @@ function BrowseJobsContent() {
                   "flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-medium border transition-all " +
                   (activeGroup === key
                     ? "bg-secondary text-white border-secondary"
-                    : "bg-white text-secondary border-border hover:border-secondary/40")
+                    : "bg-[#0f1011] text-secondary border-border hover:border-secondary/40")
                 }
               >
                 <span>{icon}</span>
@@ -237,7 +237,7 @@ function BrowseJobsContent() {
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
                 className="appearance-none pl-2.5 pr-7 py-1.5 text-xs rounded-lg border border-border
-                  bg-white text-secondary focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer"
+                  bg-[#141516] text-secondary focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer"
               >
                 {SORT_OPTIONS.map(({ value, label }) => (
                   <option key={value} value={value}>{label}</option>
@@ -262,7 +262,7 @@ function BrowseJobsContent() {
                   "px-2.5 py-1 rounded-full text-xs border transition-all " +
                   (categoryFilter === cat.value
                     ? "bg-primary text-white border-primary"
-                    : "bg-white text-muted border-border hover:border-primary/40")
+                    : "bg-[#0f1011] text-muted border-border hover:border-primary/40")
                 }
               >
                 {cat.label}
@@ -274,7 +274,7 @@ function BrowseJobsContent() {
 
       {/* Consumer surge banner */}
       {user?.role === "consumer" && (
-        <div className="bg-white border-b border-border px-4 py-2 shrink-0">
+        <div className="bg-[#0f1011] border-b border-border px-4 py-2 shrink-0">
           <ConsumerSurgeBanner />
         </div>
       )}
@@ -288,7 +288,7 @@ function BrowseJobsContent() {
           <div
             ref={listRef}
             className="w-full md:w-[300px] xl:w-[340px] shrink-0 overflow-y-auto
-              bg-white border-t md:border-t-0 md:border-r border-border
+              bg-[#0f1011] border-t md:border-t-0 md:border-r border-border
               h-[36dvh] md:h-auto"
           >
             {loading ? (
@@ -373,7 +373,7 @@ function BrowseJobsContent() {
                             {job.urgency.charAt(0).toUpperCase() + job.urgency.slice(1)}
                           </span>
                           {dist && (
-                            <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full">
+                            <span className="text-[10px] font-semibold text-[#34d399] bg-[#27a644]/10 px-1.5 py-0.5 rounded-full">
                               {dist}
                             </span>
                           )}
@@ -383,7 +383,7 @@ function BrowseJobsContent() {
                         </div>
                         <p className="text-[10px] text-muted mt-1 truncate">📍 {job.location}</p>
                         {job.budget_range && (
-                          <p className="text-[10px] font-semibold text-green-700 truncate">💰 {job.budget_range}</p>
+                          <p className="text-[10px] font-semibold text-[#34d399] truncate">💰 {job.budget_range}</p>
                         )}
                         <p className="text-[10px] text-muted/70 truncate">{catLabel}</p>
                       </div>
@@ -440,7 +440,7 @@ function BrowseJobsContent() {
           <button
             onClick={() => setSidebarOpen((v) => !v)}
             className="md:hidden absolute bottom-5 left-1/2 -translate-x-1/2 z-[500]
-              flex items-center gap-2 bg-white shadow-xl rounded-full px-4 py-2.5
+              flex items-center gap-2 bg-[#0f1011] shadow-xl rounded-full px-4 py-2.5
               text-sm font-semibold text-secondary border border-border/60 active:scale-95 transition-all duration-300 hover:shadow-2xl"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

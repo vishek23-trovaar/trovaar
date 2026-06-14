@@ -11,7 +11,7 @@ export default function AboutPage() {
     <main id="main-content">
       {/* Hero */}
       <section
-        className="relative bg-secondary overflow-hidden py-24 px-4"
+        className="relative bg-[#010102] overflow-hidden py-24 px-4"
       >
         <div
           className="absolute inset-0 opacity-[0.04]"
@@ -32,7 +32,7 @@ export default function AboutPage() {
             </span>{" "}
             to every job.
           </h1>
-          <p className="text-lg text-slate-300 max-w-2xl mx-auto" style={{ animation: "fadeInUp 0.7s ease-out 0.15s both" }}>
+          <p className="text-lg text-[#8a8f98] max-w-2xl mx-auto" style={{ animation: "fadeInUp 0.7s ease-out 0.15s both" }}>
             We built Trovaar because finding a reliable contractor shouldn&apos;t feel like a gamble. Post your job, receive competitive bids, and hire with confidence — all in one place.
           </p>
         </div>
@@ -58,7 +58,7 @@ export default function AboutPage() {
                 { icon: "🔒", title: "Secure Escrow", desc: "Funds held safely until the job is done right." },
                 { icon: "⭐", title: "Verified Reviews", desc: "Real feedback from real homeowners." },
               ].map((item) => (
-                <div key={item.title} className="flex items-start gap-3 p-2 rounded-xl hover:bg-white/60 transition-colors duration-200">
+                <div key={item.title} className="flex items-start gap-3 p-2 rounded-xl hover:bg-[#0f1011]/60 transition-colors duration-200">
                   <span className="text-2xl">{item.icon}</span>
                   <div>
                     <p className="font-semibold text-secondary">{item.title}</p>
@@ -72,7 +72,7 @@ export default function AboutPage() {
       </section>
 
       {/* Stats */}
-      <section className="bg-secondary text-white py-20 px-4">
+      <section className="bg-[#010102] text-white py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl font-bold text-center mb-12">Built for the real world</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
@@ -84,7 +84,7 @@ export default function AboutPage() {
             ].map((stat, i) => (
               <div key={stat.label} className="p-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10" style={{ animation: `fadeInUp 0.5s ease-out ${i * 0.1}s both` }}>
                 <p className="text-3xl font-black text-primary mb-1">{stat.value}</p>
-                <p className="text-sm text-slate-400">{stat.label}</p>
+                <p className="text-sm text-[#8a8f98]">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -153,23 +153,23 @@ export default function AboutPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
               <div className="p-8 sm:p-10 border-b md:border-b-0 md:border-r border-white/10">
                 <div className="inline-flex items-center gap-2 bg-red-500/20 border border-red-400/30 rounded-full px-3 py-1 mb-5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
-                  <span className="text-red-300 text-xs font-semibold uppercase tracking-wide">Real Story</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#f87171]" />
+                  <span className="text-[#f87171] text-xs font-semibold uppercase tracking-wide">Real Story</span>
                 </div>
                 <blockquote className="text-white/90 text-base sm:text-lg leading-relaxed mb-5">
                   <p className="mb-3">
-                    An <strong className="text-white">86-year-old man</strong> was quoted <strong className="text-red-400">$11,000–$13,000</strong> to redo his bathroom.
+                    An <strong className="text-white">86-year-old man</strong> was quoted <strong className="text-[#f87171]">$11,000–$13,000</strong> to redo his bathroom.
                   </p>
                   <p className="mb-3">
-                    His son got quoted <strong className="text-green-400">$5,800–$7,000</strong> for the <em>exact same job</em>.
+                    His son got quoted <strong className="text-[#34d399]">$5,800–$7,000</strong> for the <em>exact same job</em>.
                   </p>
                   <p className="text-white/60 text-sm">
                     That&apos;s not a coincidence. That&apos;s predatory pricing — targeting a senior who they assumed wouldn&apos;t question it, wouldn&apos;t shop around, and wouldn&apos;t have someone in his corner to catch it.
                   </p>
                 </blockquote>
-                <p className="text-slate-400 text-xs">
+                <p className="text-[#8a8f98] text-xs">
                   Senior citizens are targeted at every turn because they grew up in an era where you trusted professionals and didn&apos;t question the bill.<br />
-                  <strong className="text-slate-300">That trust is being weaponized against them every single day.</strong>
+                  <strong className="text-[#8a8f98]">That trust is being weaponized against them every single day.</strong>
                 </p>
               </div>
               <div className="p-8 sm:p-10 flex flex-col justify-center">
@@ -179,7 +179,7 @@ export default function AboutPage() {
                     alone in that room.
                   </span>
                 </h3>
-                <p className="text-slate-300 text-sm mb-6 leading-relaxed">
+                <p className="text-[#8a8f98] text-sm mb-6 leading-relaxed">
                   Trovaar gives every consumer — young or old — transparent, competitive bids from verified pros. Post once, see real prices, compare without pressure.
                 </p>
                 <ul className="space-y-2">
@@ -189,8 +189,8 @@ export default function AboutPage() {
                     "Secure payment held until the job is done",
                     "Free for consumers — always",
                   ].map((point) => (
-                    <li key={point} className="flex items-start gap-2 text-sm text-slate-300">
-                      <span className="text-green-400 font-bold mt-0.5">✓</span>
+                    <li key={point} className="flex items-start gap-2 text-sm text-[#8a8f98]">
+                      <span className="text-[#34d399] font-bold mt-0.5">✓</span>
                       {point}
                     </li>
                   ))}
@@ -215,7 +215,7 @@ export default function AboutPage() {
             </Link>
             <Link
               href="/jobs"
-              className="inline-flex items-center justify-center px-6 py-3 rounded-xl border border-border bg-white text-secondary font-semibold hover:border-primary/40 hover:shadow-md transition-all duration-200"
+              className="inline-flex items-center justify-center px-6 py-3 rounded-xl border border-border bg-[#0f1011] text-secondary font-semibold hover:border-primary/40 hover:shadow-md transition-all duration-200"
             >
               Browse open jobs
             </Link>

@@ -72,11 +72,11 @@ export default function PhoneVerifyWidget({ compact = false }: { compact?: boole
 
   if (compact) {
     return (
-      <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 flex items-start gap-3">
+      <div className="rounded-xl border border-[#fbbf24]/30 bg-[#fbbf24]/10 px-4 py-3 flex items-start gap-3">
         <span className="text-lg shrink-0">📱</span>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-amber-800">Verify your phone number</p>
-          <p className="text-xs text-amber-700 mt-0.5">{user.phone}</p>
+          <p className="text-sm font-semibold text-[#fbbf24]">Verify your phone number</p>
+          <p className="text-xs text-[#fbbf24] mt-0.5">{user.phone}</p>
           {step === "idle" && (
             <button
               onClick={sendCode}
@@ -95,7 +95,7 @@ export default function PhoneVerifyWidget({ compact = false }: { compact?: boole
                 value={code}
                 onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
                 placeholder="6-digit code"
-                className="w-28 px-2 py-1.5 border border-amber-300 rounded-lg text-sm font-mono text-center focus:outline-none focus:ring-2 focus:ring-amber-400"
+                className="w-28 px-2 py-1.5 bg-[#141516] border border-[#fbbf24]/30 text-[#f7f8f8] rounded-lg text-sm font-mono text-center focus:outline-none focus:ring-2 focus:ring-amber-400"
               />
               <button
                 onClick={verifyCode}
@@ -106,15 +106,15 @@ export default function PhoneVerifyWidget({ compact = false }: { compact?: boole
               </button>
               <button
                 onClick={() => { setStep("idle"); setCode(""); }}
-                className="text-xs text-amber-600 hover:underline cursor-pointer"
+                className="text-xs text-[#fbbf24] hover:underline cursor-pointer"
               >
                 Resend
               </button>
             </div>
           )}
-          {msg && <p className="text-xs text-red-600 mt-1">{msg}</p>}
+          {msg && <p className="text-xs text-[#f87171] mt-1">{msg}</p>}
         </div>
-        <button onClick={() => setDismissed(true)} className="text-amber-400 hover:text-amber-600 text-lg leading-none cursor-pointer" aria-label="Dismiss">×</button>
+        <button onClick={() => setDismissed(true)} className="text-[#fbbf24]/70 hover:text-[#fbbf24] text-lg leading-none cursor-pointer" aria-label="Dismiss">×</button>
       </div>
     );
   }

@@ -82,7 +82,7 @@ function StarRow({ rating, size = "md" }: { rating: number; size?: "sm" | "md" |
   return (
     <span className={`flex gap-0.5 ${sz}`}>
       {[1, 2, 3, 4, 5].map((s) => (
-        <span key={s} className={s <= rating ? "text-amber-400" : "text-gray-200"}>
+        <span key={s} className={s <= rating ? "text-[#fbbf24]" : "text-[#d0d6e0]"}>
           ★
         </span>
       ))}
@@ -94,15 +94,15 @@ function RatingBar({ count, total, star }: { count: number; total: number; star:
   const pct = total > 0 ? Math.round((count / total) * 100) : 0;
   return (
     <div className="flex items-center gap-2 text-xs">
-      <span className="text-amber-400 w-3 text-right font-medium">{star}</span>
-      <span className="text-amber-400 text-xs">★</span>
-      <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+      <span className="text-[#fbbf24] w-3 text-right font-medium">{star}</span>
+      <span className="text-[#fbbf24] text-xs">★</span>
+      <div className="flex-1 h-2 bg-[#141516] rounded-full overflow-hidden">
         <div
-          className="h-full bg-amber-400 rounded-full transition-all"
+          className="h-full bg-[#fbbf24] rounded-full transition-all"
           style={{ width: `${pct}%` }}
         />
       </div>
-      <span className="text-gray-400 w-6 text-right">{count}</span>
+      <span className="text-[#8a8f98] w-6 text-right">{count}</span>
     </div>
   );
 }
@@ -262,12 +262,12 @@ export default function ContractorProfilePage({
   // ── Render ──────────────────────────────────────────────────────────────────
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-[#0f1011] min-h-screen">
       <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
 
         {/* ── 1. Hero card ───────────────────────────────────────────────────── */}
         <ScrollReveal>
-        <div className="bg-white shadow-sm rounded-2xl border border-border p-6 hover:shadow-md transition-shadow duration-300">
+        <div className="bg-[#0f1011] shadow-sm rounded-2xl border border-border p-6 hover:shadow-md transition-shadow duration-300">
           <div className="flex items-start gap-5">
             {/* Avatar */}
             <div className="shrink-0">
@@ -354,32 +354,32 @@ export default function ContractorProfilePage({
                   {platformTier.icon} {platformTier.label}
                 </span>
                 {profile.verification_status === "approved" && (
-                  <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                  <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium bg-[#3B82F6]/10 text-[#60A5FA] border border-[#3B82F6]/30">
                     ✓ ID Verified
                   </span>
                 )}
                 {profile.insurance_status === "approved" && (
-                  <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium bg-[#27a644]/10 text-[#34d399] border border-[#27a644]/30">
                     🛡️ Insured
                   </span>
                 )}
                 {quals.length > 0 && (
-                  <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium bg-purple-50 text-purple-700 border border-purple-200">
+                  <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium bg-[#3B82F6]/10 text-[#60A5FA] border border-[#3B82F6]/30">
                     🏆 {quals.length} Qualification{quals.length !== 1 ? "s" : ""}
                   </span>
                 )}
                 {profile.background_check_status === "approved" && (
-                  <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium bg-green-50 text-green-700 border border-green-200">
+                  <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium bg-[#27a644]/10 text-[#34d399] border border-[#27a644]/30">
                     🛡️ Background Check Passed
                   </span>
                 )}
                 {profile.rating >= 4.8 && profile.rating_count >= 3 && (
-                  <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                  <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium bg-[#fbbf24]/10 text-[#fbbf24] border border-[#fbbf24]/30">
                     ⭐ Top Rated
                   </span>
                 )}
                 {completedJobs >= 50 && (
-                  <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium bg-purple-50 text-purple-700 border border-purple-200">
+                  <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium bg-[#3B82F6]/10 text-[#60A5FA] border border-[#3B82F6]/30">
                     🏆 Elite Pro
                   </span>
                 )}
@@ -389,7 +389,7 @@ export default function ContractorProfilePage({
               <div className="flex flex-wrap items-center gap-1 mt-3 text-sm text-muted">
                 {profile.rating > 0 ? (
                   <span className="flex items-center gap-1">
-                    <span className="text-amber-400">★</span>
+                    <span className="text-[#fbbf24]">★</span>
                     <span className="font-semibold text-secondary">
                       {profile.rating.toFixed(1)}
                     </span>
@@ -397,17 +397,17 @@ export default function ContractorProfilePage({
                 ) : (
                   <span className="italic">No rating yet</span>
                 )}
-                <span className="text-gray-300 mx-1">|</span>
+                <span className="text-[#8a8f98] mx-1">|</span>
                 <span>
                   <span className="font-semibold text-secondary">{profile.rating_count}</span>{" "}
                   review{profile.rating_count !== 1 ? "s" : ""}
                 </span>
-                <span className="text-gray-300 mx-1">|</span>
+                <span className="text-[#8a8f98] mx-1">|</span>
                 <span>
                   <span className="font-semibold text-secondary">{completedJobs}</span> jobs
                   completed
                 </span>
-                <span className="text-gray-300 mx-1">|</span>
+                <span className="text-[#8a8f98] mx-1">|</span>
                 <span>
                   <span className="font-semibold text-secondary">
                     {profile.years_experience ?? 0}
@@ -423,7 +423,7 @@ export default function ContractorProfilePage({
         {/* ── 2. About ───────────────────────────────────────────────────────── */}
         {(profile.about_me || profile.bio) && (
           <ScrollReveal delay={100}>
-          <div className="bg-white rounded-2xl border border-border p-6 hover:shadow-sm transition-shadow duration-300">
+          <div className="bg-[#0f1011] rounded-2xl border border-border p-6 hover:shadow-sm transition-shadow duration-300">
             <h2 className="text-base font-bold text-secondary mb-3">About {firstName}</h2>
             <p className="text-secondary leading-relaxed">{profile.about_me || profile.bio}</p>
             {contractorTypeDef && contractorTypeDef.value !== "independent" && (
@@ -437,7 +437,7 @@ export default function ContractorProfilePage({
 
         {/* ── 3. Credentials & Verification ─────────────────────────────────── */}
         <ScrollReveal delay={150}>
-        <div className="bg-white rounded-2xl border border-border p-6 hover:shadow-sm transition-shadow duration-300">
+        <div className="bg-[#0f1011] rounded-2xl border border-border p-6 hover:shadow-sm transition-shadow duration-300">
           <h2 className="text-base font-bold text-secondary mb-4">Credentials &amp; Trust</h2>
           <div className="space-y-3">
 
@@ -446,8 +446,8 @@ export default function ContractorProfilePage({
               <div
                 className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm shrink-0 ${
                   profile.verification_status === "approved"
-                    ? "bg-blue-50 text-blue-600"
-                    : "bg-gray-100 text-gray-400"
+                    ? "bg-[#3B82F6]/10 text-[#60A5FA]"
+                    : "bg-[#141516] text-[#8a8f98]"
                 }`}
               >
                 🪪
@@ -456,11 +456,11 @@ export default function ContractorProfilePage({
                 <p className="text-sm font-semibold text-secondary">Background Check / Identity</p>
               </div>
               {profile.verification_status === "approved" ? (
-                <span className="flex items-center gap-1 text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full">
+                <span className="flex items-center gap-1 text-xs font-semibold text-[#60A5FA] bg-[#3B82F6]/10 border border-[#3B82F6]/30 px-2.5 py-1 rounded-full">
                   ✓ Verified
                 </span>
               ) : (
-                <span className="text-xs text-gray-400">Not submitted</span>
+                <span className="text-xs text-[#8a8f98]">Not submitted</span>
               )}
             </div>
 
@@ -469,8 +469,8 @@ export default function ContractorProfilePage({
               <div
                 className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm shrink-0 ${
                   profile.insurance_status === "approved"
-                    ? "bg-emerald-50 text-emerald-600"
-                    : "bg-gray-100 text-gray-400"
+                    ? "bg-[#27a644]/10 text-[#34d399]"
+                    : "bg-[#141516] text-[#8a8f98]"
                 }`}
               >
                 🛡️
@@ -479,23 +479,23 @@ export default function ContractorProfilePage({
                 <p className="text-sm font-semibold text-secondary">Insurance</p>
               </div>
               {profile.insurance_status === "approved" ? (
-                <span className="flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
+                <span className="flex items-center gap-1 text-xs font-semibold text-[#34d399] bg-[#27a644]/10 border border-[#27a644]/30 px-2.5 py-1 rounded-full">
                   ✓ Verified
                 </span>
               ) : (
-                <span className="text-xs text-gray-400">Not submitted</span>
+                <span className="text-xs text-[#8a8f98]">Not submitted</span>
               )}
             </div>
 
             {/* Licenses & Certs */}
             <div className="flex items-start gap-3 pt-3">
-              <div className="w-9 h-9 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-sm shrink-0">
+              <div className="w-9 h-9 rounded-lg bg-[#3B82F6]/10 text-[#60A5FA] flex items-center justify-center text-sm shrink-0">
                 🏆
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-secondary mb-2">Licenses &amp; Certs</p>
                 {quals.length === 0 ? (
-                  <p className="text-xs text-gray-400">None on file</p>
+                  <p className="text-xs text-[#8a8f98]">None on file</p>
                 ) : (
                   <div className="space-y-2">
                     {quals.map((q, i) => {
@@ -510,7 +510,7 @@ export default function ContractorProfilePage({
                           {q.number && (
                             <span className="text-muted text-xs">· #{q.number}</span>
                           )}
-                          <span className="text-emerald-500 text-xs ml-auto">✓</span>
+                          <span className="text-[#34d399] text-xs ml-auto">✓</span>
                         </div>
                       );
                     })}
@@ -525,7 +525,7 @@ export default function ContractorProfilePage({
         {/* ── Skills Assessment Scores ───────────────────────────────────── */}
         {quizScores.length > 0 && (
           <ScrollReveal delay={200}>
-          <div className="bg-white rounded-2xl border border-border p-6 hover:shadow-sm transition-shadow duration-300">
+          <div className="bg-[#0f1011] rounded-2xl border border-border p-6 hover:shadow-sm transition-shadow duration-300">
             <h2 className="text-base font-bold text-secondary mb-4">Skills Assessment</h2>
             <div className="flex flex-wrap gap-3">
               {quizScores.map((s) => (
@@ -533,10 +533,10 @@ export default function ContractorProfilePage({
                   key={s.category}
                   className={`flex items-center gap-2 px-3 py-2 rounded-xl border ${
                     s.percentage >= 90
-                      ? "bg-emerald-50 border-emerald-200"
+                      ? "bg-[#27a644]/10 border-[#27a644]/30"
                       : s.percentage >= 80
-                      ? "bg-blue-50 border-blue-200"
-                      : "bg-slate-50 border-slate-200"
+                      ? "bg-[#3B82F6]/10 border-[#3B82F6]/30"
+                      : "bg-[#010102] border-[#23252a]"
                   }`}
                 >
                   <span className="text-sm">🧠</span>
@@ -546,10 +546,10 @@ export default function ContractorProfilePage({
                   <span
                     className={`text-sm font-bold ${
                       s.percentage >= 90
-                        ? "text-emerald-600"
+                        ? "text-[#34d399]"
                         : s.percentage >= 80
-                        ? "text-blue-600"
-                        : "text-slate-600"
+                        ? "text-[#60A5FA]"
+                        : "text-[#8a8f98]"
                     }`}
                   >
                     {s.percentage}%
@@ -563,7 +563,7 @@ export default function ContractorProfilePage({
 
         {/* ── 3b. Certifications ─────────────────────────────────────────── */}
         {certifications.length > 0 && (
-          <div className="bg-white rounded-2xl border border-border p-6">
+          <div className="bg-[#0f1011] rounded-2xl border border-border p-6">
             <h2 className="text-base font-bold text-secondary mb-4">Certifications</h2>
             <div className="space-y-3">
               {certifications.map((cert) => {
@@ -571,19 +571,19 @@ export default function ContractorProfilePage({
                 return (
                   <div key={cert.id} className="flex items-center gap-3 py-2">
                     <div className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm shrink-0 ${
-                      isExpired ? "bg-red-50 text-red-400" : "bg-purple-50 text-purple-600"
+                      isExpired ? "bg-[#f87171]/10 text-[#f87171]" : "bg-[#3B82F6]/10 text-[#60A5FA]"
                     }`}>
                       {isExpired ? "\u26A0\uFE0F" : "\uD83D\uDCDC"}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className={`text-sm font-semibold ${isExpired ? "text-gray-400 line-through" : "text-secondary"}`}>
+                      <p className={`text-sm font-semibold ${isExpired ? "text-[#8a8f98] line-through" : "text-secondary"}`}>
                         {cert.name}
                       </p>
                       <p className="text-xs text-muted">
                         {cert.issuer && <span>{cert.issuer}</span>}
                         {cert.issue_date && <span> · Issued {cert.issue_date}</span>}
                         {cert.expiry_date && (
-                          <span className={isExpired ? " text-red-500" : ""}>
+                          <span className={isExpired ? " text-[#f87171]" : ""}>
                             {" "}· {isExpired ? "Expired" : "Expires"} {cert.expiry_date}
                           </span>
                         )}
@@ -591,11 +591,11 @@ export default function ContractorProfilePage({
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       {isExpired ? (
-                        <span className="text-xs bg-red-50 text-red-600 border border-red-200 px-2.5 py-1 rounded-full font-medium">Expired</span>
+                        <span className="text-xs bg-[#f87171]/10 text-[#f87171] border border-[#f87171]/30 px-2.5 py-1 rounded-full font-medium">Expired</span>
                       ) : cert.verified ? (
-                        <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-full font-semibold">&#10003; Verified</span>
+                        <span className="text-xs bg-[#27a644]/10 text-[#34d399] border border-[#27a644]/30 px-2.5 py-1 rounded-full font-semibold">&#10003; Verified</span>
                       ) : (
-                        <span className="text-xs bg-gray-50 text-gray-500 border border-gray-200 px-2.5 py-1 rounded-full font-medium">Self-reported</span>
+                        <span className="text-xs bg-[#010102] text-[#8a8f98] border border-[#23252a] px-2.5 py-1 rounded-full font-medium">Self-reported</span>
                       )}
                     </div>
                   </div>
@@ -607,12 +607,12 @@ export default function ContractorProfilePage({
 
         {/* ── 3c. Work History ────────────────────────────────────────────── */}
         {workHistory.length > 0 && (
-          <div className="bg-white rounded-2xl border border-border p-6">
+          <div className="bg-[#0f1011] rounded-2xl border border-border p-6">
             <h2 className="text-base font-bold text-secondary mb-4">Work History</h2>
             <div className="space-y-3">
               {workHistory.map((entry) => (
                 <div key={entry.id} className="flex items-center gap-3 py-2">
-                  <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-sm shrink-0">
+                  <div className="w-9 h-9 rounded-lg bg-[#3B82F6]/10 text-[#60A5FA] flex items-center justify-center text-sm shrink-0">
                     🏢
                   </div>
                   <div className="flex-1 min-w-0">
@@ -627,9 +627,9 @@ export default function ContractorProfilePage({
                     </p>
                   </div>
                   {entry.verified ? (
-                    <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-full font-semibold">✓ Verified</span>
+                    <span className="text-xs bg-[#27a644]/10 text-[#34d399] border border-[#27a644]/30 px-2.5 py-1 rounded-full font-semibold">✓ Verified</span>
                   ) : (
-                    <span className="text-xs bg-gray-50 text-gray-500 border border-gray-200 px-2.5 py-1 rounded-full font-medium">Self-reported</span>
+                    <span className="text-xs bg-[#010102] text-[#8a8f98] border border-[#23252a] px-2.5 py-1 rounded-full font-medium">Self-reported</span>
                   )}
                 </div>
               ))}
@@ -640,7 +640,7 @@ export default function ContractorProfilePage({
         {/* ── 4. Services ───────────────────────────────────────────────────── */}
         {categories.length > 0 && (
           <ScrollReveal delay={200}>
-          <div className="bg-white rounded-2xl border border-border p-6 hover:shadow-sm transition-shadow duration-300">
+          <div className="bg-[#0f1011] rounded-2xl border border-border p-6 hover:shadow-sm transition-shadow duration-300">
             <h2 className="text-base font-bold text-secondary mb-4">Services Offered</h2>
             <div className="flex flex-wrap gap-2">
               {categories.map((cat) => {
@@ -661,7 +661,7 @@ export default function ContractorProfilePage({
 
         {/* ── 5. Portfolio ──────────────────────────────────────────────────── */}
         <ScrollReveal delay={250}>
-        <div className="bg-white rounded-2xl border border-border p-6 hover:shadow-sm transition-shadow duration-300">
+        <div className="bg-[#0f1011] rounded-2xl border border-border p-6 hover:shadow-sm transition-shadow duration-300">
           <h2 className="text-base font-bold text-secondary mb-1">Work Portfolio</h2>
           <p className="text-sm text-muted mb-5">Before &amp; after photos from completed projects.</p>
           <PortfolioManager contractorId={id} editable={false} />
@@ -708,7 +708,7 @@ export default function ContractorProfilePage({
 
         {/* ── 6. Reviews ────────────────────────────────────────────────────── */}
         <ScrollReveal delay={300}>
-        <div className="bg-white rounded-2xl border border-border p-6 hover:shadow-sm transition-shadow duration-300">
+        <div className="bg-[#0f1011] rounded-2xl border border-border p-6 hover:shadow-sm transition-shadow duration-300">
           <h2 className="text-base font-bold text-secondary mb-4">
             Reviews{profile.rating_count > 0 ? ` (${profile.rating_count})` : ""}
           </h2>

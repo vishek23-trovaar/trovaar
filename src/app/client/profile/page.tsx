@@ -192,15 +192,15 @@ export default function ClientProfilePage() {
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
-          { label: "Jobs Posted", value: stats.totalJobs, color: "text-blue-600", bg: "bg-blue-50/50" },
-          { label: "Active", value: stats.activeJobs, color: "text-amber-600", bg: "bg-amber-50/50" },
-          { label: "Completed", value: stats.completedJobs, color: "text-emerald-600", bg: "bg-emerald-50/50" },
-          { label: "Total Spent", value: `$${stats.totalSpent.toFixed(0)}`, color: "text-purple-600", bg: "bg-purple-50/50" },
+          { label: "Jobs Posted", value: stats.totalJobs, color: "text-[#60A5FA]", bg: "bg-[#3B82F6]/10" },
+          { label: "Active", value: stats.activeJobs, color: "text-[#fbbf24]", bg: "bg-[#fbbf24]/10" },
+          { label: "Completed", value: stats.completedJobs, color: "text-[#34d399]", bg: "bg-[#27a644]/10" },
+          { label: "Total Spent", value: `$${stats.totalSpent.toFixed(0)}`, color: "text-[#c4b5fd]", bg: "bg-[#a78bfa]/10" },
         ].map((s, i) => (
           <ScrollReveal key={s.label} delay={i * 80}>
-            <div className={`${s.bg} rounded-2xl p-4 shadow-sm border border-white/60 backdrop-blur-sm text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300`}>
+            <div className={`${s.bg} rounded-2xl p-4 shadow-sm border border-[#23252a] backdrop-blur-sm text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300`}>
               <div className={`text-2xl font-bold ${s.color}`}>{s.value}</div>
-              <div className="text-xs text-gray-500 mt-1">{s.label}</div>
+              <div className="text-xs text-[#8a8f98] mt-1">{s.label}</div>
             </div>
           </ScrollReveal>
         ))}
@@ -208,50 +208,50 @@ export default function ClientProfilePage() {
 
       {/* Personal Info */}
       <ScrollReveal delay={100}>
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-300">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h2>
+      <div className="bg-[#0f1011] rounded-2xl shadow-sm border border-[#23252a] p-6 hover:shadow-md transition-all duration-300">
+        <h2 className="text-lg font-semibold text-[#f7f8f8] mb-4">Personal Information</h2>
         <form onSubmit={saveProfile} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+              <label className="block text-sm font-medium text-[#d0d6e0] mb-1">Full Name</label>
               <input
                 value={name}
                 onChange={e => setName(e.target.value)}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="w-full bg-[#141516] border border-[#23252a] rounded-lg px-3 py-2 text-sm text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-primary/30"
                 placeholder="Your full name"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <label className="block text-sm font-medium text-[#d0d6e0] mb-1">Email</label>
               <input
                 value={user.email}
                 disabled
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 text-gray-400 cursor-not-allowed"
+                className="w-full border border-[#23252a] rounded-lg px-3 py-2 text-sm bg-[#010102] text-[#8a8f98] cursor-not-allowed"
               />
             </div>
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+                <label className="block text-sm font-medium text-[#d0d6e0]">Phone Number</label>
                 {user.phone_verified
-                  ? <span className="text-xs font-semibold text-emerald-600">✓ Verified</span>
+                  ? <span className="text-xs font-semibold text-[#34d399]">✓ Verified</span>
                   : user.phone
-                  ? <span className="text-xs font-medium text-amber-600">⚠ Not verified</span>
+                  ? <span className="text-xs font-medium text-[#fbbf24]">⚠ Not verified</span>
                   : null}
               </div>
               <input
                 value={phone}
                 onChange={e => setPhone(e.target.value)}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="w-full bg-[#141516] border border-[#23252a] rounded-lg px-3 py-2 text-sm text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-primary/30"
                 placeholder="+1 (555) 000-0000"
                 type="tel"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Home / Service Address</label>
+              <label className="block text-sm font-medium text-[#d0d6e0] mb-1">Home / Service Address</label>
               <input
                 value={location}
                 onChange={e => setLocation(e.target.value)}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="w-full bg-[#141516] border border-[#23252a] rounded-lg px-3 py-2 text-sm text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-primary/30"
                 placeholder="City, State"
               />
             </div>
@@ -272,9 +272,9 @@ export default function ClientProfilePage() {
 
       {/* SMS Bid Alerts */}
       <ScrollReveal delay={150}>
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-300">
-        <h2 className="text-lg font-semibold text-gray-900 mb-1">SMS Bid Alerts</h2>
-        <p className="text-sm text-gray-500 mb-4">
+      <div className="bg-[#0f1011] rounded-2xl shadow-sm border border-[#23252a] p-6 hover:shadow-md transition-all duration-300">
+        <h2 className="text-lg font-semibold text-[#f7f8f8] mb-1">SMS Bid Alerts</h2>
+        <p className="text-sm text-[#8a8f98] mb-4">
           Get a text message on your phone whenever a contractor submits a new bid on one of your jobs.
         </p>
         <div className="flex items-center justify-between">
@@ -286,7 +286,7 @@ export default function ClientProfilePage() {
               disabled={smsLoading}
               onClick={toggleSmsAlerts}
               className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-50 ${
-                smsAlertsEnabled ? "bg-emerald-500" : "bg-gray-200"
+                smsAlertsEnabled ? "bg-emerald-500" : "bg-[#18191a]"
               }`}
             >
               <span
@@ -295,14 +295,14 @@ export default function ClientProfilePage() {
                 }`}
               />
             </button>
-            <span className="text-sm font-medium text-gray-700">
+            <span className="text-sm font-medium text-[#d0d6e0]">
               {smsAlertsEnabled ? "Enabled" : "Disabled"}
             </span>
           </div>
-          {smsMsg && <span className="text-sm text-gray-600">{smsMsg}</span>}
+          {smsMsg && <span className="text-sm text-[#8a8f98]">{smsMsg}</span>}
         </div>
         {smsAlertsEnabled && !phone.trim() && (
-          <p className="mt-3 text-xs text-amber-600 font-medium">
+          <p className="mt-3 text-xs text-[#fbbf24] font-medium">
             Add a phone number above and save your profile to receive SMS alerts.
           </p>
         )}
@@ -311,38 +311,38 @@ export default function ClientProfilePage() {
 
       {/* Account Security */}
       <ScrollReveal delay={200}>
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-300">
-        <h2 className="text-lg font-semibold text-gray-900 mb-1">Account Security</h2>
-        <p className="text-sm text-gray-500 mb-4">Change your password. You&apos;ll need your current password to update it.</p>
+      <div className="bg-[#0f1011] rounded-2xl shadow-sm border border-[#23252a] p-6 hover:shadow-md transition-all duration-300">
+        <h2 className="text-lg font-semibold text-[#f7f8f8] mb-1">Account Security</h2>
+        <p className="text-sm text-[#8a8f98] mb-4">Change your password. You&apos;ll need your current password to update it.</p>
         <form onSubmit={changePassword} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+              <label className="block text-sm font-medium text-[#d0d6e0] mb-1">Current Password</label>
               <input
                 type="password"
                 value={currentPassword}
                 onChange={e => setCurrentPassword(e.target.value)}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="w-full bg-[#141516] border border-[#23252a] rounded-lg px-3 py-2 text-sm text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-primary/30"
                 placeholder="••••••••"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+              <label className="block text-sm font-medium text-[#d0d6e0] mb-1">New Password</label>
               <input
                 type="password"
                 value={newPassword}
                 onChange={e => setNewPassword(e.target.value)}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="w-full bg-[#141516] border border-[#23252a] rounded-lg px-3 py-2 text-sm text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-primary/30"
                 placeholder="••••••••"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+              <label className="block text-sm font-medium text-[#d0d6e0] mb-1">Confirm New Password</label>
               <input
                 type="password"
                 value={confirmPassword}
                 onChange={e => setConfirmPassword(e.target.value)}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="w-full bg-[#141516] border border-[#23252a] rounded-lg px-3 py-2 text-sm text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-primary/30"
                 placeholder="••••••••"
               />
             </div>
@@ -351,7 +351,7 @@ export default function ClientProfilePage() {
             <button
               type="submit"
               disabled={pwSaving}
-              className="px-5 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50"
+              className="px-5 py-2 bg-[#141516] border border-[#23252a] text-[#f7f8f8] text-sm font-medium rounded-lg hover:bg-[#18191a] transition-colors disabled:opacity-50"
             >
               {pwSaving ? "Updating…" : "Update Password"}
             </button>
@@ -363,34 +363,34 @@ export default function ClientProfilePage() {
 
       {/* Account Info */}
       <ScrollReveal delay={250}>
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all duration-300">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Account Details</h2>
+      <div className="bg-[#0f1011] rounded-2xl shadow-sm border border-[#23252a] p-6 hover:shadow-md transition-all duration-300">
+        <h2 className="text-lg font-semibold text-[#f7f8f8] mb-4">Account Details</h2>
         <div className="space-y-3 text-sm">
-          <div className="flex justify-between items-center py-2 border-b border-gray-50">
-            <span className="text-gray-500">Account Number</span>
+          <div className="flex justify-between items-center py-2 border-b border-[#23252a]">
+            <span className="text-[#8a8f98]">Account Number</span>
             {user.account_number ? (
-              <span className="text-gray-900 font-mono font-semibold tracking-wide">
+              <span className="text-[#f7f8f8] font-mono font-semibold tracking-wide">
                 {user.account_number}
               </span>
             ) : (
-              <span className="text-amber-600 text-xs font-medium">
+              <span className="text-[#fbbf24] text-xs font-medium">
                 ⚠ Add your phone number to activate
               </span>
             )}
           </div>
-          <div className="flex justify-between items-center py-2 border-b border-gray-50">
-            <span className="text-gray-500">Member Since</span>
-            <span className="text-gray-700">{memberSince}</span>
+          <div className="flex justify-between items-center py-2 border-b border-[#23252a]">
+            <span className="text-[#8a8f98]">Member Since</span>
+            <span className="text-[#d0d6e0]">{memberSince}</span>
           </div>
-          <div className="flex justify-between items-center py-2 border-b border-gray-50">
-            <span className="text-gray-500">Email Verified</span>
-            <span className={`font-medium ${(user as unknown as { email_verified?: number }).email_verified ? "text-emerald-600" : "text-amber-600"}`}>
+          <div className="flex justify-between items-center py-2 border-b border-[#23252a]">
+            <span className="text-[#8a8f98]">Email Verified</span>
+            <span className={`font-medium ${(user as unknown as { email_verified?: number }).email_verified ? "text-[#34d399]" : "text-[#fbbf24]"}`}>
               {(user as unknown as { email_verified?: number }).email_verified ? "✓ Verified" : "⚠ Not Verified"}
             </span>
           </div>
           <div className="flex justify-between items-center py-2">
-            <span className="text-gray-500">Account Type</span>
-            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-emerald-100 text-emerald-700">Client</span>
+            <span className="text-[#8a8f98]">Account Type</span>
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#27a644]/10 text-[#34d399]">Client</span>
           </div>
         </div>
       </div>
@@ -398,19 +398,19 @@ export default function ClientProfilePage() {
 
       {/* Danger Zone */}
       <ScrollReveal delay={300}>
-      <div className="bg-white rounded-2xl shadow-sm border border-red-100 p-6">
-        <h2 className="text-lg font-semibold text-red-700 mb-1">Danger Zone</h2>
-        <p className="text-sm text-gray-500 mb-4">Permanently delete your account and all associated data. This cannot be undone.</p>
+      <div className="bg-[#0f1011] rounded-2xl shadow-sm border border-[#f87171]/30 p-6">
+        <h2 className="text-lg font-semibold text-[#f87171] mb-1">Danger Zone</h2>
+        <p className="text-sm text-[#8a8f98] mb-4">Permanently delete your account and all associated data. This cannot be undone.</p>
         {!showDeleteConfirm ? (
           <button
             onClick={() => setShowDeleteConfirm(true)}
-            className="px-5 py-2 border border-red-300 text-red-600 text-sm font-medium rounded-lg hover:bg-red-50 transition-colors"
+            className="px-5 py-2 border border-[#f87171]/30 text-[#f87171] text-sm font-medium rounded-lg hover:bg-[#f87171]/10 transition-colors"
           >
             Delete Account
           </button>
         ) : (
           <div className="space-y-3">
-            <p className="text-sm font-medium text-red-700">Are you sure? This will permanently delete your account and all your data.</p>
+            <p className="text-sm font-medium text-[#f87171]">Are you sure? This will permanently delete your account and all your data.</p>
             <div className="flex gap-3">
               <button
                 onClick={deleteAccount}
@@ -421,7 +421,7 @@ export default function ClientProfilePage() {
               </button>
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="px-5 py-2 border border-gray-300 text-gray-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                className="px-5 py-2 border border-[#23252a] text-[#8a8f98] text-sm font-medium rounded-lg hover:bg-[#141516] transition-colors"
               >
                 Cancel
               </button>

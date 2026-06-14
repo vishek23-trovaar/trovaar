@@ -116,19 +116,19 @@ export default function ReschedulePanel({
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-2">
+      <div className="bg-[#0f1011] rounded-xl border border-[#23252a] p-4 flex items-center gap-2">
         <div className="animate-spin w-4 h-4 border-2 border-slate-400 border-t-transparent rounded-full" />
-        <span className="text-sm text-gray-500">Loading reschedule info...</span>
+        <span className="text-sm text-[#8a8f98]">Loading reschedule info...</span>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-3">
-      <h3 className="text-sm font-bold text-gray-900">Schedule</h3>
+    <div className="bg-[#0f1011] rounded-xl border border-[#23252a] p-5 space-y-3">
+      <h3 className="text-sm font-bold text-[#f7f8f8]">Schedule</h3>
 
-      <p className="text-sm text-gray-600">
-        <span className="font-medium text-gray-700">Current date: </span>
+      <p className="text-sm text-[#8a8f98]">
+        <span className="font-medium text-[#d0d6e0]">Current date: </span>
         {currentDate
           ? new Date(currentDate).toLocaleDateString("en-US", {
               weekday: "long",
@@ -141,14 +141,14 @@ export default function ReschedulePanel({
 
       {/* Success message */}
       {successMsg && (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-sm text-emerald-800">
+        <div className="bg-[#27a644]/10 border border-[#27a644]/30 rounded-lg p-3 text-sm text-[#34d399]">
           {successMsg}
         </div>
       )}
 
       {/* Error message */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700">
+        <div className="bg-[#f87171]/10 border border-[#f87171]/30 rounded-lg p-3 text-sm text-[#f87171]">
           {error}
         </div>
       )}
@@ -159,14 +159,14 @@ export default function ReschedulePanel({
           {!showForm ? (
             <button
               onClick={() => { setShowForm(true); setSuccessMsg(null); }}
-              className="w-full py-2 px-4 text-sm font-semibold bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors"
+              className="w-full py-2 px-4 text-sm font-semibold bg-[#141516] text-[#d0d6e0] rounded-lg hover:bg-[#18191a] transition-colors"
             >
               Propose New Date
             </button>
           ) : (
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1">
+                <label className="block text-xs font-semibold text-[#8a8f98] mb-1">
                   Proposed Date
                 </label>
                 <input
@@ -174,11 +174,11 @@ export default function ReschedulePanel({
                   value={proposedDate}
                   min={new Date().toISOString().split("T")[0]}
                   onChange={(e) => setProposedDate(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+                  className="w-full bg-[#141516] border border-[#23252a] rounded-lg px-3 py-2 text-sm text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1">
+                <label className="block text-xs font-semibold text-[#8a8f98] mb-1">
                   Reason (optional)
                 </label>
                 <textarea
@@ -186,7 +186,7 @@ export default function ReschedulePanel({
                   onChange={(e) => setReason(e.target.value)}
                   placeholder="Explain why you need to reschedule..."
                   rows={3}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+                  className="w-full bg-[#141516] border border-[#23252a] rounded-lg px-3 py-2 text-sm text-[#f7f8f8] resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
                 />
               </div>
               <div className="flex gap-2">
@@ -199,7 +199,7 @@ export default function ReschedulePanel({
                 </button>
                 <button
                   onClick={() => { setShowForm(false); setError(null); }}
-                  className="px-4 py-2 text-sm font-semibold bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                  className="px-4 py-2 text-sm font-semibold bg-[#141516] text-[#d0d6e0] rounded-lg hover:bg-[#18191a] transition-colors"
                 >
                   Cancel
                 </button>
@@ -211,7 +211,7 @@ export default function ReschedulePanel({
 
       {/* Contractor view — pending proposal already exists */}
       {role === "contractor" && pendingRequest && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm text-amber-800">
+        <div className="bg-[#fbbf24]/10 border border-[#fbbf24]/30 rounded-lg p-3 text-sm text-[#fbbf24]">
           <p className="font-semibold">Reschedule proposal pending</p>
           <p className="mt-1">
             Proposed:{" "}
@@ -223,18 +223,18 @@ export default function ReschedulePanel({
             })}
           </p>
           {pendingRequest.reason && (
-            <p className="mt-0.5 text-amber-700">Reason: {pendingRequest.reason}</p>
+            <p className="mt-0.5 text-[#fbbf24]/80">Reason: {pendingRequest.reason}</p>
           )}
-          <p className="mt-1 text-xs text-amber-600">Waiting for customer response...</p>
+          <p className="mt-1 text-xs text-[#fbbf24]/70">Waiting for customer response...</p>
         </div>
       )}
 
       {/* Consumer view — pending request to respond to */}
       {role === "consumer" && pendingRequest && (
         <div className="space-y-3">
-          <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-            <p className="text-sm font-semibold text-gray-800 mb-1">Contractor requested a reschedule</p>
-            <p className="text-sm text-gray-700">
+          <div className="bg-[#141516] border border-[#23252a] rounded-lg p-4">
+            <p className="text-sm font-semibold text-[#d0d6e0] mb-1">Contractor requested a reschedule</p>
+            <p className="text-sm text-[#d0d6e0]">
               <span className="font-medium">Proposed date: </span>
               {new Date(pendingRequest.proposed_date).toLocaleDateString("en-US", {
                 weekday: "long",
@@ -244,7 +244,7 @@ export default function ReschedulePanel({
               })}
             </p>
             {pendingRequest.reason && (
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-[#8a8f98] mt-1">
                 <span className="font-medium">Reason: </span>
                 {pendingRequest.reason}
               </p>
@@ -261,7 +261,7 @@ export default function ReschedulePanel({
             <button
               onClick={() => handleResponse("reject")}
               disabled={submitting}
-              className="flex-1 py-2 text-sm font-semibold bg-red-100 text-red-700 rounded-lg hover:bg-red-200 disabled:opacity-50 transition-colors"
+              className="flex-1 py-2 text-sm font-semibold bg-[#f87171]/10 text-[#f87171] rounded-lg hover:bg-[#f87171]/20 disabled:opacity-50 transition-colors"
             >
               {submitting ? "..." : "Reject"}
             </button>
@@ -271,7 +271,7 @@ export default function ReschedulePanel({
 
       {/* Consumer view — no pending request */}
       {role === "consumer" && !pendingRequest && (
-        <p className="text-xs text-gray-500">No reschedule requests pending.</p>
+        <p className="text-xs text-[#8a8f98]">No reschedule requests pending.</p>
       )}
     </div>
   );

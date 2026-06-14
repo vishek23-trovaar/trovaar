@@ -52,7 +52,7 @@ export function CallLog({
                   className={`w-2 h-2 rounded-full ${
                     call.status === "completed"
                       ? "bg-emerald-500"
-                      : "bg-gray-300"
+                      : "bg-[#23252a]"
                   }`}
                 />
                 <span className="text-xs text-secondary font-medium">
@@ -84,7 +84,7 @@ export function CallLog({
                   {expanded === call.id ? "Hide transcript" : "View transcript"}
                 </button>
                 {expanded === call.id && (
-                  <div className="mt-2 bg-white border border-border rounded-lg p-3 text-xs text-secondary leading-relaxed max-h-40 overflow-y-auto">
+                  <div className="mt-2 bg-[#0f1011] border border-border rounded-lg p-3 text-xs text-secondary leading-relaxed max-h-40 overflow-y-auto">
                     {call.transcript}
                   </div>
                 )}

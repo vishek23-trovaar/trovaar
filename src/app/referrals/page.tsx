@@ -68,8 +68,8 @@ export default function ReferralsPage() {
   if (!user) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-20 text-center">
-        <p className="text-gray-500">Please log in to view your referral program.</p>
-        <Link href="/login" className="text-blue-600 hover:underline mt-2 inline-block">Log in</Link>
+        <p className="text-[#8a8f98]">Please log in to view your referral program.</p>
+        <Link href="/login" className="text-[#60A5FA] hover:underline mt-2 inline-block">Log in</Link>
       </div>
     );
   }
@@ -97,17 +97,17 @@ export default function ReferralsPage() {
       {/* Reward Structure */}
       <ScrollReveal delay={100}>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-        <div className="bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <div className="bg-gradient-to-br from-[#3B82F6]/10 to-[#3B82F6]/10 border border-[#3B82F6]/30 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
           <div className="text-3xl mb-2">🎁</div>
-          <h3 className="font-bold text-indigo-900 text-lg">You Earn $25</h3>
-          <p className="text-sm text-indigo-700 mt-1">
+          <h3 className="font-bold text-[#60A5FA] text-lg">You Earn $25</h3>
+          <p className="text-sm text-[#60A5FA] mt-1">
             When your referred friend completes their first job on Trovaar
           </p>
         </div>
-        <div className="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <div className="bg-gradient-to-br from-[#27a644]/10 to-[#27a644]/10 border border-[#27a644]/30 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
           <div className="text-3xl mb-2">🤝</div>
-          <h3 className="font-bold text-emerald-900 text-lg">They Get $10</h3>
-          <p className="text-sm text-emerald-700 mt-1">
+          <h3 className="font-bold text-[#34d399] text-lg">They Get $10</h3>
+          <p className="text-sm text-[#34d399] mt-1">
             Your friend gets a $10 credit applied to their account immediately upon signup
           </p>
         </div>
@@ -117,11 +117,11 @@ export default function ReferralsPage() {
       {/* Referral Code Card */}
       {data?.referralCode && (
         <ScrollReveal delay={150}>
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 mb-8 hover:shadow-md transition-shadow duration-300">
-          <h2 className="font-semibold text-gray-900 mb-4">Your Referral Code</h2>
+        <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-6 mb-8 hover:shadow-md transition-shadow duration-300">
+          <h2 className="font-semibold text-[#f7f8f8] mb-4">Your Referral Code</h2>
 
           <div className="flex items-center gap-3 mb-4">
-            <div className="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 font-mono text-lg font-bold text-gray-900 tracking-wider text-center">
+            <div className="flex-1 bg-[#010102] border border-[#23252a] rounded-lg px-4 py-3 font-mono text-lg font-bold text-[#f7f8f8] tracking-wider text-center">
               {data.referralCode}
             </div>
             <button
@@ -133,17 +133,17 @@ export default function ReferralsPage() {
           </div>
 
           <div className="mb-3">
-            <p className="text-xs text-gray-500 mb-1.5 font-medium">Share Link</p>
+            <p className="text-xs text-[#8a8f98] mb-1.5 font-medium">Share Link</p>
             <div className="flex items-center gap-2">
               <input
                 type="text"
                 readOnly
                 value={shareLink}
-                className="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600 font-mono truncate"
+                className="flex-1 px-3 py-2 bg-[#010102] border border-[#23252a] rounded-lg text-sm text-[#8a8f98] font-mono truncate"
               />
               <button
                 onClick={copyLink}
-                className="px-3 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer flex-shrink-0"
+                className="px-3 py-2 border border-[#23252a] rounded-lg text-sm font-medium text-[#d0d6e0] hover:bg-[#141516] transition-colors cursor-pointer flex-shrink-0"
               >
                 Copy Link
               </button>
@@ -156,36 +156,36 @@ export default function ReferralsPage() {
       {/* Stats */}
       <ScrollReveal delay={200}>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-md transition-shadow duration-300">
-          <p className="text-xl font-bold text-indigo-600">{data?.totalReferred ?? 0}</p>
-          <p className="text-xs text-gray-500 mt-1">Total Invited</p>
+        <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4 text-center hover:shadow-md transition-shadow duration-300">
+          <p className="text-xl font-bold text-[#60A5FA]">{data?.totalReferred ?? 0}</p>
+          <p className="text-xs text-[#8a8f98] mt-1">Total Invited</p>
         </div>
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-md transition-shadow duration-300">
-          <p className="text-xl font-bold text-blue-600">
+        <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4 text-center hover:shadow-md transition-shadow duration-300">
+          <p className="text-xl font-bold text-[#60A5FA]">
             {data?.referrals?.filter((r) => r.completedFirstJob).length ?? 0}
           </p>
-          <p className="text-xs text-gray-500 mt-1">Completed 1st Job</p>
+          <p className="text-xs text-[#8a8f98] mt-1">Completed 1st Job</p>
         </div>
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-md transition-shadow duration-300">
-          <p className="text-xl font-bold text-green-600">
+        <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4 text-center hover:shadow-md transition-shadow duration-300">
+          <p className="text-xl font-bold text-[#34d399]">
             ${((data?.totalEarnedCents ?? 0) / 100).toFixed(2)}
           </p>
-          <p className="text-xs text-gray-500 mt-1">Total Earned</p>
+          <p className="text-xs text-[#8a8f98] mt-1">Total Earned</p>
         </div>
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-md transition-shadow duration-300">
-          <p className="text-xl font-bold text-amber-600">
+        <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4 text-center hover:shadow-md transition-shadow duration-300">
+          <p className="text-xl font-bold text-[#fbbf24]">
             ${((data?.pendingRewardsCents ?? 0) / 100).toFixed(2)}
           </p>
-          <p className="text-xs text-gray-500 mt-1">Pending Rewards</p>
+          <p className="text-xs text-[#8a8f98] mt-1">Pending Rewards</p>
         </div>
       </div>
       </ScrollReveal>
 
       {/* Credit Balance */}
       {data && data.creditBalanceCents > 0 && (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-5 py-3.5 mb-8 flex items-center gap-3">
+        <div className="bg-[#27a644]/10 border border-[#27a644]/30 rounded-xl px-5 py-3.5 mb-8 flex items-center gap-3">
           <span className="text-xl">💰</span>
-          <p className="text-sm text-emerald-800 font-medium">
+          <p className="text-sm text-[#34d399] font-medium">
             Your current credit balance:{" "}
             <strong>${(data.creditBalanceCents / 100).toFixed(2)}</strong>
           </p>
@@ -194,40 +194,40 @@ export default function ReferralsPage() {
 
       {/* Referral List */}
       <ScrollReveal delay={250}>
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100">
-          <h2 className="font-semibold text-gray-900">Your Referrals</h2>
+      <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-[#23252a]">
+          <h2 className="font-semibold text-[#f7f8f8]">Your Referrals</h2>
         </div>
 
         {!data?.referrals?.length ? (
           <div className="p-12 text-center">
             <div className="text-4xl mb-3">📨</div>
-            <p className="font-semibold text-gray-800">No referrals yet</p>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="font-semibold text-[#d0d6e0]">No referrals yet</p>
+            <p className="text-sm text-[#8a8f98] mt-1">
               Share your code with friends to start earning rewards
             </p>
           </div>
         ) : (
-          <div className="divide-y divide-gray-50">
+          <div className="divide-y divide-[#23252a]">
             {data.referrals.map((referral) => (
               <div key={referral.id} className="px-6 py-4 flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-gray-900">{referral.name}</p>
-                  <p className="text-xs text-gray-400">
+                  <p className="font-medium text-[#f7f8f8]">{referral.name}</p>
+                  <p className="text-xs text-[#8a8f98]">
                     Joined {new Date(referral.joinedAt).toLocaleDateString()}
                   </p>
                 </div>
                 <div>
                   {referral.rewardStatus === "credited" ? (
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-[#27a644]/10 text-[#34d399]">
                       $25 Credited
                     </span>
                   ) : referral.completedFirstJob ? (
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-[#27a644]/10 text-[#34d399]">
                       Completed 1st Job
                     </span>
                   ) : (
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-[#fbbf24]/10 text-[#fbbf24]">
                       Pending
                     </span>
                   )}
@@ -241,28 +241,28 @@ export default function ReferralsPage() {
 
       {/* How It Works */}
       <ScrollReveal delay={300}>
-      <div className="mt-8 bg-gray-50 rounded-2xl border border-gray-100 p-6">
-        <h3 className="font-semibold text-gray-900 mb-4">How It Works</h3>
+      <div className="mt-8 bg-[#010102] rounded-2xl border border-[#23252a] p-6">
+        <h3 className="font-semibold text-[#f7f8f8] mb-4">How It Works</h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="flex items-start gap-3">
-            <span className="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 text-sm font-bold flex-shrink-0">1</span>
+            <span className="w-7 h-7 rounded-full bg-[#3B82F6]/10 flex items-center justify-center text-[#60A5FA] text-sm font-bold flex-shrink-0">1</span>
             <div>
-              <p className="font-medium text-gray-800 text-sm">Share your code</p>
-              <p className="text-xs text-gray-500 mt-0.5">Send your unique referral code or link to friends</p>
+              <p className="font-medium text-[#d0d6e0] text-sm">Share your code</p>
+              <p className="text-xs text-[#8a8f98] mt-0.5">Send your unique referral code or link to friends</p>
             </div>
           </div>
           <div className="flex items-start gap-3">
-            <span className="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 text-sm font-bold flex-shrink-0">2</span>
+            <span className="w-7 h-7 rounded-full bg-[#3B82F6]/10 flex items-center justify-center text-[#60A5FA] text-sm font-bold flex-shrink-0">2</span>
             <div>
-              <p className="font-medium text-gray-800 text-sm">They sign up</p>
-              <p className="text-xs text-gray-500 mt-0.5">Your friend creates an account with your code and gets $10</p>
+              <p className="font-medium text-[#d0d6e0] text-sm">They sign up</p>
+              <p className="text-xs text-[#8a8f98] mt-0.5">Your friend creates an account with your code and gets $10</p>
             </div>
           </div>
           <div className="flex items-start gap-3">
-            <span className="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 text-sm font-bold flex-shrink-0">3</span>
+            <span className="w-7 h-7 rounded-full bg-[#3B82F6]/10 flex items-center justify-center text-[#60A5FA] text-sm font-bold flex-shrink-0">3</span>
             <div>
-              <p className="font-medium text-gray-800 text-sm">You earn $25</p>
-              <p className="text-xs text-gray-500 mt-0.5">When they complete their first job, you get $25 credited</p>
+              <p className="font-medium text-[#d0d6e0] text-sm">You earn $25</p>
+              <p className="text-xs text-[#8a8f98] mt-0.5">When they complete their first job, you get $25 credited</p>
             </div>
           </div>
         </div>

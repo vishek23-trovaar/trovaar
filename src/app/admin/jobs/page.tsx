@@ -39,19 +39,19 @@ function fmt(cents: number) {
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
-    posted: "bg-blue-100 text-blue-700",
-    bidding: "bg-indigo-100 text-indigo-700",
-    accepted: "bg-emerald-100 text-emerald-700",
-    en_route: "bg-cyan-100 text-cyan-700",
-    arrived: "bg-teal-100 text-teal-700",
-    in_progress: "bg-amber-100 text-amber-700",
-    completed: "bg-green-100 text-green-700",
-    cancelled: "bg-red-100 text-red-700",
+    posted: "bg-[#3B82F6]/10 text-[#60A5FA]",
+    bidding: "bg-[#3B82F6]/10 text-[#60A5FA]",
+    accepted: "bg-[#27a644]/10 text-[#34d399]",
+    en_route: "bg-[#27a644]/10 text-[#34d399]",
+    arrived: "bg-[#27a644]/10 text-[#34d399]",
+    in_progress: "bg-[#fbbf24]/10 text-[#fbbf24]",
+    completed: "bg-[#27a644]/10 text-[#34d399]",
+    cancelled: "bg-[#f87171]/10 text-[#f87171]",
   };
   return (
     <span
       className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-        map[status] ?? "bg-slate-100 text-slate-600"
+        map[status] ?? "bg-[#141516] text-[#8a8f98]"
       }`}
     >
       {status.replace(/_/g, " ")}
@@ -61,15 +61,15 @@ function StatusBadge({ status }: { status: string }) {
 
 function UrgencyBadge({ urgency }: { urgency: string }) {
   const map: Record<string, string> = {
-    low: "bg-slate-100 text-slate-600",
-    medium: "bg-yellow-100 text-yellow-700",
-    high: "bg-orange-100 text-orange-700",
-    emergency: "bg-red-100 text-red-700",
+    low: "bg-[#141516] text-[#8a8f98]",
+    medium: "bg-[#fbbf24]/10 text-[#fbbf24]",
+    high: "bg-[#fbbf24]/10 text-[#fbbf24]",
+    emergency: "bg-[#f87171]/10 text-[#f87171]",
   };
   return (
     <span
       className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium capitalize ${
-        map[urgency] ?? "bg-slate-100 text-slate-600"
+        map[urgency] ?? "bg-[#141516] text-[#8a8f98]"
       }`}
     >
       {urgency}
@@ -194,21 +194,21 @@ export default function AdminJobsPage() {
 
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Jobs</h1>
-          <p className="text-slate-500 text-sm mt-1">
+          <h1 className="text-2xl font-bold text-[#d0d6e0]">Jobs</h1>
+          <p className="text-[#8a8f98] text-sm mt-1">
             {total.toLocaleString()} total jobs
           </p>
         </div>
         <a
           href="/api/admin/export?type=jobs"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg hover:bg-emerald-100 transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-[#27a644]/10 text-[#34d399] border border-[#27a644]/30 rounded-lg hover:bg-[#27a644]/15 transition-colors"
         >
           Export CSV
         </a>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm mb-6 p-4">
+      <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm mb-6 p-4">
         <div className="flex flex-col sm:flex-row gap-3">
           <input
             type="text"
@@ -219,12 +219,12 @@ export default function AdminJobsPage() {
                 fetchJobs(1, search, statusFilter, urgencyFilter, categoryFilter, sort, dir);
             }}
             placeholder="Search by job title..."
-            className="flex-1 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+            className="flex-1 border border-[#23252a] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/40"
           />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white"
+            className="border border-[#23252a] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/40 bg-[#0f1011]"
           >
             {STATUS_OPTIONS.map((s) => (
               <option key={s.value} value={s.value}>{s.label}</option>
@@ -233,7 +233,7 @@ export default function AdminJobsPage() {
           <select
             value={urgencyFilter}
             onChange={(e) => setUrgencyFilter(e.target.value)}
-            className="border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white"
+            className="border border-[#23252a] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/40 bg-[#0f1011]"
           >
             {URGENCY_OPTIONS.map((u) => (
               <option key={u.value} value={u.value}>{u.label}</option>
@@ -242,7 +242,7 @@ export default function AdminJobsPage() {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white"
+            className="border border-[#23252a] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/40 bg-[#0f1011]"
           >
             <option value="">All Categories</option>
             {categories.map((cat) => (
@@ -251,7 +251,7 @@ export default function AdminJobsPage() {
           </select>
           <button
             onClick={() => fetchJobs(1, search, statusFilter, urgencyFilter, categoryFilter, sort, dir)}
-            className="px-5 py-2 bg-slate-800 text-white text-sm font-medium rounded-lg hover:bg-slate-700 transition-colors"
+            className="px-5 py-2 bg-[#0f1011] text-white text-sm font-medium rounded-lg hover:bg-[#141516] transition-colors"
           >
             Search
           </button>
@@ -259,40 +259,40 @@ export default function AdminJobsPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <div className="animate-spin w-8 h-8 border-4 border-slate-300 border-t-slate-700 rounded-full" />
+            <div className="animate-spin w-8 h-8 border-4 border-[#23252a] border-t-slate-700 rounded-full" />
           </div>
         ) : jobs.length === 0 ? (
-          <div className="text-center py-16 text-slate-400">No jobs found.</div>
+          <div className="text-center py-16 text-[#8a8f98]">No jobs found.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50">
+                <tr className="border-b border-[#23252a] bg-[#010102]">
                   <th className="px-4 py-3 text-left">
                     <input
                       type="checkbox"
                       onChange={e => e.target.checked ? setSelected(new Set(jobs.map(j => j.id))) : setSelected(new Set())}
                       checked={selected.size === jobs.length && jobs.length > 0}
-                      className="rounded border-slate-300"
+                      className="rounded border-[#23252a]"
                     />
                   </th>
                   <SortableHeader col="title" label="Title" sort={sort} dir={dir} onSort={onSort} />
-                  <th className="text-left px-5 py-3 text-xs font-medium text-slate-500">Category</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium text-slate-500">Consumer</th>
+                  <th className="text-left px-5 py-3 text-xs font-medium text-[#8a8f98]">Category</th>
+                  <th className="text-left px-5 py-3 text-xs font-medium text-[#8a8f98]">Consumer</th>
                   <SortableHeader col="status" label="Status" sort={sort} dir={dir} onSort={onSort} />
-                  <th className="text-left px-5 py-3 text-xs font-medium text-slate-500">Urgency</th>
+                  <th className="text-left px-5 py-3 text-xs font-medium text-[#8a8f98]">Urgency</th>
                   <SortableHeader col="bid_count" label="Bids" sort={sort} dir={dir} onSort={onSort} />
                   <SortableHeader col="accepted_bid_price" label="Price" sort={sort} dir={dir} onSort={onSort} />
                   <SortableHeader col="created_at" label="Created" sort={sort} dir={dir} onSort={onSort} />
-                  <th className="text-right px-5 py-3 text-xs font-medium text-slate-500">Actions</th>
+                  <th className="text-right px-5 py-3 text-xs font-medium text-[#8a8f98]">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {jobs.map((j) => (
-                  <tr key={j.id} className="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                  <tr key={j.id} className="border-b border-[#23252a] hover:bg-[#141516] transition-colors">
                     <td className="px-4 py-3">
                       <input
                         type="checkbox"
@@ -302,56 +302,56 @@ export default function AdminJobsPage() {
                           e.target.checked ? s.add(j.id) : s.delete(j.id);
                           setSelected(s);
                         }}
-                        className="rounded border-slate-300"
+                        className="rounded border-[#23252a]"
                       />
                     </td>
                     <td className="px-5 py-3">
-                      <p className="font-medium text-slate-800 max-w-[200px] truncate" title={j.title}>
+                      <p className="font-medium text-[#d0d6e0] max-w-[200px] truncate" title={j.title}>
                         {j.title}
                       </p>
-                      <p className="text-xs text-slate-400 mt-0.5">{j.location}</p>
+                      <p className="text-xs text-[#8a8f98] mt-0.5">{j.location}</p>
                     </td>
-                    <td className="px-5 py-3 text-slate-600 text-xs capitalize">
+                    <td className="px-5 py-3 text-[#8a8f98] text-xs capitalize">
                       {j.category.replace(/_/g, " ")}
                     </td>
-                    <td className="px-5 py-3 text-slate-600">{j.consumer_name}</td>
+                    <td className="px-5 py-3 text-[#8a8f98]">{j.consumer_name}</td>
                     <td className="px-5 py-3">
                       <StatusBadge status={j.status} />
                     </td>
                     <td className="px-5 py-3">
                       <UrgencyBadge urgency={j.urgency} />
                     </td>
-                    <td className="px-5 py-3 text-slate-700 font-medium">
+                    <td className="px-5 py-3 text-[#d0d6e0] font-medium">
                       {j.bid_count}
                     </td>
                     <td className="px-5 py-3">
                       {j.accepted_bid_client_price != null ? (
                         <div>
-                          <p className="text-slate-800 font-medium text-xs">
+                          <p className="text-[#d0d6e0] font-medium text-xs">
                             Client: {fmt(j.accepted_bid_client_price)}
                           </p>
                           {j.accepted_bid_contractor_price != null && (
-                            <p className="text-slate-400 text-xs">
+                            <p className="text-[#8a8f98] text-xs">
                               Contractor: {fmt(j.accepted_bid_contractor_price)}
                             </p>
                           )}
                         </div>
                       ) : (
-                        <span className="text-slate-400 text-xs">&mdash;</span>
+                        <span className="text-[#8a8f98] text-xs">&mdash;</span>
                       )}
                     </td>
-                    <td className="px-5 py-3 text-slate-500 text-xs">{fmtDate(j.created_at)}</td>
+                    <td className="px-5 py-3 text-[#8a8f98] text-xs">{fmtDate(j.created_at)}</td>
                     <td className="px-5 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <Link
                           href={`/jobs/${j.id}`}
-                          className="text-xs text-blue-600 hover:underline font-medium"
+                          className="text-xs text-[#60A5FA] hover:underline font-medium"
                         >
                           View
                         </Link>
                         <button
                           onClick={() => setEditJob(j)}
-                          className="text-xs px-2.5 py-1 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors"
+                          className="text-xs px-2.5 py-1 bg-[#141516] text-[#d0d6e0] rounded-lg hover:bg-[#18191a] transition-colors"
                         >
                           Edit
                         </button>
@@ -367,22 +367,22 @@ export default function AdminJobsPage() {
 
         {/* Pagination */}
         {pages > 1 && (
-          <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100">
-            <p className="text-xs text-slate-400">
+          <div className="flex items-center justify-between px-6 py-4 border-t border-[#23252a]">
+            <p className="text-xs text-[#8a8f98]">
               Page {page} of {pages} &middot; {total.toLocaleString()} jobs
             </p>
             <div className="flex gap-2">
               <button
                 disabled={page <= 1}
                 onClick={() => fetchJobs(page - 1, search, statusFilter, urgencyFilter, categoryFilter, sort, dir)}
-                className="px-3 py-1.5 text-xs border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40"
+                className="px-3 py-1.5 text-xs border border-[#23252a] rounded-lg hover:bg-[#141516] disabled:opacity-40"
               >
                 Previous
               </button>
               <button
                 disabled={page >= pages}
                 onClick={() => fetchJobs(page + 1, search, statusFilter, urgencyFilter, categoryFilter, sort, dir)}
-                className="px-3 py-1.5 text-xs border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40"
+                className="px-3 py-1.5 text-xs border border-[#23252a] rounded-lg hover:bg-[#141516] disabled:opacity-40"
               >
                 Next
               </button>

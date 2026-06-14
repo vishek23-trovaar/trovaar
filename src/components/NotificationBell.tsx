@@ -23,27 +23,27 @@ interface Notification {
 // ---------------------------------------------------------------------------
 
 const TYPE_CONFIG: Record<string, { icon: string; color: string }> = {
-  new_bid:           { icon: "\uD83D\uDCE9", color: "bg-blue-100 text-blue-600" },
-  bid_accepted:      { icon: "\uD83C\uDF89", color: "bg-green-100 text-green-600" },
-  bid_rejected:      { icon: "\u274C",       color: "bg-red-100 text-red-600" },
-  job_completed:     { icon: "\u2705",       color: "bg-emerald-100 text-emerald-600" },
-  payment_released:  { icon: "\uD83D\uDCB0", color: "bg-green-100 text-green-700" },
-  dispute_opened:    { icon: "\u26A0\uFE0F", color: "bg-amber-100 text-amber-700" },
-  dispute_resolved:  { icon: "\u2696\uFE0F", color: "bg-indigo-100 text-indigo-600" },
-  message_received:  { icon: "\uD83D\uDCAC", color: "bg-purple-100 text-purple-600" },
-  review_received:   { icon: "\u2B50",       color: "bg-yellow-100 text-yellow-700" },
+  new_bid:           { icon: "\uD83D\uDCE9", color: "bg-[#3B82F6]/10 text-[#60A5FA]" },
+  bid_accepted:      { icon: "\uD83C\uDF89", color: "bg-[#27a644]/10 text-[#34d399]" },
+  bid_rejected:      { icon: "\u274C",       color: "bg-[#f87171]/10 text-[#f87171]" },
+  job_completed:     { icon: "\u2705",       color: "bg-[#27a644]/10 text-[#34d399]" },
+  payment_released:  { icon: "\uD83D\uDCB0", color: "bg-[#27a644]/10 text-[#34d399]" },
+  dispute_opened:    { icon: "\u26A0\uFE0F", color: "bg-[#fbbf24]/10 text-[#fbbf24]" },
+  dispute_resolved:  { icon: "\u2696\uFE0F", color: "bg-[#3B82F6]/10 text-[#60A5FA]" },
+  message_received:  { icon: "\uD83D\uDCAC", color: "bg-[#a78bfa]/10 text-[#c4b5fd]" },
+  review_received:   { icon: "\u2B50",       color: "bg-[#fbbf24]/10 text-[#fbbf24]" },
   // fallbacks for legacy notification types already in the DB
-  new_message:       { icon: "\uD83D\uDCAC", color: "bg-purple-100 text-purple-600" },
-  dispute_filed:     { icon: "\u26A0\uFE0F", color: "bg-amber-100 text-amber-700" },
-  completion_request:{ icon: "\uD83D\uDCCB", color: "bg-teal-100 text-teal-600" },
-  contractor_cancelled: { icon: "\uD83D\uDEAB", color: "bg-red-100 text-red-600" },
-  cancellation_strike:  { icon: "\uD83D\uDEA8", color: "bg-red-100 text-red-700" },
-  status_arrived:    { icon: "\uD83D\uDE9A", color: "bg-blue-100 text-blue-600" },
-  status_in_progress:{ icon: "\uD83D\uDD27", color: "bg-amber-100 text-amber-600" },
+  new_message:       { icon: "\uD83D\uDCAC", color: "bg-[#a78bfa]/10 text-[#c4b5fd]" },
+  dispute_filed:     { icon: "\u26A0\uFE0F", color: "bg-[#fbbf24]/10 text-[#fbbf24]" },
+  completion_request:{ icon: "\uD83D\uDCCB", color: "bg-[#2dd4bf]/10 text-[#5eead4]" },
+  contractor_cancelled: { icon: "\uD83D\uDEAB", color: "bg-[#f87171]/10 text-[#f87171]" },
+  cancellation_strike:  { icon: "\uD83D\uDEA8", color: "bg-[#f87171]/10 text-[#f87171]" },
+  status_arrived:    { icon: "\uD83D\uDE9A", color: "bg-[#3B82F6]/10 text-[#60A5FA]" },
+  status_in_progress:{ icon: "\uD83D\uDD27", color: "bg-[#fbbf24]/10 text-[#fbbf24]" },
 };
 
 function getTypeConfig(type: string) {
-  return TYPE_CONFIG[type] ?? { icon: "\uD83D\uDD14", color: "bg-gray-100 text-gray-600" };
+  return TYPE_CONFIG[type] ?? { icon: "\uD83D\uDD14", color: "bg-[#141516] text-[#8a8f98]" };
 }
 
 // ---------------------------------------------------------------------------
@@ -137,7 +137,7 @@ export default function NotificationBell() {
       {/* Bell button */}
       <button
         onClick={() => setOpen((o) => !o)}
-        className="relative p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300 cursor-pointer"
+        className="relative p-2 rounded-lg text-[#8a8f98] hover:text-[#d0d6e0] hover:bg-[#141516] transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300 cursor-pointer"
         aria-label="Notifications"
       >
         <svg
@@ -163,14 +163,14 @@ export default function NotificationBell() {
 
       {/* Dropdown panel */}
       {open && (
-        <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden">
+        <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-[#0f1011] rounded-xl shadow-xl border border-[#23252a] z-50 overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-            <h3 className="text-sm font-semibold text-gray-900">Notifications</h3>
+          <div className="flex items-center justify-between px-4 py-3 border-b border-[#23252a]">
+            <h3 className="text-sm font-semibold text-[#f7f8f8]">Notifications</h3>
             {unreadCount > 0 && (
               <button
                 onClick={markAllRead}
-                className="text-xs text-blue-600 hover:text-blue-800 font-medium cursor-pointer"
+                className="text-xs text-[#60A5FA] hover:text-[#93c5fd] font-medium cursor-pointer"
               >
                 Mark all read
               </button>
@@ -178,17 +178,17 @@ export default function NotificationBell() {
           </div>
 
           {/* List */}
-          <div className="max-h-96 overflow-y-auto divide-y divide-gray-50">
+          <div className="max-h-96 overflow-y-auto divide-y divide-[#23252a]">
             {loading ? (
               <div className="flex justify-center py-8">
                 <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
               </div>
             ) : error ? (
-              <div className="py-8 text-center text-sm text-gray-400">
+              <div className="py-8 text-center text-sm text-[#8a8f98]">
                 Failed to load notifications
               </div>
             ) : notifications.length === 0 ? (
-              <div className="py-8 text-center text-sm text-gray-400">
+              <div className="py-8 text-center text-sm text-[#8a8f98]">
                 No notifications yet
               </div>
             ) : (
@@ -196,7 +196,7 @@ export default function NotificationBell() {
                 const config = getTypeConfig(n.type);
                 const inner = (
                   <div
-                    className={`flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors ${
+                    className={`flex items-start gap-3 px-4 py-3 hover:bg-[#141516] transition-colors ${
                       n.read ? "opacity-60" : ""
                     }`}
                   >
@@ -208,13 +208,13 @@ export default function NotificationBell() {
                     </div>
                     {/* Content */}
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 leading-snug truncate">
+                      <p className="text-sm font-medium text-[#f7f8f8] leading-snug truncate">
                         {n.title}
                       </p>
-                      <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">
+                      <p className="text-xs text-[#8a8f98] mt-0.5 line-clamp-2">
                         {n.message}
                       </p>
-                      <p className="text-[10px] text-gray-400 mt-1">
+                      <p className="text-[10px] text-[#8a8f98] mt-1">
                         {timeAgo(n.created_at)}
                       </p>
                     </div>

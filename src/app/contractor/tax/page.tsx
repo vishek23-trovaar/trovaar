@@ -113,44 +113,44 @@ export default function ContractorTaxPage() {
           {/* Summary Cards */}
           <ScrollReveal delay={0}>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-              <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Total Earnings</p>
-              <p className="text-2xl font-bold text-gray-900 mt-1">{formatCents(data.totalEarnedCents)}</p>
-              <p className="text-xs text-gray-400 mt-1">Gross before fees</p>
+            <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+              <p className="text-xs text-[#8a8f98] font-medium uppercase tracking-wide">Total Earnings</p>
+              <p className="text-2xl font-bold text-[#f7f8f8] mt-1">{formatCents(data.totalEarnedCents)}</p>
+              <p className="text-xs text-[#8a8f98] mt-1">Gross before fees</p>
             </div>
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-              <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Net Earnings</p>
-              <p className="text-2xl font-bold text-emerald-600 mt-1">{formatCents(data.netEarningsCents)}</p>
-              <p className="text-xs text-gray-400 mt-1">After platform fees</p>
+            <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+              <p className="text-xs text-[#8a8f98] font-medium uppercase tracking-wide">Net Earnings</p>
+              <p className="text-2xl font-bold text-[#34d399] mt-1">{formatCents(data.netEarningsCents)}</p>
+              <p className="text-xs text-[#8a8f98] mt-1">After platform fees</p>
             </div>
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-              <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Jobs Completed</p>
-              <p className="text-2xl font-bold text-blue-600 mt-1">{data.totalJobs}</p>
-              <p className="text-xs text-gray-400 mt-1">Platform fee: {formatCents(data.platformFeeCents)}</p>
+            <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+              <p className="text-xs text-[#8a8f98] font-medium uppercase tracking-wide">Jobs Completed</p>
+              <p className="text-2xl font-bold text-[#60A5FA] mt-1">{data.totalJobs}</p>
+              <p className="text-xs text-[#8a8f98] mt-1">Platform fee: {formatCents(data.platformFeeCents)}</p>
             </div>
           </div>
           </ScrollReveal>
 
           {/* 1099 Status */}
           <ScrollReveal delay={100}>
-          <div className={`rounded-2xl border p-5 ${data.meetsThreshold ? "bg-amber-50 border-amber-200" : "bg-green-50 border-green-200"}`}>
+          <div className={`rounded-2xl border p-5 ${data.meetsThreshold ? "bg-[#fbbf24]/10 border-[#fbbf24]/30" : "bg-[#27a644]/10 border-[#27a644]/30"}`}>
             <div className="flex items-start gap-3">
               <span className="text-xl">{data.meetsThreshold ? "\u26A0\uFE0F" : "\u2705"}</span>
               <div>
-                <p className="font-semibold text-gray-900">
+                <p className="font-semibold text-[#f7f8f8]">
                   {data.meetsThreshold
                     ? "1099-NEC Required"
                     : "Below 1099 Threshold"
                   }
                 </p>
-                <p className="text-sm text-gray-600 mt-1">
+                <p className="text-sm text-[#d0d6e0] mt-1">
                   {data.meetsThreshold
                     ? `Your net earnings of ${formatCents(data.netEarningsCents)} exceed the $600 threshold. A 1099-NEC form will be generated for your tax filing.`
                     : `Your net earnings of ${formatCents(data.netEarningsCents)} are below the $600 threshold. No 1099-NEC is required at this time.`
                   }
                 </p>
                 {data.formGenerated && (
-                  <p className="text-sm text-emerald-700 font-medium mt-2">
+                  <p className="text-sm text-[#34d399] font-medium mt-2">
                     1099-NEC generated on {new Date(data.formGeneratedAt!).toLocaleDateString()}
                   </p>
                 )}
@@ -161,22 +161,22 @@ export default function ContractorTaxPage() {
 
           {/* Monthly Breakdown */}
           <ScrollReveal delay={200}>
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-            <div className="px-5 py-4 border-b border-gray-100">
-              <h2 className="font-semibold text-gray-900">Monthly Breakdown</h2>
+          <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm overflow-hidden">
+            <div className="px-5 py-4 border-b border-[#23252a]">
+              <h2 className="font-semibold text-[#f7f8f8]">Monthly Breakdown</h2>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-gray-50 text-left">
-                    <th className="px-5 py-3 font-medium text-gray-500">Month</th>
-                    <th className="px-5 py-3 font-medium text-gray-500 text-right">Earnings</th>
-                    <th className="px-5 py-3 font-medium text-gray-500 text-right">Jobs</th>
+                  <tr className="bg-[#010102] text-left">
+                    <th className="px-5 py-3 font-medium text-[#8a8f98]">Month</th>
+                    <th className="px-5 py-3 font-medium text-[#8a8f98] text-right">Earnings</th>
+                    <th className="px-5 py-3 font-medium text-[#8a8f98] text-right">Jobs</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-[#23252a]">
                   {data.monthlyBreakdown.map((m) => (
-                    <tr key={m.month} className={m.earned_cents > 0 ? "" : "text-gray-300"}>
+                    <tr key={m.month} className={m.earned_cents > 0 ? "text-[#d0d6e0]" : "text-[#8a8f98]"}>
                       <td className="px-5 py-3">{MONTH_NAMES[m.month - 1]}</td>
                       <td className="px-5 py-3 text-right font-medium">{m.earned_cents > 0 ? formatCents(m.earned_cents) : "--"}</td>
                       <td className="px-5 py-3 text-right">{m.jobs > 0 ? m.jobs : "--"}</td>
@@ -184,7 +184,7 @@ export default function ContractorTaxPage() {
                   ))}
                 </tbody>
                 <tfoot>
-                  <tr className="bg-gray-50 font-semibold">
+                  <tr className="bg-[#010102] font-semibold text-[#f7f8f8]">
                     <td className="px-5 py-3">Total</td>
                     <td className="px-5 py-3 text-right">{formatCents(data.totalEarnedCents)}</td>
                     <td className="px-5 py-3 text-right">{data.totalJobs}</td>
@@ -197,49 +197,49 @@ export default function ContractorTaxPage() {
 
           {/* Tax Information Form */}
           <ScrollReveal delay={300}>
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
-            <h2 className="font-semibold text-gray-900 mb-4">Tax Information</h2>
-            <p className="text-sm text-gray-500 mb-4">
+          <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-5">
+            <h2 className="font-semibold text-[#f7f8f8] mb-4">Tax Information</h2>
+            <p className="text-sm text-[#8a8f98] mb-4">
               This information is used for generating your 1099-NEC form. Please keep it up to date.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Legal Name</label>
+                <label className="block text-sm font-medium text-[#d0d6e0] mb-1">Legal Name</label>
                 <input
                   type="text"
                   value={taxName}
                   onChange={(e) => setTaxName(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full border border-[#23252a] bg-[#141516] text-[#f7f8f8] rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Full legal name"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <label className="block text-sm font-medium text-[#d0d6e0] mb-1">Email</label>
                 <input
                   type="email"
                   value={taxEmail}
                   onChange={(e) => setTaxEmail(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full border border-[#23252a] bg-[#141516] text-[#f7f8f8] rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Email address"
                 />
               </div>
               <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Mailing Address</label>
+                <label className="block text-sm font-medium text-[#d0d6e0] mb-1">Mailing Address</label>
                 <input
                   type="text"
                   value={taxAddress}
                   onChange={(e) => setTaxAddress(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full border border-[#23252a] bg-[#141516] text-[#f7f8f8] rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Street, City, State, ZIP"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Last 4 of SSN or EIN</label>
+                <label className="block text-sm font-medium text-[#d0d6e0] mb-1">Last 4 of SSN or EIN</label>
                 <input
                   type="text"
                   value={taxLast4}
                   onChange={(e) => setTaxLast4(e.target.value.replace(/\D/g, "").slice(0, 4))}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full border border-[#23252a] bg-[#141516] text-[#f7f8f8] rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="XXXX"
                   maxLength={4}
                 />
@@ -256,7 +256,7 @@ export default function ContractorTaxPage() {
           </ScrollReveal>
         </div>
       ) : (
-        <div className="text-center py-12 text-gray-500">Failed to load tax data</div>
+        <div className="text-center py-12 text-[#8a8f98]">Failed to load tax data</div>
       )}
     </div>
   );

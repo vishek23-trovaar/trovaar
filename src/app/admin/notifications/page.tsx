@@ -12,9 +12,9 @@ interface AdminNotification {
 }
 
 function TargetBadge({ target }: { target: string }) {
-  if (target === "consumers") return <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700">Consumers</span>;
-  if (target === "contractors") return <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700">Contractors</span>;
-  return <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">All Users</span>;
+  if (target === "consumers") return <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-[#3B82F6]/10 text-[#60A5FA]">Consumers</span>;
+  if (target === "contractors") return <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-[#3B82F6]/10 text-[#60A5FA]">Contractors</span>;
+  return <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-[#141516] text-[#8a8f98]">All Users</span>;
 }
 
 function timeAgo(dateStr: string): string {
@@ -83,22 +83,22 @@ export default function NotificationsPage() {
     <div className="p-6 md:p-8 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Notification Center</h1>
-        <p className="text-slate-500 text-sm mt-1">Broadcast messages to users on the platform</p>
+        <h1 className="text-2xl font-bold text-[#f7f8f8]">Notification Center</h1>
+        <p className="text-[#8a8f98] text-sm mt-1">Broadcast messages to users on the platform</p>
       </div>
 
       {/* Send Notification Form */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-        <h2 className="text-base font-semibold text-slate-800 mb-5">Send Notification</h2>
+      <div className="bg-[#0f1011] rounded-2xl shadow-sm border border-[#23252a] p-6">
+        <h2 className="text-base font-semibold text-[#d0d6e0] mb-5">Send Notification</h2>
 
         {successMsg && (
-          <div className="mb-4 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-3 text-emerald-700 text-sm flex items-center gap-2">
-            <span className="text-emerald-500">✓</span>
+          <div className="mb-4 bg-[#27a644]/10 border border-[#27a644]/30 rounded-lg px-4 py-3 text-[#34d399] text-sm flex items-center gap-2">
+            <span className="text-[#34d399]">✓</span>
             {successMsg}
           </div>
         )}
         {errorMsg && (
-          <div className="mb-4 bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-red-700 text-sm flex items-center gap-2">
+          <div className="mb-4 bg-[#f87171]/10 border border-[#f87171]/30 rounded-lg px-4 py-3 text-[#f87171] text-sm flex items-center gap-2">
             <span>⚠</span>
             {errorMsg}
           </div>
@@ -106,7 +106,7 @@ export default function NotificationsPage() {
 
         <form onSubmit={handleSend} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="notif-title">
+            <label className="block text-sm font-medium text-[#d0d6e0] mb-1" htmlFor="notif-title">
               Title
             </label>
             <input
@@ -115,13 +115,13 @@ export default function NotificationsPage() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Platform Maintenance Tonight"
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-[#23252a] rounded-lg px-3 py-2 text-sm text-[#d0d6e0] focus:outline-none focus:ring-2 focus:ring-[#3B82F6] focus:border-transparent"
               maxLength={200}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="notif-message">
+            <label className="block text-sm font-medium text-[#d0d6e0] mb-1" htmlFor="notif-message">
               Message
             </label>
             <textarea
@@ -130,20 +130,20 @@ export default function NotificationsPage() {
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Write your notification message here…"
               rows={4}
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+              className="w-full border border-[#23252a] rounded-lg px-3 py-2 text-sm text-[#d0d6e0] focus:outline-none focus:ring-2 focus:ring-[#3B82F6] focus:border-transparent resize-none"
               maxLength={1000}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1" htmlFor="notif-target">
+            <label className="block text-sm font-medium text-[#d0d6e0] mb-1" htmlFor="notif-target">
               Target Audience
             </label>
             <select
               id="notif-target"
               value={target}
               onChange={(e) => setTarget(e.target.value)}
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+              className="w-full border border-[#23252a] rounded-lg px-3 py-2 text-sm text-[#d0d6e0] focus:outline-none focus:ring-2 focus:ring-[#3B82F6] focus:border-transparent bg-[#0f1011]"
             >
               <option value="all">All Users</option>
               <option value="consumers">Consumers Only</option>
@@ -171,40 +171,40 @@ export default function NotificationsPage() {
       </div>
 
       {/* Notification History */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-        <h2 className="text-base font-semibold text-slate-800 mb-4">Notification History</h2>
+      <div className="bg-[#0f1011] rounded-2xl shadow-sm border border-[#23252a] p-6">
+        <h2 className="text-base font-semibold text-[#d0d6e0] mb-4">Notification History</h2>
 
         {loading ? (
-          <div className="flex items-center gap-3 py-6 text-slate-400 text-sm">
-            <span className="w-5 h-5 border-2 border-slate-300 border-t-slate-500 rounded-full animate-spin" />
+          <div className="flex items-center gap-3 py-6 text-[#8a8f98] text-sm">
+            <span className="w-5 h-5 border-2 border-[#23252a] border-t-slate-500 rounded-full animate-spin" />
             Loading history…
           </div>
         ) : notifications.length === 0 ? (
-          <div className="text-center py-12 text-slate-400">
+          <div className="text-center py-12 text-[#8a8f98]">
             <p className="text-3xl mb-2">🔔</p>
-            <p className="font-medium text-slate-500">No notifications sent yet</p>
+            <p className="font-medium text-[#8a8f98]">No notifications sent yet</p>
             <p className="text-sm mt-1">Use the form above to send your first notification.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-100">
-                  <th className="text-left py-2 px-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Sent At</th>
-                  <th className="text-left py-2 px-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Title</th>
-                  <th className="text-left py-2 px-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Message</th>
-                  <th className="text-left py-2 px-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Target</th>
-                  <th className="text-right py-2 px-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Recipients</th>
+                <tr className="border-b border-[#23252a]">
+                  <th className="text-left py-2 px-3 text-xs font-semibold text-[#8a8f98] uppercase tracking-wide">Sent At</th>
+                  <th className="text-left py-2 px-3 text-xs font-semibold text-[#8a8f98] uppercase tracking-wide">Title</th>
+                  <th className="text-left py-2 px-3 text-xs font-semibold text-[#8a8f98] uppercase tracking-wide">Message</th>
+                  <th className="text-left py-2 px-3 text-xs font-semibold text-[#8a8f98] uppercase tracking-wide">Target</th>
+                  <th className="text-right py-2 px-3 text-xs font-semibold text-[#8a8f98] uppercase tracking-wide">Recipients</th>
                 </tr>
               </thead>
               <tbody>
                 {notifications.map((n) => (
-                  <tr key={n.id} className="border-b border-slate-50 hover:bg-slate-50 transition-colors">
-                    <td className="py-3 px-3 text-slate-500 whitespace-nowrap">{timeAgo(n.sent_at)}</td>
-                    <td className="py-3 px-3 font-medium text-slate-800 max-w-[160px] truncate">{n.title}</td>
-                    <td className="py-3 px-3 text-slate-500 max-w-[240px] truncate">{n.message}</td>
+                  <tr key={n.id} className="border-b border-[#23252a] hover:bg-[#141516] transition-colors">
+                    <td className="py-3 px-3 text-[#8a8f98] whitespace-nowrap">{timeAgo(n.sent_at)}</td>
+                    <td className="py-3 px-3 font-medium text-[#d0d6e0] max-w-[160px] truncate">{n.title}</td>
+                    <td className="py-3 px-3 text-[#8a8f98] max-w-[240px] truncate">{n.message}</td>
                     <td className="py-3 px-3"><TargetBadge target={n.target} /></td>
-                    <td className="py-3 px-3 text-right text-slate-700 font-medium">{n.recipient_count?.toLocaleString() ?? "—"}</td>
+                    <td className="py-3 px-3 text-right text-[#d0d6e0] font-medium">{n.recipient_count?.toLocaleString() ?? "—"}</td>
                   </tr>
                 ))}
               </tbody>

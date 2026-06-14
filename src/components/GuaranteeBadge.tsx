@@ -13,14 +13,14 @@ export default function GuaranteeBadge({ size = "sm", className = "" }: Guarante
   return (
     <Link
       href="/legal/guarantee"
-      className={`inline-flex items-center gap-1.5 rounded-lg border transition-colors hover:bg-blue-50 ${
+      className={`inline-flex items-center gap-1.5 rounded-lg border transition-colors hover:bg-[#3B82F6]/10 ${
         isSmall
-          ? "px-2.5 py-1.5 border-blue-200 bg-blue-50/50"
-          : "px-3.5 py-2 border-blue-200 bg-blue-50"
+          ? "px-2.5 py-1.5 border-[#3B82F6]/30 bg-[#3B82F6]/5"
+          : "px-3.5 py-2 border-[#3B82F6]/30 bg-[#3B82F6]/10"
       } ${className}`}
     >
       <svg
-        className={`${isSmall ? "w-4 h-4" : "w-5 h-5"} text-blue-600 flex-shrink-0`}
+        className={`${isSmall ? "w-4 h-4" : "w-5 h-5"} text-[#60A5FA] flex-shrink-0`}
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -33,7 +33,7 @@ export default function GuaranteeBadge({ size = "sm", className = "" }: Guarante
         />
       </svg>
       <span
-        className={`font-semibold text-blue-700 ${
+        className={`font-semibold text-[#60A5FA] ${
           isSmall ? "text-xs" : "text-sm"
         }`}
       >

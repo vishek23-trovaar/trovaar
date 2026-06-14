@@ -9,7 +9,7 @@ function TrovaarIcon() { return <Image src="/trovaar-icon.png" alt="Trovaar" wid
 
 function BellIcon() {
   return (
-    <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className="w-5 h-5 text-[#8a8f98]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
         d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
     </svg>
@@ -27,7 +27,7 @@ export default function ContractorNavbar() {
   const pathname = usePathname();
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+    <header className="bg-[#0f1011] border-b border-[#23252a] sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -47,7 +47,7 @@ export default function ContractorNavbar() {
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                     isActive
                       ? "bg-primary/10 text-primary"
-                      : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                      : "text-[#8a8f98] hover:bg-[#141516] hover:text-[#f7f8f8]"
                   }`}
                 >
                   {link.label}
@@ -60,7 +60,7 @@ export default function ContractorNavbar() {
           <div className="flex items-center gap-3">
             {/* Notification bell */}
             <button
-              className="p-2 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+              className="p-2 rounded-lg hover:bg-[#141516] transition-colors cursor-pointer"
               aria-label="Notifications"
             >
               <BellIcon />
@@ -68,8 +68,8 @@ export default function ContractorNavbar() {
 
             {/* User avatar */}
             {user && (
-              <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
-                <span className="text-sm font-semibold text-indigo-700">
+              <div className="w-8 h-8 rounded-full bg-[#3B82F6]/10 flex items-center justify-center">
+                <span className="text-sm font-semibold text-[#60A5FA]">
                   {user.name.charAt(0).toUpperCase()}
                 </span>
               </div>
@@ -78,7 +78,7 @@ export default function ContractorNavbar() {
             {/* Logout */}
             <button
               onClick={logout}
-              className="text-sm text-gray-500 hover:text-red-600 transition-colors cursor-pointer"
+              className="text-sm text-[#8a8f98] hover:text-[#f87171] transition-colors cursor-pointer"
             >
               Logout
             </button>
@@ -96,7 +96,7 @@ export default function ContractorNavbar() {
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
                   isActive
                     ? "bg-primary/10 text-primary"
-                    : "text-gray-600 hover:bg-gray-100"
+                    : "text-[#8a8f98] hover:bg-[#141516]"
                 }`}
               >
                 {link.label}

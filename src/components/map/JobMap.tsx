@@ -210,7 +210,7 @@ export default function JobMap({
     <div
       ref={containerRef}
       className={className}
-      style={{ background: "#e5e7eb" }}
+      style={{ background: "#141516" }}
     />
   );
 }

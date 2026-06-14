@@ -90,10 +90,10 @@ export default function JobChat({ jobId, otherPartyLabel }: JobChatProps) {
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+    <div className="bg-[#0f1011] rounded-xl border border-[#23252a] overflow-hidden">
       {/* Header */}
-      <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
-        <h3 className="text-sm font-semibold text-gray-800">
+      <div className="px-4 py-3 border-b border-[#23252a] bg-[#010102]">
+        <h3 className="text-sm font-semibold text-[#d0d6e0]">
           Chat with {otherPartyLabel}
         </h3>
       </div>
@@ -105,7 +105,7 @@ export default function JobChat({ jobId, otherPartyLabel }: JobChatProps) {
             <div className="w-6 h-6 border-4 border-primary border-t-transparent rounded-full animate-spin" />
           </div>
         ) : messages.length === 0 ? (
-          <p className="text-center text-sm text-gray-400 py-6">
+          <p className="text-center text-sm text-[#8a8f98] py-6">
             No messages yet. Start the conversation!
           </p>
         ) : (
@@ -118,11 +118,11 @@ export default function JobChat({ jobId, otherPartyLabel }: JobChatProps) {
                 className={`max-w-[75%] px-3 py-2 rounded-2xl text-sm leading-relaxed ${
                   msg.is_mine
                     ? "bg-blue-600 text-white rounded-br-sm"
-                    : "bg-gray-100 text-gray-800 rounded-bl-sm"
+                    : "bg-[#141516] text-[#d0d6e0] rounded-bl-sm"
                 }`}
               >
                 <p className="whitespace-pre-wrap break-words">{msg.content}</p>
-                <p className={`text-[10px] mt-1 ${msg.is_mine ? "text-blue-100" : "text-gray-400"}`}>
+                <p className={`text-[10px] mt-1 ${msg.is_mine ? "text-blue-100" : "text-[#8a8f98]"}`}>
                   {formatTime(msg.created_at)}
                 </p>
               </div>
@@ -134,18 +134,18 @@ export default function JobChat({ jobId, otherPartyLabel }: JobChatProps) {
 
       {/* Error */}
       {error && (
-        <div className="px-4 py-2 bg-red-50 text-red-600 text-xs">{error}</div>
+        <div className="px-4 py-2 bg-[#f87171]/10 text-[#f87171] text-xs">{error}</div>
       )}
 
       {/* Input */}
-      <div className="px-4 py-3 border-t border-gray-100 flex gap-2 items-end">
+      <div className="px-4 py-3 border-t border-[#23252a] flex gap-2 items-end">
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Type a message..."
           rows={1}
-          className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 max-h-24"
+          className="flex-1 px-3 py-2 rounded-lg bg-[#141516] text-[#f7f8f8] border border-[#23252a] text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 max-h-24"
           style={{ minHeight: "38px" }}
         />
         <button

@@ -712,7 +712,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
             <JobStatusBadge status={job.status as JobStatus} />
             <GuaranteeBadge />
             {job.urgency === "emergency" && (
-              <span className="inline-flex items-center gap-1 text-xs font-semibold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">
+              <span className="inline-flex items-center gap-1 text-xs font-semibold bg-[#fbbf24]/10 text-[#fbbf24] px-2 py-0.5 rounded-full">
                 ⚡ Emergency — $100 fee applies
               </span>
             )}
@@ -726,7 +726,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
               </svg>
               <strong>{job.location}</strong>
               {(job as unknown as { location_masked?: boolean }).location_masked && (
-                <span className="ml-1 text-xs text-amber-700 italic">
+                <span className="ml-1 text-xs text-[#fbbf24] italic">
                   — Full address revealed after you accept and payment is secured
                 </span>
               )}
@@ -739,7 +739,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
               {urgency?.label}
             </Badge>
             {job.budget_range && (
-              <span className="inline-flex items-center gap-1 text-xs font-semibold bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+              <span className="inline-flex items-center gap-1 text-xs font-semibold bg-[#27a644]/10 text-[#34d399] px-2 py-0.5 rounded-full">
                 💰 Budget: {job.budget_range}
               </span>
             )}
@@ -750,9 +750,9 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                 <strong>{new Date(job.expected_completion_date + "T12:00:00").toLocaleDateString()}</strong>
                 {daysUntilNeeded !== null && daysUntilNeeded >= 0 && (
                   <span className={`text-xs font-semibold px-1.5 py-0.5 rounded-full ${
-                    daysUntilNeeded <= 2 ? "bg-red-100 text-red-700" :
-                    daysUntilNeeded <= 7 ? "bg-amber-100 text-amber-700" :
-                    "bg-green-100 text-green-700"
+                    daysUntilNeeded <= 2 ? "bg-[#f87171]/10 text-[#f87171]" :
+                    daysUntilNeeded <= 7 ? "bg-[#fbbf24]/10 text-[#fbbf24]" :
+                    "bg-[#27a644]/10 text-[#34d399]"
                   }`}>
                     {daysUntilNeeded === 0 ? "today" : `${daysUntilNeeded}d left`}
                   </span>
@@ -804,45 +804,45 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
         if (job.status === "completed") {
           return (
-            <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-2xl px-5 py-4 mb-6">
+            <div className="flex items-center gap-3 bg-[#27a644]/10 border border-[#27a644]/30 rounded-2xl px-5 py-4 mb-6">
               <span className="text-2xl">✅</span>
               <div>
-                <p className="font-semibold text-green-900 text-sm">Payment Released to Contractor</p>
-                <p className="text-xs text-green-700 mt-0.5">
+                <p className="font-semibold text-[#6ee7b7] text-sm">Payment Released to Contractor</p>
+                <p className="text-xs text-[#34d399] mt-0.5">
                   {escrowDisplay} has been released from escrow. The job is complete.
                 </p>
               </div>
-              <span className="ml-auto text-xs font-semibold bg-green-100 text-green-700 px-2.5 py-1 rounded-full">Released</span>
+              <span className="ml-auto text-xs font-semibold bg-[#27a644]/10 text-[#34d399] px-2.5 py-1 rounded-full">Released</span>
             </div>
           );
         }
 
         if ((job as any).contractor_confirmed && !((job as any).consumer_confirmed)) {
           return (
-            <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 mb-6">
+            <div className="flex items-center gap-3 bg-[#fbbf24]/10 border border-[#fbbf24]/30 rounded-2xl px-5 py-4 mb-6">
               <span className="text-2xl">🔒</span>
               <div>
-                <p className="font-semibold text-amber-900 text-sm">Payment Secured in Escrow</p>
-                <p className="text-xs text-amber-700 mt-0.5">
+                <p className="font-semibold text-[#fde68a] text-sm">Payment Secured in Escrow</p>
+                <p className="text-xs text-[#fbbf24] mt-0.5">
                   {escrowDisplay} held securely — awaiting confirmation from both parties before release.
                 </p>
               </div>
-              <span className="ml-auto text-xs font-semibold bg-amber-100 text-amber-700 px-2.5 py-1 rounded-full">Pending Confirmation</span>
+              <span className="ml-auto text-xs font-semibold bg-[#fbbf24]/10 text-[#fbbf24] px-2.5 py-1 rounded-full">Pending Confirmation</span>
             </div>
           );
         }
 
         if (["accepted", "en_route", "arrived", "in_progress"].includes(job.status)) {
           return (
-            <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-2xl px-5 py-4 mb-6">
+            <div className="flex items-center gap-3 bg-[#3B82F6]/10 border border-[#3B82F6]/30 rounded-2xl px-5 py-4 mb-6">
               <span className="text-2xl">🔒</span>
               <div>
-                <p className="font-semibold text-blue-900 text-sm">Payment Secured in Escrow</p>
-                <p className="text-xs text-blue-700 mt-0.5">
+                <p className="font-semibold text-[#bfdbfe] text-sm">Payment Secured in Escrow</p>
+                <p className="text-xs text-[#60A5FA] mt-0.5">
                   💰 {escrowDisplay} held securely in escrow — released when both parties confirm completion.
                 </p>
               </div>
-              <span className="ml-auto text-xs font-semibold bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full">Held</span>
+              <span className="ml-auto text-xs font-semibold bg-[#3B82F6]/10 text-[#60A5FA] px-2.5 py-1 rounded-full">Held</span>
             </div>
           );
         }
@@ -880,11 +880,11 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
       {/* Post-acceptance messaging prompt */}
       {hasAcceptedBid && canMessage && (
-        <div className="flex items-center gap-3 rounded-xl bg-blue-50 border border-blue-200 px-4 py-3 mb-4">
+        <div className="flex items-center gap-3 rounded-xl bg-[#3B82F6]/10 border border-[#3B82F6]/30 px-4 py-3 mb-4">
           <span className="text-xl">💬</span>
           <div className="flex-1">
-            <p className="text-sm font-semibold text-blue-900">Bid accepted — you can now message your {isOwner ? "contractor" : "client"} directly</p>
-            <p className="text-xs text-blue-700 mt-0.5">
+            <p className="text-sm font-semibold text-[#bfdbfe]">Bid accepted — you can now message your {isOwner ? "contractor" : "client"} directly</p>
+            <p className="text-xs text-[#60A5FA] mt-0.5">
               All communication is recorded and documented for your protection. Do not share contact info outside the platform.
             </p>
           </div>
@@ -951,16 +951,16 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
             {/* AI Q&A */}
             {aiQuestions.length > 0 && (
-              <Card className="p-6 border-violet-100 bg-violet-50/40 rounded-2xl">
+              <Card className="p-6 border-[#8b5cf6]/20 bg-[#8b5cf6]/10 rounded-2xl">
                 <div className="flex items-center gap-2 mb-4">
                   <span className="text-lg">✨</span>
                   <h2 className="font-semibold text-secondary text-sm">Additional Details</h2>
-                  <span className="text-xs text-violet-500 bg-violet-100 px-2 py-0.5 rounded-full ml-auto">AI-assisted</span>
+                  <span className="text-xs text-[#a78bfa] bg-[#8b5cf6]/10 px-2 py-0.5 rounded-full ml-auto">AI-assisted</span>
                 </div>
                 <div className="space-y-3">
                   {aiQuestions.map((q, i) => (
-                    <div key={i} className="bg-white rounded-lg border border-violet-100 p-3">
-                      <p className="text-xs font-medium text-violet-700 mb-1">{q.question}</p>
+                    <div key={i} className="bg-[#0f1011] rounded-lg border border-[#8b5cf6]/20 p-3">
+                      <p className="text-xs font-medium text-[#a78bfa] mb-1">{q.question}</p>
                       <p className="text-sm text-secondary">{q.answer}</p>
                     </div>
                   ))}
@@ -970,11 +970,11 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
             {/* Vision Board */}
             {hasVisionBoard && (
-              <Card className="p-6 border-pink-100 bg-gradient-to-br from-pink-50/50 to-purple-50/30 rounded-2xl">
+              <Card className="p-6 border-[#ec4899]/20 bg-gradient-to-br from-[#ec4899]/10 to-[#a855f7]/10 rounded-2xl">
                 <div className="flex items-center gap-2 mb-4">
                   <span className="text-xl">🎯</span>
                   <h2 className="font-semibold text-secondary text-sm">Vision Board</h2>
-                  <span className="text-xs text-pink-500 bg-pink-100 px-2 py-0.5 rounded-full ml-auto font-medium">
+                  <span className="text-xs text-[#f472b6] bg-[#ec4899]/10 px-2 py-0.5 rounded-full ml-auto font-medium">
                     What the client wants
                   </span>
                 </div>
@@ -990,12 +990,12 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                           href={link.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-start gap-2 p-2.5 rounded-lg border border-pink-100 bg-white hover:border-pink-300 hover:bg-pink-50 transition-colors group"
+                          className="flex items-start gap-2 p-2.5 rounded-lg border border-[#ec4899]/20 bg-[#0f1011] hover:border-[#ec4899]/50 hover:bg-[#ec4899]/10 transition-colors group"
                         >
                           <span className="text-base flex-shrink-0 mt-0.5">🔗</span>
                           <div className="min-w-0">
                             {link.label && (
-                              <p className="text-sm font-medium text-secondary group-hover:text-pink-700 transition-colors truncate">
+                              <p className="text-sm font-medium text-secondary group-hover:text-[#f9a8d4] transition-colors truncate">
                                 {link.label}
                               </p>
                             )}
@@ -1020,7 +1020,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                           key={i}
                           src={photo}
                           alt={`Inspiration ${i + 1}`}
-                          className="w-full rounded-lg object-cover cursor-pointer hover:opacity-90 transition-opacity h-40 border border-pink-100"
+                          className="w-full rounded-lg object-cover cursor-pointer hover:opacity-90 transition-opacity h-40 border border-[#ec4899]/20"
                           onClick={() => openLightbox(inspirationPhotos, i)}
                         />
                       ))}
@@ -1089,7 +1089,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                     value={afterPhotoInput}
                     onChange={(e) => setAfterPhotoInput(e.target.value)}
                     placeholder="Photo URL (https://...)"
-                    className="flex-1 px-3 py-2 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted text-sm"
+                    className="flex-1 px-3 py-2 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary placeholder-muted text-sm"
                   />
                   <Button
                     size="sm"
@@ -1114,9 +1114,9 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                   const materials = co.materials_json ? JSON.parse(co.materials_json) as Array<{ description: string; quantity: number; unit_price_cents: number; subtotal_cents: number }> : [];
                   return (
                     <Card key={co.id} className={`p-5 border-2 ${
-                      co.status === "approved" ? "border-green-200 bg-green-50/40" :
-                      co.status === "rejected" ? "border-red-200 bg-red-50/40" :
-                      "border-amber-200 bg-amber-50/40"
+                      co.status === "approved" ? "border-[#27a644]/30 bg-[#27a644]/10" :
+                      co.status === "rejected" ? "border-[#f87171]/30 bg-[#f87171]/10" :
+                      "border-[#fbbf24]/30 bg-[#fbbf24]/10"
                     }`}>
                       <div className="flex items-start justify-between mb-2">
                         <div>
@@ -1124,9 +1124,9 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                           <p className="text-xs text-muted">Submitted by {co.contractor_name}</p>
                         </div>
                         <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-                          co.status === "approved" ? "bg-green-100 text-green-700" :
-                          co.status === "rejected" ? "bg-red-100 text-red-700" :
-                          "bg-amber-100 text-amber-700"
+                          co.status === "approved" ? "bg-[#27a644]/10 text-[#34d399]" :
+                          co.status === "rejected" ? "bg-[#f87171]/10 text-[#f87171]" :
+                          "bg-[#fbbf24]/10 text-[#fbbf24]"
                         }`}>
                           {co.status === "pending" ? "⏳ Awaiting Approval" :
                            co.status === "approved" ? "✅ Approved" : "❌ Rejected"}
@@ -1159,13 +1159,13 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                       )}
 
                       {co.additional_cost_cents > 0 && (
-                        <p className="text-sm font-semibold text-amber-800 mb-3">
+                        <p className="text-sm font-semibold text-[#fbbf24] mb-3">
                           Additional Cost: +${(co.additional_cost_cents / 100).toFixed(2)}
                         </p>
                       )}
 
                       {co.status === "rejected" && co.rejection_reason && (
-                        <p className="text-xs text-red-700 bg-red-50 rounded px-3 py-2 mb-3">
+                        <p className="text-xs text-[#f87171] bg-[#f87171]/10 rounded px-3 py-2 mb-3">
                           Rejection reason: {co.rejection_reason}
                         </p>
                       )}
@@ -1178,7 +1178,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                             onChange={(e) => setRejectionReason((prev) => ({ ...prev, [co.id]: e.target.value }))}
                             placeholder="Reason for rejection (optional)"
                             rows={2}
-                            className="w-full text-sm px-3 py-2 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white"
+                            className="w-full text-sm px-3 py-2 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 bg-[#141516]"
                           />
                           <div className="flex gap-2">
                             <Button
@@ -1192,7 +1192,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                             <Button
                               size="sm"
                               variant="outline"
-                              className="flex-1 border-red-300 text-red-600 hover:bg-red-50"
+                              className="flex-1 border-[#f87171]/30 text-[#f87171] hover:bg-[#f87171]/10"
                               loading={changeOrderAction[co.id]}
                               onClick={() => handleChangeOrderAction(co.id, "rejected")}
                             >
@@ -1209,12 +1209,12 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
             {/* Feature 28 — Neighborhood Group Buying Banner */}
             {isOwner && groupOpportunity && !joinedGroup && ["posted", "bidding"].includes(job.status) && (
-              <div className="bg-teal-50 border border-teal-200 rounded-xl p-4">
+              <div className="bg-[#14b8a6]/10 border border-[#14b8a6]/30 rounded-xl p-4">
                 <div className="flex items-start gap-3">
                   <span className="text-xl">🤝</span>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-teal-900 text-sm">Group Discount Available!</h4>
-                    <p className="text-sm text-teal-700 mt-0.5">
+                    <h4 className="font-semibold text-[#5eead4] text-sm">Group Discount Available!</h4>
+                    <p className="text-sm text-[#2dd4bf] mt-0.5">
                       {groupOpportunity.participant_count} neighbor{groupOpportunity.participant_count !== 1 ? "s" : ""} in your area {groupOpportunity.participant_count !== 1 ? "are" : "is"} also looking for {CATEGORIES.find(c => c.value === groupOpportunity.category)?.label || groupOpportunity.category.replace(/_/g, " ")} work. Bundle together for a potential 10–20% group discount.
                     </p>
                     <button
@@ -1229,8 +1229,8 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
             )}
 
             {isOwner && joinedGroup && (
-              <div className="bg-teal-50 border border-teal-200 rounded-xl p-4">
-                <p className="text-sm text-teal-800">✅ You&apos;ve joined the group! Contractors will see your bundled request.</p>
+              <div className="bg-[#14b8a6]/10 border border-[#14b8a6]/30 rounded-xl p-4">
+                <p className="text-sm text-[#2dd4bf]">✅ You&apos;ve joined the group! Contractors will see your bundled request.</p>
               </div>
             )}
 
@@ -1268,7 +1268,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                           <span className="text-xs text-muted">· {acceptedBid.contractor_completed_jobs} jobs completed</span>
                         )}
                         {acceptedBid.contractor_verification_status === "approved" && (
-                          <span className="text-xs bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded-full">✓ Verified</span>
+                          <span className="text-xs bg-[#3B82F6]/10 text-[#60A5FA] px-1.5 py-0.5 rounded-full">✓ Verified</span>
                         )}
                       </div>
                       <p className="text-xs text-muted mt-0.5">${((isOwner ? Math.round(acceptedBid.price * (1 + PLATFORM_MARKUP)) : acceptedBid.price) / 100).toFixed(2)} · {acceptedBid.timeline_days} day{acceptedBid.timeline_days !== 1 ? "s" : ""}</p>
@@ -1281,9 +1281,9 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                     </button>
                   </div>
                   {isOwner && job.status === "accepted" && (
-                    <div className="mt-4 flex items-start gap-2.5 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-3">
+                    <div className="mt-4 flex items-start gap-2.5 bg-[#27a644]/10 border border-[#27a644]/30 rounded-lg px-4 py-3">
                       <span className="text-base shrink-0 mt-0.5">🔒</span>
-                      <p className="text-sm text-emerald-800">
+                      <p className="text-sm text-[#34d399]">
                         Your payment of <strong>${((Math.round(acceptedBid.price * (1 + PLATFORM_MARKUP))) / 100).toLocaleString("en-US", { minimumFractionDigits: 2 })}</strong> is now held in escrow. Funds will be released to the contractor once you confirm the job is complete.
                       </p>
                     </div>
@@ -1317,9 +1317,9 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                     Contractor didn&apos;t show up?
                   </button>
                 ) : (
-                  <div className="bg-red-50 border border-red-200 rounded-xl p-4 mt-2">
-                    <p className="text-sm font-semibold text-red-800 mb-1">Report No-Show?</p>
-                    <p className="text-xs text-red-700 mb-3">
+                  <div className="bg-[#f87171]/10 border border-[#f87171]/30 rounded-xl p-4 mt-2">
+                    <p className="text-sm font-semibold text-[#f87171] mb-1">Report No-Show?</p>
+                    <p className="text-xs text-[#f87171] mb-3">
                       This will reopen your job for new bids and issue a strike to the contractor. Only use this if they genuinely didn&apos;t show up.
                     </p>
                     <div className="flex gap-2">
@@ -1344,23 +1344,23 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
             {/* Escrow Trust Banner — shown to job owner when viewing bids */}
             {isOwner && ["posted", "bidding"].includes(job.status) && displayBids.length > 0 && (
-              <div className="rounded-xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-teal-50 p-5 mb-2">
+              <div className="rounded-xl border border-[#27a644]/30 bg-gradient-to-r from-[#27a644]/10 to-[#14b8a6]/10 p-5 mb-2">
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
-                    <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-10 h-10 rounded-full bg-[#27a644]/10 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-5 h-5 text-[#34d399]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-emerald-900 text-sm">Your Payment is Protected</h3>
-                    <p className="text-xs text-emerald-700 mt-1 leading-relaxed">
+                    <h3 className="font-semibold text-[#6ee7b7] text-sm">Your Payment is Protected</h3>
+                    <p className="text-xs text-[#34d399] mt-1 leading-relaxed">
                       When you accept a bid, your payment is held in secure escrow.
                       Funds are <strong>only</strong> released after you confirm the job is complete.
                       You&apos;re always in control.
                     </p>
                   </div>
                   <div className="ml-auto flex-shrink-0">
-                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-full">
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#34d399] bg-[#27a644]/10 px-2.5 py-1 rounded-full">
                       <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                       </svg>
@@ -1373,9 +1373,9 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
             {/* Escrow Timeline — shown when job has accepted bid or is in progress */}
             {isOwner && hasAcceptedBid && ["accepted", "en_route", "arrived", "in_progress", "completed"].includes(job.status) && (
-              <div className="rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-5 mb-2">
-                <h3 className="font-semibold text-blue-900 text-sm mb-4 flex items-center gap-2">
-                  <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="rounded-xl border border-[#3B82F6]/30 bg-gradient-to-r from-[#3B82F6]/10 to-[#3B82F6]/10 p-5 mb-2">
+                <h3 className="font-semibold text-[#bfdbfe] text-sm mb-4 flex items-center gap-2">
+                  <svg className="w-4 h-4 text-[#60A5FA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                   Escrow Payment Timeline
@@ -1387,58 +1387,58 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                       &#10003;
                     </div>
                     <div className="sm:mt-1">
-                      <p className="text-xs font-semibold text-emerald-700">Bid Accepted</p>
-                      <p className="text-[10px] text-emerald-600">Payment secured in escrow</p>
+                      <p className="text-xs font-semibold text-[#34d399]">Bid Accepted</p>
+                      <p className="text-[10px] text-[#34d399]">Payment secured in escrow</p>
                     </div>
                   </div>
                   {/* Connector */}
                   <div className="hidden sm:flex items-center flex-shrink-0 pt-4">
-                    <div className={`w-8 h-0.5 ${["in_progress", "arrived", "en_route", "completed"].includes(job.status) ? "bg-emerald-400" : "bg-blue-200"}`} />
+                    <div className={`w-8 h-0.5 ${["in_progress", "arrived", "en_route", "completed"].includes(job.status) ? "bg-emerald-400" : "bg-[#3B82F6]/20"}`} />
                   </div>
                   {/* Step 2 */}
                   <div className="flex sm:flex-col items-start sm:items-center gap-2 sm:gap-1 flex-1 text-center">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold ${
                       ["in_progress", "arrived", "en_route", "completed"].includes(job.status)
                         ? "bg-emerald-500 text-white"
-                        : "bg-blue-200 text-blue-600"
+                        : "bg-[#3B82F6]/20 text-[#60A5FA]"
                     }`}>
                       {["in_progress", "arrived", "en_route", "completed"].includes(job.status) ? "\u2713" : "2"}
                     </div>
                     <div className="sm:mt-1">
-                      <p className={`text-xs font-semibold ${["in_progress", "arrived", "en_route", "completed"].includes(job.status) ? "text-emerald-700" : "text-blue-600"}`}>Work in Progress</p>
-                      <p className={`text-[10px] ${["in_progress", "arrived", "en_route", "completed"].includes(job.status) ? "text-emerald-600" : "text-blue-500"}`}>Funds held safely</p>
+                      <p className={`text-xs font-semibold ${["in_progress", "arrived", "en_route", "completed"].includes(job.status) ? "text-[#34d399]" : "text-[#60A5FA]"}`}>Work in Progress</p>
+                      <p className={`text-[10px] ${["in_progress", "arrived", "en_route", "completed"].includes(job.status) ? "text-[#34d399]" : "text-[#60A5FA]"}`}>Funds held safely</p>
                     </div>
                   </div>
                   {/* Connector */}
                   <div className="hidden sm:flex items-center flex-shrink-0 pt-4">
-                    <div className={`w-8 h-0.5 ${job.status === "completed" ? "bg-emerald-400" : "bg-blue-200"}`} />
+                    <div className={`w-8 h-0.5 ${job.status === "completed" ? "bg-emerald-400" : "bg-[#3B82F6]/20"}`} />
                   </div>
                   {/* Step 3 */}
                   <div className="flex sm:flex-col items-start sm:items-center gap-2 sm:gap-1 flex-1 text-center">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold ${
-                      job.status === "completed" ? "bg-emerald-500 text-white" : "bg-blue-200 text-blue-600"
+                      job.status === "completed" ? "bg-emerald-500 text-white" : "bg-[#3B82F6]/20 text-[#60A5FA]"
                     }`}>
                       {job.status === "completed" ? "\u2713" : "3"}
                     </div>
                     <div className="sm:mt-1">
-                      <p className={`text-xs font-semibold ${job.status === "completed" ? "text-emerald-700" : "text-blue-600"}`}>You Confirm</p>
-                      <p className={`text-[10px] ${job.status === "completed" ? "text-emerald-600" : "text-blue-500"}`}>Funds released to pro</p>
+                      <p className={`text-xs font-semibold ${job.status === "completed" ? "text-[#34d399]" : "text-[#60A5FA]"}`}>You Confirm</p>
+                      <p className={`text-[10px] ${job.status === "completed" ? "text-[#34d399]" : "text-[#60A5FA]"}`}>Funds released to pro</p>
                     </div>
                   </div>
                   {/* Connector */}
                   <div className="hidden sm:flex items-center flex-shrink-0 pt-4">
-                    <div className={`w-8 h-0.5 ${job.status === "completed" ? "bg-emerald-400" : "bg-blue-200"}`} />
+                    <div className={`w-8 h-0.5 ${job.status === "completed" ? "bg-emerald-400" : "bg-[#3B82F6]/20"}`} />
                   </div>
                   {/* Step 4 */}
                   <div className="flex sm:flex-col items-start sm:items-center gap-2 sm:gap-1 flex-1 text-center">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold ${
-                      job.status === "completed" && existingReview ? "bg-emerald-500 text-white" : "bg-blue-200 text-blue-600"
+                      job.status === "completed" && existingReview ? "bg-emerald-500 text-white" : "bg-[#3B82F6]/20 text-[#60A5FA]"
                     }`}>
                       {job.status === "completed" && existingReview ? "\u2713" : "4"}
                     </div>
                     <div className="sm:mt-1">
-                      <p className={`text-xs font-semibold ${job.status === "completed" && existingReview ? "text-emerald-700" : "text-blue-600"}`}>Leave a Review</p>
-                      <p className={`text-[10px] ${job.status === "completed" && existingReview ? "text-emerald-600" : "text-blue-500"}`}>Rate your experience</p>
+                      <p className={`text-xs font-semibold ${job.status === "completed" && existingReview ? "text-[#34d399]" : "text-[#60A5FA]"}`}>Leave a Review</p>
+                      <p className={`text-[10px] ${job.status === "completed" && existingReview ? "text-[#34d399]" : "text-[#60A5FA]"}`}>Rate your experience</p>
                     </div>
                   </div>
                 </div>
@@ -1451,14 +1451,14 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
               const escrowTotal = acceptedBid ? Math.round(acceptedBid.price * (1 + PLATFORM_MARKUP)) : 0;
               const escrowStr = `$${(escrowTotal / 100).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
               return (
-                <div className="rounded-xl border border-emerald-300 bg-gradient-to-r from-emerald-50 to-green-50 p-5 mb-2">
+                <div className="rounded-xl border border-[#27a644]/40 bg-gradient-to-r from-[#27a644]/10 to-[#27a644]/10 p-5 mb-2">
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0 text-xl">
+                    <div className="w-10 h-10 rounded-full bg-[#27a644]/10 flex items-center justify-center flex-shrink-0 text-xl">
                       &#127881;
                     </div>
                     <div>
-                      <h3 className="font-semibold text-emerald-900 text-sm">Bid Accepted! Your payment of {escrowStr} is now secured.</h3>
-                      <p className="text-xs text-emerald-700 mt-1 leading-relaxed">
+                      <h3 className="font-semibold text-[#6ee7b7] text-sm">Bid Accepted! Your payment of {escrowStr} is now secured.</h3>
+                      <p className="text-xs text-[#34d399] mt-1 leading-relaxed">
                         Your money is held in escrow and will <strong>only</strong> be released when you confirm the job is done to your satisfaction.
                       </p>
                     </div>
@@ -1472,13 +1472,13 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
               <div className="flex items-center gap-2 mb-4">
                 <h2 className="font-semibold text-secondary">Bids ({displayBids.length})</h2>
                 {streamConnected && (
-                  <span className="inline-flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
+                  <span className="inline-flex items-center gap-1.5 text-xs text-[#34d399] font-medium">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                     Live
                   </span>
                 )}
                 {matchScoresLoading && isOwner && (
-                  <span className="inline-flex items-center gap-1.5 text-xs text-blue-600 font-medium">
+                  <span className="inline-flex items-center gap-1.5 text-xs text-[#60A5FA] font-medium">
                     <span className="w-3 h-3 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
                     Computing match scores...
                   </span>
@@ -1486,11 +1486,11 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                 {displayBids.length > 1 && (
                   <div className="flex items-center gap-2 ml-auto">
                     {isOwner && Object.keys(matchScores).length > 0 && (
-                      <div className="flex gap-1 bg-gray-100 p-0.5 rounded-lg">
+                      <div className="flex gap-1 bg-[#141516] p-0.5 rounded-lg">
                         <button
                           onClick={() => setBidSortMode("price")}
                           className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer ${
-                            bidSortMode === "price" ? "bg-white shadow-sm text-gray-900" : "text-gray-500 hover:text-gray-700"
+                            bidSortMode === "price" ? "bg-[#0f1011] shadow-sm text-[#f7f8f8]" : "text-[#8a8f98] hover:text-[#d0d6e0]"
                           }`}
                         >
                           Sort by Price
@@ -1498,7 +1498,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                         <button
                           onClick={() => setBidSortMode("match")}
                           className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer ${
-                            bidSortMode === "match" ? "bg-white shadow-sm text-gray-900" : "text-gray-500 hover:text-gray-700"
+                            bidSortMode === "match" ? "bg-[#0f1011] shadow-sm text-[#f7f8f8]" : "text-[#8a8f98] hover:text-[#d0d6e0]"
                           }`}
                         >
                           Sort by Match
@@ -1555,7 +1555,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
               <Card className="p-6">
                 <h2 className="font-semibold text-secondary mb-4">Leave a Review</h2>
                 {reviewError && (
-                  <div className="bg-red-50 text-danger text-sm p-3 rounded-lg mb-4">{reviewError}</div>
+                  <div className="bg-[#f87171]/10 text-danger text-sm p-3 rounded-lg mb-4">{reviewError}</div>
                 )}
                 <div className="flex gap-1 mb-4">
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -1579,7 +1579,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                   onChange={(e) => setReviewComment(e.target.value)}
                   placeholder="Share details about your experience (optional)"
                   rows={3}
-                  className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted mb-4"
+                  className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary placeholder-muted mb-4"
                 />
                 <div className="mb-4">
                   <p className="text-sm font-medium text-secondary mb-2">Photos of completed work (optional)</p>
@@ -1617,7 +1617,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                   <strong>{(job as unknown as { consumer_name?: string }).consumer_name ?? "this client"}</strong>?
                 </p>
                 {clientReviewError && (
-                  <div className="bg-red-50 text-danger text-sm p-3 rounded-lg mb-4">{clientReviewError}</div>
+                  <div className="bg-[#f87171]/10 text-danger text-sm p-3 rounded-lg mb-4">{clientReviewError}</div>
                 )}
                 <div className="flex gap-1 mb-4">
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -1641,7 +1641,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                   onChange={(e) => setClientReviewComment(e.target.value)}
                   placeholder="How was communication, payment, access to the site, etc.? (optional)"
                   rows={3}
-                  className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted mb-4"
+                  className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary placeholder-muted mb-4"
                 />
                 <Button onClick={submitClientReview} loading={clientReviewSubmitting} disabled={clientReviewRating === 0}>
                   Submit Client Review
@@ -1726,12 +1726,12 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
               </Card>
             )}
             {isOwner && job.payment_status === "failed" && (
-              <Card className="p-4 border-red-300 bg-red-50">
-                <div className="flex items-center gap-2 text-red-700">
+              <Card className="p-4 border-[#f87171]/30 bg-[#f87171]/10">
+                <div className="flex items-center gap-2 text-[#f87171]">
                   <span className="text-lg shrink-0">⚠️</span>
                   <div>
                     <p className="font-semibold text-sm">Payment Failed</p>
-                    <p className="text-xs text-red-600">
+                    <p className="text-xs text-[#f87171]">
                       Your payment could not be processed. Please try again with a different payment method.
                     </p>
                   </div>
@@ -1742,12 +1742,12 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
               </Card>
             )}
             {isOwner && job.payment_status === "paid" && (
-              <Card className="p-4 border-green-200 bg-green-50">
-                <div className="flex items-center gap-2 text-green-700">
+              <Card className="p-4 border-[#27a644]/30 bg-[#27a644]/10">
+                <div className="flex items-center gap-2 text-[#34d399]">
                   <span className="text-lg shrink-0">🔒</span>
                   <div>
                     <p className="font-semibold text-sm">Payment Secured in Escrow</p>
-                    <p className="text-xs text-green-600">
+                    <p className="text-xs text-[#34d399]">
                       {job.status === "completed"
                         ? "Funds have been released to the contractor"
                         : "Funds held securely — released when you confirm completion"}
@@ -1770,19 +1770,19 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                 {/* Scheduled — show confirmation + start work */}
                 {job.status === "arrived" && (
                   <div>
-                    <div className="flex items-start gap-3 bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4">
+                    <div className="flex items-start gap-3 bg-[#3B82F6]/10 border border-[#3B82F6]/30 rounded-xl p-4 mb-4">
                       <span className="text-xl">📅</span>
                       <div>
-                        <p className="text-sm font-semibold text-indigo-900">Arrival Scheduled</p>
+                        <p className="text-sm font-semibold text-[#bfdbfe]">Arrival Scheduled</p>
                         {(job as unknown as { scheduled_arrival_at?: string | null }).scheduled_arrival_at && (
-                          <p className="text-sm text-indigo-700 mt-0.5">
+                          <p className="text-sm text-[#60A5FA] mt-0.5">
                             {new Date((job as unknown as { scheduled_arrival_at: string }).scheduled_arrival_at).toLocaleString("en-US", {
                               weekday: "long", month: "long", day: "numeric",
                               hour: "numeric", minute: "2-digit",
                             })}
                           </p>
                         )}
-                        <p className="text-xs text-indigo-600 mt-1">Client has been notified of your arrival time.</p>
+                        <p className="text-xs text-[#60A5FA] mt-1">Client has been notified of your arrival time.</p>
                       </div>
                     </div>
                     <Button
@@ -1810,7 +1810,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                         </Button>
                       </>
                     ) : (
-                      <div className="flex items-center gap-2 text-amber-700 bg-amber-50 rounded-lg p-3">
+                      <div className="flex items-center gap-2 text-[#fbbf24] bg-[#fbbf24]/10 rounded-lg p-3">
                         <span>⏳</span>
                         <p className="text-sm font-medium">Waiting for consumer confirmation</p>
                       </div>
@@ -1822,18 +1822,18 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
 
             {/* Completion confirmation — consumer side */}
             {isOwner && !!(job as any).contractor_confirmed && !((job as any).consumer_confirmed) && job.status !== "completed" && (
-              <Card className="p-6 border-green-200 bg-green-50">
+              <Card className="p-6 border-[#27a644]/30 bg-[#27a644]/10">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xl">🎉</span>
-                  <h3 className="font-semibold text-green-900">Contractor Marked Complete</h3>
+                  <h3 className="font-semibold text-[#6ee7b7]">Contractor Marked Complete</h3>
                 </div>
-                <p className="text-sm text-green-800 mb-4">
+                <p className="text-sm text-[#34d399] mb-4">
                   Your contractor says the work is done. Please confirm to release payment.
                 </p>
                 <Button className="w-full bg-green-600 hover:bg-green-700 text-white" loading={confirmingCompletion} onClick={confirmCompletion}>
                   ✅ Confirm & Release Payment
                 </Button>
-                <p className="text-xs text-green-700 mt-2 text-center">
+                <p className="text-xs text-[#34d399] mt-2 text-center">
                   Not satisfied? <Link href={`/jobs/${id}/dispute`} className="underline">Report a problem</Link> instead.
                 </p>
               </Card>
@@ -1842,7 +1842,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
             {/* Change order button — contractor */}
             {isContractor && bids.some((b) => b.contractor_id === user?.id && b.status === "accepted") && ["accepted", "in_progress"].includes(job.status) && (
               <Link href={`/jobs/${id}/change-order/new`}>
-                <Button variant="outline" size="sm" className="w-full border-amber-300 text-amber-700 hover:bg-amber-50">
+                <Button variant="outline" size="sm" className="w-full border-[#fbbf24]/30 text-[#fbbf24] hover:bg-[#fbbf24]/10">
                   🔄 Submit Change Order
                 </Button>
               </Link>
@@ -1863,7 +1863,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
             {/* Report a Problem / File Dispute */}
             {(isOwner || isAssignedContractor) && ["accepted", "in_progress", "completed"].includes(job.status) && (
               <Link href={`/jobs/${id}/dispute`}>
-                <button className="w-full text-sm text-red-500 hover:text-red-700 transition-colors underline-offset-2 hover:underline cursor-pointer py-2 flex items-center justify-center gap-1.5">
+                <button className="w-full text-sm text-[#f87171] hover:text-[#fca5a5] transition-colors underline-offset-2 hover:underline cursor-pointer py-2 flex items-center justify-center gap-1.5">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
                   </svg>
@@ -1898,7 +1898,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                           d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                       </svg>
-                      <span className="font-semibold text-emerald-600">
+                      <span className="font-semibold text-[#34d399]">
                         {formatDistance(distanceMiles(userLat, userLng, job.latitude, job.longitude))} from you
                       </span>
                     </div>
@@ -1919,7 +1919,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
       {/* Feature C — Mandatory Rating Modal */}
       {showRatingModal && isOwner && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[500] flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 sm:p-8">
+          <div className="bg-[#0f1011] rounded-2xl shadow-2xl w-full max-w-md p-6 sm:p-8">
             <div className="text-center mb-6">
               <div className="text-5xl mb-3">🎉</div>
               <h2 className="text-xl font-bold text-secondary">Job Complete!</h2>
@@ -1929,7 +1929,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
             </div>
 
             {reviewError && (
-              <div className="bg-red-50 text-danger text-sm p-3 rounded-lg mb-4">{reviewError}</div>
+              <div className="bg-[#f87171]/10 text-danger text-sm p-3 rounded-lg mb-4">{reviewError}</div>
             )}
 
             {/* Stars */}
@@ -1942,7 +1942,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
                   onMouseLeave={() => setReviewHover(0)}
                   className="text-4xl transition-transform hover:scale-110 cursor-pointer"
                 >
-                  <span className={(reviewHover || reviewRating) >= star ? "text-amber-400" : "text-slate-200"}>★</span>
+                  <span className={(reviewHover || reviewRating) >= star ? "text-amber-400" : "text-[#8a8f98]"}>★</span>
                 </button>
               ))}
             </div>
@@ -1953,7 +1953,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
               onChange={e => setReviewComment(e.target.value)}
               placeholder="What did they do well? (optional)"
               rows={3}
-              className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted text-sm mb-4"
+              className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary placeholder-muted text-sm mb-4"
             />
 
             <div className="flex gap-3">
@@ -2024,7 +2024,7 @@ function ScheduleArrivalBlock({ jobId, onScheduled }: { jobId: string; onSchedul
       <p className="text-sm text-muted">
         Set your scheduled arrival date and time — the client will be notified immediately.
       </p>
-      {err && <p className="text-xs text-danger bg-red-50 rounded-lg px-3 py-2">{err}</p>}
+      {err && <p className="text-xs text-danger bg-[#f87171]/10 rounded-lg px-3 py-2">{err}</p>}
       <div>
         <label className="block text-xs font-medium text-secondary mb-1">Arrival Date &amp; Time</label>
         <input
@@ -2032,7 +2032,7 @@ function ScheduleArrivalBlock({ jobId, onScheduled }: { jobId: string; onSchedul
           defaultValue={defaultDateTime}
           min={minDateTime}
           onChange={(e) => setScheduledAt(e.target.value)}
-          className="w-full px-3 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white text-secondary"
+          className="w-full px-3 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 bg-[#141516] text-secondary"
         />
       </div>
       <Button

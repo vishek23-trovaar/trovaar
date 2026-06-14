@@ -79,8 +79,8 @@ export default function CheckoutDisclaimerPage({ params }: { params: Promise<{ i
     const msg = (job.status && statusMessages[job.status]) || `This job is currently "${job.status}" and cannot proceed to checkout.`;
     return (
       <div className="max-w-2xl mx-auto px-4 py-8">
-        <div role="alert" aria-live="polite" className="bg-amber-50 border border-amber-200 rounded-xl p-6 text-center">
-          <p className="text-amber-800 font-medium">{msg}</p>
+        <div role="alert" aria-live="polite" className="bg-[#fbbf24]/10 border border-[#fbbf24]/30 rounded-xl p-6 text-center">
+          <p className="text-[#fbbf24] font-medium">{msg}</p>
           <Link href={`/jobs/${id}`} className="mt-3 inline-block text-sm text-primary hover:underline">
             Back to job details
           </Link>
@@ -92,8 +92,8 @@ export default function CheckoutDisclaimerPage({ params }: { params: Promise<{ i
   if (error && !job) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-8">
-        <div role="alert" aria-live="polite" className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-          <p className="text-red-700 font-medium">{error}</p>
+        <div role="alert" aria-live="polite" className="bg-[#f87171]/10 border border-[#f87171]/30 rounded-xl p-6 text-center">
+          <p className="text-[#f87171] font-medium">{error}</p>
           <button
             onClick={() => window.location.reload()}
             className="mt-3 text-sm text-primary hover:underline"
@@ -129,7 +129,7 @@ export default function CheckoutDisclaimerPage({ params }: { params: Promise<{ i
           </div>
           <div className="text-right">
             <p className="text-xs text-muted">Funds held in escrow until completion</p>
-            <p className="text-xs font-medium text-green-600">🔒 Secure Payment</p>
+            <p className="text-xs font-medium text-[#34d399]">🔒 Secure Payment</p>
           </div>
         </div>
         </ScrollReveal>
@@ -151,7 +151,7 @@ export default function CheckoutDisclaimerPage({ params }: { params: Promise<{ i
             at the time the contractor arrives and throughout the duration of the service. The adult must
             be available to provide access, answer questions, and approve work before the contractor begins.
           </p>
-          <p className="mt-2 text-sm text-blue-700">
+          <p className="mt-2 text-sm text-[#60A5FA]">
             If no adult is present when the contractor arrives, the service call may be rescheduled and
             a trip fee may apply per the contractor's terms.
           </p>
@@ -251,7 +251,7 @@ export default function CheckoutDisclaimerPage({ params }: { params: Promise<{ i
 
       {/* CTA */}
       {error && (
-        <div role="alert" aria-live="polite" className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-3 mb-4">
+        <div role="alert" aria-live="polite" className="bg-[#f87171]/10 border border-[#f87171]/30 text-[#f87171] text-sm rounded-lg p-3 mb-4">
           {error}
         </div>
       )}
@@ -294,11 +294,11 @@ export default function CheckoutDisclaimerPage({ params }: { params: Promise<{ i
 
 // ── Reusable disclaimer block ──────────────────────────────────────
 const colorMap = {
-  blue:   { border: "border-blue-200",   bg: "bg-blue-50",   title: "text-blue-900",   body: "text-blue-800",   check: "border-blue-300 text-blue-700"   },
-  amber:  { border: "border-amber-200",  bg: "bg-amber-50",  title: "text-amber-900",  body: "text-amber-800",  check: "border-amber-300 text-amber-700"  },
-  green:  { border: "border-green-200",  bg: "bg-green-50",  title: "text-green-900",  body: "text-green-800",  check: "border-green-300 text-green-700"  },
-  violet: { border: "border-violet-200", bg: "bg-violet-50", title: "text-violet-900", body: "text-violet-800", check: "border-violet-300 text-violet-700" },
-  gray:   { border: "border-gray-200",   bg: "bg-gray-50",   title: "text-gray-900",   body: "text-gray-700",   check: "border-gray-300 text-gray-700"    },
+  blue:   { border: "border-[#3B82F6]/30",   bg: "bg-[#3B82F6]/10",   title: "text-[#bfdbfe]",   body: "text-[#93c5fd]",   check: "border-[#3B82F6]/30 text-[#60A5FA]"   },
+  amber:  { border: "border-[#fbbf24]/30",  bg: "bg-[#fbbf24]/10",  title: "text-[#fde68a]",  body: "text-[#fbbf24]",  check: "border-[#fbbf24]/30 text-[#fbbf24]"  },
+  green:  { border: "border-[#27a644]/30",  bg: "bg-[#27a644]/10",  title: "text-[#6ee7b7]",  body: "text-[#34d399]",  check: "border-[#27a644]/30 text-[#34d399]"  },
+  violet: { border: "border-[#8b5cf6]/30", bg: "bg-[#8b5cf6]/10", title: "text-[#c4b5fd]", body: "text-[#a78bfa]", check: "border-[#8b5cf6]/30 text-[#a78bfa]" },
+  gray:   { border: "border-[#23252a]",   bg: "bg-[#010102]",   title: "text-[#f7f8f8]",   body: "text-[#d0d6e0]",   check: "border-[#23252a] text-[#d0d6e0]"    },
 } as const;
 
 function DisclaimerBlock({
@@ -320,12 +320,12 @@ function DisclaimerBlock({
           <span className="text-xl">{icon}</span>
           <h3 className={`font-semibold text-sm ${c.title}`}>{title}</h3>
           {checked && (
-            <span className="ml-auto text-xs font-semibold text-green-600 bg-green-100 px-2 py-0.5 rounded-full">✓ Accepted</span>
+            <span className="ml-auto text-xs font-semibold text-[#34d399] bg-[#27a644]/10 px-2 py-0.5 rounded-full">✓ Accepted</span>
           )}
         </div>
         <div className={`text-sm ${c.body} space-y-1`}>{children}</div>
       </div>
-      <div className={`px-5 py-3 border-t ${c.border} bg-white/60`}>
+      <div className={`px-5 py-3 border-t ${c.border} bg-black/20`}>
         <label className="flex items-start gap-3 cursor-pointer">
           <input
             type="checkbox"

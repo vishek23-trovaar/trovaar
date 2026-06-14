@@ -25,7 +25,7 @@ interface Props {
 export default function JobStatusTimeline({ status, scheduledArrivalAt }: Props) {
   if (status === "cancelled") {
     return (
-      <div className="flex items-center gap-2 text-sm text-danger bg-red-50 px-4 py-3 rounded-lg">
+      <div className="flex items-center gap-2 text-sm text-danger bg-[#f87171]/10 px-4 py-3 rounded-lg">
         <span className="text-base">❌</span>
         <span className="font-semibold">Job Cancelled</span>
       </div>

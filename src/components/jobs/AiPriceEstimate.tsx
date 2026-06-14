@@ -44,17 +44,17 @@ export function AiPriceEstimate({ category, title, description, location, photos
   if (!loading && !estimate) return null;
 
   return (
-    <div className="rounded-xl border border-emerald-200 bg-gradient-to-b from-emerald-50 to-white overflow-hidden">
+    <div className="rounded-xl border border-[#27a644]/30 bg-[#27a644]/10 overflow-hidden">
       {/* Header */}
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center gap-2.5 px-4 py-3 cursor-pointer hover:bg-emerald-50/80 transition-colors"
+        className="w-full flex items-center gap-2.5 px-4 py-3 cursor-pointer hover:bg-[#27a644]/15 transition-colors"
       >
         <span className="text-lg">💰</span>
         <div className="flex-1 text-left">
-          <p className="text-sm font-semibold text-emerald-900">AI Price Estimate</p>
-          <p className="text-xs text-emerald-500">What this job typically costs</p>
+          <p className="text-sm font-semibold text-[#34d399]">AI Price Estimate</p>
+          <p className="text-xs text-[#34d399]/70">What this job typically costs</p>
         </div>
         {loading && (
           <div className="w-4 h-4 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
@@ -68,17 +68,17 @@ export function AiPriceEstimate({ category, title, description, location, photos
       </button>
 
       {open && (
-        <div className="border-t border-emerald-100">
+        <div className="border-t border-[#27a644]/20">
           {loading && !estimate ? (
             <div className="px-4 py-6 text-center">
               <div className="w-6 h-6 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-              <p className="text-xs text-emerald-500">Estimating fair price range...</p>
+              <p className="text-xs text-[#34d399]/70">Estimating fair price range...</p>
             </div>
           ) : estimate ? (
             <div className="px-4 py-4 space-y-4">
               {/* Price range bar */}
               <div>
-                <p className="text-xs text-emerald-500 font-medium uppercase tracking-wide mb-2">Estimated Range</p>
+                <p className="text-xs text-[#34d399]/70 font-medium uppercase tracking-wide mb-2">Estimated Range</p>
                 <div className="flex items-end justify-between mb-1.5">
                   <div>
                     <p className="text-xs text-muted">Low</p>
@@ -89,14 +89,14 @@ export function AiPriceEstimate({ category, title, description, location, photos
                   </div>
                   <div className="text-right">
                     <p className="text-xs text-muted">High</p>
-                    <p className="text-2xl font-bold text-amber-600">${estimate.high.toLocaleString()}</p>
+                    <p className="text-2xl font-bold text-[#fbbf24]">${estimate.high.toLocaleString()}</p>
                   </div>
                 </div>
               </div>
 
               {/* Note */}
               {estimate.note && (
-                <p className="text-xs text-emerald-700 bg-emerald-50 rounded-lg px-3 py-2 leading-relaxed">
+                <p className="text-xs text-[#34d399] bg-[#27a644]/10 rounded-lg px-3 py-2 leading-relaxed">
                   {estimate.note}
                 </p>
               )}

@@ -68,10 +68,10 @@ export default function BidCard({ bid, isConsumer, isEmergency, onAccept, onReje
     (() => { try { return JSON.parse((bid as any).equipment_json || "[]"); } catch { return []; } })();
 
   const EQUIPMENT_BADGE: Record<string, { label: string; cls: string }> = {
-    own:      { label: "I own it",        cls: "bg-emerald-100 text-emerald-700" },
-    rent:     { label: "Renting",         cls: "bg-blue-100 text-blue-700" },
-    purchase: { label: "Need to Purchase",cls: "bg-orange-100 text-orange-700" },
-    borrow:   { label: "Need to Borrow",  cls: "bg-purple-100 text-purple-700" },
+    own:      { label: "I own it",        cls: "bg-[#27a644]/10 text-[#34d399]" },
+    rent:     { label: "Renting",         cls: "bg-[#3B82F6]/10 text-[#60A5FA]" },
+    purchase: { label: "Need to Purchase",cls: "bg-[#fbbf24]/10 text-[#fbbf24]" },
+    borrow:   { label: "Need to Borrow",  cls: "bg-[#a78bfa]/10 text-[#c4b5fd]" },
   };
 
   return (
@@ -80,7 +80,7 @@ export default function BidCard({ bid, isConsumer, isEmergency, onAccept, onReje
         <div className="flex items-center gap-3">
           {/* Avatar */}
           {isConsumer && !revealed ? (
-            <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center border-2 border-dashed border-slate-300 flex-shrink-0">
+            <div className="w-10 h-10 rounded-full bg-[#18191a] flex items-center justify-center border-2 border-dashed border-[#23252a] flex-shrink-0">
               <span className="text-sm">🔒</span>
             </div>
           ) : (
@@ -155,9 +155,9 @@ export default function BidCard({ bid, isConsumer, isEmergency, onAccept, onReje
                   <span
                     title="% of accepted jobs paid through the platform (not cash or off-platform)"
                     className={`text-xs font-medium ${
-                      onPlatformRate >= 90 ? "text-emerald-600" :
-                      onPlatformRate >= 70 ? "text-amber-600" :
-                      "text-red-600"
+                      onPlatformRate >= 90 ? "text-[#34d399]" :
+                      onPlatformRate >= 70 ? "text-[#fbbf24]" :
+                      "text-[#f87171]"
                     }`}
                   >
                     {onPlatformRate >= 90 ? "✅" : onPlatformRate >= 70 ? "⚠️" : "🚩"} {onPlatformRate}% on-platform
@@ -175,19 +175,19 @@ export default function BidCard({ bid, isConsumer, isEmergency, onAccept, onReje
             {(bid.contractor_verification_status === "approved" || bid.contractor_insurance_status === "approved" || backgroundCheck === "approved") && (
               <div className="flex items-center gap-1.5 mt-1 flex-wrap">
                 {bid.contractor_verification_status === "approved" && (
-                  <span className="text-xs bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded-full font-medium">✓ ID Verified</span>
+                  <span className="text-xs bg-[#3B82F6]/10 text-[#60A5FA] px-1.5 py-0.5 rounded-full font-medium">✓ ID Verified</span>
                 )}
                 {backgroundCheck === "approved" && (
-                  <span className="text-xs bg-green-50 text-green-700 px-1.5 py-0.5 rounded-full font-medium">🛡️ Background Check</span>
+                  <span className="text-xs bg-[#27a644]/10 text-[#34d399] px-1.5 py-0.5 rounded-full font-medium">🛡️ Background Check</span>
                 )}
                 {bid.contractor_insurance_status === "approved" && (
-                  <span className="text-xs bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded-full font-medium">📋 Licensed &amp; Insured</span>
+                  <span className="text-xs bg-[#27a644]/10 text-[#34d399] px-1.5 py-0.5 rounded-full font-medium">📋 Licensed &amp; Insured</span>
                 )}
                 {bid.contractor_rating >= 4.8 && (bid.contractor_completed_jobs ?? 0) >= 3 && (
-                  <span className="text-xs bg-amber-50 text-amber-700 px-1.5 py-0.5 rounded-full font-medium">⭐ Top Rated</span>
+                  <span className="text-xs bg-[#fbbf24]/10 text-[#fbbf24] px-1.5 py-0.5 rounded-full font-medium">⭐ Top Rated</span>
                 )}
                 {(bid.contractor_completed_jobs ?? 0) >= 50 && (
-                  <span className="text-xs bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded-full font-medium">🏆 Elite Pro</span>
+                  <span className="text-xs bg-[#a78bfa]/10 text-[#c4b5fd] px-1.5 py-0.5 rounded-full font-medium">🏆 Elite Pro</span>
                 )}
               </div>
             )}
@@ -195,7 +195,7 @@ export default function BidCard({ bid, isConsumer, isEmergency, onAccept, onReje
             {certsList.length > 0 && (
               <div className="flex flex-wrap gap-1 mt-1">
                 {certsList.slice(0, 3).map((cert, i) => (
-                  <span key={i} className="text-xs bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded font-medium">
+                  <span key={i} className="text-xs bg-[#a78bfa]/10 text-[#c4b5fd] px-1.5 py-0.5 rounded font-medium">
                     📜 {cert}
                   </span>
                 ))}
@@ -224,7 +224,7 @@ export default function BidCard({ bid, isConsumer, isEmergency, onAccept, onReje
         <div className="text-right">
           <p className="text-2xl font-bold text-secondary">${price}</p>
           {bonusPrice && (
-            <p className="text-xs font-medium text-amber-600">+25% bonus: ${bonusPrice}</p>
+            <p className="text-xs font-medium text-[#fbbf24]">+25% bonus: ${bonusPrice}</p>
           )}
           {hasMaterials && laborCents > 0 && (
             <p className="text-xs text-muted">Labor: ${(laborCents / 100).toFixed(2)}</p>
@@ -240,10 +240,10 @@ export default function BidCard({ bid, isConsumer, isEmergency, onAccept, onReje
             onClick={() => setShowMatchDetails(!showMatchDetails)}
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold transition-colors cursor-pointer ${
               matchScore.score >= 80
-                ? "bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100"
+                ? "bg-[#27a644]/10 text-[#34d399] border border-[#27a644]/30 hover:bg-[#27a644]/15"
                 : matchScore.score >= 60
-                ? "bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100"
-                : "bg-gray-50 text-gray-600 border border-gray-200 hover:bg-gray-100"
+                ? "bg-[#fbbf24]/10 text-[#fbbf24] border border-[#fbbf24]/30 hover:bg-[#fbbf24]/15"
+                : "bg-[#141516] text-[#8a8f98] border border-[#23252a] hover:bg-[#18191a]"
             }`}
           >
             <span>🎯</span>
@@ -259,16 +259,16 @@ export default function BidCard({ bid, isConsumer, isEmergency, onAccept, onReje
           {showMatchDetails && (
             <div className={`mt-2 rounded-lg border p-3 text-sm ${
               matchScore.score >= 80
-                ? "bg-emerald-50/50 border-emerald-200"
+                ? "bg-[#27a644]/5 border-[#27a644]/30"
                 : matchScore.score >= 60
-                ? "bg-amber-50/50 border-amber-200"
-                : "bg-gray-50/50 border-gray-200"
+                ? "bg-[#fbbf24]/5 border-[#fbbf24]/30"
+                : "bg-[#141516] border-[#23252a]"
             }`}>
               <p className="text-secondary mb-2">{matchScore.reasoning}</p>
               {matchScore.highlights.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 mb-2">
                   {matchScore.highlights.map((h, i) => (
-                    <span key={i} className="inline-flex items-center gap-1 text-xs bg-white px-2 py-1 rounded-full border border-emerald-200 text-emerald-700">
+                    <span key={i} className="inline-flex items-center gap-1 text-xs bg-[#0f1011] px-2 py-1 rounded-full border border-[#27a644]/30 text-[#34d399]">
                       <span>✓</span> {h}
                     </span>
                   ))}
@@ -277,7 +277,7 @@ export default function BidCard({ bid, isConsumer, isEmergency, onAccept, onReje
               {matchScore.concerns.length > 0 && (
                 <div className="flex flex-wrap gap-1.5">
                   {matchScore.concerns.map((c, i) => (
-                    <span key={i} className="inline-flex items-center gap-1 text-xs bg-white px-2 py-1 rounded-full border border-orange-200 text-orange-600">
+                    <span key={i} className="inline-flex items-center gap-1 text-xs bg-[#0f1011] px-2 py-1 rounded-full border border-[#fbbf24]/30 text-[#fbbf24]">
                       <span>!</span> {c}
                     </span>
                   ))}
@@ -290,18 +290,18 @@ export default function BidCard({ bid, isConsumer, isEmergency, onAccept, onReje
 
       {/* Itemized materials breakdown */}
       {hasMaterials && materials.length > 0 && (
-        <div className="mt-3 rounded-lg border border-amber-200 overflow-hidden">
-          <div className="px-3 py-1.5 bg-amber-50 flex items-center justify-between">
-            <span className="text-xs font-semibold text-amber-900">🧾 Materials Estimate</span>
-            <span className="text-xs text-amber-600 font-medium">Subject to change — approval required</span>
+        <div className="mt-3 rounded-lg border border-[#fbbf24]/30 overflow-hidden">
+          <div className="px-3 py-1.5 bg-[#fbbf24]/10 flex items-center justify-between">
+            <span className="text-xs font-semibold text-[#fbbf24]">🧾 Materials Estimate</span>
+            <span className="text-xs text-[#fbbf24]/80 font-medium">Subject to change — approval required</span>
           </div>
-          <table className="w-full text-xs bg-white">
+          <table className="w-full text-xs bg-[#0f1011]">
             <tbody>
               {materials.map((m, i) => (
-                <tr key={i} className="border-t border-amber-100">
+                <tr key={i} className="border-t border-[#fbbf24]/20">
                   <td className="px-3 py-1.5 text-secondary">
                     {m.hd_search ? (
-                      <a href={m.hd_search} target="_blank" rel="noopener noreferrer" className="hover:text-orange-600 hover:underline">
+                      <a href={m.hd_search} target="_blank" rel="noopener noreferrer" className="hover:text-[#fbbf24] hover:underline">
                         🏠 {m.description}
                       </a>
                     ) : m.description}
@@ -317,11 +317,11 @@ export default function BidCard({ bid, isConsumer, isEmergency, onAccept, onReje
 
       {/* Parts & Supplies Summary */}
       {partsSummary && (
-        <div className="mt-3 rounded-lg border border-blue-200 overflow-hidden">
-          <div className="px-3 py-1.5 bg-blue-50 flex items-center gap-2">
-            <span className="text-xs font-semibold text-blue-900">📦 Parts &amp; Supplies</span>
+        <div className="mt-3 rounded-lg border border-[#3B82F6]/30 overflow-hidden">
+          <div className="px-3 py-1.5 bg-[#3B82F6]/10 flex items-center gap-2">
+            <span className="text-xs font-semibold text-[#60A5FA]">📦 Parts &amp; Supplies</span>
           </div>
-          <p className="px-3 py-2 text-xs text-secondary whitespace-pre-line bg-white leading-relaxed">
+          <p className="px-3 py-2 text-xs text-secondary whitespace-pre-line bg-[#0f1011] leading-relaxed">
             {partsSummary}
           </p>
         </div>
@@ -329,16 +329,16 @@ export default function BidCard({ bid, isConsumer, isEmergency, onAccept, onReje
 
       {/* Equipment list */}
       {equipmentList.length > 0 && (
-        <div className="mt-3 rounded-lg border border-slate-200 overflow-hidden">
-          <div className="px-3 py-1.5 bg-slate-50 flex items-center gap-2">
-            <span className="text-xs font-semibold text-slate-700">🔧 Equipment</span>
+        <div className="mt-3 rounded-lg border border-[#23252a] overflow-hidden">
+          <div className="px-3 py-1.5 bg-[#141516] flex items-center gap-2">
+            <span className="text-xs font-semibold text-[#d0d6e0]">🔧 Equipment</span>
             {equipmentList.some((e) => e.status !== "own") && (
-              <span className="text-xs text-amber-600 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded-full">
+              <span className="text-xs text-[#fbbf24] bg-[#fbbf24]/10 border border-[#fbbf24]/30 px-1.5 py-0.5 rounded-full">
                 ⚠️ Some equipment to be sourced
               </span>
             )}
           </div>
-          <div className="bg-white divide-y divide-slate-100">
+          <div className="bg-[#0f1011] divide-y divide-[#23252a]">
             {equipmentList.map((eq, i) => {
               const badge = EQUIPMENT_BADGE[eq.status] ?? EQUIPMENT_BADGE.own;
               return (
@@ -375,14 +375,14 @@ export default function BidCard({ bid, isConsumer, isEmergency, onAccept, onReje
 
       {/* Escrow trust line — shown to consumer on pending bids */}
       {isConsumer && bid.status === "pending" && (
-        <div className="mt-3 flex items-center gap-2 rounded-lg bg-emerald-50 border border-emerald-100 px-3 py-2">
-          <svg className="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="mt-3 flex items-center gap-2 rounded-lg bg-[#27a644]/10 border border-[#27a644]/30 px-3 py-2">
+          <svg className="w-4 h-4 text-[#34d399] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
-          <span className="text-xs text-emerald-700">
+          <span className="text-xs text-[#34d399]">
             Accept this bid &rarr; <strong>${price}</strong> held in escrow until you confirm
           </span>
-          <span className="ml-auto text-[10px] text-emerald-600 font-medium whitespace-nowrap">Protected by Trovaar Escrow</span>
+          <span className="ml-auto text-[10px] text-[#34d399] font-medium whitespace-nowrap">Protected by Trovaar Escrow</span>
         </div>
       )}
 

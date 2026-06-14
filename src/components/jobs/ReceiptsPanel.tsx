@@ -157,7 +157,7 @@ export function ReceiptsPanel({ jobId, isContractor, canUpload }: Props) {
       {canUpload && showForm && (
         <Card className="p-4 border-2 border-primary/20 bg-primary/5">
           <p className="text-sm font-semibold text-secondary mb-3">Upload Receipt or Invoice</p>
-          {error && <p className="text-danger text-xs mb-2 bg-red-50 rounded p-2">{error}</p>}
+          {error && <p className="text-danger text-xs mb-2 bg-[#f87171]/10 rounded p-2">{error}</p>}
           <form onSubmit={handleUpload} className="space-y-3">
             {/* Type selector */}
             <div>
@@ -201,7 +201,7 @@ export function ReceiptsPanel({ jobId, isContractor, canUpload }: Props) {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="e.g. PVC pipe and fittings from Home Depot"
-                className="w-full px-3 py-2 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white"
+                className="w-full px-3 py-2 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 bg-[#141516] text-[#f7f8f8]"
               />
             </div>
 
@@ -217,7 +217,7 @@ export function ReceiptsPanel({ jobId, isContractor, canUpload }: Props) {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="0.00"
-                  className="w-full pl-7 pr-3 py-2 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white"
+                  className="w-full pl-7 pr-3 py-2 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 bg-[#141516] text-[#f7f8f8]"
                 />
               </div>
             </div>
@@ -235,7 +235,7 @@ export function ReceiptsPanel({ jobId, isContractor, canUpload }: Props) {
       )}
 
       {success && (
-        <div className="bg-green-50 text-green-700 text-sm px-3 py-2 rounded-lg border border-green-200">
+        <div className="bg-[#27a644]/10 text-[#34d399] text-sm px-3 py-2 rounded-lg border border-[#27a644]/30">
           ✅ {success}
         </div>
       )}
@@ -254,10 +254,10 @@ export function ReceiptsPanel({ jobId, isContractor, canUpload }: Props) {
           {receipts.map((receipt) => (
             <div
               key={receipt.id}
-              className="flex items-start gap-3 p-3 rounded-xl border border-border bg-surface hover:bg-white transition-colors"
+              className="flex items-start gap-3 p-3 rounded-xl border border-border bg-surface hover:bg-[#141516] transition-colors"
             >
               {/* Icon */}
-              <div className="w-10 h-10 rounded-lg bg-white border border-border flex items-center justify-center flex-shrink-0 text-xl">
+              <div className="w-10 h-10 rounded-lg bg-[#0f1011] border border-border flex items-center justify-center flex-shrink-0 text-xl">
                 {receipt.file_type === "pdf" ? "📄" : "🖼️"}
               </div>
 
@@ -299,7 +299,7 @@ export function ReceiptsPanel({ jobId, isContractor, canUpload }: Props) {
                     {isContractor && (
                       <button
                         onClick={() => handleDelete(receipt.id)}
-                        className="text-xs text-muted hover:text-danger px-2 py-1 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
+                        className="text-xs text-muted hover:text-danger px-2 py-1 rounded-lg hover:bg-[#f87171]/10 transition-colors cursor-pointer"
                         title="Delete receipt"
                       >
                         ✕

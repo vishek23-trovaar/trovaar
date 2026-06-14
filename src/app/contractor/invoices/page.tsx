@@ -32,13 +32,13 @@ interface InvoiceStats {
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
-    draft: "bg-gray-100 text-gray-600",
-    sent: "bg-blue-100 text-blue-700",
-    paid: "bg-green-100 text-green-700",
-    overdue: "bg-red-100 text-red-700",
+    draft: "bg-[#141516] text-[#8a8f98]",
+    sent: "bg-[#3B82F6]/10 text-[#60A5FA]",
+    paid: "bg-[#27a644]/10 text-[#34d399]",
+    overdue: "bg-[#f87171]/10 text-[#f87171]",
   };
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium capitalize ${map[status] || "bg-gray-100 text-gray-600"}`}>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium capitalize ${map[status] || "bg-[#141516] text-[#8a8f98]"}`}>
       {status}
     </span>
   );
@@ -100,34 +100,34 @@ export default function ContractorInvoicesPage() {
       {stats && (
         <ScrollReveal delay={0}>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-            <p className="text-xl font-bold text-gray-900">{stats.count}</p>
-            <p className="text-xs text-gray-500 mt-1">Total Invoices</p>
+          <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+            <p className="text-xl font-bold text-[#f7f8f8]">{stats.count}</p>
+            <p className="text-xs text-[#8a8f98] mt-1">Total Invoices</p>
           </div>
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-            <p className="text-xl font-bold text-indigo-600">{formatCents(stats.total_invoiced)}</p>
-            <p className="text-xs text-gray-500 mt-1">Total Invoiced</p>
+          <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+            <p className="text-xl font-bold text-indigo-400">{formatCents(stats.total_invoiced)}</p>
+            <p className="text-xs text-[#8a8f98] mt-1">Total Invoiced</p>
           </div>
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-            <p className="text-xl font-bold text-green-600">{formatCents(stats.total_paid)}</p>
-            <p className="text-xs text-gray-500 mt-1">Paid</p>
+          <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+            <p className="text-xl font-bold text-[#34d399]">{formatCents(stats.total_paid)}</p>
+            <p className="text-xs text-[#8a8f98] mt-1">Paid</p>
           </div>
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-            <p className="text-xl font-bold text-amber-600">{formatCents(stats.total_outstanding)}</p>
-            <p className="text-xs text-gray-500 mt-1">Outstanding</p>
+          <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+            <p className="text-xl font-bold text-[#fbbf24]">{formatCents(stats.total_outstanding)}</p>
+            <p className="text-xs text-[#8a8f98] mt-1">Outstanding</p>
           </div>
         </div>
         </ScrollReveal>
       )}
 
       {/* Filter */}
-      <div className="flex gap-1 bg-gray-100 p-1 rounded-xl mb-6 w-fit">
+      <div className="flex gap-1 bg-[#141516] p-1 rounded-xl mb-6 w-fit">
         {["", "draft", "sent", "paid"].map((s) => (
           <button
             key={s}
             onClick={() => setStatusFilter(s)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
-              statusFilter === s ? "bg-white shadow-sm text-gray-900" : "text-gray-600 hover:text-gray-900"
+              statusFilter === s ? "bg-[#0f1011] shadow-sm text-[#f7f8f8]" : "text-[#8a8f98] hover:text-[#f7f8f8]"
             }`}
           >
             {s === "" ? "All" : s.charAt(0).toUpperCase() + s.slice(1)}
@@ -141,16 +141,16 @@ export default function ContractorInvoicesPage() {
           <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : invoices.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-12 text-center">
+        <div className="bg-[#0f1011] rounded-xl border border-[#23252a] shadow-sm p-12 text-center">
           <div className="text-4xl mb-3">📄</div>
-          <p className="font-semibold text-gray-800">No invoices yet</p>
-          <p className="text-sm text-gray-500 mt-1">Invoices are auto-created when jobs are completed.</p>
+          <p className="font-semibold text-[#d0d6e0]">No invoices yet</p>
+          <p className="text-sm text-[#8a8f98] mt-1">Invoices are auto-created when jobs are completed.</p>
         </div>
       ) : (
         <ScrollReveal delay={100}>
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm overflow-hidden">
           {/* Table header */}
-          <div className="hidden sm:grid grid-cols-12 gap-4 px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-medium text-gray-500 uppercase">
+          <div className="hidden sm:grid grid-cols-12 gap-4 px-4 py-3 bg-[#010102] border-b border-[#23252a] text-xs font-medium text-[#8a8f98] uppercase">
             <div className="col-span-2">Invoice #</div>
             <div className="col-span-3">Job</div>
             <div className="col-span-2">Client</div>
@@ -158,30 +158,30 @@ export default function ContractorInvoicesPage() {
             <div className="col-span-1">Status</div>
             <div className="col-span-2 text-right">Date</div>
           </div>
-          <div className="divide-y divide-gray-50">
+          <div className="divide-y divide-[#23252a]">
             {invoices.map((inv) => (
               <Link
                 key={inv.id}
                 href={`/contractor/invoices/${inv.id}`}
-                className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-4 px-4 py-3 hover:bg-gray-50 transition-all duration-200 items-center"
+                className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-4 px-4 py-3 hover:bg-[#141516] transition-all duration-200 items-center"
               >
                 <div className="sm:col-span-2">
-                  <p className="text-sm font-mono font-medium text-gray-900">{inv.invoice_number}</p>
+                  <p className="text-sm font-mono font-medium text-[#f7f8f8]">{inv.invoice_number}</p>
                 </div>
                 <div className="sm:col-span-3">
-                  <p className="text-sm text-gray-900 truncate">{inv.job_title}</p>
+                  <p className="text-sm text-[#f7f8f8] truncate">{inv.job_title}</p>
                 </div>
                 <div className="sm:col-span-2">
-                  <p className="text-sm text-gray-600 truncate">{inv.consumer_name}</p>
+                  <p className="text-sm text-[#8a8f98] truncate">{inv.consumer_name}</p>
                 </div>
                 <div className="sm:col-span-2 text-right">
-                  <p className="text-sm font-semibold text-gray-900">{formatCents(inv.total_cents)}</p>
+                  <p className="text-sm font-semibold text-[#f7f8f8]">{formatCents(inv.total_cents)}</p>
                 </div>
                 <div className="sm:col-span-1">
                   <StatusBadge status={inv.status} />
                 </div>
                 <div className="sm:col-span-2 text-right">
-                  <p className="text-xs text-gray-500">{formatDate(inv.created_at)}</p>
+                  <p className="text-xs text-[#8a8f98]">{formatDate(inv.created_at)}</p>
                 </div>
               </Link>
             ))}

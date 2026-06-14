@@ -206,15 +206,15 @@ export default function ContractorCalendarPage() {
         <div className="flex-1">
           {/* Month navigation */}
           <div className="flex items-center justify-between mb-4">
-            <button onClick={prevMonth} className="p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+            <button onClick={prevMonth} className="p-2 rounded-lg text-[#d0d6e0] hover:bg-[#141516] cursor-pointer">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
             </button>
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="text-lg font-semibold text-[#f7f8f8]">
               {currentDate.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
             </h2>
-            <button onClick={nextMonth} className="p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+            <button onClick={nextMonth} className="p-2 rounded-lg text-[#d0d6e0] hover:bg-[#141516] cursor-pointer">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
@@ -222,7 +222,7 @@ export default function ContractorCalendarPage() {
           </div>
 
           {/* Legend */}
-          <div className="flex gap-4 mb-3 text-xs text-gray-500">
+          <div className="flex gap-4 mb-3 text-xs text-[#8a8f98]">
             <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-blue-500" /> Job</span>
             <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-green-500" /> Available</span>
             <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-red-500" /> Blocked</span>
@@ -233,11 +233,11 @@ export default function ContractorCalendarPage() {
               <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
             </div>
           ) : (
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm overflow-hidden">
               {/* Day headers */}
-              <div className="grid grid-cols-7 border-b border-gray-200">
+              <div className="grid grid-cols-7 border-b border-[#23252a]">
                 {DAY_NAMES.map((d) => (
-                  <div key={d} className="py-2 text-center text-xs font-medium text-gray-500 uppercase">
+                  <div key={d} className="py-2 text-center text-xs font-medium text-[#8a8f98] uppercase">
                     {d}
                   </div>
                 ))}
@@ -247,7 +247,7 @@ export default function ContractorCalendarPage() {
               <div className="grid grid-cols-7">
                 {calendarDays.map((day, idx) => {
                   if (day === null) {
-                    return <div key={`empty-${idx}`} className="h-24 border-b border-r border-gray-100 bg-gray-50/50" />;
+                    return <div key={`empty-${idx}`} className="h-24 border-b border-r border-[#23252a] bg-[#010102]" />;
                   }
                   const { dk, dayJobs, hasAvailability, hasBlocked } = getDateInfo(day);
                   const isToday = dk === todayKey;
@@ -257,15 +257,15 @@ export default function ContractorCalendarPage() {
                     <div
                       key={dk}
                       onClick={() => setSelectedDate(dk)}
-                      className={`h-24 border-b border-r border-gray-100 p-1.5 cursor-pointer transition-colors hover:bg-blue-50/50 ${
-                        isSelected ? "bg-blue-50 ring-2 ring-blue-500 ring-inset" : ""
+                      className={`h-24 border-b border-r border-[#23252a] p-1.5 cursor-pointer transition-colors hover:bg-[#3B82F6]/10 ${
+                        isSelected ? "bg-[#3B82F6]/10 ring-2 ring-blue-500 ring-inset" : ""
                       }`}
                     >
                       <div className="flex items-center justify-between mb-1">
                         <span className={`text-sm font-medium ${
                           isToday
                             ? "bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center"
-                            : "text-gray-700"
+                            : "text-[#d0d6e0]"
                         }`}>
                           {day}
                         </span>
@@ -275,12 +275,12 @@ export default function ContractorCalendarPage() {
                         </div>
                       </div>
                       {dayJobs.slice(0, 2).map((j) => (
-                        <div key={j.id} className="text-[10px] bg-blue-100 text-blue-700 rounded px-1 py-0.5 truncate mb-0.5">
+                        <div key={j.id} className="text-[10px] bg-[#3B82F6]/10 text-[#60A5FA] rounded px-1 py-0.5 truncate mb-0.5">
                           {j.title}
                         </div>
                       ))}
                       {dayJobs.length > 2 && (
-                        <div className="text-[10px] text-gray-400">+{dayJobs.length - 2} more</div>
+                        <div className="text-[10px] text-[#8a8f98]">+{dayJobs.length - 2} more</div>
                       )}
                     </div>
                   );
@@ -291,22 +291,22 @@ export default function ContractorCalendarPage() {
 
           {/* Weekly recurring availability */}
           <ScrollReveal delay={100}>
-          <div className="mt-6 bg-white rounded-2xl border border-gray-200 shadow-sm p-4">
-            <h3 className="font-semibold text-gray-900 mb-3">Weekly Recurring Availability</h3>
+          <div className="mt-6 bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4">
+            <h3 className="font-semibold text-[#f7f8f8] mb-3">Weekly Recurring Availability</h3>
             {weeklySlots.length === 0 ? (
-              <p className="text-sm text-gray-500">No recurring schedule set.</p>
+              <p className="text-sm text-[#8a8f98]">No recurring schedule set.</p>
             ) : (
               <div className="space-y-2">
                 {weeklySlots.map((slot) => (
-                  <div key={slot.id} className="flex items-center justify-between bg-green-50 rounded-lg px-3 py-2">
+                  <div key={slot.id} className="flex items-center justify-between bg-[#27a644]/10 rounded-lg px-3 py-2">
                     <div className="text-sm">
-                      <span className="font-medium text-gray-900">{FULL_DAY_NAMES[slot.day_of_week!]}</span>
-                      <span className="text-gray-500 ml-2">{formatTime(slot.start_time)} - {formatTime(slot.end_time)}</span>
-                      {slot.note && <span className="text-gray-400 ml-2">({slot.note})</span>}
+                      <span className="font-medium text-[#f7f8f8]">{FULL_DAY_NAMES[slot.day_of_week!]}</span>
+                      <span className="text-[#8a8f98] ml-2">{formatTime(slot.start_time)} - {formatTime(slot.end_time)}</span>
+                      {slot.note && <span className="text-[#8a8f98] ml-2">({slot.note})</span>}
                     </div>
                     <button
                       onClick={() => handleDeleteSlot(slot.id)}
-                      className="text-red-400 hover:text-red-600 text-xs cursor-pointer"
+                      className="text-[#f87171] hover:text-red-400 text-xs cursor-pointer"
                     >
                       Remove
                     </button>
@@ -316,7 +316,7 @@ export default function ContractorCalendarPage() {
             )}
             <button
               onClick={() => { setShowAddForm(true); setFormType("weekly"); }}
-              className="mt-3 text-sm text-blue-600 hover:text-blue-700 font-medium cursor-pointer"
+              className="mt-3 text-sm text-[#60A5FA] hover:text-[#93c5fd] font-medium cursor-pointer"
             >
               + Add Weekly Schedule
             </button>
@@ -327,23 +327,23 @@ export default function ContractorCalendarPage() {
         {/* Day Detail Panel */}
         <div className="w-full lg:w-80 shrink-0">
           {selectedDate && selectedInfo ? (
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 sticky top-4">
-              <h3 className="font-semibold text-gray-900">{selectedInfo.dayName}</h3>
-              <p className="text-sm text-gray-500 mb-4">{selectedInfo.formatted}</p>
+            <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4 sticky top-4">
+              <h3 className="font-semibold text-[#f7f8f8]">{selectedInfo.dayName}</h3>
+              <p className="text-sm text-[#8a8f98] mb-4">{selectedInfo.formatted}</p>
 
               {/* Jobs */}
               <div className="mb-4">
-                <h4 className="text-xs font-medium text-gray-500 uppercase mb-2">Jobs ({selectedInfo.dayJobs.length})</h4>
+                <h4 className="text-xs font-medium text-[#8a8f98] uppercase mb-2">Jobs ({selectedInfo.dayJobs.length})</h4>
                 {selectedInfo.dayJobs.length === 0 ? (
-                  <p className="text-sm text-gray-400">No jobs scheduled</p>
+                  <p className="text-sm text-[#8a8f98]">No jobs scheduled</p>
                 ) : (
                   <div className="space-y-2">
                     {selectedInfo.dayJobs.map((j) => (
-                      <Link key={j.id} href={`/jobs/${j.id}`} className="block bg-blue-50 rounded-lg px-3 py-2 hover:bg-blue-100 transition-colors">
-                        <p className="text-sm font-medium text-gray-900 truncate">{j.title}</p>
-                        <p className="text-xs text-gray-500">{j.consumer_name} &middot; ${(j.price / 100).toFixed(2)}</p>
+                      <Link key={j.id} href={`/jobs/${j.id}`} className="block bg-[#3B82F6]/10 rounded-lg px-3 py-2 hover:bg-[#3B82F6]/20 transition-colors">
+                        <p className="text-sm font-medium text-[#f7f8f8] truncate">{j.title}</p>
+                        <p className="text-xs text-[#8a8f98]">{j.consumer_name} &middot; ${(j.price / 100).toFixed(2)}</p>
                         <span className={`inline-flex text-[10px] mt-1 px-1.5 py-0.5 rounded-full font-medium ${
-                          j.status === "completed" ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700"
+                          j.status === "completed" ? "bg-[#27a644]/10 text-[#34d399]" : "bg-[#3B82F6]/10 text-[#60A5FA]"
                         }`}>
                           {j.status}
                         </span>
@@ -355,26 +355,26 @@ export default function ContractorCalendarPage() {
 
               {/* Availability */}
               <div className="mb-4">
-                <h4 className="text-xs font-medium text-gray-500 uppercase mb-2">Availability</h4>
+                <h4 className="text-xs font-medium text-[#8a8f98] uppercase mb-2">Availability</h4>
                 {selectedInfo.specificSlots.length === 0 && selectedInfo.weeklySlots.length === 0 ? (
-                  <p className="text-sm text-gray-400">No availability set</p>
+                  <p className="text-sm text-[#8a8f98]">No availability set</p>
                 ) : (
                   <div className="space-y-1">
                     {selectedInfo.weeklySlots.filter((s) => !s.is_blocked).map((s) => (
-                      <div key={s.id} className="text-sm text-green-700 bg-green-50 rounded px-2 py-1 flex justify-between items-center">
-                        <span>{formatTime(s.start_time)} - {formatTime(s.end_time)} <span className="text-xs text-gray-400">(weekly)</span></span>
+                      <div key={s.id} className="text-sm text-[#34d399] bg-[#27a644]/10 rounded px-2 py-1 flex justify-between items-center">
+                        <span>{formatTime(s.start_time)} - {formatTime(s.end_time)} <span className="text-xs text-[#8a8f98]">(weekly)</span></span>
                       </div>
                     ))}
                     {selectedInfo.specificSlots.filter((s) => !s.is_blocked).map((s) => (
-                      <div key={s.id} className="text-sm text-green-700 bg-green-50 rounded px-2 py-1 flex justify-between items-center">
+                      <div key={s.id} className="text-sm text-[#34d399] bg-[#27a644]/10 rounded px-2 py-1 flex justify-between items-center">
                         <span>{formatTime(s.start_time)} - {formatTime(s.end_time)}</span>
-                        <button onClick={() => handleDeleteSlot(s.id)} className="text-red-400 hover:text-red-600 text-xs cursor-pointer">x</button>
+                        <button onClick={() => handleDeleteSlot(s.id)} className="text-[#f87171] hover:text-red-400 text-xs cursor-pointer">x</button>
                       </div>
                     ))}
                     {selectedInfo.specificSlots.filter((s) => s.is_blocked).map((s) => (
-                      <div key={s.id} className="text-sm text-red-700 bg-red-50 rounded px-2 py-1 flex justify-between items-center">
+                      <div key={s.id} className="text-sm text-[#f87171] bg-[#f87171]/10 rounded px-2 py-1 flex justify-between items-center">
                         <span>Blocked: {formatTime(s.start_time)} - {formatTime(s.end_time)}</span>
-                        <button onClick={() => handleDeleteSlot(s.id)} className="text-red-400 hover:text-red-600 text-xs cursor-pointer">x</button>
+                        <button onClick={() => handleDeleteSlot(s.id)} className="text-[#f87171] hover:text-red-400 text-xs cursor-pointer">x</button>
                       </div>
                     ))}
                   </div>
@@ -398,9 +398,9 @@ export default function ContractorCalendarPage() {
               </div>
             </div>
           ) : (
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 text-center">
+            <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-6 text-center">
               <div className="text-3xl mb-2">📅</div>
-              <p className="text-sm text-gray-500">Click a day to see details</p>
+              <p className="text-sm text-[#8a8f98]">Click a day to see details</p>
             </div>
           )}
         </div>
@@ -408,19 +408,19 @@ export default function ContractorCalendarPage() {
 
       {/* Add Slot Modal */}
       {showAddForm && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={() => setShowAddForm(false)}>
-          <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={() => setShowAddForm(false)}>
+          <div className="bg-[#0f1011] border border-[#23252a] rounded-2xl shadow-xl p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-semibold text-[#f7f8f8] mb-4">
               {formType === "weekly" ? "Add Weekly Schedule" : formType === "block" ? "Block Time" : "Add Availability"}
             </h3>
             <form onSubmit={handleAddSlot} className="space-y-4">
               {formType === "weekly" && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Day of Week</label>
+                  <label className="block text-sm font-medium text-[#d0d6e0] mb-1">Day of Week</label>
                   <select
                     value={formDayOfWeek}
                     onChange={(e) => setFormDayOfWeek(Number(e.target.value))}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-[#23252a] bg-[#141516] text-[#f7f8f8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     {FULL_DAY_NAMES.map((name, i) => (
                       <option key={i} value={i}>{name}</option>
@@ -429,47 +429,47 @@ export default function ContractorCalendarPage() {
                 </div>
               )}
               {formType !== "weekly" && selectedDate && (
-                <p className="text-sm text-gray-600">
-                  Date: <span className="font-medium">{new Date(selectedDate + "T00:00:00").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
+                <p className="text-sm text-[#8a8f98]">
+                  Date: <span className="font-medium text-[#d0d6e0]">{new Date(selectedDate + "T00:00:00").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
                 </p>
               )}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Start Time</label>
+                  <label className="block text-sm font-medium text-[#d0d6e0] mb-1">Start Time</label>
                   <input
                     type="time"
                     value={formStartTime}
                     onChange={(e) => setFormStartTime(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-[#23252a] bg-[#141516] text-[#f7f8f8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">End Time</label>
+                  <label className="block text-sm font-medium text-[#d0d6e0] mb-1">End Time</label>
                   <input
                     type="time"
                     value={formEndTime}
                     onChange={(e) => setFormEndTime(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-[#23252a] bg-[#141516] text-[#f7f8f8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Note (optional)</label>
+                <label className="block text-sm font-medium text-[#d0d6e0] mb-1">Note (optional)</label>
                 <input
                   type="text"
                   value={formNote}
                   onChange={(e) => setFormNote(e.target.value)}
                   placeholder="e.g. Plumbing jobs only"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-[#23252a] bg-[#141516] text-[#f7f8f8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div className="flex gap-3">
                 <button
                   type="button"
                   onClick={() => setShowAddForm(false)}
-                  className="flex-1 px-4 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50 cursor-pointer"
+                  className="flex-1 px-4 py-2 border border-[#23252a] text-[#d0d6e0] rounded-lg text-sm hover:bg-[#141516] cursor-pointer"
                 >
                   Cancel
                 </button>

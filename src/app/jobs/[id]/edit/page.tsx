@@ -145,7 +145,7 @@ export default function EditJobPage({ params }: { params: Promise<{ id: string }
       <Card className="p-6 sm:p-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300">
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
-            <div className="bg-red-50 text-danger text-sm p-3 rounded-lg">{error}</div>
+            <div className="bg-[#f87171]/10 text-danger text-sm p-3 rounded-lg">{error}</div>
           )}
 
           <ImageUploader images={photos} onImagesChange={setPhotos} />
@@ -166,7 +166,7 @@ export default function EditJobPage({ params }: { params: Promise<{ id: string }
               placeholder="Describe the work needed."
               rows={4}
               required
-              className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted"
+              className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary placeholder-muted"
             />
           </div>
 
@@ -176,7 +176,7 @@ export default function EditJobPage({ params }: { params: Promise<{ id: string }
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               required
-              className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary"
+              className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary"
             >
               <option value="">Select a category...</option>
               {CATEGORY_GROUPS.map((group) => (
@@ -195,7 +195,7 @@ export default function EditJobPage({ params }: { params: Promise<{ id: string }
               value={urgency}
               onChange={(e) => setUrgency(e.target.value)}
               required
-              className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary"
+              className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary"
             >
               {URGENCY_LEVELS.map((u) => (
                 <option key={u.value} value={u.value}>{u.label}</option>
@@ -211,7 +211,7 @@ export default function EditJobPage({ params }: { params: Promise<{ id: string }
               onChange={(e) => setExpectedDate(e.target.value)}
               min={today}
               required
-              className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary"
+              className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary"
             />
             <p className="text-xs text-muted mt-1.5">
               * This date is a goal, not a guarantee — it helps contractors plan their availability.
@@ -250,7 +250,7 @@ export default function EditJobPage({ params }: { params: Promise<{ id: string }
                 🗑 Delete This Job
               </button>
             ) : (
-              <div className="rounded-lg border border-danger/30 bg-red-50 p-4">
+              <div className="rounded-lg border border-danger/30 bg-[#f87171]/10 p-4">
                 <p className="text-sm font-semibold text-danger mb-1">Are you sure?</p>
                 <p className="text-xs text-danger/80 mb-4">This cannot be undone. The job and all its bids will be permanently deleted.</p>
                 <div className="flex gap-3">

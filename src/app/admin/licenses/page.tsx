@@ -83,7 +83,7 @@ export default function AdminLicensesPage() {
       </div>
 
       {message && (
-        <div className="mb-4 bg-blue-50 text-blue-800 text-sm p-3 rounded-lg">{message}</div>
+        <div className="mb-4 bg-[#3B82F6]/10 text-[#60A5FA] text-sm p-3 rounded-lg">{message}</div>
       )}
 
       {loading ? (
@@ -135,14 +135,14 @@ export default function AdminLicensesPage() {
                       placeholder="Optional notes (visible to contractor on rejection)..."
                       value={notes[lic.user_id] || ""}
                       onChange={(e) => setNotes((prev) => ({ ...prev, [lic.user_id]: e.target.value }))}
-                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary placeholder-muted"
+                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-[#0f1011] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary placeholder-muted"
                     />
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-2 min-w-fit">
-                  <div className="border rounded-lg p-3 bg-blue-50">
-                    <p className="text-xs font-semibold text-blue-800 mb-2">License Review</p>
+                  <div className="border rounded-lg p-3 bg-[#3B82F6]/10">
+                    <p className="text-xs font-semibold text-[#60A5FA] mb-2">License Review</p>
                     <div className="flex gap-2">
                       <Button
                         size="sm"

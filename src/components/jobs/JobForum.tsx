@@ -116,7 +116,7 @@ export default function JobForum({ jobId, jobStatus, isOwner }: Props) {
   return (
     <div className="space-y-4">
       {/* Info banner */}
-      <div className="flex items-start gap-2 rounded-xl bg-blue-50 border border-blue-200 px-3 py-2.5 text-xs text-blue-800">
+      <div className="flex items-start gap-2 rounded-xl bg-[#3B82F6]/10 border border-[#3B82F6]/30 px-3 py-2.5 text-xs text-[#60A5FA]">
         <span className="shrink-0 text-sm">💬</span>
         <p>
           <strong>Public Q&A</strong> — All questions and answers are visible to everyone.
@@ -126,7 +126,7 @@ export default function JobForum({ jobId, jobStatus, isOwner }: Props) {
 
       {/* Redaction notice */}
       {redactedNotice && (
-        <div className="flex items-start gap-2 rounded-xl bg-orange-50 border border-orange-200 px-3 py-2.5 text-xs text-orange-800">
+        <div className="flex items-start gap-2 rounded-xl bg-[#fbbf24]/10 border border-[#fbbf24]/30 px-3 py-2.5 text-xs text-[#fbbf24]">
           <span className="shrink-0 text-sm">✂️</span>
           <p>
             <strong>Contact info was removed</strong> from your message. Phone numbers, emails, and social handles are not allowed to keep the process fair.
@@ -140,10 +140,10 @@ export default function JobForum({ jobId, jobStatus, isOwner }: Props) {
           <div className="w-6 h-6 border-3 border-primary border-t-transparent rounded-full animate-spin" />
         </div>
       ) : topLevel.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-100 p-8 text-center">
+        <div className="bg-[#0f1011] rounded-xl border border-[#23252a] p-8 text-center">
           <div className="text-4xl mb-3">🙋</div>
-          <p className="font-semibold text-gray-800 text-sm">No questions yet</p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="font-semibold text-[#d0d6e0] text-sm">No questions yet</p>
+          <p className="text-xs text-[#8a8f98] mt-1">
             {isOwner
               ? "Contractors will ask questions here about your project."
               : "Be the first to ask a question about this job!"}
@@ -159,7 +159,7 @@ export default function JobForum({ jobId, jobStatus, isOwner }: Props) {
             const initial = post.is_owner ? "H" : post.display_name.replace("Contractor #", "C");
 
             return (
-              <div key={post.id} className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+              <div key={post.id} className="bg-[#0f1011] rounded-xl border border-[#23252a] shadow-sm overflow-hidden">
                 {/* Main post */}
                 <div className="p-4">
                   <div className="flex items-start gap-3">
@@ -171,36 +171,36 @@ export default function JobForum({ jobId, jobStatus, isOwner }: Props) {
                     <div className="flex-1 min-w-0">
                       {/* Header */}
                       <div className="flex items-center gap-2 mb-1">
-                        <span className={`text-sm font-semibold ${post.is_mine ? "text-primary" : "text-gray-900"}`}>
+                        <span className={`text-sm font-semibold ${post.is_mine ? "text-primary" : "text-[#f7f8f8]"}`}>
                           {post.display_name}
-                          {post.is_mine && <span className="text-xs font-normal text-gray-400 ml-1">(you)</span>}
+                          {post.is_mine && <span className="text-xs font-normal text-[#8a8f98] ml-1">(you)</span>}
                         </span>
                         <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
                           post.is_owner
-                            ? "bg-blue-100 text-blue-700"
-                            : "bg-emerald-100 text-emerald-700"
+                            ? "bg-[#3B82F6]/10 text-[#60A5FA]"
+                            : "bg-[#27a644]/10 text-[#34d399]"
                         }`}>
                           {post.is_owner ? "Homeowner" : "Contractor"}
                         </span>
-                        <span className="text-[11px] text-gray-400">{timeAgo(post.created_at)}</span>
+                        <span className="text-[11px] text-[#8a8f98]">{timeAgo(post.created_at)}</span>
                       </div>
 
                       {/* Content */}
-                      <p className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap">{post.content}</p>
+                      <p className="text-sm text-[#d0d6e0] leading-relaxed whitespace-pre-wrap">{post.content}</p>
 
                       {/* Actions */}
                       {canPost && (
                         <div className="mt-2 flex items-center gap-3">
                           <button
                             onClick={() => startReply(post.id)}
-                            className="text-xs text-gray-400 hover:text-primary font-medium flex items-center gap-1 transition-colors"
+                            className="text-xs text-[#8a8f98] hover:text-primary font-medium flex items-center gap-1 transition-colors"
                           >
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
                             </svg>
                             Reply
                           </button>
-                          <span className="text-xs text-gray-300">
+                          <span className="text-xs text-[#8a8f98]">
                             {replies.length > 0 && `${replies.length} ${replies.length === 1 ? "reply" : "replies"}`}
                           </span>
                         </div>
@@ -211,7 +211,7 @@ export default function JobForum({ jobId, jobStatus, isOwner }: Props) {
 
                 {/* Replies */}
                 {replies.length > 0 && (
-                  <div className="border-t border-gray-50 bg-gray-50/50">
+                  <div className="border-t border-[#23252a] bg-[#010102]">
                     {replies.map((reply) => {
                       const replyAvatarColor = reply.is_owner
                         ? "from-blue-500 to-indigo-600"
@@ -219,27 +219,27 @@ export default function JobForum({ jobId, jobStatus, isOwner }: Props) {
                       const replyInitial = reply.is_owner ? "H" : reply.display_name.replace("Contractor #", "C");
 
                       return (
-                        <div key={reply.id} className="px-4 py-3 ml-12 border-t border-gray-100 first:border-t-0">
+                        <div key={reply.id} className="px-4 py-3 ml-12 border-t border-[#23252a] first:border-t-0">
                           <div className="flex items-start gap-2.5">
                             <div className={`w-7 h-7 rounded-full bg-gradient-to-br ${replyAvatarColor} flex items-center justify-center text-[10px] font-bold text-white shrink-0`}>
                               {replyInitial}
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 mb-0.5">
-                                <span className={`text-xs font-semibold ${reply.is_mine ? "text-primary" : "text-gray-900"}`}>
+                                <span className={`text-xs font-semibold ${reply.is_mine ? "text-primary" : "text-[#f7f8f8]"}`}>
                                   {reply.display_name}
-                                  {reply.is_mine && <span className="text-[10px] font-normal text-gray-400 ml-1">(you)</span>}
+                                  {reply.is_mine && <span className="text-[10px] font-normal text-[#8a8f98] ml-1">(you)</span>}
                                 </span>
                                 <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-medium ${
                                   reply.is_owner
-                                    ? "bg-blue-100 text-blue-700"
-                                    : "bg-emerald-100 text-emerald-700"
+                                    ? "bg-[#3B82F6]/10 text-[#60A5FA]"
+                                    : "bg-[#27a644]/10 text-[#34d399]"
                                 }`}>
                                   {reply.is_owner ? "Homeowner" : "Contractor"}
                                 </span>
-                                <span className="text-[10px] text-gray-400">{timeAgo(reply.created_at)}</span>
+                                <span className="text-[10px] text-[#8a8f98]">{timeAgo(reply.created_at)}</span>
                               </div>
-                              <p className="text-xs text-gray-700 leading-relaxed whitespace-pre-wrap">{reply.content}</p>
+                              <p className="text-xs text-[#d0d6e0] leading-relaxed whitespace-pre-wrap">{reply.content}</p>
                             </div>
                           </div>
                         </div>
@@ -255,16 +255,16 @@ export default function JobForum({ jobId, jobStatus, isOwner }: Props) {
 
       {/* Input area */}
       {canPost && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div className="bg-[#0f1011] rounded-xl border border-[#23252a] shadow-sm overflow-hidden">
           {/* Reply indicator */}
           {replyToPost && (
-            <div className="flex items-center justify-between px-4 py-2 bg-gray-50 border-b border-gray-100">
-              <p className="text-xs text-gray-500">
+            <div className="flex items-center justify-between px-4 py-2 bg-[#010102] border-b border-[#23252a]">
+              <p className="text-xs text-[#8a8f98]">
                 Replying to <span className="font-semibold">{replyToPost.display_name}</span>
               </p>
               <button
                 onClick={() => setReplyTo(null)}
-                className="text-xs text-gray-400 hover:text-gray-600"
+                className="text-xs text-[#8a8f98] hover:text-[#d0d6e0]"
               >
                 Cancel
               </button>
@@ -281,10 +281,10 @@ export default function JobForum({ jobId, jobStatus, isOwner }: Props) {
               disabled={sending}
               maxLength={1000}
               rows={2}
-              className="w-full resize-none rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all disabled:opacity-50 placeholder:text-gray-400"
+              className="w-full resize-none rounded-lg bg-[#141516] text-[#f7f8f8] border border-[#23252a] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/30 transition-all disabled:opacity-50 placeholder:text-[#8a8f98]"
             />
             <div className="flex items-center justify-between mt-2">
-              <p className="text-[10px] text-gray-400">
+              <p className="text-[10px] text-[#8a8f98]">
                 Press Enter to post &middot; Shift+Enter for new line
               </p>
               <button

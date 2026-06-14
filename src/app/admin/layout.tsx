@@ -38,13 +38,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="min-h-screen flex bg-slate-50">
+    <div className="min-h-screen flex bg-[#010102]">
       {/* Dark sidebar */}
-      <aside className="w-60 bg-slate-900 text-white flex flex-col shrink-0 min-h-screen">
+      <aside className="w-60 bg-[#0f1011] text-white flex flex-col shrink-0 min-h-screen border-r border-[#23252a]">
         {/* Logo / title */}
-        <div className="px-5 py-5 border-b border-slate-800">
+        <div className="px-5 py-5 border-b border-[#23252a]">
           <div className="text-lg font-bold text-white tracking-tight">Admin Console</div>
-          <div className="text-xs text-slate-400 mt-0.5">Trovaar Platform</div>
+          <div className="text-xs text-[#8a8f98] mt-0.5">Trovaar Platform</div>
         </div>
 
         {/* Nav */}
@@ -59,8 +59,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 href={item.href}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                   isActive
-                    ? "bg-slate-700 text-white"
-                    : "text-slate-400 hover:bg-slate-800 hover:text-white"
+                    ? "bg-[#3B82F6]/10 text-[#60A5FA]"
+                    : "text-[#8a8f98] hover:bg-[#141516] hover:text-[#f7f8f8]"
                 }`}
               >
                 <span className="text-base">{item.icon}</span>
@@ -71,16 +71,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
 
         {/* Footer */}
-        <div className="px-4 py-4 border-t border-slate-800 space-y-2">
+        <div className="px-4 py-4 border-t border-[#23252a] space-y-2">
           <Link
             href="/"
-            className="flex items-center gap-2 text-xs text-slate-400 hover:text-white transition-colors px-1 py-1"
+            className="flex items-center gap-2 text-xs text-[#8a8f98] hover:text-[#f7f8f8] transition-colors px-1 py-1"
           >
             <span>←</span> Back to site
           </Link>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 text-xs text-slate-400 hover:text-red-400 transition-colors px-1 py-1 w-full text-left"
+            className="flex items-center gap-2 text-xs text-[#8a8f98] hover:text-[#f87171] transition-colors px-1 py-1 w-full text-left"
           >
             <span>🚪</span> Sign out
           </button>

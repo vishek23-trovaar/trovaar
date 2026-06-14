@@ -34,7 +34,7 @@ export default function InlineDeleteButton({ onConfirm, className = "" }: Props)
       className={`text-xs px-2.5 py-1 rounded-lg transition-colors ${
         confirming
           ? "bg-red-600 text-white font-semibold"
-          : "bg-red-50 text-red-600 hover:bg-red-100"
+          : "bg-[#f87171]/10 text-[#f87171] hover:bg-[#f87171]/20"
       } ${className}`}
     >
       {confirming ? "Confirm?" : "Delete"}

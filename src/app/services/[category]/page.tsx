@@ -51,7 +51,7 @@ export default async function CategoryPage({ params }: Props) {
   if (!category) notFound();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#010102]">
       {/* Hero */}
       <section className="bg-gradient-to-br from-blue-900 to-blue-700 text-white py-16 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -65,13 +65,13 @@ export default async function CategoryPage({ params }: Props) {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/jobs/new"
-              className="inline-block bg-white text-blue-800 font-semibold px-8 py-3 rounded-lg shadow hover:bg-blue-50 transition-colors"
+              className="inline-block bg-[#0f1011] text-[#60A5FA] font-semibold px-8 py-3 rounded-lg shadow hover:bg-[#3B82F6]/15 transition-colors"
             >
               Post a {category.name} Job
             </Link>
             <Link
               href={`/jobs?category=${slug}`}
-              className="inline-block bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg shadow hover:bg-blue-500 transition-colors border border-blue-400"
+              className="inline-block bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg shadow hover:bg-blue-500 transition-colors border border-[#3B82F6]/50"
             >
               Browse {category.name} Jobs
             </Link>
@@ -81,10 +81,10 @@ export default async function CategoryPage({ params }: Props) {
 
       {/* Cities Grid */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2 text-center">
+        <h2 className="text-2xl font-bold text-[#f7f8f8] mb-2 text-center">
           Find {category.name} Pros by City
         </h2>
-        <p className="text-gray-600 text-center mb-10 max-w-xl mx-auto">
+        <p className="text-[#8a8f98] text-center mb-10 max-w-xl mx-auto">
           Select your city to see local {category.name.toLowerCase()}{" "}
           professionals and get competitive bids.
         </p>
@@ -93,12 +93,12 @@ export default async function CategoryPage({ params }: Props) {
             <Link
               key={city.slug}
               href={`/services/${slug}/${city.slug}`}
-              className="group bg-white rounded-xl border border-gray-200 px-4 py-3 text-center shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-blue-300 transition-all duration-300"
+              className="group bg-[#0f1011] rounded-xl border border-[#23252a] px-4 py-3 text-center shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-[#3B82F6]/40 transition-all duration-300"
             >
-              <span className="text-sm font-semibold text-gray-900 group-hover:text-blue-800 transition-colors">
+              <span className="text-sm font-semibold text-[#f7f8f8] group-hover:text-[#60A5FA] transition-colors">
                 {city.name}
               </span>
-              <span className="block text-xs text-gray-500">
+              <span className="block text-xs text-[#8a8f98]">
                 {city.stateAbbr}
               </span>
             </Link>
@@ -107,9 +107,9 @@ export default async function CategoryPage({ params }: Props) {
       </section>
 
       {/* How It Works */}
-      <section className="bg-white py-16 border-t border-gray-200">
+      <section className="bg-[#0f1011] py-16 border-t border-[#23252a]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-10 text-center">
+          <h2 className="text-2xl font-bold text-[#f7f8f8] mb-10 text-center">
             How Trovaar Works
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -130,14 +130,14 @@ export default async function CategoryPage({ params }: Props) {
                 desc: "Choose the pro that fits your budget and timeline. Pay securely through Trovaar escrow protection.",
               },
             ].map((item) => (
-              <div key={item.step} className="text-center p-6 rounded-2xl hover:bg-blue-50/50 transition-colors duration-300">
+              <div key={item.step} className="text-center p-6 rounded-2xl hover:bg-[#3B82F6]/15 transition-colors duration-300">
                 <div className="w-14 h-14 bg-blue-800 text-white rounded-2xl flex items-center justify-center text-xl font-bold mx-auto mb-4 shadow-md">
                   {item.step}
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <h3 className="text-lg font-semibold text-[#f7f8f8] mb-2">
                   {item.title}
                 </h3>
-                <p className="text-gray-600 text-sm">{item.desc}</p>
+                <p className="text-[#8a8f98] text-sm">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -145,9 +145,9 @@ export default async function CategoryPage({ params }: Props) {
       </section>
 
       {/* Trust Signals */}
-      <section className="bg-gray-50 py-16 border-t border-gray-200">
+      <section className="bg-[#010102] py-16 border-t border-[#23252a]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-10 text-center">
+          <h2 className="text-2xl font-bold text-[#f7f8f8] mb-10 text-center">
             Why Homeowners Trust Trovaar
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
@@ -170,13 +170,13 @@ export default async function CategoryPage({ params }: Props) {
             ].map((item) => (
               <div
                 key={item.title}
-                className="bg-white rounded-2xl border border-gray-200 p-6 text-center shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+                className="bg-[#0f1011] rounded-2xl border border-[#23252a] p-6 text-center shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
               >
                 <div className="text-3xl mb-3">{item.icon}</div>
-                <h3 className="font-semibold text-gray-900 mb-2">
+                <h3 className="font-semibold text-[#f7f8f8] mb-2">
                   {item.title}
                 </h3>
-                <p className="text-sm text-gray-600">{item.desc}</p>
+                <p className="text-sm text-[#8a8f98]">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -185,18 +185,18 @@ export default async function CategoryPage({ params }: Props) {
 
       {/* FAQ */}
       {category.faqs.length > 0 && (
-        <section className="bg-white py-16 border-t border-gray-200">
+        <section className="bg-[#0f1011] py-16 border-t border-[#23252a]">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-10 text-center">
+            <h2 className="text-2xl font-bold text-[#f7f8f8] mb-10 text-center">
               Frequently Asked Questions
             </h2>
             <div className="space-y-6">
               {category.faqs.map((faq, i) => (
-                <div key={i} className="border-b border-gray-200 pb-6 hover:pl-2 transition-all duration-200">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <div key={i} className="border-b border-[#23252a] pb-6 hover:pl-2 transition-all duration-200">
+                  <h3 className="text-lg font-semibold text-[#f7f8f8] mb-2">
                     {faq.question}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+                  <p className="text-[#8a8f98] leading-relaxed">{faq.answer}</p>
                 </div>
               ))}
             </div>

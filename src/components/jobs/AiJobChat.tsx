@@ -91,7 +91,7 @@ export default function AiJobChat({ jobId, jobTitle, jobDescription, jobCategory
   const atLimit = messages.filter((m) => m.role === "user").length >= MAX_MESSAGES / 2;
 
   return (
-    <div className="rounded-xl border border-border bg-white shadow-sm overflow-hidden">
+    <div className="rounded-xl border border-border bg-[#0f1011] shadow-sm overflow-hidden">
       {/* Header — always visible, toggles collapse */}
       <button
         onClick={() => setOpen((v) => !v)}
@@ -174,7 +174,7 @@ export default function AiJobChat({ jobId, jobTitle, jobDescription, jobCategory
                   onKeyDown={handleKeyDown}
                   placeholder="Ask about your project..."
                   disabled={loading}
-                  className="flex-1 rounded-lg border border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary disabled:opacity-50"
+                  className="flex-1 rounded-lg bg-[#141516] text-[#f7f8f8] border border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary disabled:opacity-50"
                 />
                 <button
                   onClick={sendMessage}

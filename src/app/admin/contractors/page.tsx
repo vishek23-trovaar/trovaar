@@ -39,10 +39,10 @@ function fmtMoney(cents: number) {
 function StatusBadge({ status }: { status: string | null }) {
   const s = status ?? "none";
   const styles: Record<string, string> = {
-    approved: "bg-emerald-100 text-emerald-700",
-    pending:  "bg-amber-100 text-amber-700",
-    rejected: "bg-red-100 text-red-700",
-    none:     "bg-slate-100 text-slate-500",
+    approved: "bg-[#27a644]/10 text-[#34d399]",
+    pending:  "bg-[#fbbf24]/10 text-[#fbbf24]",
+    rejected: "bg-[#f87171]/10 text-[#f87171]",
+    none:     "bg-[#141516] text-[#8a8f98]",
   };
   return (
     <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${styles[s] ?? styles.none}`}>
@@ -162,19 +162,19 @@ export default function AdminContractorsPage() {
 
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Contractors</h1>
-          <p className="text-slate-500 text-sm mt-1">{total.toLocaleString()} registered contractors</p>
+          <h1 className="text-2xl font-bold text-[#d0d6e0]">Contractors</h1>
+          <p className="text-[#8a8f98] text-sm mt-1">{total.toLocaleString()} registered contractors</p>
         </div>
         <a
           href="/api/admin/export?type=contractors"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg hover:bg-emerald-100 transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-[#27a644]/10 text-[#34d399] border border-[#27a644]/30 rounded-lg hover:bg-[#27a644]/15 transition-colors"
         >
           Export CSV
         </a>
       </div>
 
       {/* Search + filter */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm mb-6 p-4">
+      <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm mb-6 p-4">
         <div className="flex flex-col sm:flex-row gap-3">
           <input
             type="text"
@@ -182,11 +182,11 @@ export default function AdminContractorsPage() {
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") fetchUsers(1, search, filter, sort, dir); }}
             placeholder="Search by name, email, phone, or account number..."
-            className="flex-1 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+            className="flex-1 border border-[#23252a] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/40"
           />
           <button
             onClick={() => fetchUsers(1, search, filter, sort, dir)}
-            className="px-5 py-2 bg-slate-800 text-white text-sm font-medium rounded-lg hover:bg-slate-700 transition-colors"
+            className="px-5 py-2 bg-[#0f1011] text-white text-sm font-medium rounded-lg hover:bg-[#141516] transition-colors"
           >
             Search
           </button>
@@ -197,7 +197,7 @@ export default function AdminContractorsPage() {
               key={f.id}
               onClick={() => setFilter(f.id)}
               className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                filter === f.id ? "bg-slate-800 text-white" : "text-slate-500 hover:bg-slate-100"
+                filter === f.id ? "bg-[#0f1011] text-white" : "text-[#8a8f98] hover:bg-[#141516]"
               }`}
             >
               {f.label}
@@ -207,41 +207,41 @@ export default function AdminContractorsPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <div className="animate-spin w-8 h-8 border-4 border-slate-300 border-t-slate-700 rounded-full" />
+            <div className="animate-spin w-8 h-8 border-4 border-[#23252a] border-t-slate-700 rounded-full" />
           </div>
         ) : users.length === 0 ? (
-          <div className="text-center py-16 text-slate-400">No contractors found.</div>
+          <div className="text-center py-16 text-[#8a8f98]">No contractors found.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50">
+                <tr className="border-b border-[#23252a] bg-[#010102]">
                   <th className="px-4 py-3 text-left">
                     <input
                       type="checkbox"
                       onChange={e => e.target.checked ? setSelected(new Set(users.map(u => u.id))) : setSelected(new Set())}
                       checked={selected.size === users.length && users.length > 0}
-                      className="rounded border-slate-300"
+                      className="rounded border-[#23252a]"
                     />
                   </th>
                   <SortableHeader col="name" label="Name" sort={sort} dir={dir} onSort={onSort} />
-                  <th className="text-left px-5 py-3 text-xs font-medium text-slate-500 whitespace-nowrap">Account #</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium text-slate-500">Contact</th>
-                  <th className="text-left px-5 py-3 text-xs font-medium text-slate-500">ID / Insurance</th>
+                  <th className="text-left px-5 py-3 text-xs font-medium text-[#8a8f98] whitespace-nowrap">Account #</th>
+                  <th className="text-left px-5 py-3 text-xs font-medium text-[#8a8f98]">Contact</th>
+                  <th className="text-left px-5 py-3 text-xs font-medium text-[#8a8f98]">ID / Insurance</th>
                   <SortableHeader col="rating" label="Rating" sort={sort} dir={dir} onSort={onSort} />
                   <SortableHeader col="completed_jobs" label="Jobs Done" sort={sort} dir={dir} onSort={onSort} />
                   <SortableHeader col="platform_revenue" label="Revenue" sort={sort} dir={dir} onSort={onSort} />
                   <SortableHeader col="strike_count" label="Strikes" sort={sort} dir={dir} onSort={onSort} />
                   <SortableHeader col="created_at" label="Joined" sort={sort} dir={dir} onSort={onSort} />
-                  <th className="text-right px-5 py-3 text-xs font-medium text-slate-500">Actions</th>
+                  <th className="text-right px-5 py-3 text-xs font-medium text-[#8a8f98]">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {users.map((u) => (
-                  <tr key={u.id} className={`border-b border-slate-50 hover:bg-slate-50 transition-colors ${u.is_suspended ? "opacity-60" : ""}`}>
+                  <tr key={u.id} className={`border-b border-[#23252a] hover:bg-[#141516] transition-colors ${u.is_suspended ? "opacity-60" : ""}`}>
                     <td className="px-4 py-3">
                       <input
                         type="checkbox"
@@ -251,43 +251,43 @@ export default function AdminContractorsPage() {
                           e.target.checked ? s.add(u.id) : s.delete(u.id);
                           setSelected(s);
                         }}
-                        className="rounded border-slate-300"
+                        className="rounded border-[#23252a]"
                       />
                     </td>
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-bold text-indigo-700 shrink-0">
+                        <div className="w-8 h-8 rounded-full bg-[#3B82F6]/10 flex items-center justify-center text-xs font-bold text-[#60A5FA] shrink-0">
                           {u.name.charAt(0).toUpperCase()}
                         </div>
                         <div>
-                          <p className="font-medium text-slate-800">{u.name}</p>
+                          <p className="font-medium text-[#d0d6e0]">{u.name}</p>
                           {u.contractor_type && (
-                            <p className="text-xs text-slate-400 capitalize">{u.contractor_type}</p>
+                            <p className="text-xs text-[#8a8f98] capitalize">{u.contractor_type}</p>
                           )}
                         </div>
                       </div>
                     </td>
                     <td className="px-5 py-3">
                       {u.account_number
-                        ? <span className="font-mono text-xs font-semibold text-slate-700">{u.account_number}</span>
-                        : <span className="text-slate-300 text-xs italic">&mdash;</span>}
+                        ? <span className="font-mono text-xs font-semibold text-[#d0d6e0]">{u.account_number}</span>
+                        : <span className="text-[#8a8f98] text-xs italic">&mdash;</span>}
                     </td>
-                    <td className="px-5 py-3 text-xs text-slate-500">
+                    <td className="px-5 py-3 text-xs text-[#8a8f98]">
                       <p>{u.email}</p>
-                      {u.phone && <p className="text-slate-400 mt-0.5">{u.phone}</p>}
+                      {u.phone && <p className="text-[#8a8f98] mt-0.5">{u.phone}</p>}
                       <div className="flex gap-1 mt-1">
-                        {!!u.email_verified && <span className="text-emerald-500 text-xs">Email verified</span>}
-                        {!!u.phone_verified && <span className="text-emerald-500 text-xs">Phone verified</span>}
+                        {!!u.email_verified && <span className="text-[#34d399] text-xs">Email verified</span>}
+                        {!!u.phone_verified && <span className="text-[#34d399] text-xs">Phone verified</span>}
                       </div>
                     </td>
                     <td className="px-5 py-3">
                       <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-1.5">
-                          <span className="text-xs text-slate-400">ID</span>
+                          <span className="text-xs text-[#8a8f98]">ID</span>
                           <StatusBadge status={u.verification_status} />
                         </div>
                         <div className="flex items-center gap-1.5">
-                          <span className="text-xs text-slate-400">Ins</span>
+                          <span className="text-xs text-[#8a8f98]">Ins</span>
                           <StatusBadge status={u.insurance_status} />
                         </div>
                       </div>
@@ -295,34 +295,34 @@ export default function AdminContractorsPage() {
                     <td className="px-5 py-3">
                       {u.rating ? (
                         <div>
-                          <span className="font-semibold text-slate-800">{Number(u.rating).toFixed(1)}</span>
-                          <p className="text-xs text-slate-400">{u.rating_count} reviews</p>
+                          <span className="font-semibold text-[#d0d6e0]">{Number(u.rating).toFixed(1)}</span>
+                          <p className="text-xs text-[#8a8f98]">{u.rating_count} reviews</p>
                         </div>
                       ) : (
-                        <span className="text-slate-300 text-xs">No ratings</span>
+                        <span className="text-[#8a8f98] text-xs">No ratings</span>
                       )}
                     </td>
                     <td className="px-5 py-3">
-                      <span className="font-semibold text-slate-800">{u.completed_jobs ?? 0}</span>
+                      <span className="font-semibold text-[#d0d6e0]">{u.completed_jobs ?? 0}</span>
                     </td>
                     <td className="px-5 py-3">
-                      <span className="font-semibold text-slate-800">{fmtMoney(u.platform_revenue_cents)}</span>
+                      <span className="font-semibold text-[#d0d6e0]">{fmtMoney(u.platform_revenue_cents)}</span>
                     </td>
                     <td className="px-5 py-3">
                       {(u.strike_count ?? 0) > 0 ? (
-                        <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-semibold">
+                        <span className="text-xs bg-[#f87171]/10 text-[#f87171] px-2 py-0.5 rounded-full font-semibold">
                           {u.strike_count} strike{(u.strike_count ?? 0) !== 1 ? "s" : ""}
                         </span>
                       ) : (
-                        <span className="text-xs text-slate-300">&mdash;</span>
+                        <span className="text-xs text-[#8a8f98]">&mdash;</span>
                       )}
                     </td>
-                    <td className="px-5 py-3 text-xs text-slate-500">{fmtDate(u.created_at)}</td>
+                    <td className="px-5 py-3 text-xs text-[#8a8f98]">{fmtDate(u.created_at)}</td>
                     <td className="px-5 py-3 text-right">
                       <div className="flex items-center justify-end gap-2 flex-wrap">
                         <button
                           onClick={() => setEditUser(u)}
-                          className="text-xs px-2.5 py-1 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors"
+                          className="text-xs px-2.5 py-1 bg-[#141516] text-[#d0d6e0] rounded-lg hover:bg-[#18191a] transition-colors"
                         >
                           Edit
                         </button>
@@ -330,7 +330,7 @@ export default function AdminContractorsPage() {
                           <button
                             onClick={() => handleAction(u.id, "unsuspend")}
                             disabled={actionLoading === u.id + "unsuspend"}
-                            className="text-xs px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200 disabled:opacity-50"
+                            className="text-xs px-2.5 py-1 bg-[#27a644]/10 text-[#34d399] rounded-lg hover:bg-[#27a644]/20 disabled:opacity-50"
                           >
                             Unsuspend
                           </button>
@@ -338,7 +338,7 @@ export default function AdminContractorsPage() {
                           <button
                             onClick={() => handleAction(u.id, "suspend")}
                             disabled={actionLoading === u.id + "suspend"}
-                            className="text-xs px-2.5 py-1 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 disabled:opacity-50"
+                            className="text-xs px-2.5 py-1 bg-[#f87171]/10 text-[#f87171] rounded-lg hover:bg-[#f87171]/20 disabled:opacity-50"
                           >
                             Suspend
                           </button>
@@ -354,15 +354,15 @@ export default function AdminContractorsPage() {
         )}
 
         {pages > 1 && (
-          <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100">
-            <p className="text-xs text-slate-400">Page {page} of {pages} &middot; {total.toLocaleString()} contractors</p>
+          <div className="flex items-center justify-between px-6 py-4 border-t border-[#23252a]">
+            <p className="text-xs text-[#8a8f98]">Page {page} of {pages} &middot; {total.toLocaleString()} contractors</p>
             <div className="flex gap-2">
               <button disabled={page <= 1} onClick={() => fetchUsers(page - 1, search, filter, sort, dir)}
-                className="px-3 py-1.5 text-xs border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40">
+                className="px-3 py-1.5 text-xs border border-[#23252a] rounded-lg hover:bg-[#141516] disabled:opacity-40">
                 Previous
               </button>
               <button disabled={page >= pages} onClick={() => fetchUsers(page + 1, search, filter, sort, dir)}
-                className="px-3 py-1.5 text-xs border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40">
+                className="px-3 py-1.5 text-xs border border-[#23252a] rounded-lg hover:bg-[#141516] disabled:opacity-40">
                 Next
               </button>
             </div>

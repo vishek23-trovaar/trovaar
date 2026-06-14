@@ -65,7 +65,7 @@ function TipForm({
       <PaymentElement />
 
       {error && (
-        <div className="bg-red-50 text-red-700 text-sm p-3 rounded-lg">{error}</div>
+        <div className="bg-[#f87171]/10 text-[#f87171] text-sm p-3 rounded-lg">{error}</div>
       )}
 
       <Button type="submit" loading={paying} disabled={!stripe || !elements} className="w-full" size="lg">
@@ -171,13 +171,13 @@ export default function TipPage({ params }: { params: Promise<{ id: string }> })
                   value={customAmount}
                   onChange={(e) => { setCustomAmount(e.target.value); setSelectedAmount(null); }}
                   placeholder="0.00"
-                  className="w-full pl-8 pr-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted"
+                  className="w-full pl-8 pr-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary placeholder-muted"
                 />
               </div>
             </div>
 
             {error && (
-              <div className="bg-red-50 text-red-700 text-sm p-3 rounded-lg">{error}</div>
+              <div className="bg-[#f87171]/10 text-[#f87171] text-sm p-3 rounded-lg">{error}</div>
             )}
 
             <Button

@@ -106,14 +106,14 @@ export default function AdminTaxPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">1099 Tax Management</h1>
-          <p className="text-sm text-gray-500 mt-1">Track contractor earnings and generate 1099-NEC forms</p>
+          <h1 className="text-2xl font-bold text-[#f7f8f8]">1099 Tax Management</h1>
+          <p className="text-sm text-[#8a8f98] mt-1">Track contractor earnings and generate 1099-NEC forms</p>
         </div>
         <div className="flex items-center gap-3">
           <select
             value={year}
             onChange={(e) => setYear(Number(e.target.value))}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm font-medium bg-white"
+            className="border border-[#23252a] rounded-lg px-3 py-2 text-sm font-medium bg-[#0f1011]"
           >
             {years.map((y) => (
               <option key={y} value={y}>{y}</option>
@@ -138,72 +138,72 @@ export default function AdminTaxPage() {
           {/* Stats Cards */}
           {summary && (
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 hover:shadow-lg transition-all duration-300">
-                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Contractors &ge; $600</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">{summary.totalContractors}</p>
+              <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-5 hover:shadow-lg transition-all duration-300">
+                <p className="text-xs text-[#8a8f98] font-medium uppercase tracking-wide">Contractors &ge; $600</p>
+                <p className="text-2xl font-bold text-[#f7f8f8] mt-1">{summary.totalContractors}</p>
               </div>
-              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 hover:shadow-lg transition-all duration-300">
-                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Total Gross Earnings</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">{formatCents(summary.totalEarningsCents)}</p>
+              <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-5 hover:shadow-lg transition-all duration-300">
+                <p className="text-xs text-[#8a8f98] font-medium uppercase tracking-wide">Total Gross Earnings</p>
+                <p className="text-2xl font-bold text-[#f7f8f8] mt-1">{formatCents(summary.totalEarningsCents)}</p>
               </div>
-              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 hover:shadow-lg transition-all duration-300">
-                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">1099s Generated</p>
-                <p className="text-2xl font-bold text-emerald-600 mt-1">{summary.formsGenerated}</p>
+              <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-5 hover:shadow-lg transition-all duration-300">
+                <p className="text-xs text-[#8a8f98] font-medium uppercase tracking-wide">1099s Generated</p>
+                <p className="text-2xl font-bold text-[#34d399] mt-1">{summary.formsGenerated}</p>
               </div>
-              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 hover:shadow-lg transition-all duration-300">
-                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">1099s Pending</p>
-                <p className="text-2xl font-bold text-amber-600 mt-1">{summary.formsPending}</p>
+              <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-5 hover:shadow-lg transition-all duration-300">
+                <p className="text-xs text-[#8a8f98] font-medium uppercase tracking-wide">1099s Pending</p>
+                <p className="text-2xl font-bold text-[#fbbf24] mt-1">{summary.formsPending}</p>
               </div>
             </div>
           )}
 
           {/* Contractors Table */}
           {contractors.length === 0 ? (
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-12 text-center">
-              <p className="text-gray-500">No contractors with earnings &ge; $600 for {year}</p>
+            <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-12 text-center">
+              <p className="text-[#8a8f98]">No contractors with earnings &ge; $600 for {year}</p>
             </div>
           ) : (
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="bg-gray-50 text-left">
-                      <th className="px-5 py-3 font-medium text-gray-500">Contractor</th>
-                      <th className="px-5 py-3 font-medium text-gray-500 text-right">Gross Earned</th>
-                      <th className="px-5 py-3 font-medium text-gray-500 text-right">Net Earned</th>
-                      <th className="px-5 py-3 font-medium text-gray-500 text-right">Jobs</th>
-                      <th className="px-5 py-3 font-medium text-gray-500">Tax Info</th>
-                      <th className="px-5 py-3 font-medium text-gray-500 text-center">1099 Status</th>
-                      <th className="px-5 py-3 font-medium text-gray-500 text-center">Action</th>
+                    <tr className="bg-[#010102] text-left">
+                      <th className="px-5 py-3 font-medium text-[#8a8f98]">Contractor</th>
+                      <th className="px-5 py-3 font-medium text-[#8a8f98] text-right">Gross Earned</th>
+                      <th className="px-5 py-3 font-medium text-[#8a8f98] text-right">Net Earned</th>
+                      <th className="px-5 py-3 font-medium text-[#8a8f98] text-right">Jobs</th>
+                      <th className="px-5 py-3 font-medium text-[#8a8f98]">Tax Info</th>
+                      <th className="px-5 py-3 font-medium text-[#8a8f98] text-center">1099 Status</th>
+                      <th className="px-5 py-3 font-medium text-[#8a8f98] text-center">Action</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-[#23252a]">
                     {contractors.map((c) => (
-                      <tr key={c.contractorId} className="hover:bg-gray-50">
+                      <tr key={c.contractorId} className="hover:bg-[#141516]">
                         <td className="px-5 py-3">
-                          <p className="font-medium text-gray-900">{c.name}</p>
-                          <p className="text-xs text-gray-500">{c.email}</p>
+                          <p className="font-medium text-[#f7f8f8]">{c.name}</p>
+                          <p className="text-xs text-[#8a8f98]">{c.email}</p>
                         </td>
                         <td className="px-5 py-3 text-right font-medium">{formatCents(c.grossEarnedCents)}</td>
-                        <td className="px-5 py-3 text-right font-medium text-emerald-600">{formatCents(c.netEarnedCents)}</td>
+                        <td className="px-5 py-3 text-right font-medium text-[#34d399]">{formatCents(c.netEarnedCents)}</td>
                         <td className="px-5 py-3 text-right">{c.totalJobs}</td>
                         <td className="px-5 py-3">
                           {c.taxName ? (
                             <div>
-                              <p className="text-xs text-gray-700">{c.taxName}</p>
-                              {c.einOrSsnLast4 && <p className="text-xs text-gray-400">****{c.einOrSsnLast4}</p>}
+                              <p className="text-xs text-[#d0d6e0]">{c.taxName}</p>
+                              {c.einOrSsnLast4 && <p className="text-xs text-[#8a8f98]">****{c.einOrSsnLast4}</p>}
                             </div>
                           ) : (
-                            <span className="text-xs text-amber-600 font-medium">Missing</span>
+                            <span className="text-xs text-[#fbbf24] font-medium">Missing</span>
                           )}
                         </td>
                         <td className="px-5 py-3 text-center">
                           {c.formGenerated ? (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-medium">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#27a644]/10 text-[#34d399] rounded-full text-xs font-medium">
                               Generated
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-medium">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#fbbf24]/10 text-[#fbbf24] rounded-full text-xs font-medium">
                               Pending
                             </span>
                           )}

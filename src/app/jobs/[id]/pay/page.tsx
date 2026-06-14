@@ -62,7 +62,7 @@ function CheckoutForm({
           <span className="font-medium text-secondary">${((amountCents + creditAppliedCents) / 100).toFixed(2)}</span>
         </div>
         {creditAppliedCents > 0 && (
-          <div className="flex justify-between text-xs text-green-600">
+          <div className="flex justify-between text-xs text-[#34d399]">
             <span>Referral credit applied</span>
             <span>−${(creditAppliedCents / 100).toFixed(2)}</span>
           </div>
@@ -76,7 +76,7 @@ function CheckoutForm({
       <PaymentElement />
 
       {error && (
-        <div className="bg-red-50 text-red-700 text-sm p-3 rounded-lg">{error}</div>
+        <div className="bg-[#f87171]/10 text-[#f87171] text-sm p-3 rounded-lg">{error}</div>
       )}
 
       <Button type="submit" loading={paying} disabled={!stripe || !elements} className="w-full" size="lg">

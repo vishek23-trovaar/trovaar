@@ -119,13 +119,13 @@ function LoginForm() {
             <span className="w-full border-t border-border" />
           </div>
           <div className="relative flex justify-center text-xs">
-            <span className="bg-white px-3 text-muted">or continue with email</span>
+            <span className="bg-surface px-3 text-muted">or continue with email</span>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {displayError && (
-            <div role="alert" aria-live="polite" className="bg-red-50 text-danger text-sm p-3 rounded-lg">{displayError}</div>
+            <div role="alert" aria-live="polite" className="bg-[#f87171]/10 text-danger text-sm p-3 rounded-lg">{displayError}</div>
           )}
 
           {/* Email */}
@@ -156,7 +156,7 @@ function LoginForm() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
                 required
-                className="w-full px-4 py-2.5 pr-11 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted transition-colors duration-200"
+                className="w-full px-4 py-2.5 pr-11 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary placeholder-muted transition-colors duration-200"
               />
               <button
                 type="button"

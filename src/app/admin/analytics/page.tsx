@@ -71,20 +71,20 @@ function fmtTime(hours: number): string {
 
 function KpiCard({ label, value, sub }: { label: string; value: string; sub: string }) {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-lg transition-all duration-300">
-      <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">{label}</p>
-      <p className="text-2xl font-bold text-slate-800 mt-1">{value}</p>
-      <p className="text-xs text-slate-400 mt-1">{sub}</p>
+    <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] p-5 shadow-sm hover:shadow-lg transition-all duration-300">
+      <p className="text-xs font-medium text-[#8a8f98] uppercase tracking-wide">{label}</p>
+      <p className="text-2xl font-bold text-[#d0d6e0] mt-1">{value}</p>
+      <p className="text-xs text-[#8a8f98] mt-1">{sub}</p>
     </div>
   );
 }
 
 function TimeStatCard({ label, value, unit }: { label: string; value: string; unit: string }) {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm text-center hover:shadow-lg transition-all duration-300">
-      <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">{label}</p>
-      <p className="text-3xl font-bold text-slate-800 mt-2">{value}</p>
-      <p className="text-xs text-slate-400 mt-1">{unit}</p>
+    <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] p-5 shadow-sm text-center hover:shadow-lg transition-all duration-300">
+      <p className="text-xs font-medium text-[#8a8f98] uppercase tracking-wide">{label}</p>
+      <p className="text-3xl font-bold text-[#d0d6e0] mt-2">{value}</p>
+      <p className="text-xs text-[#8a8f98] mt-1">{unit}</p>
     </div>
   );
 }
@@ -93,7 +93,7 @@ function ExportButton({ onClick, label }: { onClick: () => void; label: string }
   return (
     <button
       onClick={onClick}
-      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#8a8f98] bg-[#0f1011] border border-[#23252a] rounded-lg hover:bg-[#141516] transition-colors"
     >
       <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3M3 17v3a2 2 0 002 2h14a2 2 0 002-2v-3" />
@@ -157,7 +157,7 @@ export default function AnalyticsPage() {
       <div className="p-8 flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-          <p className="text-slate-500 text-sm">Loading analytics...</p>
+          <p className="text-[#8a8f98] text-sm">Loading analytics...</p>
         </div>
       </div>
     );
@@ -166,7 +166,7 @@ export default function AnalyticsPage() {
   if (error || !data) {
     return (
       <div className="p-8">
-        <div className="bg-red-50 border border-red-200 rounded-2xl p-6 text-red-700">{error ?? "No data available"}</div>
+        <div className="bg-[#f87171]/10 border border-[#f87171]/30 rounded-2xl p-6 text-[#f87171]">{error ?? "No data available"}</div>
       </div>
     );
   }
@@ -217,30 +217,30 @@ export default function AnalyticsPage() {
     <div className="p-6 md:p-8 max-w-7xl space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Analytics</h1>
-        <p className="text-slate-500 text-sm mt-1">Platform performance and insights</p>
+        <h1 className="text-2xl font-bold text-[#f7f8f8]">Analytics</h1>
+        <p className="text-[#8a8f98] text-sm mt-1">Platform performance and insights</p>
       </div>
 
       {/* ── Section A: Job Funnel ──────────────────────────── */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+      <div className="bg-[#0f1011] rounded-2xl shadow-sm border border-[#23252a] p-6">
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h2 className="text-base font-semibold text-slate-800">Job Conversion Funnel</h2>
-            <p className="text-xs text-slate-400 mt-0.5">Posted → Got Bids → Accepted → Completed → Paid</p>
+            <h2 className="text-base font-semibold text-[#d0d6e0]">Job Conversion Funnel</h2>
+            <p className="text-xs text-[#8a8f98] mt-0.5">Posted → Got Bids → Accepted → Completed → Paid</p>
           </div>
           <ExportButton onClick={exportFunnel} label="Export CSV" />
         </div>
         {data.funnel.jobsPosted === 0 ? (
-          <p className="text-slate-400 text-sm py-4">No job data yet.</p>
+          <p className="text-[#8a8f98] text-sm py-4">No job data yet.</p>
         ) : (
           <div className="space-y-3">
             {funnelSteps.map((step, i) => (
               <div key={step.label}>
                 <div className="flex items-center gap-4">
                   <div className="w-24 shrink-0">
-                    <p className="text-xs text-slate-600 font-medium">{step.label}</p>
+                    <p className="text-xs text-[#8a8f98] font-medium">{step.label}</p>
                   </div>
-                  <div className="flex-1 bg-slate-100 rounded-full h-8 relative overflow-hidden">
+                  <div className="flex-1 bg-[#141516] rounded-full h-8 relative overflow-hidden">
                     <div
                       className="h-full rounded-full flex items-center px-3 transition-all duration-500"
                       style={{
@@ -256,15 +256,15 @@ export default function AnalyticsPage() {
                     </div>
                   </div>
                   <div className="w-20 text-right shrink-0">
-                    <span className="text-sm font-semibold text-slate-700">{step.pct}%</span>
+                    <span className="text-sm font-semibold text-[#d0d6e0]">{step.pct}%</span>
                     {step.pct <= 10 && step.count > 0 && (
-                      <span className="text-xs text-slate-400 ml-1">({step.count})</span>
+                      <span className="text-xs text-[#8a8f98] ml-1">({step.count})</span>
                     )}
                   </div>
                 </div>
                 {i < dropOffs.length && dropOffs[i] > 0 && (
                   <div className="ml-28 mt-0.5 mb-1">
-                    <span className="text-[10px] text-red-400 font-medium">
+                    <span className="text-[10px] text-[#f87171] font-medium">
                       {dropOffs[i]}% drop-off
                     </span>
                   </div>
@@ -284,11 +284,11 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Revenue Trend Chart */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+      <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] p-6 shadow-sm">
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h2 className="font-semibold text-slate-800">Daily Revenue (Last 30 Days)</h2>
-            <p className="text-xs text-slate-400 mt-0.5">20% platform markup per accepted bid</p>
+            <h2 className="font-semibold text-[#d0d6e0]">Daily Revenue (Last 30 Days)</h2>
+            <p className="text-xs text-[#8a8f98] mt-0.5">20% platform markup per accepted bid</p>
           </div>
           <ExportButton onClick={exportRevenue} label="Export CSV" />
         </div>
@@ -308,11 +308,11 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Revenue by Category */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-        <h2 className="font-semibold text-slate-800 mb-1">Revenue by Category</h2>
-        <p className="text-xs text-slate-400 mb-5">Platform earnings by job category</p>
+      <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] p-6 shadow-sm">
+        <h2 className="font-semibold text-[#d0d6e0] mb-1">Revenue by Category</h2>
+        <p className="text-xs text-[#8a8f98] mb-5">Platform earnings by job category</p>
         {catData.length === 0 ? (
-          <p className="text-slate-400 text-sm py-8 text-center">No accepted bids yet.</p>
+          <p className="text-[#8a8f98] text-sm py-8 text-center">No accepted bids yet.</p>
         ) : (
           <ResponsiveContainer width="100%" height={Math.max(catData.length * 50, 150)}>
             <BarChart data={catData} layout="vertical" margin={{ top: 5, right: 40, left: 100, bottom: 5 }}>
@@ -338,11 +338,11 @@ export default function AnalyticsPage() {
       </div>
 
       {/* User Growth Chart */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+      <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] p-6 shadow-sm">
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h2 className="font-semibold text-slate-800">Signups Per Day (Last 30 Days)</h2>
-            <p className="text-xs text-slate-400 mt-0.5">Consumer vs Contractor registrations</p>
+            <h2 className="font-semibold text-[#d0d6e0]">Signups Per Day (Last 30 Days)</h2>
+            <p className="text-xs text-[#8a8f98] mt-0.5">Consumer vs Contractor registrations</p>
           </div>
           <ExportButton onClick={exportUserGrowth} label="Export CSV" />
         </div>
@@ -370,7 +370,7 @@ export default function AnalyticsPage() {
 
       {/* ── Section D: LTV & Churn Metrics ─────────────────── */}
       <div>
-        <h2 className="text-lg font-semibold text-slate-800 mb-4">LTV & Engagement</h2>
+        <h2 className="text-lg font-semibold text-[#d0d6e0] mb-4">LTV & Engagement</h2>
         <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
           <KpiCard
             label="Avg Customer LTV"
@@ -397,7 +397,7 @@ export default function AnalyticsPage() {
 
       {/* ── Section E: Time-to-Completion Stats ────────────── */}
       <div>
-        <h2 className="text-lg font-semibold text-slate-800 mb-4">Time-to-Completion</h2>
+        <h2 className="text-lg font-semibold text-[#d0d6e0] mb-4">Time-to-Completion</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <TimeStatCard
             label="Post to First Bid"

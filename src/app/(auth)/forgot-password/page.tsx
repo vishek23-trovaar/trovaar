@@ -57,9 +57,9 @@ export default function ForgotPasswordPage() {
 
         {submitted ? (
           <div className="text-center space-y-4">
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <p className="text-green-800 text-sm font-medium">Check your email</p>
-              <p className="text-green-700 text-sm mt-1">
+            <div className="bg-[#27a644]/10 border border-[#27a644]/30 rounded-lg p-4">
+              <p className="text-[#34d399] text-sm font-medium">Check your email</p>
+              <p className="text-[#34d399] text-sm mt-1">
                 If an account exists with that email, you&apos;ll receive reset instructions shortly.
               </p>
             </div>
@@ -80,7 +80,7 @@ export default function ForgotPasswordPage() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div role="alert" aria-live="polite" className="bg-red-50 text-danger text-sm p-3 rounded-lg">
+              <div role="alert" aria-live="polite" className="bg-[#f87171]/10 text-danger text-sm p-3 rounded-lg">
                 {error}
               </div>
             )}

@@ -53,7 +53,7 @@ export default function BulkActionBar({ count, onClear, actions, onAction }: Pro
         <div className="w-px h-5 bg-slate-600" />
         <button
           onClick={onClear}
-          className="text-xs text-slate-400 hover:text-white transition-colors"
+          className="text-xs text-[#8a8f98] hover:text-white transition-colors"
         >
           Clear
         </button>

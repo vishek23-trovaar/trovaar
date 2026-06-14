@@ -57,10 +57,10 @@ function formatDate(dateStr: string | null): string {
 }
 
 const STATUS_STYLES: Record<string, string> = {
-  pending: "bg-yellow-100 text-yellow-700",
-  confirmed: "bg-blue-100 text-blue-700",
-  completed: "bg-green-100 text-green-700",
-  cancelled: "bg-red-100 text-red-600",
+  pending: "bg-[#fbbf24]/10 text-[#fbbf24]",
+  confirmed: "bg-[#3B82F6]/10 text-[#60A5FA]",
+  completed: "bg-[#27a644]/10 text-[#34d399]",
+  cancelled: "bg-[#f87171]/10 text-[#f87171]",
 };
 
 export default function ClientSubscriptionsPage() {
@@ -188,10 +188,10 @@ export default function ClientSubscriptionsPage() {
   if (!subscription) {
     return (
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center">
+        <div className="bg-[#0f1011] rounded-2xl shadow-sm border border-[#23252a] p-12 text-center">
           <div className="text-5xl mb-5">🏠</div>
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">No active subscription</h2>
-          <p className="text-slate-500 mb-8 max-w-sm mx-auto">
+          <h2 className="text-2xl font-bold text-[#f7f8f8] mb-2">No active subscription</h2>
+          <p className="text-[#8a8f98] mb-8 max-w-sm mx-auto">
             Subscribe to a Home Health plan to get recurring maintenance visits at fixed prices.
           </p>
           <Link
@@ -205,9 +205,9 @@ export default function ClientSubscriptionsPage() {
         {/* Plan comparison summary */}
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
-            { name: "Basic Care", price: "$49", visits: 2, color: "bg-slate-50 border-slate-200" },
-            { name: "Home Health", price: "$99", visits: 4, color: "bg-emerald-50 border-emerald-300", badge: "Most popular" },
-            { name: "Home Guard", price: "$189", visits: 8, color: "bg-indigo-50 border-indigo-200" },
+            { name: "Basic Care", price: "$49", visits: 2, color: "bg-[#010102] border-[#23252a]" },
+            { name: "Home Health", price: "$99", visits: 4, color: "bg-[#27a644]/10 border-[#27a644]/40", badge: "Most popular" },
+            { name: "Home Guard", price: "$189", visits: 8, color: "bg-[#3B82F6]/10 border-[#3B82F6]/30" },
           ].map((p, i) => (
             <ScrollReveal key={p.name} delay={i * 100}>
             <div className={`rounded-2xl border p-5 ${p.color} relative backdrop-blur-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300`}>
@@ -216,9 +216,9 @@ export default function ClientSubscriptionsPage() {
                   {p.badge}
                 </span>
               )}
-              <div className="font-bold text-slate-900">{p.name}</div>
-              <div className="text-2xl font-extrabold text-slate-900 mt-1">{p.price}<span className="text-sm font-normal text-slate-400">/mo</span></div>
-              <div className="text-sm text-slate-600 mt-1">{p.visits} visits/month</div>
+              <div className="font-bold text-[#f7f8f8]">{p.name}</div>
+              <div className="text-2xl font-extrabold text-[#f7f8f8] mt-1">{p.price}<span className="text-sm font-normal text-[#8a8f98]">/mo</span></div>
+              <div className="text-sm text-[#8a8f98] mt-1">{p.visits} visits/month</div>
             </div>
             </ScrollReveal>
           ))}
@@ -249,31 +249,31 @@ export default function ClientSubscriptionsPage() {
 
       {/* Subscription card */}
       <ScrollReveal>
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6 hover:shadow-md transition-all duration-300">
+      <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-6 mb-6 hover:shadow-md transition-all duration-300">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-lg font-bold text-slate-900">{subscription.plan_name}</span>
+              <span className="text-lg font-bold text-[#f7f8f8]">{subscription.plan_name}</span>
               {subscription.plan_priority_booking ? (
-                <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 text-xs font-semibold px-2 py-0.5 rounded-full">
+                <span className="inline-flex items-center gap-1 bg-[#27a644]/10 text-[#34d399] text-xs font-semibold px-2 py-0.5 rounded-full">
                   ⚡ Priority
                 </span>
               ) : null}
               {subscription.cancel_at_period_end ? (
-                <span className="bg-amber-100 text-amber-700 text-xs font-semibold px-2 py-0.5 rounded-full">
+                <span className="bg-[#fbbf24]/10 text-[#fbbf24] text-xs font-semibold px-2 py-0.5 rounded-full">
                   Cancels {formatDate(subscription.current_period_end)}
                 </span>
               ) : (
-                <span className="bg-green-100 text-green-700 text-xs font-semibold px-2 py-0.5 rounded-full">
+                <span className="bg-[#27a644]/10 text-[#34d399] text-xs font-semibold px-2 py-0.5 rounded-full">
                   Active
                 </span>
               )}
             </div>
             {subscription.plan_description && (
-              <p className="text-sm text-slate-500 mb-2">{subscription.plan_description}</p>
+              <p className="text-sm text-[#8a8f98] mb-2">{subscription.plan_description}</p>
             )}
-            <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
-              <span className="font-semibold text-slate-900">{formatPrice(subscription.plan_price_cents)}/month</span>
+            <div className="flex flex-wrap items-center gap-4 text-sm text-[#8a8f98]">
+              <span className="font-semibold text-[#f7f8f8]">{formatPrice(subscription.plan_price_cents)}/month</span>
               <span>Renews {formatDate(subscription.current_period_end)}</span>
             </div>
           </div>
@@ -281,25 +281,25 @@ export default function ClientSubscriptionsPage() {
           <button
             onClick={() => setShowModal(true)}
             disabled={visitsRemaining === 0}
-            className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-semibold px-5 py-2.5 rounded-xl transition-colors text-sm shrink-0 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-[#18191a] disabled:text-[#8a8f98] text-white font-semibold px-5 py-2.5 rounded-xl transition-colors text-sm shrink-0 disabled:cursor-not-allowed"
           >
             + Schedule a Visit
           </button>
         </div>
 
         {/* Visit usage */}
-        <div className="mt-5 pt-5 border-t border-gray-100">
+        <div className="mt-5 pt-5 border-t border-[#23252a]">
           <div className="flex items-center justify-between text-sm mb-2">
-            <span className="text-slate-600 font-medium">Visits this period</span>
-            <span className="font-bold text-slate-900">{visitsUsed} of {visitsTotal} used</span>
+            <span className="text-[#8a8f98] font-medium">Visits this period</span>
+            <span className="font-bold text-[#f7f8f8]">{visitsUsed} of {visitsTotal} used</span>
           </div>
-          <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+          <div className="h-2 bg-[#141516] rounded-full overflow-hidden">
             <div
               className="h-full bg-emerald-500 rounded-full transition-all"
               style={{ width: `${progressPct}%` }}
             />
           </div>
-          <p className="text-xs text-slate-400 mt-1.5">
+          <p className="text-xs text-[#8a8f98] mt-1.5">
             {visitsRemaining} visit{visitsRemaining !== 1 ? "s" : ""} remaining until {formatDate(subscription.current_period_end)}
           </p>
         </div>
@@ -309,9 +309,9 @@ export default function ClientSubscriptionsPage() {
       {/* Upcoming visits */}
       <ScrollReveal delay={100}>
       <div className="mb-6">
-        <h2 className="text-base font-bold text-slate-900 mb-3">Upcoming visits</h2>
+        <h2 className="text-base font-bold text-[#f7f8f8] mb-3">Upcoming visits</h2>
         {upcomingVisits.length === 0 ? (
-          <div className="bg-white rounded-xl border border-dashed border-slate-200 p-8 text-center text-slate-400 text-sm">
+          <div className="bg-[#0f1011] rounded-xl border border-dashed border-[#23252a] p-8 text-center text-[#8a8f98] text-sm">
             No upcoming visits. Schedule one above.
           </div>
         ) : (
@@ -319,20 +319,20 @@ export default function ClientSubscriptionsPage() {
             {upcomingVisits.map((v) => (
               <div
                 key={v.id}
-                className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 flex items-center gap-4 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
+                className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4 flex items-center gap-4 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
               >
-                <div className="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center text-xl shrink-0">
+                <div className="w-10 h-10 bg-[#27a644]/10 rounded-lg flex items-center justify-center text-xl shrink-0">
                   {v.service_icon}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium text-slate-900 text-sm">{v.service_name}</div>
-                  <div className="text-xs text-slate-500 mt-0.5">
+                  <div className="font-medium text-[#f7f8f8] text-sm">{v.service_name}</div>
+                  <div className="text-xs text-[#8a8f98] mt-0.5">
                     {v.scheduled_date ? formatDate(v.scheduled_date) : "Date TBD"}
                     {v.notes ? ` · ${v.notes}` : ""}
                   </div>
                 </div>
                 <span
-                  className={`text-xs font-semibold px-2 py-1 rounded-full capitalize shrink-0 ${STATUS_STYLES[v.status] ?? "bg-slate-100 text-slate-600"}`}
+                  className={`text-xs font-semibold px-2 py-1 rounded-full capitalize shrink-0 ${STATUS_STYLES[v.status] ?? "bg-[#141516] text-[#8a8f98]"}`}
                 >
                   {v.status}
                 </span>
@@ -347,24 +347,24 @@ export default function ClientSubscriptionsPage() {
       {pastVisits.length > 0 && (
         <ScrollReveal delay={200}>
         <div className="mb-8">
-          <h2 className="text-base font-bold text-slate-900 mb-3">Past visits</h2>
+          <h2 className="text-base font-bold text-[#f7f8f8] mb-3">Past visits</h2>
           <div className="space-y-2">
             {pastVisits.map((v) => (
               <div
                 key={v.id}
-                className="bg-white rounded-2xl border border-slate-100 p-4 flex items-center gap-4 opacity-75 hover:opacity-100 transition-all duration-300"
+                className="bg-[#0f1011] rounded-2xl border border-[#23252a] p-4 flex items-center gap-4 opacity-75 hover:opacity-100 transition-all duration-300"
               >
-                <div className="w-9 h-9 bg-slate-50 rounded-lg flex items-center justify-center text-lg shrink-0">
+                <div className="w-9 h-9 bg-[#141516] rounded-lg flex items-center justify-center text-lg shrink-0">
                   {v.service_icon}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium text-slate-700 text-sm">{v.service_name}</div>
-                  <div className="text-xs text-slate-400 mt-0.5">
+                  <div className="font-medium text-[#d0d6e0] text-sm">{v.service_name}</div>
+                  <div className="text-xs text-[#8a8f98] mt-0.5">
                     {v.scheduled_date ? formatDate(v.scheduled_date) : formatDate(v.created_at)}
                   </div>
                 </div>
                 <span
-                  className={`text-xs font-semibold px-2 py-1 rounded-full capitalize shrink-0 ${STATUS_STYLES[v.status] ?? "bg-slate-100 text-slate-600"}`}
+                  className={`text-xs font-semibold px-2 py-1 rounded-full capitalize shrink-0 ${STATUS_STYLES[v.status] ?? "bg-[#141516] text-[#8a8f98]"}`}
                 >
                   {v.status}
                 </span>
@@ -377,14 +377,14 @@ export default function ClientSubscriptionsPage() {
 
       {/* Cancel subscription */}
       {!subscription.cancel_at_period_end && (
-        <div className="border-t border-slate-100 pt-6">
-          <h3 className="text-sm font-semibold text-slate-700 mb-1">Cancel subscription</h3>
-          <p className="text-xs text-slate-400 mb-3">
+        <div className="border-t border-[#23252a] pt-6">
+          <h3 className="text-sm font-semibold text-[#d0d6e0] mb-1">Cancel subscription</h3>
+          <p className="text-xs text-[#8a8f98] mb-3">
             Your plan will remain active until {formatDate(subscription.current_period_end)}, then will not renew.
           </p>
           <button
             onClick={() => setShowCancelConfirm(true)}
-            className="text-sm text-red-500 hover:text-red-600 font-medium transition-colors"
+            className="text-sm text-[#f87171] hover:text-[#fca5a5] font-medium transition-colors"
           >
             Cancel my subscription
           </button>
@@ -392,7 +392,7 @@ export default function ClientSubscriptionsPage() {
       )}
 
       {subscription.cancel_at_period_end && (
-        <div className="mt-4 bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
+        <div className="mt-4 bg-[#fbbf24]/10 border border-[#fbbf24]/30 rounded-xl p-4 text-sm text-[#fbbf24]">
           Your plan is set to cancel on <strong>{formatDate(subscription.current_period_end)}</strong>. You can still schedule visits until then.
         </div>
       )}
@@ -400,12 +400,12 @@ export default function ClientSubscriptionsPage() {
       {/* Schedule visit modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+          <div className="bg-[#0f1011] border border-[#23252a] rounded-2xl shadow-2xl w-full max-w-md p-6">
             <div className="flex items-center justify-between mb-5">
-              <h3 className="text-lg font-bold text-slate-900">Schedule a Visit</h3>
+              <h3 className="text-lg font-bold text-[#f7f8f8]">Schedule a Visit</h3>
               <button
                 onClick={() => { setShowModal(false); setScheduleError(""); }}
-                className="text-slate-400 hover:text-slate-600 text-xl leading-none"
+                className="text-[#8a8f98] hover:text-[#d0d6e0] text-xl leading-none"
               >
                 ×
               </button>
@@ -413,11 +413,11 @@ export default function ClientSubscriptionsPage() {
 
             <form onSubmit={handleScheduleVisit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Service</label>
+                <label className="block text-sm font-medium text-[#d0d6e0] mb-1">Service</label>
                 <select
                   value={scheduleForm.serviceId}
                   onChange={(e) => setScheduleForm((f) => ({ ...f, serviceId: e.target.value }))}
-                  className="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                  className="w-full bg-[#141516] border border-[#23252a] rounded-lg px-3 py-2.5 text-sm text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-emerald-400"
                   required
                 >
                   <option value="">Select a service…</option>
@@ -430,39 +430,39 @@ export default function ClientSubscriptionsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Preferred date</label>
+                <label className="block text-sm font-medium text-[#d0d6e0] mb-1">Preferred date</label>
                 <input
                   type="date"
                   min={today}
                   value={scheduleForm.scheduledDate}
                   onChange={(e) => setScheduleForm((f) => ({ ...f, scheduledDate: e.target.value }))}
-                  className="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                  className="w-full bg-[#141516] border border-[#23252a] rounded-lg px-3 py-2.5 text-sm text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-emerald-400"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Notes <span className="text-slate-400 font-normal">(optional)</span>
+                <label className="block text-sm font-medium text-[#d0d6e0] mb-1">
+                  Notes <span className="text-[#8a8f98] font-normal">(optional)</span>
                 </label>
                 <textarea
                   value={scheduleForm.notes}
                   onChange={(e) => setScheduleForm((f) => ({ ...f, notes: e.target.value }))}
                   placeholder="Any special instructions or access details…"
                   rows={3}
-                  className="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-400 resize-none"
+                  className="w-full bg-[#141516] border border-[#23252a] rounded-lg px-3 py-2.5 text-sm text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-emerald-400 resize-none"
                 />
               </div>
 
               {scheduleError && (
-                <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{scheduleError}</p>
+                <p className="text-sm text-[#f87171] bg-[#f87171]/10 rounded-lg px-3 py-2">{scheduleError}</p>
               )}
 
               <div className="flex gap-3 pt-1">
                 <button
                   type="button"
                   onClick={() => { setShowModal(false); setScheduleError(""); }}
-                  className="flex-1 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+                  className="flex-1 py-2.5 rounded-xl border border-[#23252a] text-sm font-medium text-[#8a8f98] hover:bg-[#141516] transition-colors"
                 >
                   Cancel
                 </button>
@@ -482,17 +482,17 @@ export default function ClientSubscriptionsPage() {
       {/* Cancel confirmation modal */}
       {showCancelConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">
+          <div className="bg-[#0f1011] border border-[#23252a] rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">
             <div className="text-4xl mb-4">⚠️</div>
-            <h3 className="text-lg font-bold text-slate-900 mb-2">Cancel subscription?</h3>
-            <p className="text-sm text-slate-500 mb-6">
+            <h3 className="text-lg font-bold text-[#f7f8f8] mb-2">Cancel subscription?</h3>
+            <p className="text-sm text-[#8a8f98] mb-6">
               Your plan will remain active until{" "}
               <strong>{formatDate(subscription.current_period_end)}</strong> and will not renew after that.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowCancelConfirm(false)}
-                className="flex-1 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+                className="flex-1 py-2.5 rounded-xl border border-[#23252a] text-sm font-medium text-[#8a8f98] hover:bg-[#141516] transition-colors"
               >
                 Keep plan
               </button>

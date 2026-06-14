@@ -35,12 +35,12 @@ function timeAgo(dateStr: string): string {
 
 function BidStatusBadge({ status }: { status: string }) {
   const map: Record<string, { bg: string; label: string }> = {
-    pending:   { bg: "bg-yellow-100 text-yellow-700", label: "Pending" },
-    accepted:  { bg: "bg-green-100 text-green-700",   label: "Accepted ✓" },
-    rejected:  { bg: "bg-red-100 text-red-700",       label: "Declined" },
-    withdrawn: { bg: "bg-gray-100 text-gray-500",     label: "Withdrawn" },
+    pending:   { bg: "bg-[#fbbf24]/10 text-[#fbbf24]", label: "Pending" },
+    accepted:  { bg: "bg-[#27a644]/10 text-[#34d399]", label: "Accepted ✓" },
+    rejected:  { bg: "bg-[#f87171]/10 text-[#f87171]", label: "Declined" },
+    withdrawn: { bg: "bg-[#141516] text-[#8a8f98]",    label: "Withdrawn" },
   };
-  const s = map[status] ?? { bg: "bg-gray-100 text-gray-600", label: status };
+  const s = map[status] ?? { bg: "bg-[#141516] text-[#8a8f98]", label: status };
   return (
     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${s.bg}`}>
       {s.label}
@@ -141,20 +141,20 @@ export default function ContractorBidsPage() {
       <ScrollReveal delay={0}>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         {[
-          { key: "all",      label: "Total Bids",   color: "text-gray-800" },
-          { key: "pending",  label: "Pending",       color: "text-yellow-600" },
-          { key: "accepted", label: "Accepted",      color: "text-green-600" },
-          { key: "rejected", label: "Declined",      color: "text-red-600" },
+          { key: "all",      label: "Total Bids",   color: "text-[#d0d6e0]" },
+          { key: "pending",  label: "Pending",       color: "text-[#fbbf24]" },
+          { key: "accepted", label: "Accepted",      color: "text-[#34d399]" },
+          { key: "rejected", label: "Declined",      color: "text-[#f87171]" },
         ].map((s) => (
           <button
             key={s.key}
             onClick={() => setFilter(s.key as typeof filter)}
-            className={`bg-white rounded-2xl border p-4 text-center transition-all duration-300 cursor-pointer hover:shadow-lg hover:-translate-y-0.5 ${
-              filter === s.key ? "border-primary shadow-sm" : "border-gray-100 hover:border-gray-200"
+            className={`bg-[#0f1011] rounded-2xl border p-4 text-center transition-all duration-300 cursor-pointer hover:shadow-lg hover:-translate-y-0.5 ${
+              filter === s.key ? "border-primary shadow-sm" : "border-[#23252a] hover:border-[#18191a]"
             }`}
           >
             <div className={`text-2xl font-bold ${s.color}`}>{counts[s.key as keyof typeof counts]}</div>
-            <div className="text-xs text-gray-500 mt-1">{s.label}</div>
+            <div className="text-xs text-[#8a8f98] mt-1">{s.label}</div>
           </button>
         ))}
       </div>
@@ -166,12 +166,12 @@ export default function ContractorBidsPage() {
           <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
         </div>
       ) : filtered.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-12 text-center">
+        <div className="bg-[#0f1011] rounded-xl border border-[#23252a] shadow-sm p-12 text-center">
           <div className="text-4xl mb-3">🏷</div>
-          <p className="font-semibold text-gray-800">
+          <p className="font-semibold text-[#d0d6e0]">
             {filter === "all" ? "No bids submitted yet" : `No ${filter} bids`}
           </p>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-[#8a8f98] mt-1">
             {filter === "all"
               ? "Browse available jobs and submit your first bid."
               : "Change the filter above to see other bids."}
@@ -187,22 +187,22 @@ export default function ContractorBidsPage() {
         </div>
       ) : (
         <ScrollReveal delay={100}>
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-          <div className="divide-y divide-gray-50">
+        <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm overflow-hidden">
+          <div className="divide-y divide-[#23252a]">
             {filtered.map((bid) => (
-              <div key={bid.id} className="p-4 hover:bg-gray-50/60 transition-all duration-200">
+              <div key={bid.id} className="p-4 hover:bg-[#141516] transition-all duration-200">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-start gap-3 min-w-0">
-                    <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center text-xl shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-[#141516] flex items-center justify-center text-xl shrink-0">
                       {getCategoryIcon(bid.job_category)}
                     </div>
                     <div className="min-w-0">
-                      <p className="font-semibold text-gray-900 truncate">{bid.job_title}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">
+                      <p className="font-semibold text-[#f7f8f8] truncate">{bid.job_title}</p>
+                      <p className="text-xs text-[#8a8f98] mt-0.5">
                         {getCategoryLabel(bid.job_category)} · Submitted {timeAgo(bid.created_at)}
                       </p>
                       {bid.note && (
-                        <p className="text-xs text-gray-500 mt-1 italic truncate max-w-sm">
+                        <p className="text-xs text-[#8a8f98] mt-1 italic truncate max-w-sm">
                           &ldquo;{bid.note}&rdquo;
                         </p>
                       )}
@@ -211,12 +211,12 @@ export default function ContractorBidsPage() {
 
                   <div className="flex flex-col items-end gap-1.5 shrink-0">
                     <BidStatusBadge status={bid.status} />
-                    <p className="text-sm font-bold text-gray-900">
+                    <p className="text-sm font-bold text-[#f7f8f8]">
                       ${(bid.price / 100).toLocaleString("en-US", { minimumFractionDigits: 2 })}
                     </p>
                     <Link
                       href={`/jobs/${bid.job_id}`}
-                      className="text-xs font-medium text-blue-600 hover:text-blue-700 hover:underline"
+                      className="text-xs font-medium text-[#60A5FA] hover:text-[#93c5fd] hover:underline"
                     >
                       {bid.status === "accepted" ? "Open Job →" : "View →"}
                     </Link>

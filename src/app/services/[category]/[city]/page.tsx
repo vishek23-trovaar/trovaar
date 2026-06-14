@@ -62,7 +62,7 @@ export default async function ServiceCityPage({ params }: Props) {
   const cityLabel = `${city.name}, ${city.stateAbbr}`;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#010102]">
       {/* Hero */}
       <section className="bg-gradient-to-br from-blue-900 to-blue-700 text-white py-16 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -92,13 +92,13 @@ export default async function ServiceCityPage({ params }: Props) {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/jobs/new"
-              className="inline-block bg-white text-blue-800 font-semibold px-8 py-3 rounded-lg shadow hover:bg-blue-50 transition-colors text-lg"
+              className="inline-block bg-[#0f1011] text-[#60A5FA] font-semibold px-8 py-3 rounded-lg shadow hover:bg-[#3B82F6]/15 transition-colors text-lg"
             >
               Post a {category.name} Job
             </Link>
             <Link
               href={`/jobs?category=${catSlug}`}
-              className="inline-block bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg shadow hover:bg-blue-500 transition-colors border border-blue-400 text-lg"
+              className="inline-block bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg shadow hover:bg-blue-500 transition-colors border border-[#3B82F6]/50 text-lg"
             >
               Find {category.name} Jobs
             </Link>
@@ -108,13 +108,13 @@ export default async function ServiceCityPage({ params }: Props) {
 
       {/* About This Service */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
+        <h2 className="text-2xl font-bold text-[#f7f8f8] mb-4">
           {category.name} in {city.name}
         </h2>
-        <p className="text-gray-700 leading-relaxed text-lg">
+        <p className="text-[#d0d6e0] leading-relaxed text-lg">
           {category.description}
         </p>
-        <p className="text-gray-600 leading-relaxed mt-4">
+        <p className="text-[#8a8f98] leading-relaxed mt-4">
           Whether you need a quick repair or a major project in {cityLabel},
           Trovaar makes it easy to find qualified {category.name.toLowerCase()}{" "}
           professionals who are ready to compete for your business. Every
@@ -124,9 +124,9 @@ export default async function ServiceCityPage({ params }: Props) {
       </section>
 
       {/* How It Works */}
-      <section className="bg-white py-16 border-t border-gray-200">
+      <section className="bg-[#0f1011] py-16 border-t border-[#23252a]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-10 text-center">
+          <h2 className="text-2xl font-bold text-[#f7f8f8] mb-10 text-center">
             How Trovaar Works
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -150,14 +150,14 @@ export default async function ServiceCityPage({ params }: Props) {
                 desc: "Choose the pro that fits your budget and timeline. Pay securely through Trovaar escrow protection.",
               },
             ].map((item) => (
-              <div key={item.step} className="text-center p-6 rounded-2xl hover:bg-blue-50/50 transition-colors duration-300">
+              <div key={item.step} className="text-center p-6 rounded-2xl hover:bg-[#3B82F6]/15 transition-colors duration-300">
                 <div className="w-14 h-14 bg-blue-800 text-white rounded-2xl flex items-center justify-center text-xl font-bold mx-auto mb-4 shadow-md">
                   {item.step}
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <h3 className="text-lg font-semibold text-[#f7f8f8] mb-2">
                   {item.title}
                 </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
+                <p className="text-[#8a8f98] text-sm leading-relaxed">
                   {item.desc}
                 </p>
               </div>
@@ -175,9 +175,9 @@ export default async function ServiceCityPage({ params }: Props) {
       </section>
 
       {/* Trust Signals */}
-      <section className="bg-gray-50 py-16 border-t border-gray-200">
+      <section className="bg-[#010102] py-16 border-t border-[#23252a]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-10 text-center">
+          <h2 className="text-2xl font-bold text-[#f7f8f8] mb-10 text-center">
             Why {city.name} Homeowners Trust Trovaar
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
@@ -200,13 +200,13 @@ export default async function ServiceCityPage({ params }: Props) {
             ].map((item) => (
               <div
                 key={item.title}
-                className="bg-white rounded-2xl border border-gray-200 p-6 text-center shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+                className="bg-[#0f1011] rounded-2xl border border-[#23252a] p-6 text-center shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
               >
                 <div className="text-3xl mb-3">{item.icon}</div>
-                <h3 className="font-semibold text-gray-900 mb-2">
+                <h3 className="font-semibold text-[#f7f8f8] mb-2">
                   {item.title}
                 </h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
+                <p className="text-sm text-[#8a8f98] leading-relaxed">
                   {item.desc}
                 </p>
               </div>
@@ -217,18 +217,18 @@ export default async function ServiceCityPage({ params }: Props) {
 
       {/* FAQ */}
       {category.faqs.length > 0 && (
-        <section className="bg-white py-16 border-t border-gray-200">
+        <section className="bg-[#0f1011] py-16 border-t border-[#23252a]">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-10 text-center">
+            <h2 className="text-2xl font-bold text-[#f7f8f8] mb-10 text-center">
               {category.name} FAQ for {city.name} Homeowners
             </h2>
             <div className="space-y-6">
               {category.faqs.map((faq, i) => (
-                <div key={i} className="border-b border-gray-200 pb-6 hover:pl-2 transition-all duration-200">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <div key={i} className="border-b border-[#23252a] pb-6 hover:pl-2 transition-all duration-200">
+                  <h3 className="text-lg font-semibold text-[#f7f8f8] mb-2">
                     {faq.question}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+                  <p className="text-[#8a8f98] leading-relaxed">{faq.answer}</p>
                 </div>
               ))}
             </div>
@@ -237,9 +237,9 @@ export default async function ServiceCityPage({ params }: Props) {
       )}
 
       {/* Browse Other Cities */}
-      <section className="bg-gray-50 py-16 border-t border-gray-200">
+      <section className="bg-[#010102] py-16 border-t border-[#23252a]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+          <h2 className="text-2xl font-bold text-[#f7f8f8] mb-8 text-center">
             {category.name} Services in Other Cities
           </h2>
           <div className="flex flex-wrap justify-center gap-3">
@@ -247,7 +247,7 @@ export default async function ServiceCityPage({ params }: Props) {
               <Link
                 key={c.slug}
                 href={`/services/${catSlug}/${c.slug}`}
-                className="text-sm bg-white border border-gray-200 rounded-full px-4 py-2 text-gray-700 hover:border-blue-300 hover:text-blue-800 hover:shadow-sm transition-all duration-200"
+                className="text-sm bg-[#0f1011] border border-[#23252a] rounded-full px-4 py-2 text-[#d0d6e0] hover:border-[#3B82F6]/40 hover:text-[#60A5FA] hover:shadow-sm transition-all duration-200"
               >
                 {c.name}, {c.stateAbbr}
               </Link>
@@ -268,7 +268,7 @@ export default async function ServiceCityPage({ params }: Props) {
           </p>
           <Link
             href="/jobs/new"
-            className="inline-block bg-white text-blue-800 font-semibold px-10 py-4 rounded-lg shadow hover:bg-blue-50 transition-colors text-lg"
+            className="inline-block bg-[#0f1011] text-[#60A5FA] font-semibold px-10 py-4 rounded-lg shadow hover:bg-[#3B82F6]/15 transition-colors text-lg"
           >
             Post Your {category.name} Job Now
           </Link>

@@ -179,7 +179,7 @@ export default function HelpRequestsPage() {
 
                 {/* Feedback */}
                 {fb && (
-                  <p className={`text-xs mb-2 px-3 py-1.5 rounded-lg ${fb.startsWith("✅") ? "bg-green-50 text-green-700" : "bg-red-50 text-danger"}`}>
+                  <p className={`text-xs mb-2 px-3 py-1.5 rounded-lg ${fb.startsWith("✅") ? "bg-[#27a644]/10 text-[#34d399]" : "bg-[#f87171]/10 text-danger"}`}>
                     {fb}
                   </p>
                 )}
@@ -192,7 +192,7 @@ export default function HelpRequestsPage() {
                       onChange={e => setMessage(prev => ({ ...prev, [req.id]: e.target.value }))}
                       placeholder="Optional: introduce yourself or describe relevant experience…"
                       rows={3}
-                      className="w-full px-3 py-2 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white resize-none"
+                      className="w-full px-3 py-2 rounded-lg border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 bg-[#0f1011] resize-none"
                     />
                   </div>
                 )}
@@ -200,12 +200,12 @@ export default function HelpRequestsPage() {
                 {/* Action buttons */}
                 <div className="flex gap-2">
                   {accepted ? (
-                    <span className="text-sm font-semibold text-green-700 bg-green-50 px-3 py-1.5 rounded-lg border border-green-200">
+                    <span className="text-sm font-semibold text-[#34d399] bg-[#27a644]/10 px-3 py-1.5 rounded-lg border border-[#27a644]/30">
                       🎉 You&apos;re on the crew!
                     </span>
                   ) : applied ? (
                     <>
-                      <span className="text-sm text-amber-700 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200 flex-1 text-center">
+                      <span className="text-sm text-[#fbbf24] bg-[#fbbf24]/10 px-3 py-1.5 rounded-lg border border-[#fbbf24]/30 flex-1 text-center">
                         ⏳ Application Pending
                       </span>
                       <button

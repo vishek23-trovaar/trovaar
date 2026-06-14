@@ -71,13 +71,13 @@ export function ConsumerProtectPanel({ category, title, description, location, b
   function bidLabel(priceCents: number): { text: string; cls: string } | null {
     if (!fairLowCents || !fairHighCents) return null;
     if (priceCents <= fairHighCents) {
-      return { text: "Fair range", cls: "text-success bg-emerald-50" };
+      return { text: "Fair range", cls: "text-[#34d399] bg-[#27a644]/10" };
     }
     const over = ((priceCents - fairHighCents) / fairHighCents) * 100;
     if (over <= 30) {
-      return { text: `~${Math.round(over)}% above fair`, cls: "text-amber-700 bg-amber-50" };
+      return { text: `~${Math.round(over)}% above fair`, cls: "text-[#fbbf24] bg-[#fbbf24]/10" };
     }
-    return { text: `${Math.round(over)}% over fair ⚠️`, cls: "text-danger bg-red-50" };
+    return { text: `${Math.round(over)}% over fair ⚠️`, cls: "text-[#f87171] bg-[#f87171]/10" };
   }
 
   const overBids = pendingBids.filter((b) => {
@@ -88,17 +88,17 @@ export function ConsumerProtectPanel({ category, title, description, location, b
   if (!loading && !report) return null;
 
   return (
-    <div className="rounded-xl border border-indigo-200 bg-gradient-to-b from-indigo-50 to-white overflow-hidden">
+    <div className="rounded-xl border border-[#3B82F6]/30 bg-[#3B82F6]/10 overflow-hidden">
       {/* Header */}
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center gap-2.5 px-4 py-3 cursor-pointer hover:bg-indigo-50/80 transition-colors"
+        className="w-full flex items-center gap-2.5 px-4 py-3 cursor-pointer hover:bg-[#3B82F6]/15 transition-colors"
       >
         <span className="text-lg">🛡️</span>
         <div className="flex-1 text-left">
-          <p className="text-sm font-semibold text-indigo-900">Price Protect</p>
-          <p className="text-xs text-indigo-500">Know what&apos;s fair before you accept</p>
+          <p className="text-sm font-semibold text-[#60A5FA]">Price Protect</p>
+          <p className="text-xs text-[#60A5FA]/70">Know what&apos;s fair before you accept</p>
         </div>
         {loading && (
           <div className="w-4 h-4 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" />
@@ -109,7 +109,7 @@ export function ConsumerProtectPanel({ category, title, description, location, b
           </span>
         )}
         <svg
-          className={`w-4 h-4 text-indigo-400 transition-transform ${open ? "rotate-180" : ""}`}
+          className={`w-4 h-4 text-[#60A5FA] transition-transform ${open ? "rotate-180" : ""}`}
           fill="none" stroke="currentColor" viewBox="0 0 24 24"
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -117,16 +117,16 @@ export function ConsumerProtectPanel({ category, title, description, location, b
       </button>
 
       {open && (
-        <div className="border-t border-indigo-100">
+        <div className="border-t border-[#3B82F6]/20">
           {loading && !report ? (
             <div className="px-4 py-6 text-center">
               <div className="w-6 h-6 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-              <p className="text-xs text-indigo-500">Analyzing fair market price…</p>
+              <p className="text-xs text-[#60A5FA]/70">Analyzing fair market price…</p>
             </div>
           ) : report ? (
             <>
               {/* Tab nav */}
-              <div className="flex border-b border-indigo-100">
+              <div className="flex border-b border-[#3B82F6]/20">
                 {(["price", "upsells", "questions"] as const).map((tab) => (
                   <button
                     key={tab}
@@ -134,8 +134,8 @@ export function ConsumerProtectPanel({ category, title, description, location, b
                     onClick={() => setActiveTab(tab)}
                     className={`flex-1 py-2 text-xs font-semibold transition-colors cursor-pointer ${
                       activeTab === tab
-                        ? "text-indigo-700 border-b-2 border-indigo-600 bg-white"
-                        : "text-indigo-400 hover:text-indigo-600"
+                        ? "text-[#60A5FA] border-b-2 border-[#3B82F6] bg-[#3B82F6]/10"
+                        : "text-[#8a8f98] hover:text-[#60A5FA]"
                     }`}
                   >
                     {tab === "price" ? "💰 Fair Price" : tab === "upsells" ? "⚠️ Watch Out" : "❓ Ask First"}
@@ -150,7 +150,7 @@ export function ConsumerProtectPanel({ category, title, description, location, b
                   <div className="space-y-4">
                     {/* Fair price range */}
                     <div>
-                      <p className="text-xs text-indigo-500 font-medium uppercase tracking-wide mb-2">Fair Market Range</p>
+                      <p className="text-xs text-[#60A5FA]/70 font-medium uppercase tracking-wide mb-2">Fair Market Range</p>
                       <div className="flex items-end justify-between mb-1.5">
                         <div>
                           <p className="text-xs text-muted">Low</p>
@@ -161,10 +161,10 @@ export function ConsumerProtectPanel({ category, title, description, location, b
                         </div>
                         <div className="text-right">
                           <p className="text-xs text-muted">High</p>
-                          <p className="text-2xl font-bold text-amber-600">${report.fair_high.toLocaleString()}</p>
+                          <p className="text-2xl font-bold text-[#fbbf24]">${report.fair_high.toLocaleString()}</p>
                         </div>
                       </div>
-                      <p className="text-xs text-indigo-600 bg-indigo-50 rounded-lg px-3 py-2 leading-relaxed">
+                      <p className="text-xs text-[#60A5FA] bg-[#3B82F6]/10 rounded-lg px-3 py-2 leading-relaxed">
                         💡 {report.price_note}
                       </p>
                     </div>
@@ -172,7 +172,7 @@ export function ConsumerProtectPanel({ category, title, description, location, b
                     {/* Bid comparison */}
                     {pendingBids.length > 0 && (
                       <div>
-                        <p className="text-xs text-indigo-500 font-medium uppercase tracking-wide mb-2">Your Bids vs. Fair Range</p>
+                        <p className="text-xs text-[#60A5FA]/70 font-medium uppercase tracking-wide mb-2">Your Bids vs. Fair Range</p>
                         <div className="space-y-1.5">
                           {pendingBids.map((bid, i) => {
                             const label = bidLabel(bid.price);
@@ -189,7 +189,7 @@ export function ConsumerProtectPanel({ category, title, description, location, b
                           })}
                         </div>
                         {overBids.length > 0 && (
-                          <div className="mt-3 bg-red-50 border border-red-200 rounded-lg p-3 flex gap-2">
+                          <div className="mt-3 bg-[#f87171]/10 border border-[#f87171]/30 rounded-lg p-3 flex gap-2">
                             <span className="text-base shrink-0">⚠️</span>
                             <p className="text-xs text-danger leading-relaxed">
                               <span className="font-semibold">{overBids.length} bid{overBids.length > 1 ? "s are" : " is"} significantly above the fair market range.</span>{" "}
@@ -202,7 +202,7 @@ export function ConsumerProtectPanel({ category, title, description, location, b
 
                     {/* What's included */}
                     <div>
-                      <p className="text-xs text-indigo-500 font-medium uppercase tracking-wide mb-2">A Fair Quote Should Include</p>
+                      <p className="text-xs text-[#60A5FA]/70 font-medium uppercase tracking-wide mb-2">A Fair Quote Should Include</p>
                       <ul className="space-y-1.5">
                         {report.fair_includes.map((item, i) => (
                           <li key={i} className="flex gap-2 text-xs text-secondary">
@@ -223,9 +223,9 @@ export function ConsumerProtectPanel({ category, title, description, location, b
                     </p>
                     <ul className="space-y-2.5">
                       {report.upsell_warnings.map((warning, i) => (
-                        <li key={i} className="flex gap-2.5 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2.5">
+                        <li key={i} className="flex gap-2.5 bg-[#fbbf24]/10 border border-[#fbbf24]/30 rounded-lg px-3 py-2.5">
                           <span className="text-amber-500 shrink-0 mt-0.5">⚠️</span>
-                          <p className="text-xs text-amber-900 leading-relaxed">{warning}</p>
+                          <p className="text-xs text-[#fbbf24] leading-relaxed">{warning}</p>
                         </li>
                       ))}
                     </ul>
@@ -240,9 +240,9 @@ export function ConsumerProtectPanel({ category, title, description, location, b
                     </p>
                     <ul className="space-y-2.5">
                       {report.questions.map((q, i) => (
-                        <li key={i} className="flex gap-2.5 bg-indigo-50 border border-indigo-200 rounded-lg px-3 py-2.5">
-                          <span className="text-indigo-500 font-bold text-sm shrink-0">{i + 1}.</span>
-                          <p className="text-xs text-indigo-900 leading-relaxed">{q}</p>
+                        <li key={i} className="flex gap-2.5 bg-[#3B82F6]/10 border border-[#3B82F6]/30 rounded-lg px-3 py-2.5">
+                          <span className="text-[#60A5FA] font-bold text-sm shrink-0">{i + 1}.</span>
+                          <p className="text-xs text-[#60A5FA] leading-relaxed">{q}</p>
                         </li>
                       ))}
                     </ul>

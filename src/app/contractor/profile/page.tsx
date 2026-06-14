@@ -93,7 +93,7 @@ function StarRow({ rating, size = "sm" }: { rating: number; size?: "sm" | "md" }
   return (
     <span className={`flex gap-0.5 ${sz}`}>
       {[1, 2, 3, 4, 5].map((s) => (
-        <span key={s} className={s <= rating ? "text-amber-400" : "text-gray-200"}>
+        <span key={s} className={s <= rating ? "text-amber-400" : "text-[#23252a]"}>
           ★
         </span>
       ))}
@@ -107,13 +107,13 @@ function RatingBar({ count, total, star }: { count: number; total: number; star:
     <div className="flex items-center gap-2 text-xs">
       <span className="text-amber-400 w-3 text-right font-medium">{star}</span>
       <span className="text-amber-400">★</span>
-      <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+      <div className="flex-1 h-2 bg-[#141516] rounded-full overflow-hidden">
         <div
           className="h-full bg-amber-400 rounded-full transition-all"
           style={{ width: `${pct}%` }}
         />
       </div>
-      <span className="text-gray-400 w-6 text-right">{count}</span>
+      <span className="text-[#8a8f98] w-6 text-right">{count}</span>
     </div>
   );
 }
@@ -603,12 +603,12 @@ export default function ContractorPerformancePage() {
 
   const completionRateColor =
     contractorStats?.completionRate == null
-      ? "text-gray-400"
+      ? "text-[#8a8f98]"
       : contractorStats.completionRate >= 90
-      ? "text-emerald-600"
+      ? "text-[#34d399]"
       : contractorStats.completionRate >= 70
-      ? "text-amber-600"
-      : "text-red-600";
+      ? "text-[#fbbf24]"
+      : "text-[#f87171]";
 
   // Profile completeness checks
   const hasPhoto = !!(profile?.profile_photo);
@@ -632,7 +632,7 @@ export default function ContractorPerformancePage() {
   // ── Render ──────────────────────────────────────────────────────────────────
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-[#010102] min-h-screen">
       <div className="max-w-5xl mx-auto px-4 py-8">
 
         {/* ── Page header ─────────────────────────────────────────────────── */}
@@ -658,11 +658,11 @@ export default function ContractorPerformancePage() {
         {contractorStats && (
           <div className="mb-6">
             {isSuspended ? (
-              <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-2xl p-4">
+              <div className="flex items-start gap-3 bg-[#f87171]/10 border border-[#f87171]/30 rounded-2xl p-4">
                 <span className="text-2xl shrink-0">🚫</span>
                 <div>
-                  <p className="font-bold text-red-700">Account Suspended</p>
-                  <p className="text-sm text-red-600 mt-0.5">
+                  <p className="font-bold text-[#f87171]">Account Suspended</p>
+                  <p className="text-sm text-[#f87171] mt-0.5">
                     {contractorStats.suspended_until
                       ? `Suspended until ${new Date(contractorStats.suspended_until).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`
                       : "Your account is under review. Contact support for details."}
@@ -670,11 +670,11 @@ export default function ContractorPerformancePage() {
                 </div>
               </div>
             ) : hasStrikes ? (
-              <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-2xl p-4">
+              <div className="flex items-start gap-3 bg-[#fbbf24]/10 border border-[#fbbf24]/30 rounded-2xl p-4">
                 <span className="text-xl shrink-0">⚠️</span>
                 <div>
-                  <p className="font-bold text-amber-800">Active Warnings on Account</p>
-                  <p className="text-sm text-amber-700 mt-0.5">
+                  <p className="font-bold text-[#fbbf24]">Active Warnings on Account</p>
+                  <p className="text-sm text-[#fbbf24] mt-0.5">
                     You have {contractorStats.activeStrikes} active strike
                     {contractorStats.activeStrikes !== 1 ? "s" : ""} in the last 60 days.
                     Strikes expire after 60 days of no further issues.
@@ -682,20 +682,20 @@ export default function ContractorPerformancePage() {
                 </div>
               </div>
             ) : (
-              <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
+              <div className="flex items-center gap-3 bg-[#27a644]/10 border border-[#27a644]/30 rounded-2xl p-4">
                 <span className="text-xl">✅</span>
-                <p className="font-semibold text-emerald-800">Account in good standing</p>
+                <p className="font-semibold text-[#34d399]">Account in good standing</p>
               </div>
             )}
           </div>
         )}
 
         {/* ── Tab navigation ──────────────────────────────────────────── */}
-        <div className="flex gap-1 bg-gray-100 p-1 rounded-xl mb-6 w-fit">
+        <div className="flex gap-1 bg-[#141516] p-1 rounded-xl mb-6 w-fit">
           <button
             onClick={() => setActiveTab("performance")}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
-              activeTab === "performance" ? "bg-white shadow-sm text-gray-900" : "text-gray-600 hover:text-gray-900"
+              activeTab === "performance" ? "bg-[#0f1011] shadow-sm text-[#f7f8f8]" : "text-[#8a8f98] hover:text-[#f7f8f8]"
             }`}
           >
             Performance
@@ -703,7 +703,7 @@ export default function ContractorPerformancePage() {
           <button
             onClick={() => setActiveTab("portfolio")}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
-              activeTab === "portfolio" ? "bg-white shadow-sm text-gray-900" : "text-gray-600 hover:text-gray-900"
+              activeTab === "portfolio" ? "bg-[#0f1011] shadow-sm text-[#f7f8f8]" : "text-[#8a8f98] hover:text-[#f7f8f8]"
             }`}
           >
             Portfolio
@@ -711,7 +711,7 @@ export default function ContractorPerformancePage() {
           <button
             onClick={() => setActiveTab("trust")}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
-              activeTab === "trust" ? "bg-white shadow-sm text-gray-900" : "text-gray-600 hover:text-gray-900"
+              activeTab === "trust" ? "bg-[#0f1011] shadow-sm text-[#f7f8f8]" : "text-[#8a8f98] hover:text-[#f7f8f8]"
             }`}
           >
             Trust &amp; Verification
@@ -726,7 +726,7 @@ export default function ContractorPerformancePage() {
               <button
                 onClick={() => setPortfolioSubTab("projects")}
                 className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
-                  portfolioSubTab === "projects" ? "bg-white text-secondary shadow-sm" : "text-muted hover:text-secondary"
+                  portfolioSubTab === "projects" ? "bg-[#0f1011] text-secondary shadow-sm" : "text-muted hover:text-secondary"
                 }`}
               >
                 Projects
@@ -734,7 +734,7 @@ export default function ContractorPerformancePage() {
               <button
                 onClick={() => setPortfolioSubTab("credentials")}
                 className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
-                  portfolioSubTab === "credentials" ? "bg-white text-secondary shadow-sm" : "text-muted hover:text-secondary"
+                  portfolioSubTab === "credentials" ? "bg-[#0f1011] text-secondary shadow-sm" : "text-muted hover:text-secondary"
                 }`}
               >
                 Licenses &amp; Credentials
@@ -745,21 +745,21 @@ export default function ContractorPerformancePage() {
               <>
                 {/* Portfolio photo requirement warning */}
                 {portfolioPhotoCount < 3 && (
-                  <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-2xl p-4">
+                  <div className="flex items-start gap-3 bg-[#fbbf24]/10 border border-[#fbbf24]/30 rounded-2xl p-4">
                     <span className="text-xl shrink-0">&#9888;&#65039;</span>
                     <div>
-                      <p className="font-bold text-amber-800">You need at least 3 work photos to start bidding on jobs</p>
-                      <p className="text-sm text-amber-700 mt-1">
+                      <p className="font-bold text-[#fbbf24]">You need at least 3 work photos to start bidding on jobs</p>
+                      <p className="text-sm text-[#fbbf24] mt-1">
                         Upload photos of your completed projects to build credibility with homeowners.
                       </p>
                       <div className="flex items-center gap-2 mt-2">
-                        <div className="flex-1 max-w-[200px] h-2 bg-amber-200 rounded-full overflow-hidden">
+                        <div className="flex-1 max-w-[200px] h-2 bg-[#fbbf24]/20 rounded-full overflow-hidden">
                           <div
                             className="h-full bg-amber-500 rounded-full transition-all"
                             style={{ width: `${Math.min((portfolioPhotoCount / 3) * 100, 100)}%` }}
                           />
                         </div>
-                        <span className="text-sm font-semibold text-amber-800">
+                        <span className="text-sm font-semibold text-[#fbbf24]">
                           {portfolioPhotoCount}/3 photos uploaded
                         </span>
                       </div>
@@ -767,21 +767,21 @@ export default function ContractorPerformancePage() {
                   </div>
                 )}
                 {portfolioPhotoCount >= 3 && (
-                  <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
+                  <div className="flex items-center gap-3 bg-[#27a644]/10 border border-[#27a644]/30 rounded-2xl p-4">
                     <span className="text-xl">&#9989;</span>
-                    <p className="font-semibold text-emerald-800">
+                    <p className="font-semibold text-[#34d399]">
                       {portfolioPhotoCount} portfolio photos uploaded &mdash; you&apos;re ready to bid!
                     </p>
                   </div>
                 )}
-                <div className="bg-white rounded-2xl border border-border p-6">
+                <div className="bg-[#0f1011] rounded-2xl border border-border p-6">
                   <PortfolioManager contractorId={user.id} editable={true} />
                 </div>
               </>
             )}
 
             {portfolioSubTab === "credentials" && (
-              <div className="bg-white rounded-2xl border border-border p-6">
+              <div className="bg-[#0f1011] rounded-2xl border border-border p-6">
                 <div className="mb-4">
                   <h3 className="font-semibold text-secondary">Licenses &amp; Certifications</h3>
                   <p className="text-xs text-muted mt-1">
@@ -800,85 +800,85 @@ export default function ContractorPerformancePage() {
 
             {/* Trust Badges Display */}
             <ScrollReveal delay={0}>
-            <div className="bg-white rounded-2xl border border-border p-6">
+            <div className="bg-[#0f1011] rounded-2xl border border-border p-6">
               <h2 className="text-base font-bold text-secondary mb-4">Your Trust Badges</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {/* Identity Verified */}
                 <div className={`rounded-2xl p-4 text-center border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ${
                   profile?.verification_status === "approved"
-                    ? "bg-blue-50 border-blue-200"
-                    : "bg-gray-50 border-gray-200 opacity-50"
+                    ? "bg-[#3B82F6]/10 border-[#3B82F6]/30"
+                    : "bg-[#141516] border-[#23252a] opacity-50"
                 }`}>
                   <p className="text-2xl mb-1">✅</p>
                   <p className="text-xs font-semibold text-secondary">Identity Verified</p>
                   {profile?.verification_status === "approved"
-                    ? <p className="text-[10px] text-blue-600 font-medium mt-1">Earned</p>
-                    : <p className="text-[10px] text-gray-400 mt-1">Not yet</p>
+                    ? <p className="text-[10px] text-[#60A5FA] font-medium mt-1">Earned</p>
+                    : <p className="text-[10px] text-[#8a8f98] mt-1">Not yet</p>
                   }
                 </div>
                 {/* Background Check */}
                 <div className={`rounded-2xl p-4 text-center border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ${
                   (profile as any)?.background_check_status === "approved"
-                    ? "bg-green-50 border-green-200"
-                    : "bg-gray-50 border-gray-200 opacity-50"
+                    ? "bg-[#27a644]/10 border-[#27a644]/30"
+                    : "bg-[#141516] border-[#23252a] opacity-50"
                 }`}>
                   <p className="text-2xl mb-1">🛡️</p>
                   <p className="text-xs font-semibold text-secondary">Background Check</p>
                   {(profile as any)?.background_check_status === "approved"
-                    ? <p className="text-[10px] text-green-600 font-medium mt-1">Passed</p>
-                    : <p className="text-[10px] text-gray-400 mt-1">Not yet</p>
+                    ? <p className="text-[10px] text-[#34d399] font-medium mt-1">Passed</p>
+                    : <p className="text-[10px] text-[#8a8f98] mt-1">Not yet</p>
                   }
                 </div>
                 {/* Licensed & Insured */}
                 <div className={`rounded-2xl p-4 text-center border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ${
                   profile?.insurance_status === "approved"
-                    ? "bg-emerald-50 border-emerald-200"
-                    : "bg-gray-50 border-gray-200 opacity-50"
+                    ? "bg-[#27a644]/10 border-[#27a644]/30"
+                    : "bg-[#141516] border-[#23252a] opacity-50"
                 }`}>
                   <p className="text-2xl mb-1">📋</p>
                   <p className="text-xs font-semibold text-secondary">Licensed &amp; Insured</p>
                   {profile?.insurance_status === "approved"
-                    ? <p className="text-[10px] text-emerald-600 font-medium mt-1">Verified</p>
-                    : <p className="text-[10px] text-gray-400 mt-1">Not yet</p>
+                    ? <p className="text-[10px] text-[#34d399] font-medium mt-1">Verified</p>
+                    : <p className="text-[10px] text-[#8a8f98] mt-1">Not yet</p>
                   }
                 </div>
                 {/* Top Rated */}
                 <div className={`rounded-2xl p-4 text-center border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ${
                   profile && profile.rating >= 4.8
-                    ? "bg-amber-50 border-amber-200"
-                    : "bg-gray-50 border-gray-200 opacity-50"
+                    ? "bg-[#fbbf24]/10 border-[#fbbf24]/30"
+                    : "bg-[#141516] border-[#23252a] opacity-50"
                 }`}>
                   <p className="text-2xl mb-1">⭐</p>
                   <p className="text-xs font-semibold text-secondary">Top Rated</p>
                   {profile && profile.rating >= 4.8
-                    ? <p className="text-[10px] text-amber-600 font-medium mt-1">4.8+ rating</p>
-                    : <p className="text-[10px] text-gray-400 mt-1">Need 4.8+ rating</p>
+                    ? <p className="text-[10px] text-[#fbbf24] font-medium mt-1">4.8+ rating</p>
+                    : <p className="text-[10px] text-[#8a8f98] mt-1">Need 4.8+ rating</p>
                   }
                 </div>
                 {/* Elite Pro */}
                 <div className={`rounded-2xl p-4 text-center border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ${
                   completedJobs >= 50
-                    ? "bg-purple-50 border-purple-200"
-                    : "bg-gray-50 border-gray-200 opacity-50"
+                    ? "bg-purple-500/10 border-purple-500/30"
+                    : "bg-[#141516] border-[#23252a] opacity-50"
                 }`}>
                   <p className="text-2xl mb-1">🏆</p>
                   <p className="text-xs font-semibold text-secondary">Elite Pro</p>
                   {completedJobs >= 50
-                    ? <p className="text-[10px] text-purple-600 font-medium mt-1">50+ jobs completed</p>
-                    : <p className="text-[10px] text-gray-400 mt-1">{completedJobs}/50 jobs</p>
+                    ? <p className="text-[10px] text-purple-400 font-medium mt-1">50+ jobs completed</p>
+                    : <p className="text-[10px] text-[#8a8f98] mt-1">{completedJobs}/50 jobs</p>
                   }
                 </div>
                 {/* Fast Responder */}
                 <div className={`rounded-2xl p-4 text-center border hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ${
                   contractorStats?.avg_response_hours != null && contractorStats.avg_response_hours < 2
-                    ? "bg-sky-50 border-sky-200"
-                    : "bg-gray-50 border-gray-200 opacity-50"
+                    ? "bg-sky-500/10 border-sky-500/30"
+                    : "bg-[#141516] border-[#23252a] opacity-50"
                 }`}>
                   <p className="text-2xl mb-1">⏰</p>
                   <p className="text-xs font-semibold text-secondary">Fast Responder</p>
                   {contractorStats?.avg_response_hours != null && contractorStats.avg_response_hours < 2
-                    ? <p className="text-[10px] text-sky-600 font-medium mt-1">Avg &lt; 2hrs</p>
-                    : <p className="text-[10px] text-gray-400 mt-1">Need avg &lt; 2hrs</p>
+                    ? <p className="text-[10px] text-sky-400 font-medium mt-1">Avg &lt; 2hrs</p>
+                    : <p className="text-[10px] text-[#8a8f98] mt-1">Need avg &lt; 2hrs</p>
                   }
                 </div>
               </div>
@@ -887,33 +887,33 @@ export default function ContractorPerformancePage() {
 
             {/* Background Check */}
             <ScrollReveal delay={100}>
-            <div className="bg-white rounded-2xl border border-border p-6">
+            <div className="bg-[#0f1011] rounded-2xl border border-border p-6">
               <h2 className="text-base font-bold text-secondary mb-4">Background Check</h2>
 
               {profile?.background_check_status === "approved" ? (
-                <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                <div className="flex items-center gap-3 bg-[#27a644]/10 border border-[#27a644]/30 rounded-xl p-4">
                   <span className="text-2xl">&#9989;</span>
                   <div>
-                    <p className="text-sm font-semibold text-emerald-700">Background Check Passed</p>
-                    <p className="text-xs text-emerald-600">Your background check has been verified. Consumers can see your badge.</p>
+                    <p className="text-sm font-semibold text-[#34d399]">Background Check Passed</p>
+                    <p className="text-xs text-[#34d399]">Your background check has been verified. Consumers can see your badge.</p>
                   </div>
                 </div>
               ) : profile?.background_check_status === "pending" ? (
-                <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <div className="flex items-center gap-3 bg-[#fbbf24]/10 border border-[#fbbf24]/30 rounded-xl p-4">
                   <span className="text-2xl">&#9203;</span>
                   <div>
-                    <p className="text-sm font-semibold text-amber-700">Background check in progress...</p>
-                    <p className="text-xs text-amber-600">Your request is being reviewed. You will be notified when it is complete.</p>
+                    <p className="text-sm font-semibold text-[#fbbf24]">Background check in progress...</p>
+                    <p className="text-xs text-[#fbbf24]">Your request is being reviewed. You will be notified when it is complete.</p>
                   </div>
                 </div>
               ) : profile?.background_check_status === "rejected" ? (
-                <div className="flex items-center gap-3 bg-red-50 border border-red-200 rounded-xl p-4">
+                <div className="flex items-center gap-3 bg-[#f87171]/10 border border-[#f87171]/30 rounded-xl p-4">
                   <span className="text-2xl">&#10060;</span>
                   <div>
-                    <p className="text-sm font-semibold text-red-700">Not passed</p>
-                    <p className="text-xs text-red-600">
+                    <p className="text-sm font-semibold text-[#f87171]">Not passed</p>
+                    <p className="text-xs text-[#f87171]">
                       Your background check was not approved.{" "}
-                      <a href="/help" className="underline hover:text-red-800">Contact support</a> for more information.
+                      <a href="/help" className="underline hover:text-red-400">Contact support</a> for more information.
                     </p>
                   </div>
                 </div>
@@ -923,7 +923,7 @@ export default function ContractorPerformancePage() {
                     A background check helps build trust with consumers. Passing a background check adds a verified badge to your profile and can help you win more jobs.
                   </p>
                   {bgCheckMessage && (
-                    <div className="mb-3 bg-blue-50 text-blue-800 text-sm p-3 rounded-lg">{bgCheckMessage}</div>
+                    <div className="mb-3 bg-[#3B82F6]/10 text-[#60A5FA] text-sm p-3 rounded-lg">{bgCheckMessage}</div>
                   )}
                   <button
                     onClick={requestBackgroundCheck}
@@ -939,33 +939,33 @@ export default function ContractorPerformancePage() {
 
             {/* Identity Verification */}
             <ScrollReveal delay={200}>
-            <div className="bg-white rounded-2xl border border-border p-6">
+            <div className="bg-[#0f1011] rounded-2xl border border-border p-6">
               <h2 className="text-base font-bold text-secondary mb-4">Identity Verification</h2>
 
               {profile?.verification_status === "approved" ? (
-                <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                <div className="flex items-center gap-3 bg-[#27a644]/10 border border-[#27a644]/30 rounded-xl p-4">
                   <span className="text-2xl">&#9989;</span>
                   <div>
-                    <p className="text-sm font-semibold text-emerald-700">ID Verified</p>
-                    <p className="text-xs text-emerald-600">Your identity has been confirmed. Consumers can see your verified badge.</p>
+                    <p className="text-sm font-semibold text-[#34d399]">ID Verified</p>
+                    <p className="text-xs text-[#34d399]">Your identity has been confirmed. Consumers can see your verified badge.</p>
                   </div>
                 </div>
               ) : profile?.verification_status === "pending" ? (
-                <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <div className="flex items-center gap-3 bg-[#fbbf24]/10 border border-[#fbbf24]/30 rounded-xl p-4">
                   <span className="text-2xl">&#9203;</span>
                   <div>
-                    <p className="text-sm font-semibold text-amber-700">Verification in progress</p>
-                    <p className="text-xs text-amber-600">We&apos;re reviewing your documents. This usually takes a few minutes.</p>
+                    <p className="text-sm font-semibold text-[#fbbf24]">Verification in progress</p>
+                    <p className="text-xs text-[#fbbf24]">We&apos;re reviewing your documents. This usually takes a few minutes.</p>
                   </div>
                 </div>
               ) : (
                 <div>
                   {profile?.verification_status === "rejected" && (
-                    <div className="flex items-center gap-3 bg-red-50 border border-red-200 rounded-xl p-4 mb-4">
+                    <div className="flex items-center gap-3 bg-[#f87171]/10 border border-[#f87171]/30 rounded-xl p-4 mb-4">
                       <span className="text-2xl">&#10060;</span>
                       <div>
-                        <p className="text-sm font-semibold text-red-700">Verification failed</p>
-                        <p className="text-xs text-red-600">Your previous verification attempt could not be completed. Please try again.</p>
+                        <p className="text-sm font-semibold text-[#f87171]">Verification failed</p>
+                        <p className="text-xs text-[#f87171]">Your previous verification attempt could not be completed. Please try again.</p>
                       </div>
                     </div>
                   )}
@@ -986,7 +986,7 @@ export default function ContractorPerformancePage() {
 
             {/* Professional Summary */}
             <ScrollReveal delay={300}>
-            <div className="bg-white rounded-2xl border border-border p-6">
+            <div className="bg-[#0f1011] rounded-2xl border border-border p-6">
               <h2 className="text-base font-bold text-secondary mb-4">Professional Summary</h2>
               <div className="space-y-4">
                 <div>
@@ -996,7 +996,7 @@ export default function ContractorPerformancePage() {
                     value={headline}
                     onChange={(e) => setHeadline(e.target.value)}
                     placeholder='e.g., "Licensed Master Plumber — 15 Years"'
-                    className="w-full px-3 py-2 text-sm border border-border rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    className="w-full px-3 py-2 text-sm border border-border rounded-xl bg-[#141516] text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-primary/30"
                     maxLength={120}
                   />
                   <p className="text-[10px] text-muted mt-1">{headline.length}/120 characters</p>
@@ -1013,7 +1013,7 @@ export default function ContractorPerformancePage() {
                     }}
                     min={0}
                     max={60}
-                    className="w-24 px-3 py-2 text-sm border border-border rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    className="w-24 px-3 py-2 text-sm border border-border rounded-xl bg-[#141516] text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-primary/30"
                   />
                 </div>
                 <div>
@@ -1023,7 +1023,7 @@ export default function ContractorPerformancePage() {
                     onChange={(e) => setAboutMe(e.target.value.slice(0, 500))}
                     placeholder="Tell clients about your background, approach, and what sets you apart..."
                     rows={4}
-                    className="w-full px-3 py-2 text-sm border border-border rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+                    className="w-full px-3 py-2 text-sm border border-border rounded-xl bg-[#141516] text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
                     maxLength={500}
                   />
                   <p className="text-[10px] text-muted mt-1">{aboutMe.length}/500 characters</p>
@@ -1035,7 +1035,7 @@ export default function ContractorPerformancePage() {
                     value={licenseNumber}
                     onChange={(e) => setLicenseNumber(e.target.value)}
                     placeholder="e.g., CFC1234567"
-                    className="w-full px-3 py-2 text-sm border border-border rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    className="w-full px-3 py-2 text-sm border border-border rounded-xl bg-[#141516] text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-primary/30"
                   />
                 </div>
                 <button
@@ -1043,7 +1043,7 @@ export default function ContractorPerformancePage() {
                   disabled={trustSaving}
                   className={`px-6 py-2 text-sm font-semibold rounded-xl transition-colors ${
                     trustSaved
-                      ? "bg-emerald-100 text-emerald-700"
+                      ? "bg-[#27a644]/20 text-[#34d399]"
                       : "bg-primary text-white hover:bg-primary/90"
                   }`}
                 >
@@ -1055,7 +1055,7 @@ export default function ContractorPerformancePage() {
 
             {/* Trade License Submission */}
             <ScrollReveal delay={400}>
-            <div className="bg-white rounded-2xl border border-border p-6">
+            <div className="bg-[#0f1011] rounded-2xl border border-border p-6">
               <h2 className="text-base font-bold text-secondary mb-1">Trade License</h2>
               <p className="text-xs text-muted mb-4">Submit your trade license for verification. Verified licenses appear on your public profile.</p>
 
@@ -1066,11 +1066,11 @@ export default function ContractorPerformancePage() {
                     <div
                       key={sub.id}
                       className={`flex items-center justify-between p-3 rounded-xl border ${
-                        sub.verified ? "bg-emerald-50 border-emerald-200" : "bg-amber-50 border-amber-200"
+                        sub.verified ? "bg-[#27a644]/10 border-[#27a644]/30" : "bg-[#fbbf24]/10 border-[#fbbf24]/30"
                       }`}
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-sm shrink-0">
+                        <div className="w-9 h-9 rounded-lg bg-[#3B82F6]/10 text-[#60A5FA] flex items-center justify-center text-sm shrink-0">
                           &#128203;
                         </div>
                         <div className="min-w-0">
@@ -1080,9 +1080,9 @@ export default function ContractorPerformancePage() {
                       </div>
                       <div className="shrink-0">
                         {sub.verified ? (
-                          <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full font-medium">Verified</span>
+                          <span className="text-xs bg-[#27a644]/10 text-[#34d399] border border-[#27a644]/30 px-2 py-0.5 rounded-full font-medium">Verified</span>
                         ) : (
-                          <span className="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full font-medium">Pending Review</span>
+                          <span className="text-xs bg-[#fbbf24]/10 text-[#fbbf24] border border-[#fbbf24]/30 px-2 py-0.5 rounded-full font-medium">Pending Review</span>
                         )}
                       </div>
                     </div>
@@ -1091,7 +1091,7 @@ export default function ContractorPerformancePage() {
               )}
 
               {/* License submission form */}
-              <div className="border border-dashed border-gray-200 rounded-xl p-4 bg-gray-50/50">
+              <div className="border border-dashed border-[#23252a] rounded-xl p-4 bg-[#010102]">
                 <p className="text-xs font-semibold text-muted mb-3">Submit a Trade License</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                   <div>
@@ -1101,7 +1101,7 @@ export default function ContractorPerformancePage() {
                       value={licenseNumber}
                       onChange={(e) => setLicenseNumber(e.target.value)}
                       placeholder="e.g., CFC1234567"
-                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-[#141516] text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-primary/30"
                     />
                   </div>
                   <div>
@@ -1109,7 +1109,7 @@ export default function ContractorPerformancePage() {
                     <select
                       value={licenseState}
                       onChange={(e) => setLicenseState(e.target.value)}
-                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-[#141516] text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-primary/30"
                     >
                       <option value="">Select state...</option>
                       {["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY","DC"].map((s) => (
@@ -1122,7 +1122,7 @@ export default function ContractorPerformancePage() {
                     <select
                       value={licenseType}
                       onChange={(e) => setLicenseType(e.target.value)}
-                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-[#141516] text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-primary/30"
                     >
                       <option value="">Select license type...</option>
                       {["Plumbing","Electrical","HVAC","General Contractor","Roofing","Painting","Landscaping","Carpentry","Masonry","Welding","Fire Protection","Low Voltage","Solar/PV","Other"].map((t) => (
@@ -1136,7 +1136,7 @@ export default function ContractorPerformancePage() {
                   disabled={licenseSubmitting || !licenseNumber.trim() || !licenseState || !licenseType}
                   className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors disabled:opacity-50 ${
                     licenseSubmitted
-                      ? "bg-emerald-100 text-emerald-700"
+                      ? "bg-[#27a644]/20 text-[#34d399]"
                       : "bg-primary text-white hover:bg-primary/90"
                   }`}
                 >
@@ -1148,7 +1148,7 @@ export default function ContractorPerformancePage() {
 
             {/* Certifications */}
             <ScrollReveal delay={100}>
-            <div className="bg-white rounded-2xl border border-border p-6">
+            <div className="bg-[#0f1011] rounded-2xl border border-border p-6">
               <h2 className="text-base font-bold text-secondary mb-1">Certifications</h2>
               <p className="text-xs text-muted mb-4">Trade licenses, ASE certs, NATE certs, EPA certifications, and more.</p>
 
@@ -1158,7 +1158,7 @@ export default function ContractorPerformancePage() {
                 const daysUntil = Math.ceil((new Date(c.expiry_date).getTime() - Date.now()) / 86_400_000);
                 return daysUntil <= 60;
               }) && (
-                <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4 text-sm text-amber-800">
+                <div className="flex items-start gap-2 bg-[#fbbf24]/10 border border-[#fbbf24]/30 rounded-xl p-3 mb-4 text-sm text-[#fbbf24]">
                   <span className="shrink-0 mt-0.5">&#9888;&#65039;</span>
                   <div>
                     <p className="font-semibold">Certifications expiring soon</p>
@@ -1173,7 +1173,7 @@ export default function ContractorPerformancePage() {
                           <li key={c.id}>
                             <span className="font-medium">{c.name}</span>
                             {daysUntil <= 0
-                              ? <span className="text-red-600 font-semibold"> -- EXPIRED</span>
+                              ? <span className="text-[#f87171] font-semibold"> -- EXPIRED</span>
                               : <span> -- expires in {daysUntil} day{daysUntil !== 1 ? "s" : ""}</span>
                             }
                           </li>
@@ -1198,14 +1198,14 @@ export default function ContractorPerformancePage() {
                         key={cert.id}
                         className={`flex items-center justify-between p-3 rounded-xl border ${
                           isExpired
-                            ? "bg-red-50 border-red-200"
+                            ? "bg-[#f87171]/10 border-[#f87171]/30"
                             : isExpiringSoon
-                            ? "bg-amber-50 border-amber-200"
-                            : "bg-gray-50 border-gray-100"
+                            ? "bg-[#fbbf24]/10 border-[#fbbf24]/30"
+                            : "bg-[#141516] border-[#23252a]"
                         }`}
                       >
                         <div className="flex items-center gap-3 min-w-0">
-                          <div className="w-9 h-9 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-sm shrink-0">
+                          <div className="w-9 h-9 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center text-sm shrink-0">
                             &#128220;
                           </div>
                           <div className="min-w-0">
@@ -1214,7 +1214,7 @@ export default function ContractorPerformancePage() {
                               {cert.issuer && <span>{cert.issuer}</span>}
                               {cert.issue_date && <span> · Issued {cert.issue_date}</span>}
                               {cert.expiry_date && (
-                                <span className={isExpired ? " text-red-600 font-semibold" : isExpiringSoon ? " text-amber-600 font-semibold" : ""}>
+                                <span className={isExpired ? " text-[#f87171] font-semibold" : isExpiringSoon ? " text-[#fbbf24] font-semibold" : ""}>
                                   {" "}· {isExpired ? "Expired" : "Expires"} {cert.expiry_date}
                                 </span>
                               )}
@@ -1223,12 +1223,12 @@ export default function ContractorPerformancePage() {
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
                           {isExpired && (
-                            <span className="text-xs bg-red-100 text-red-700 border border-red-200 px-2 py-0.5 rounded-full font-medium">Expired</span>
+                            <span className="text-xs bg-[#f87171]/10 text-[#f87171] border border-[#f87171]/30 px-2 py-0.5 rounded-full font-medium">Expired</span>
                           )}
                           {!isExpired && cert.verified ? (
-                            <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full font-medium">Verified</span>
+                            <span className="text-xs bg-[#27a644]/10 text-[#34d399] border border-[#27a644]/30 px-2 py-0.5 rounded-full font-medium">Verified</span>
                           ) : !isExpired ? (
-                            <span className="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full font-medium">Self-reported</span>
+                            <span className="text-xs bg-[#fbbf24]/10 text-[#fbbf24] border border-[#fbbf24]/30 px-2 py-0.5 rounded-full font-medium">Self-reported</span>
                           ) : null}
                           {cert.document_url && (
                             <a
@@ -1243,7 +1243,7 @@ export default function ContractorPerformancePage() {
                           )}
                           <button
                             onClick={() => removeCertification(cert.id)}
-                            className="text-xs text-red-400 hover:text-red-600 transition-colors px-1"
+                            className="text-xs text-[#f87171] hover:text-red-400 transition-colors px-1"
                           >
                             &#10005;
                           </button>
@@ -1255,7 +1255,7 @@ export default function ContractorPerformancePage() {
               )}
 
               {/* Add certification form */}
-              <div className="border border-dashed border-gray-200 rounded-xl p-4 bg-gray-50/50">
+              <div className="border border-dashed border-[#23252a] rounded-xl p-4 bg-[#010102]">
                 <p className="text-xs font-semibold text-muted mb-3">Add Certification</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                   <input
@@ -1263,14 +1263,14 @@ export default function ContractorPerformancePage() {
                     value={newCertName}
                     onChange={(e) => setNewCertName(e.target.value)}
                     placeholder='e.g., "EPA Section 608", "ASE A1"'
-                    className="px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    className="px-3 py-2 text-sm border border-border rounded-lg bg-[#141516] text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-primary/30"
                   />
                   <input
                     type="text"
                     value={newCertIssuer}
                     onChange={(e) => setNewCertIssuer(e.target.value)}
                     placeholder="Issuing body (e.g., EPA, NATE, ASE)"
-                    className="px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    className="px-3 py-2 text-sm border border-border rounded-lg bg-[#141516] text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-primary/30"
                   />
                   <div>
                     <label className="block text-[10px] font-medium text-muted mb-1">Issue Date</label>
@@ -1278,7 +1278,7 @@ export default function ContractorPerformancePage() {
                       type="date"
                       value={newCertIssueDate}
                       onChange={(e) => setNewCertIssueDate(e.target.value)}
-                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-[#141516] text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-primary/30"
                     />
                   </div>
                   <div>
@@ -1287,7 +1287,7 @@ export default function ContractorPerformancePage() {
                       type="date"
                       value={newCertExpiry}
                       onChange={(e) => setNewCertExpiry(e.target.value)}
-                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-[#141516] text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-primary/30"
                     />
                   </div>
                 </div>
@@ -1304,15 +1304,15 @@ export default function ContractorPerformancePage() {
 
             {/* Work History */}
             <ScrollReveal delay={200}>
-            <div className="bg-white rounded-2xl border border-border p-6">
+            <div className="bg-[#0f1011] rounded-2xl border border-border p-6">
               <h2 className="text-base font-bold text-secondary mb-1">Work History</h2>
               <p className="text-xs text-muted mb-4">Show clients your professional background and corporate-level training.</p>
               {workHistory.length > 0 && (
                 <div className="space-y-3 mb-6">
                   {workHistory.map((entry) => (
-                    <div key={entry.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl border border-gray-100">
+                    <div key={entry.id} className="flex items-center justify-between p-3 bg-[#141516] rounded-xl border border-[#23252a]">
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-sm shrink-0">
+                        <div className="w-9 h-9 rounded-lg bg-[#3B82F6]/10 text-[#60A5FA] flex items-center justify-center text-sm shrink-0">
                           🏢
                         </div>
                         <div className="min-w-0">
@@ -1329,9 +1329,9 @@ export default function ContractorPerformancePage() {
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         {entry.verified ? (
-                          <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full font-medium">Verified</span>
+                          <span className="text-xs bg-[#27a644]/10 text-[#34d399] border border-[#27a644]/30 px-2 py-0.5 rounded-full font-medium">Verified</span>
                         ) : (
-                          <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">Self-reported</span>
+                          <span className="text-xs bg-[#141516] text-[#8a8f98] px-2 py-0.5 rounded-full font-medium">Self-reported</span>
                         )}
                         <button
                           onClick={() => removeWorkHistory(entry.id)}
@@ -1346,7 +1346,7 @@ export default function ContractorPerformancePage() {
               )}
 
               {/* Add work history form */}
-              <div className="border border-dashed border-gray-200 rounded-xl p-4 bg-gray-50/50">
+              <div className="border border-dashed border-[#23252a] rounded-xl p-4 bg-[#010102]">
                 <p className="text-xs font-semibold text-muted mb-3">Add Work History</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                   <input
@@ -1354,14 +1354,14 @@ export default function ContractorPerformancePage() {
                     value={newWorkCompany}
                     onChange={(e) => setNewWorkCompany(e.target.value)}
                     placeholder='Company name (e.g., "Roto-Rooter")'
-                    className="px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    className="px-3 py-2 text-sm border border-border rounded-lg bg-[#141516] text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-primary/30"
                   />
                   <input
                     type="text"
                     value={newWorkRole}
                     onChange={(e) => setNewWorkRole(e.target.value)}
                     placeholder='Role (e.g., "Senior Technician")'
-                    className="px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    className="px-3 py-2 text-sm border border-border rounded-lg bg-[#141516] text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-primary/30"
                   />
                   <input
                     type="number"
@@ -1370,7 +1370,7 @@ export default function ContractorPerformancePage() {
                     placeholder="Start year"
                     min={1970}
                     max={2030}
-                    className="px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    className="px-3 py-2 text-sm border border-border rounded-lg bg-[#141516] text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-primary/30"
                   />
                   <input
                     type="number"
@@ -1379,7 +1379,7 @@ export default function ContractorPerformancePage() {
                     placeholder="End year (blank = present)"
                     min={1970}
                     max={2030}
-                    className="px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    className="px-3 py-2 text-sm border border-border rounded-lg bg-[#141516] text-[#f7f8f8] focus:outline-none focus:ring-2 focus:ring-primary/30"
                   />
                 </div>
                 <button
@@ -1395,7 +1395,7 @@ export default function ContractorPerformancePage() {
 
             {/* Completed Jobs (portfolio showcase with ratings) */}
             <ScrollReveal delay={300}>
-            <div className="bg-white rounded-2xl border border-border p-6">
+            <div className="bg-[#0f1011] rounded-2xl border border-border p-6">
               <h2 className="text-base font-bold text-secondary mb-1">Completed Jobs</h2>
               <p className="text-xs text-muted mb-4">Jobs completed on the Trovaar platform with client ratings.</p>
               {reviews.length === 0 ? (
@@ -1407,8 +1407,8 @@ export default function ContractorPerformancePage() {
               ) : (
                 <div className="space-y-3">
                   {reviews.slice(0, 5).map((review) => (
-                    <div key={review.id} className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
-                      <div className="w-9 h-9 rounded-lg bg-amber-50 text-amber-500 flex items-center justify-center text-sm shrink-0">
+                    <div key={review.id} className="flex items-start gap-3 p-3 bg-[#141516] rounded-xl border border-[#23252a]">
+                      <div className="w-9 h-9 rounded-lg bg-[#fbbf24]/10 text-amber-500 flex items-center justify-center text-sm shrink-0">
                         ⭐
                       </div>
                       <div className="flex-1 min-w-0">
@@ -1437,7 +1437,7 @@ export default function ContractorPerformancePage() {
           <div className="flex-1 min-w-0 space-y-6">
 
             {/* AI Profile Analysis */}
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-5">
+            <div className="bg-gradient-to-br from-[#3B82F6]/10 to-indigo-500/10 border border-[#3B82F6]/30 rounded-2xl p-5">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-base font-bold text-secondary flex items-center gap-2">
                   <span>🤖</span> AI Profile Analysis
@@ -1484,7 +1484,7 @@ export default function ContractorPerformancePage() {
               </div>
 
               {aiAnalysisError && (
-                <div className="bg-red-50 text-red-700 text-sm p-3 rounded-lg mb-3">{aiAnalysisError}</div>
+                <div className="bg-[#f87171]/10 text-[#f87171] text-sm p-3 rounded-lg mb-3">{aiAnalysisError}</div>
               )}
 
               {aiAnalysis ? (
@@ -1493,10 +1493,10 @@ export default function ContractorPerformancePage() {
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-medium text-muted uppercase tracking-wide">Experience Tier:</span>
                     <span className={`text-sm font-bold px-2.5 py-0.5 rounded-full ${
-                      aiAnalysis.experience_tier === "master" ? "bg-purple-100 text-purple-700" :
-                      aiAnalysis.experience_tier === "senior" ? "bg-blue-100 text-blue-700" :
-                      aiAnalysis.experience_tier === "mid" ? "bg-emerald-100 text-emerald-700" :
-                      "bg-gray-100 text-gray-700"
+                      aiAnalysis.experience_tier === "master" ? "bg-purple-500/10 text-purple-400" :
+                      aiAnalysis.experience_tier === "senior" ? "bg-[#3B82F6]/10 text-[#60A5FA]" :
+                      aiAnalysis.experience_tier === "mid" ? "bg-[#27a644]/10 text-[#34d399]" :
+                      "bg-[#141516] text-[#d0d6e0]"
                     }`}>
                       {aiAnalysis.experience_tier.charAt(0).toUpperCase() + aiAnalysis.experience_tier.slice(1)}
                     </span>
@@ -1508,12 +1508,12 @@ export default function ContractorPerformancePage() {
                       <p className="text-xs font-medium text-muted uppercase tracking-wide mb-2">Specialties</p>
                       <div className="space-y-1.5">
                         {aiAnalysis.specialties.map((s, i) => (
-                          <div key={i} className="flex items-center gap-2 bg-white rounded-lg px-3 py-2 border border-blue-100">
+                          <div key={i} className="flex items-center gap-2 bg-[#0f1011] rounded-lg px-3 py-2 border border-[#3B82F6]/20">
                             <span className="text-sm font-medium text-secondary flex-1">{s.category}</span>
                             <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                              s.level === "expert" ? "bg-emerald-100 text-emerald-700" :
-                              s.level === "intermediate" ? "bg-blue-100 text-blue-700" :
-                              "bg-gray-100 text-gray-600"
+                              s.level === "expert" ? "bg-[#27a644]/10 text-[#34d399]" :
+                              s.level === "intermediate" ? "bg-[#3B82F6]/10 text-[#60A5FA]" :
+                              "bg-[#141516] text-[#8a8f98]"
                             }`}>
                               {s.level}
                             </span>
@@ -1532,7 +1532,7 @@ export default function ContractorPerformancePage() {
                       <p className="text-xs font-medium text-muted uppercase tracking-wide mb-2">Key Strengths</p>
                       <div className="flex flex-wrap gap-1.5">
                         {aiAnalysis.strengths.map((s, i) => (
-                          <span key={i} className="inline-flex items-center gap-1 text-xs bg-white px-2.5 py-1.5 rounded-full border border-emerald-200 text-emerald-700 font-medium">
+                          <span key={i} className="inline-flex items-center gap-1 text-xs bg-[#0f1011] px-2.5 py-1.5 rounded-full border border-[#27a644]/30 text-[#34d399] font-medium">
                             <span>✓</span> {s}
                           </span>
                         ))}
@@ -1544,7 +1544,7 @@ export default function ContractorPerformancePage() {
                   {aiAnalysis.certifications_summary && (
                     <div>
                       <p className="text-xs font-medium text-muted uppercase tracking-wide mb-1">Certifications</p>
-                      <p className="text-sm text-secondary bg-white rounded-lg px-3 py-2 border border-blue-100">
+                      <p className="text-sm text-secondary bg-[#0f1011] rounded-lg px-3 py-2 border border-[#3B82F6]/20">
                         {aiAnalysis.certifications_summary}
                       </p>
                     </div>
@@ -1567,7 +1567,7 @@ export default function ContractorPerformancePage() {
                 <h2 className="text-base font-bold text-secondary mb-3">Performance Stats</h2>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {/* Rating */}
-                  <div className="bg-gray-50 rounded-2xl p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+                  <div className="bg-[#141516] rounded-2xl p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                     <p className="text-2xl mb-1">⭐</p>
                     <p className="text-xl font-bold text-secondary">
                       {profile && profile.rating > 0 ? profile.rating.toFixed(1) : "—"}
@@ -1579,7 +1579,7 @@ export default function ContractorPerformancePage() {
                   </div>
 
                   {/* Jobs Completed */}
-                  <div className="bg-gray-50 rounded-2xl p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+                  <div className="bg-[#141516] rounded-2xl p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                     <p className="text-2xl mb-1">✅</p>
                     <p className="text-xl font-bold text-secondary">
                       {contractorStats?.completion_count ?? completedJobs}
@@ -1588,7 +1588,7 @@ export default function ContractorPerformancePage() {
                   </div>
 
                   {/* Completion Rate */}
-                  <div className="bg-gray-50 rounded-2xl p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+                  <div className="bg-[#141516] rounded-2xl p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                     <p className="text-2xl mb-1">📊</p>
                     <p className={`text-xl font-bold ${completionRateColor}`}>
                       {contractorStats?.completionRate != null
@@ -1599,7 +1599,7 @@ export default function ContractorPerformancePage() {
                   </div>
 
                   {/* Response Time */}
-                  <div className="bg-gray-50 rounded-2xl p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+                  <div className="bg-[#141516] rounded-2xl p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                     <p className="text-2xl mb-1">⚡</p>
                     <p className="text-xl font-bold text-secondary">
                       {formatResponseTime(contractorStats?.avg_response_hours ?? null)}
@@ -1630,11 +1630,11 @@ export default function ContractorPerformancePage() {
             <div>
               <h2 className="text-base font-bold text-secondary mb-3">Earnings Overview</h2>
               {earningsLoading ? (
-                <div className="bg-white rounded-2xl border border-border p-8 flex justify-center">
+                <div className="bg-[#0f1011] rounded-2xl border border-border p-8 flex justify-center">
                   <div className="animate-spin w-6 h-6 border-4 border-primary border-t-transparent rounded-full" />
                 </div>
               ) : !earnings ? (
-                <div className="bg-white rounded-2xl border border-border p-8 text-center">
+                <div className="bg-[#0f1011] rounded-2xl border border-border p-8 text-center">
                   <p className="text-4xl mb-3">💸</p>
                   <p className="font-semibold text-secondary">No earnings data</p>
                   <p className="text-sm text-muted mt-1">Could not load earnings at this time.</p>
@@ -1643,19 +1643,19 @@ export default function ContractorPerformancePage() {
                 <div className="space-y-4">
                   {/* Earnings summary cards */}
                   <div className="grid grid-cols-3 gap-3">
-                    <div className="bg-white rounded-2xl border border-border p-4 text-center">
+                    <div className="bg-[#0f1011] rounded-2xl border border-border p-4 text-center">
                       <p className="text-xs font-medium text-muted mb-1">Total Earned</p>
-                      <p className="text-xl font-bold text-emerald-600">
+                      <p className="text-xl font-bold text-[#34d399]">
                         {formatDollars(earnings.totalEarnedCents)}
                       </p>
                     </div>
-                    <div className="bg-white rounded-2xl border border-border p-4 text-center">
+                    <div className="bg-[#0f1011] rounded-2xl border border-border p-4 text-center">
                       <p className="text-xs font-medium text-muted mb-1">Pending Payout</p>
-                      <p className="text-xl font-bold text-amber-600">
+                      <p className="text-xl font-bold text-[#fbbf24]">
                         {formatDollars(earnings.pendingCents)}
                       </p>
                     </div>
-                    <div className="bg-white rounded-2xl border border-border p-4 text-center">
+                    <div className="bg-[#0f1011] rounded-2xl border border-border p-4 text-center">
                       <p className="text-xs font-medium text-muted mb-1">Tips Received</p>
                       <p className="text-xl font-bold text-secondary">
                         {formatDollars(earnings.totalTipsCents)}
@@ -1664,7 +1664,7 @@ export default function ContractorPerformancePage() {
                   </div>
 
                   {/* Recent jobs table */}
-                  <div className="bg-white rounded-2xl border border-border overflow-hidden">
+                  <div className="bg-[#0f1011] rounded-2xl border border-border overflow-hidden">
                     <div className="px-5 py-4 border-b border-border">
                       <h3 className="text-sm font-bold text-secondary">Recent Jobs</h3>
                     </div>
@@ -1699,14 +1699,14 @@ export default function ContractorPerformancePage() {
                                 </p>
                               </div>
                               <div className="text-right shrink-0">
-                                <p className="text-sm font-semibold text-emerald-600">
+                                <p className="text-sm font-semibold text-[#34d399]">
                                   {formatDollars(net)}
                                 </p>
                                 <p
                                   className={`text-xs capitalize ${
                                     job.payment_status === "paid"
-                                      ? "text-emerald-600"
-                                      : "text-amber-600"
+                                      ? "text-[#34d399]"
+                                      : "text-[#fbbf24]"
                                   }`}
                                 >
                                   {job.payment_status || "pending"}
@@ -1728,7 +1728,7 @@ export default function ContractorPerformancePage() {
                 Reviews Received
                 {reviews.length > 0 ? ` (${reviews.length})` : ""}
               </h2>
-              <div className="bg-white rounded-2xl border border-border p-6">
+              <div className="bg-[#0f1011] rounded-2xl border border-border p-6">
                 {profileLoading ? (
                   <div className="flex justify-center py-6">
                     <div className="animate-spin w-6 h-6 border-4 border-primary border-t-transparent rounded-full" />
@@ -1798,10 +1798,10 @@ export default function ContractorPerformancePage() {
             <div className="sticky top-6 space-y-4">
 
               {/* Profile Completeness */}
-              <div className="bg-white rounded-2xl border border-border p-5">
+              <div className="bg-[#0f1011] rounded-2xl border border-border p-5">
                 <h3 className="text-sm font-bold text-secondary mb-1">Profile Completeness</h3>
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div className="flex-1 h-2 bg-[#141516] rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all ${
                         completenessPct === 100
@@ -1821,11 +1821,11 @@ export default function ContractorPerformancePage() {
                   {completenessItems.map((item) => (
                     <li key={item.label} className="flex items-center gap-2 text-sm">
                       {item.done ? (
-                        <span className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs shrink-0">
+                        <span className="w-4 h-4 rounded-full bg-[#27a644]/10 text-[#34d399] flex items-center justify-center text-xs shrink-0">
                           ✓
                         </span>
                       ) : (
-                        <span className="w-4 h-4 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center text-xs shrink-0">
+                        <span className="w-4 h-4 rounded-full bg-[#141516] text-[#8a8f98] flex items-center justify-center text-xs shrink-0">
                           ✗
                         </span>
                       )}
@@ -1854,7 +1854,7 @@ export default function ContractorPerformancePage() {
               </div>
 
               {/* Bid Performance */}
-              <div className="bg-white rounded-2xl border border-border p-5">
+              <div className="bg-[#0f1011] rounded-2xl border border-border p-5">
                 <h3 className="text-sm font-bold text-secondary mb-4">Bid Performance</h3>
                 {profileLoading ? (
                   <div className="flex justify-center py-4">
@@ -1884,7 +1884,7 @@ export default function ContractorPerformancePage() {
                     </div>
                     {contractorStats?.acceptance_rate != null && (
                       <div className="pt-2">
-                        <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-1.5 bg-[#141516] rounded-full overflow-hidden">
                           <div
                             className="h-full bg-primary rounded-full transition-all"
                             style={{
@@ -1899,7 +1899,7 @@ export default function ContractorPerformancePage() {
               </div>
 
               {/* Account Number */}
-              <div className="bg-white rounded-2xl border border-border p-5">
+              <div className="bg-[#0f1011] rounded-2xl border border-border p-5">
                 <h3 className="text-sm font-bold text-secondary mb-3">Account Number</h3>
                 {user.account_number ? (
                   <div className="flex items-center gap-2">
@@ -1908,7 +1908,7 @@ export default function ContractorPerformancePage() {
                     </span>
                   </div>
                 ) : (
-                  <p className="text-xs text-amber-600 font-medium">
+                  <p className="text-xs text-[#fbbf24] font-medium">
                     ⚠ Add your phone number in the Personal Info section to activate your account number.
                   </p>
                 )}
@@ -1918,7 +1918,7 @@ export default function ContractorPerformancePage() {
               </div>
 
               {/* Job Alert Preferences */}
-              <div className="bg-white rounded-2xl border border-border p-5">
+              <div className="bg-[#0f1011] rounded-2xl border border-border p-5">
                 <h3 className="text-sm font-bold text-secondary mb-4">Job Alert Preferences</h3>
                 {alertPrefsLoading ? (
                   <div className="flex justify-center py-4">
@@ -1959,7 +1959,7 @@ export default function ContractorPerformancePage() {
                         type="button"
                         onClick={() => setAlertEmailEnabled((v) => !v)}
                         className={`w-10 h-5 rounded-full transition-colors relative ${
-                          alertEmailEnabled ? "bg-emerald-500" : "bg-gray-200"
+                          alertEmailEnabled ? "bg-emerald-500" : "bg-[#23252a]"
                         }`}
                       >
                         <span
@@ -1976,7 +1976,7 @@ export default function ContractorPerformancePage() {
                       <select
                         value={alertRadius}
                         onChange={(e) => setAlertRadius(Number(e.target.value))}
-                        className="w-full text-xs border border-border rounded-lg px-2 py-1.5 text-secondary bg-white focus:outline-none focus:ring-2 focus:ring-primary/30"
+                        className="w-full text-xs border border-border rounded-lg px-2 py-1.5 text-secondary bg-[#141516] focus:outline-none focus:ring-2 focus:ring-primary/30"
                       >
                         <option value={10}>10 miles</option>
                         <option value={25}>25 miles</option>
@@ -1991,7 +1991,7 @@ export default function ContractorPerformancePage() {
                       disabled={alertSaving}
                       className={`w-full py-2 text-sm font-semibold rounded-xl transition-colors ${
                         alertSaved
-                          ? "bg-emerald-100 text-emerald-700"
+                          ? "bg-[#27a644]/20 text-[#34d399]"
                           : "bg-primary text-white hover:bg-primary/90"
                       }`}
                     >
@@ -2002,7 +2002,7 @@ export default function ContractorPerformancePage() {
               </div>
 
               {/* Quick links */}
-              <div className="bg-white rounded-2xl border border-border p-5">
+              <div className="bg-[#0f1011] rounded-2xl border border-border p-5">
                 <h3 className="text-sm font-bold text-secondary mb-3">Quick Links</h3>
                 <div className="space-y-2">
                   <Link

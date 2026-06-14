@@ -98,17 +98,17 @@ export default function ContractorEarningsPage() {
       {/* Summary cards */}
       <ScrollReveal delay={0}>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-          <p className="text-3xl font-bold text-green-600">{fmt(totalCents)}</p>
-          <p className="text-sm text-gray-500 mt-1">Total Earned (Net)</p>
+        <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-5 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+          <p className="text-3xl font-bold text-[#34d399]">{fmt(totalCents)}</p>
+          <p className="text-sm text-[#8a8f98] mt-1">Total Earned (Net)</p>
         </div>
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-          <p className="text-3xl font-bold text-blue-600">{fmt(thisMonthCents)}</p>
-          <p className="text-sm text-gray-500 mt-1">This Month (Net)</p>
+        <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-5 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+          <p className="text-3xl font-bold text-[#60A5FA]">{fmt(thisMonthCents)}</p>
+          <p className="text-sm text-[#8a8f98] mt-1">This Month (Net)</p>
         </div>
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-          <p className="text-3xl font-bold text-indigo-600">{earnings.length}</p>
-          <p className="text-sm text-gray-500 mt-1">Jobs Completed</p>
+        <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-5 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+          <p className="text-3xl font-bold text-indigo-400">{earnings.length}</p>
+          <p className="text-sm text-[#8a8f98] mt-1">Jobs Completed</p>
         </div>
       </div>
       </ScrollReveal>
@@ -119,10 +119,10 @@ export default function ContractorEarningsPage() {
           <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
         </div>
       ) : earnings.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-12 text-center">
+        <div className="bg-[#0f1011] rounded-xl border border-[#23252a] shadow-sm p-12 text-center">
           <div className="text-4xl mb-3">💰</div>
-          <p className="font-semibold text-gray-800">No earnings yet</p>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="font-semibold text-[#d0d6e0]">No earnings yet</p>
+          <p className="text-sm text-[#8a8f98] mt-1">
             Complete your first job to see your earnings here.
           </p>
           <Link
@@ -134,24 +134,24 @@ export default function ContractorEarningsPage() {
         </div>
       ) : (
         <ScrollReveal delay={100}>
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-          <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-            <p className="text-sm font-semibold text-gray-700">Payment History</p>
-            <p className="text-xs text-gray-400">{earnings.length} job{earnings.length !== 1 ? "s" : ""}</p>
+        <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm overflow-hidden">
+          <div className="px-4 py-3 border-b border-[#23252a] flex items-center justify-between">
+            <p className="text-sm font-semibold text-[#d0d6e0]">Payment History</p>
+            <p className="text-xs text-[#8a8f98]">{earnings.length} job{earnings.length !== 1 ? "s" : ""}</p>
           </div>
-          <div className="divide-y divide-gray-50">
+          <div className="divide-y divide-[#23252a]">
             {earnings.map((row) => (
               <div
                 key={row.job_id}
-                className="flex items-center justify-between p-4 gap-4 hover:bg-gray-50/60 transition-all duration-200"
+                className="flex items-center justify-between p-4 gap-4 hover:bg-[#141516] transition-all duration-200"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-xl bg-green-50 border border-green-100 flex items-center justify-center text-xl shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[#27a644]/10 border border-[#27a644]/30 flex items-center justify-center text-xl shrink-0">
                     {getCategoryIcon(row.job_category)}
                   </div>
                   <div className="min-w-0">
-                    <p className="font-medium text-gray-900 truncate">{row.job_title}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">
+                    <p className="font-medium text-[#f7f8f8] truncate">{row.job_title}</p>
+                    <p className="text-xs text-[#8a8f98] mt-0.5">
                       {getCategoryLabel(row.job_category)} · {formatDate(row.job_completed_at)}
                     </p>
                   </div>
@@ -159,12 +159,12 @@ export default function ContractorEarningsPage() {
 
                 <div className="flex items-center gap-4 shrink-0">
                   <div className="text-right">
-                    <p className="text-sm font-bold text-green-600">+{fmt(row.net_cents)}</p>
-                    <p className="text-xs text-gray-400">Completed</p>
+                    <p className="text-sm font-bold text-[#34d399]">+{fmt(row.net_cents)}</p>
+                    <p className="text-xs text-[#8a8f98]">Completed</p>
                   </div>
                   <Link
                     href={`/jobs/${row.job_id}`}
-                    className="text-xs font-medium text-blue-600 hover:underline"
+                    className="text-xs font-medium text-[#60A5FA] hover:underline"
                   >
                     View →
                   </Link>
@@ -174,9 +174,9 @@ export default function ContractorEarningsPage() {
           </div>
 
           {/* Total footer */}
-          <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
-            <p className="text-sm font-semibold text-gray-700">Total</p>
-            <p className="text-sm font-bold text-green-600">{fmt(totalCents)}</p>
+          <div className="px-4 py-3 bg-[#010102] border-t border-[#23252a] flex items-center justify-between">
+            <p className="text-sm font-semibold text-[#d0d6e0]">Total</p>
+            <p className="text-sm font-bold text-[#34d399]">{fmt(totalCents)}</p>
           </div>
         </div>
         </ScrollReveal>

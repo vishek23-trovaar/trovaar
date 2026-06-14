@@ -167,7 +167,7 @@ export default function PortfolioManager({ contractorId, editable = false }: Por
             <select
               value={newCategory}
               onChange={(e) => setNewCategory(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-border bg-white text-sm text-secondary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+              className="w-full px-3 py-2 rounded-lg border border-border bg-[#141516] text-sm text-secondary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
             >
               {CATEGORIES.map((c) => (
                 <option key={c.value} value={c.value}>{c.label}</option>
@@ -183,7 +183,7 @@ export default function PortfolioManager({ contractorId, editable = false }: Por
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
               placeholder="e.g. Complete bathroom remodel, Engine rebuild on '18 F-150"
-              className="w-full px-3 py-2 rounded-lg border border-border bg-white text-sm text-secondary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+              className="w-full px-3 py-2 rounded-lg border border-border bg-[#141516] text-sm text-secondary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
             />
           </div>
 
@@ -195,7 +195,7 @@ export default function PortfolioManager({ contractorId, editable = false }: Por
               onChange={(e) => setNewDescription(e.target.value)}
               placeholder="Describe the work, challenges overcome, and materials used."
               rows={2}
-              className="w-full px-3 py-2 rounded-lg border border-border bg-white text-sm text-secondary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary placeholder-muted"
+              className="w-full px-3 py-2 rounded-lg border border-border bg-[#141516] text-sm text-secondary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary placeholder-muted"
             />
           </div>
 
@@ -218,7 +218,7 @@ export default function PortfolioManager({ contractorId, editable = false }: Por
           />
 
           {saveMsg && (
-            <p className={`text-sm ${saveMsg.startsWith("✓") ? "text-emerald-600" : "text-danger"}`}>
+            <p className={`text-sm ${saveMsg.startsWith("✓") ? "text-[#34d399]" : "text-danger"}`}>
               {saveMsg}
             </p>
           )}
@@ -266,7 +266,7 @@ export default function PortfolioManager({ contractorId, editable = false }: Por
                 const after: string[] = (() => { try { return JSON.parse(item.after_photos); } catch { return []; } })();
 
                 return (
-                  <div key={item.id} className="bg-white rounded-xl border border-border overflow-hidden">
+                  <div key={item.id} className="bg-[#0f1011] rounded-xl border border-border overflow-hidden">
                     {/* Title bar */}
                     <div className="flex items-center justify-between px-4 py-2.5 bg-surface border-b border-border">
                       <div>
@@ -290,7 +290,7 @@ export default function PortfolioManager({ contractorId, editable = false }: Por
                       {/* Before column */}
                       <div className="p-3">
                         <p className="text-xs font-semibold text-muted mb-2 flex items-center gap-1">
-                          <span className="w-4 h-4 rounded-full bg-gray-200 flex items-center justify-center text-[9px] font-bold">B</span>
+                          <span className="w-4 h-4 rounded-full bg-[#18191a] flex items-center justify-center text-[9px] font-bold">B</span>
                           Before
                         </p>
                         {before.length > 0 ? (
@@ -315,8 +315,8 @@ export default function PortfolioManager({ contractorId, editable = false }: Por
 
                       {/* After column */}
                       <div className="p-3">
-                        <p className="text-xs font-semibold text-emerald-600 mb-2 flex items-center gap-1">
-                          <span className="w-4 h-4 rounded-full bg-emerald-100 flex items-center justify-center text-[9px] font-bold text-emerald-700">A</span>
+                        <p className="text-xs font-semibold text-[#34d399] mb-2 flex items-center gap-1">
+                          <span className="w-4 h-4 rounded-full bg-[#27a644]/20 flex items-center justify-center text-[9px] font-bold text-[#34d399]">A</span>
                           After
                         </p>
                         {after.length > 0 ? (

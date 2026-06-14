@@ -57,12 +57,12 @@ export function CallButton({ jobId, receiverId, receiverName }: CallButtonProps)
         {calling ? "Calling…" : `Call ${receiverName}`}
       </button>
       {callStatus && (
-        <p className="text-xs text-emerald-700 mt-1">
+        <p className="text-xs text-[#34d399] mt-1">
           Call initiated — check your phone.{" "}
-          <span className="text-gray-400">This call is recorded for safety.</span>
+          <span className="text-[#8a8f98]">This call is recorded for safety.</span>
         </p>
       )}
-      {error && <p className="text-xs text-red-600 mt-1">{error}</p>}
+      {error && <p className="text-xs text-[#f87171] mt-1">{error}</p>}
     </div>
   );
 }

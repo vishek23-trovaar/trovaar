@@ -159,21 +159,21 @@ export default function AdminUsersPage() {
 
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Users</h1>
-          <p className="text-slate-500 text-sm mt-1">
+          <h1 className="text-2xl font-bold text-[#d0d6e0]">Users</h1>
+          <p className="text-[#8a8f98] text-sm mt-1">
             {total.toLocaleString()} total users
           </p>
         </div>
         <a
           href="/api/admin/export?type=users"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg hover:bg-emerald-100 transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-[#27a644]/10 text-[#34d399] border border-[#27a644]/30 rounded-lg hover:bg-[#27a644]/15 transition-colors"
         >
           Export CSV
         </a>
       </div>
 
       {/* Search + role filter + status filter */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm mb-6 p-4">
+      <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm mb-6 p-4">
         <div className="flex flex-col sm:flex-row gap-3">
           <input
             type="text"
@@ -181,12 +181,12 @@ export default function AdminUsersPage() {
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") fetchUsers(1, search, roleFilter, sort, dir, statusFilter); }}
             placeholder="Search by name, email, phone, or account number..."
-            className="flex-1 border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+            className="flex-1 border border-[#23252a] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/40"
           />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-            className="border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white"
+            className="border border-[#23252a] rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/40 bg-[#0f1011]"
           >
             <option value="all">All Statuses</option>
             <option value="active">Active</option>
@@ -196,7 +196,7 @@ export default function AdminUsersPage() {
           </select>
           <button
             onClick={() => fetchUsers(1, search, roleFilter, sort, dir, statusFilter)}
-            className="px-5 py-2 bg-slate-800 text-white text-sm font-medium rounded-lg hover:bg-slate-700 transition-colors"
+            className="px-5 py-2 bg-[#0f1011] text-white text-sm font-medium rounded-lg hover:bg-[#141516] transition-colors"
           >
             Search
           </button>
@@ -210,8 +210,8 @@ export default function AdminUsersPage() {
               onClick={() => setRoleFilter(tab.id)}
               className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                 roleFilter === tab.id
-                  ? "bg-slate-800 text-white"
-                  : "text-slate-500 hover:bg-slate-100"
+                  ? "bg-[#0f1011] text-white"
+                  : "text-[#8a8f98] hover:bg-[#141516]"
               }`}
             >
               {tab.label}
@@ -221,40 +221,40 @@ export default function AdminUsersPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm overflow-hidden">
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <div className="animate-spin w-8 h-8 border-4 border-slate-300 border-t-slate-700 rounded-full" />
+            <div className="animate-spin w-8 h-8 border-4 border-[#23252a] border-t-slate-700 rounded-full" />
           </div>
         ) : users.length === 0 ? (
-          <div className="text-center py-16 text-slate-400">No users found.</div>
+          <div className="text-center py-16 text-[#8a8f98]">No users found.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50">
+                <tr className="border-b border-[#23252a] bg-[#010102]">
                   <th className="px-4 py-3 text-left">
                     <input
                       type="checkbox"
                       onChange={e => e.target.checked ? setSelected(new Set(users.map(u => u.id))) : setSelected(new Set())}
                       checked={selected.size === users.length && users.length > 0}
-                      className="rounded border-slate-300"
+                      className="rounded border-[#23252a]"
                     />
                   </th>
                   <SortableHeader col="name" label="Name" sort={sort} dir={dir} onSort={onSort} className="px-6" />
-                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500 whitespace-nowrap">Account #</th>
+                  <th className="text-left px-6 py-3 text-xs font-medium text-[#8a8f98] whitespace-nowrap">Account #</th>
                   <SortableHeader col="email" label="Email / Phone" sort={sort} dir={dir} onSort={onSort} className="px-6" />
-                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500">Role</th>
+                  <th className="text-left px-6 py-3 text-xs font-medium text-[#8a8f98]">Role</th>
                   <SortableHeader col="created_at" label="Joined" sort={sort} dir={dir} onSort={onSort} className="px-6" />
-                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500">Status</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-slate-500">Actions</th>
+                  <th className="text-left px-6 py-3 text-xs font-medium text-[#8a8f98]">Status</th>
+                  <th className="text-right px-6 py-3 text-xs font-medium text-[#8a8f98]">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {users.map((u) => (
                   <tr
                     key={u.id}
-                    className={`border-b border-slate-50 hover:bg-slate-50 transition-colors ${
+                    className={`border-b border-[#23252a] hover:bg-[#141516] transition-colors ${
                       u.is_suspended ? "opacity-60" : ""
                     }`}
                   >
@@ -267,18 +267,18 @@ export default function AdminUsersPage() {
                           e.target.checked ? s.add(u.id) : s.delete(u.id);
                           setSelected(s);
                         }}
-                        className="rounded border-slate-300"
+                        className="rounded border-[#23252a]"
                       />
                     </td>
                     <td className="px-6 py-3">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-600 shrink-0">
+                        <div className="w-7 h-7 rounded-full bg-[#18191a] flex items-center justify-center text-xs font-bold text-[#8a8f98] shrink-0">
                           {u.name.charAt(0).toUpperCase()}
                         </div>
                         <div>
-                          <p className="font-medium text-slate-800">{u.name}</p>
+                          <p className="font-medium text-[#d0d6e0]">{u.name}</p>
                           {!!u.is_admin && (
-                            <span className="text-xs bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full">
+                            <span className="text-xs bg-[#fbbf24]/10 text-[#fbbf24] px-1.5 py-0.5 rounded-full">
                               Admin
                             </span>
                           )}
@@ -287,36 +287,36 @@ export default function AdminUsersPage() {
                     </td>
                     <td className="px-6 py-3">
                       {u.account_number ? (
-                        <span className="font-mono font-semibold text-slate-800 text-xs tracking-wide">
+                        <span className="font-mono font-semibold text-[#d0d6e0] text-xs tracking-wide">
                           {u.account_number}
                         </span>
                       ) : (
-                        <span className="text-slate-300 text-xs italic">&mdash;</span>
+                        <span className="text-[#8a8f98] text-xs italic">&mdash;</span>
                       )}
                     </td>
-                    <td className="px-6 py-3 text-slate-500 text-xs">
+                    <td className="px-6 py-3 text-[#8a8f98] text-xs">
                       <p>{u.email}</p>
-                      {u.phone && <p className="text-slate-400 mt-0.5">{u.phone}</p>}
+                      {u.phone && <p className="text-[#8a8f98] mt-0.5">{u.phone}</p>}
                     </td>
                     <td className="px-6 py-3">
                       <span
                         className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
                           u.role === "consumer"
-                            ? "bg-blue-100 text-blue-700"
-                            : "bg-indigo-100 text-indigo-700"
+                            ? "bg-[#3B82F6]/10 text-[#60A5FA]"
+                            : "bg-[#3B82F6]/10 text-[#60A5FA]"
                         }`}
                       >
                         {u.role}
                       </span>
                     </td>
-                    <td className="px-6 py-3 text-slate-500 text-xs">{fmtDate(u.created_at)}</td>
+                    <td className="px-6 py-3 text-[#8a8f98] text-xs">{fmtDate(u.created_at)}</td>
                     <td className="px-6 py-3">
                       {u.is_suspended ? (
-                        <span className="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-medium">
+                        <span className="text-xs bg-[#f87171]/10 text-[#f87171] px-2 py-0.5 rounded-full font-medium">
                           Suspended
                         </span>
                       ) : (
-                        <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">
+                        <span className="text-xs bg-[#27a644]/10 text-[#34d399] px-2 py-0.5 rounded-full font-medium">
                           Active
                         </span>
                       )}
@@ -325,13 +325,13 @@ export default function AdminUsersPage() {
                       <div className="flex items-center justify-end gap-2 flex-wrap">
                         <Link
                           href={`/profile/${u.id}`}
-                          className="text-xs text-blue-600 hover:underline font-medium"
+                          className="text-xs text-[#60A5FA] hover:underline font-medium"
                         >
                           View
                         </Link>
                         <button
                           onClick={() => setEditUser(u)}
-                          className="text-xs px-2.5 py-1 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors"
+                          className="text-xs px-2.5 py-1 bg-[#141516] text-[#d0d6e0] rounded-lg hover:bg-[#18191a] transition-colors"
                         >
                           Edit
                         </button>
@@ -339,7 +339,7 @@ export default function AdminUsersPage() {
                           <button
                             onClick={() => handleAction(u.id, "unsuspend")}
                             disabled={actionLoading === u.id + "unsuspend"}
-                            className="text-xs px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200 disabled:opacity-50 transition-colors"
+                            className="text-xs px-2.5 py-1 bg-[#27a644]/10 text-[#34d399] rounded-lg hover:bg-[#27a644]/20 disabled:opacity-50 transition-colors"
                           >
                             Unsuspend
                           </button>
@@ -347,7 +347,7 @@ export default function AdminUsersPage() {
                           <button
                             onClick={() => handleAction(u.id, "suspend")}
                             disabled={actionLoading === u.id + "suspend"}
-                            className="text-xs px-2.5 py-1 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 disabled:opacity-50 transition-colors"
+                            className="text-xs px-2.5 py-1 bg-[#f87171]/10 text-[#f87171] rounded-lg hover:bg-[#f87171]/20 disabled:opacity-50 transition-colors"
                           >
                             Suspend
                           </button>
@@ -356,7 +356,7 @@ export default function AdminUsersPage() {
                           <button
                             onClick={() => handleAction(u.id, "remove_admin")}
                             disabled={!!actionLoading}
-                            className="text-xs px-2.5 py-1 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 disabled:opacity-50 transition-colors"
+                            className="text-xs px-2.5 py-1 bg-[#141516] text-[#8a8f98] rounded-lg hover:bg-[#18191a] disabled:opacity-50 transition-colors"
                           >
                             Revoke Admin
                           </button>
@@ -364,7 +364,7 @@ export default function AdminUsersPage() {
                           <button
                             onClick={() => handleAction(u.id, "make_admin")}
                             disabled={!!actionLoading}
-                            className="text-xs px-2.5 py-1 bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 disabled:opacity-50 transition-colors"
+                            className="text-xs px-2.5 py-1 bg-[#fbbf24]/10 text-[#fbbf24] rounded-lg hover:bg-[#fbbf24]/20 disabled:opacity-50 transition-colors"
                           >
                             Make Admin
                           </button>
@@ -381,22 +381,22 @@ export default function AdminUsersPage() {
 
         {/* Pagination */}
         {pages > 1 && (
-          <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100">
-            <p className="text-xs text-slate-400">
+          <div className="flex items-center justify-between px-6 py-4 border-t border-[#23252a]">
+            <p className="text-xs text-[#8a8f98]">
               Page {page} of {pages} &middot; {total.toLocaleString()} users
             </p>
             <div className="flex gap-2">
               <button
                 disabled={page <= 1}
                 onClick={() => fetchUsers(page - 1, search, roleFilter, sort, dir, statusFilter)}
-                className="px-3 py-1.5 text-xs border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40 transition-colors"
+                className="px-3 py-1.5 text-xs border border-[#23252a] rounded-lg hover:bg-[#141516] disabled:opacity-40 transition-colors"
               >
                 Previous
               </button>
               <button
                 disabled={page >= pages}
                 onClick={() => fetchUsers(page + 1, search, roleFilter, sort, dir, statusFilter)}
-                className="px-3 py-1.5 text-xs border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40 transition-colors"
+                className="px-3 py-1.5 text-xs border border-[#23252a] rounded-lg hover:bg-[#141516] disabled:opacity-40 transition-colors"
               >
                 Next
               </button>

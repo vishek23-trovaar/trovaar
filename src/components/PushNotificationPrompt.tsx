@@ -75,14 +75,14 @@ export default function PushNotificationPrompt() {
   if (!show) return null;
 
   return (
-    <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center justify-between gap-4 mb-6">
+    <div className="bg-[#3B82F6]/10 border border-[#3B82F6]/30 rounded-xl p-4 flex items-center justify-between gap-4 mb-6">
       <div className="flex items-center gap-3">
         <span className="text-2xl">&#x1F514;</span>
         <div>
-          <p className="text-sm font-semibold text-blue-900">
+          <p className="text-sm font-semibold text-[#60A5FA]">
             Enable push notifications
           </p>
-          <p className="text-xs text-blue-700">
+          <p className="text-xs text-[#60A5FA]/80">
             Get instant alerts for bids, messages, and job updates
           </p>
         </div>
@@ -90,7 +90,7 @@ export default function PushNotificationPrompt() {
       <div className="flex items-center gap-2 shrink-0">
         <button
           onClick={handleDismiss}
-          className="text-xs text-blue-600 hover:text-blue-800 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors"
+          className="text-xs text-[#60A5FA] hover:text-[#93c5fd] px-3 py-1.5 rounded-lg hover:bg-[#3B82F6]/15 transition-colors"
         >
           Not now
         </button>

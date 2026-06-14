@@ -81,7 +81,7 @@ export default function AdminBackgroundChecksPage() {
       </div>
 
       {message && (
-        <div className="mb-4 bg-blue-50 text-blue-800 text-sm p-3 rounded-lg">{message}</div>
+        <div className="mb-4 bg-[#3B82F6]/10 text-[#60A5FA] text-sm p-3 rounded-lg">{message}</div>
       )}
 
       {loading ? (
@@ -119,8 +119,8 @@ export default function AdminBackgroundChecksPage() {
                       </div>
 
                       <div className="flex flex-col gap-3 min-w-fit">
-                        <div className="border rounded-lg p-3 bg-blue-50">
-                          <p className="text-xs font-semibold text-blue-800 mb-2">
+                        <div className="border rounded-lg p-3 bg-[#3B82F6]/10">
+                          <p className="text-xs font-semibold text-[#60A5FA] mb-2">
                             Background Check Request
                           </p>
                           <div className="mb-2">
@@ -134,7 +134,7 @@ export default function AdminBackgroundChecksPage() {
                                   [contractor.user_id]: e.target.value,
                                 }))
                               }
-                              className="w-full px-2 py-1.5 text-xs border border-border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                              className="w-full px-2 py-1.5 text-xs border border-border rounded-md bg-[#0f1011] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                             />
                           </div>
                           <div className="flex gap-2">
@@ -185,8 +185,8 @@ export default function AdminBackgroundChecksPage() {
                       <span
                         className={`text-xs px-2.5 py-1 rounded-full font-medium ${
                           contractor.background_check_status === "approved"
-                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                            : "bg-red-50 text-red-700 border border-red-200"
+                            ? "bg-[#27a644]/10 text-[#34d399] border border-[#27a644]/30"
+                            : "bg-[#f87171]/10 text-[#f87171] border border-[#f87171]/30"
                         }`}
                       >
                         {contractor.background_check_status === "approved"

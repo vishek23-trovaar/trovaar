@@ -181,12 +181,12 @@ export default function CredentialUploader({ contractorId, editable = true }: Pr
       )}
 
       {error && (
-        <div className="bg-red-50 text-danger text-sm p-3 rounded-lg">{error}</div>
+        <div className="bg-[#f87171]/10 text-danger text-sm p-3 rounded-lg">{error}</div>
       )}
 
       {/* Verification results */}
       {result && (
-        <div className="bg-white border border-border rounded-xl overflow-hidden">
+        <div className="bg-[#0f1011] border border-border rounded-xl overflow-hidden">
           <div className="flex items-center gap-2 px-4 py-3 bg-surface border-b border-border">
             <span className="text-lg">
               {result.confidence === "high" ? "✅" : result.confidence === "medium" ? "🟡" : "⚠️"}
@@ -202,7 +202,7 @@ export default function CredentialUploader({ contractorId, editable = true }: Pr
               <p className="text-xs text-muted">{result.summary}</p>
             </div>
             {result.isExpired && (
-              <span className="ml-auto px-2 py-0.5 bg-red-100 text-red-700 text-xs font-semibold rounded-full">
+              <span className="ml-auto px-2 py-0.5 bg-[#f87171]/10 text-[#f87171] text-xs font-semibold rounded-full">
                 Expired
               </span>
             )}
@@ -248,7 +248,7 @@ export default function CredentialUploader({ contractorId, editable = true }: Pr
           <div className="px-4 py-2 bg-surface border-b border-border">
             <p className="text-xs font-medium text-muted">Document on file</p>
           </div>
-          <div className="relative w-full h-48 bg-slate-50">
+          <div className="relative w-full h-48 bg-[#010102]">
             <Image
               src={credential.id_document_url}
               alt="License document"
@@ -266,7 +266,7 @@ function Field({ label, value, warn }: { label: string; value: string; warn?: bo
   return (
     <div>
       <p className="text-xs text-muted mb-0.5">{label}</p>
-      <p className={`text-sm font-medium ${warn ? "text-red-600" : "text-secondary"}`}>{value}</p>
+      <p className={`text-sm font-medium ${warn ? "text-[#f87171]" : "text-secondary"}`}>{value}</p>
     </div>
   );
 }

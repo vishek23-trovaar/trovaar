@@ -20,10 +20,10 @@ interface EquipmentItem {
 }
 
 const EQUIPMENT_STATUS_OPTIONS: { value: EquipmentItem["status"]; label: string; color: string }[] = [
-  { value: "own",      label: "I own it",          color: "text-emerald-700 bg-emerald-50 border-emerald-200" },
-  { value: "rent",     label: "Renting",            color: "text-blue-700 bg-blue-50 border-blue-200" },
-  { value: "purchase", label: "Need to Purchase",   color: "text-orange-700 bg-orange-50 border-orange-200" },
-  { value: "borrow",   label: "Need to Borrow",     color: "text-purple-700 bg-purple-50 border-purple-200" },
+  { value: "own",      label: "I own it",          color: "text-[#34d399] bg-[#27a644]/10 border-[#27a644]/30" },
+  { value: "rent",     label: "Renting",            color: "text-[#60A5FA] bg-[#3B82F6]/10 border-[#3B82F6]/30" },
+  { value: "purchase", label: "Need to Purchase",   color: "text-[#fb923c] bg-[#f97316]/10 border-[#f97316]/30" },
+  { value: "borrow",   label: "Need to Borrow",     color: "text-[#c084fc] bg-[#a855f7]/10 border-[#a855f7]/30" },
 ];
 
 export default function SubmitBidPage({ params }: { params: Promise<{ id: string }> }) {
@@ -300,12 +300,12 @@ export default function SubmitBidPage({ params }: { params: Promise<{ id: string
       <Card className="p-6 sm:p-8 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300">
         <form onSubmit={handleSubmit} className="space-y-7">
           {error && (
-            <div role="alert" aria-live="polite" className="bg-red-50 text-danger text-sm p-3 rounded-lg">{error}</div>
+            <div role="alert" aria-live="polite" className="bg-[#f87171]/10 text-danger text-sm p-3 rounded-lg">{error}</div>
           )}
 
           {/* ── AI Price Intelligence banner ── */}
           {(estimateLoading || priceEstimate) && (
-            <div className={`rounded-xl border px-4 py-3 ${estimateLoading ? "border-border bg-surface animate-pulse" : "border-indigo-200 bg-indigo-50"}`}>
+            <div className={`rounded-xl border px-4 py-3 ${estimateLoading ? "border-border bg-surface animate-pulse" : "border-[#3B82F6]/30 bg-[#3B82F6]/10"}`}>
               {estimateLoading ? (
                 <div className="flex items-center gap-2 text-sm text-muted">
                   <svg className="animate-spin w-4 h-4 text-primary shrink-0" fill="none" viewBox="0 0 24 24">
@@ -317,13 +317,13 @@ export default function SubmitBidPage({ params }: { params: Promise<{ id: string
               ) : priceEstimate ? (
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-indigo-600 font-semibold text-sm">🤖 Market Rate Insight</span>
-                    <span className="text-xs text-indigo-400 bg-indigo-100 px-1.5 py-0.5 rounded-full">Only you see this</span>
+                    <span className="text-[#60A5FA] font-semibold text-sm">🤖 Market Rate Insight</span>
+                    <span className="text-xs text-[#60A5FA] bg-[#3B82F6]/10 px-1.5 py-0.5 rounded-full">Only you see this</span>
                   </div>
-                  <p className="text-indigo-900 font-semibold text-lg">
+                  <p className="text-[#bfdbfe] font-semibold text-lg">
                     ${priceEstimate.low.toLocaleString()} – ${priceEstimate.high.toLocaleString()}
                   </p>
-                  <p className="text-xs text-indigo-600 mt-0.5">{priceEstimate.note}</p>
+                  <p className="text-xs text-[#60A5FA] mt-0.5">{priceEstimate.note}</p>
                 </div>
               ) : null}
             </div>
@@ -375,7 +375,7 @@ export default function SubmitBidPage({ params }: { params: Promise<{ id: string
                   onChange={(e) => setPrice(e.target.value)}
                   placeholder="0.00"
                   required={!includeMaterials}
-                  className="w-full pl-8 pr-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary"
+                  className="w-full pl-8 pr-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary"
                 />
               </div>
               <p className="text-xs text-muted mt-1">
@@ -400,7 +400,7 @@ export default function SubmitBidPage({ params }: { params: Promise<{ id: string
                     value={laborPrice}
                     onChange={(e) => setLaborPrice(e.target.value)}
                     placeholder="0.00"
-                    className="w-full pl-8 pr-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary"
+                    className="w-full pl-8 pr-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary"
                   />
                 </div>
               </div>
@@ -409,7 +409,7 @@ export default function SubmitBidPage({ params }: { params: Promise<{ id: string
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <label className="block text-sm font-medium text-secondary">Materials Estimate</label>
-                  <span className="text-xs text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                  <span className="text-xs text-[#fbbf24] bg-[#fbbf24]/10 border border-[#fbbf24]/30 px-2 py-0.5 rounded-full">
                     Subject to change — client approval required
                   </span>
                 </div>
@@ -432,7 +432,7 @@ export default function SubmitBidPage({ params }: { params: Promise<{ id: string
                         value={m.description}
                         onChange={(e) => updateMaterial(i, "description", e.target.value)}
                         placeholder="e.g. 1/2 copper pipe"
-                        className="text-sm px-2 py-1.5 rounded border border-border focus:outline-none focus:ring-1 focus:ring-primary/30 focus:border-primary bg-white"
+                        className="text-sm px-2 py-1.5 rounded border border-border focus:outline-none focus:ring-1 focus:ring-primary/30 focus:border-primary bg-[#141516]"
                       />
                       <input
                         type="number"
@@ -440,7 +440,7 @@ export default function SubmitBidPage({ params }: { params: Promise<{ id: string
                         step="0.5"
                         value={m.quantity}
                         onChange={(e) => updateMaterial(i, "quantity", e.target.value)}
-                        className="text-sm px-2 py-1.5 rounded border border-border focus:outline-none focus:ring-1 focus:ring-primary/30 bg-white text-center"
+                        className="text-sm px-2 py-1.5 rounded border border-border focus:outline-none focus:ring-1 focus:ring-primary/30 bg-[#141516] text-center"
                       />
                       <div className="relative">
                         <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted text-xs">$</span>
@@ -451,7 +451,7 @@ export default function SubmitBidPage({ params }: { params: Promise<{ id: string
                           value={m.unit_price}
                           onChange={(e) => updateMaterial(i, "unit_price", e.target.value)}
                           placeholder="0.00"
-                          className="text-sm pl-5 pr-2 py-1.5 rounded border border-border focus:outline-none focus:ring-1 focus:ring-primary/30 bg-white w-full"
+                          className="text-sm pl-5 pr-2 py-1.5 rounded border border-border focus:outline-none focus:ring-1 focus:ring-primary/30 bg-[#141516] w-full"
                         />
                       </div>
                       <button
@@ -522,7 +522,7 @@ export default function SubmitBidPage({ params }: { params: Promise<{ id: string
               onChange={(e) => setPartsSummary(e.target.value)}
               placeholder={`Briefly describe the parts or supplies required for this job.\n\nExample: Fiberglass mat, resin, gel coat (matching hull color), sandpaper (80–220 grit), acetone for prep. Will need to color-match the existing finish.`}
               rows={4}
-              className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted text-sm"
+              className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary placeholder-muted text-sm"
             />
             <p className="text-xs text-muted mt-1">
               This gives the client a clear picture of what goes into the job before they accept your bid.
@@ -539,7 +539,7 @@ export default function SubmitBidPage({ params }: { params: Promise<{ id: string
             </div>
 
             {nonOwnedEquipment.length > 0 && (
-              <div className="mb-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+              <div className="mb-2 text-xs text-[#fbbf24] bg-[#fbbf24]/10 border border-[#fbbf24]/30 rounded-lg px-3 py-2">
                 ⚠️ You have equipment you need to{" "}
                 {nonOwnedEquipment.some((e) => e.status === "rent") && "rent"}
                 {nonOwnedEquipment.some((e) => e.status === "rent") &&
@@ -572,7 +572,7 @@ export default function SubmitBidPage({ params }: { params: Promise<{ id: string
                     value={eq.name}
                     onChange={(e) => updateEquipment(i, "name", e.target.value)}
                     placeholder="e.g. angle grinder, orbital sander"
-                    className="text-sm px-2 py-1.5 rounded border border-border focus:outline-none focus:ring-1 focus:ring-primary/30 focus:border-primary bg-white"
+                    className="text-sm px-2 py-1.5 rounded border border-border focus:outline-none focus:ring-1 focus:ring-primary/30 focus:border-primary bg-[#141516]"
                   />
                   <select
                     value={eq.status}
@@ -647,7 +647,7 @@ export default function SubmitBidPage({ params }: { params: Promise<{ id: string
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Introduce yourself, mention relevant experience, note anything about the job scope, or ask questions."
               rows={4}
-              className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted"
+              className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary placeholder-muted"
             />
           </div>
 

@@ -22,30 +22,30 @@ export default function MobileAppPage() {
   const scaledH = (frameH * scale) / 100;
 
   return (
-    <div className="h-screen flex flex-col bg-slate-100 overflow-hidden">
+    <div className="h-screen flex flex-col bg-[#141516] overflow-hidden">
       {/* Top toolbar */}
-      <div className="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between shrink-0">
+      <div className="bg-[#0f1011] border-b border-[#23252a] px-6 py-3 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-xl shadow">
             📱
           </div>
           <div>
-            <h1 className="text-lg font-bold text-slate-900">Mobile App Preview</h1>
-            <p className="text-xs text-slate-500">Live development preview via Expo</p>
+            <h1 className="text-lg font-bold text-[#f7f8f8]">Mobile App Preview</h1>
+            <p className="text-xs text-[#8a8f98]">Live development preview via Expo</p>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
           {/* Device selector */}
-          <div className="flex bg-slate-100 rounded-lg p-0.5">
+          <div className="flex bg-[#141516] rounded-lg p-0.5">
             {(Object.keys(devices) as Array<keyof typeof devices>).map((key) => (
               <button
                 key={key}
                 onClick={() => setDevice(key)}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
                   device === key
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-500 hover:text-slate-700"
+                    ? "bg-[#0f1011] text-[#f7f8f8] shadow-sm"
+                    : "text-[#8a8f98] hover:text-[#d0d6e0]"
                 }`}
               >
                 {key === "iphone" ? "🍎 iPhone" : key === "android" ? "🤖 Android" : "📱 Tablet"}
@@ -56,7 +56,7 @@ export default function MobileAppPage() {
           {/* Orientation toggle */}
           <button
             onClick={() => setOrientation(o => o === "portrait" ? "landscape" : "portrait")}
-            className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"
+            className="p-2 rounded-lg bg-[#141516] hover:bg-[#18191a] text-[#8a8f98] transition-colors"
             title="Toggle orientation"
           >
             {orientation === "portrait" ? "📲" : "📱"}
@@ -66,7 +66,7 @@ export default function MobileAppPage() {
           <select
             value={scale}
             onChange={(e) => setScale(Number(e.target.value))}
-            className="px-2 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-700 bg-white"
+            className="px-2 py-1.5 rounded-lg border border-[#23252a] text-xs text-[#d0d6e0] bg-[#0f1011]"
           >
             <option value={50}>50%</option>
             <option value={65}>65%</option>
@@ -78,7 +78,7 @@ export default function MobileAppPage() {
           {/* Refresh */}
           <button
             onClick={() => setRefreshKey(k => k + 1)}
-            className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm text-slate-600 font-medium transition-colors"
+            className="px-3 py-1.5 rounded-lg bg-[#141516] hover:bg-[#18191a] text-sm text-[#8a8f98] font-medium transition-colors"
           >
             🔄 Reload
           </button>
@@ -86,24 +86,24 @@ export default function MobileAppPage() {
       </div>
 
       {/* Device info bar */}
-      <div className="bg-white border-b border-slate-200 px-6 py-2 flex items-center justify-between text-xs text-slate-500 shrink-0">
+      <div className="bg-[#0f1011] border-b border-[#23252a] px-6 py-2 flex items-center justify-between text-xs text-[#8a8f98] shrink-0">
         <div className="flex items-center gap-4">
-          <span className="font-medium text-slate-700">{devices[device].name}</span>
+          <span className="font-medium text-[#d0d6e0]">{devices[device].name}</span>
           <span>{frameW} × {frameH}px</span>
           <span className="capitalize">{orientation}</span>
           <span>{scale}% scale</span>
         </div>
         <div className="flex items-center gap-3">
-          <label className="text-xs text-slate-500">Expo URL:</label>
+          <label className="text-xs text-[#8a8f98]">Expo URL:</label>
           <input
             type="text"
             value={expoUrl}
             onChange={(e) => setExpoUrl(e.target.value)}
-            className="w-64 px-2 py-1 border border-slate-200 rounded text-xs font-mono text-slate-700 focus:outline-none focus:ring-1 focus:ring-indigo-400"
+            className="w-64 px-2 py-1 border border-[#23252a] rounded text-xs font-mono text-[#d0d6e0] focus:outline-none focus:ring-1 focus:ring-[#3B82F6]/40"
           />
           <button
             onClick={() => setRefreshKey(k => k + 1)}
-            className="text-indigo-600 hover:text-indigo-800 font-medium"
+            className="text-[#60A5FA] hover:text-[#60A5FA] font-medium"
           >
             Connect
           </button>
@@ -118,27 +118,27 @@ export default function MobileAppPage() {
         >
           {/* Phone bezel */}
           <div
-            className="absolute inset-0 bg-slate-900 rounded-[3rem] shadow-2xl"
+            className="absolute inset-0 bg-[#010102] rounded-[3rem] shadow-2xl"
             style={{
               boxShadow: "0 25px 50px -12px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)",
             }}
           >
             {/* Notch (iPhone) */}
             {device === "iphone" && orientation === "portrait" && (
-              <div className="absolute top-2 left-1/2 -translate-x-1/2 w-[120px] h-[30px] bg-slate-900 rounded-b-2xl z-10 flex items-center justify-center">
-                <div className="w-16 h-4 bg-slate-800 rounded-full" />
+              <div className="absolute top-2 left-1/2 -translate-x-1/2 w-[120px] h-[30px] bg-[#010102] rounded-b-2xl z-10 flex items-center justify-center">
+                <div className="w-16 h-4 bg-[#0f1011] rounded-full" />
               </div>
             )}
 
             {/* Status bar dots (bottom - home indicator) */}
             {device === "iphone" && orientation === "portrait" && (
-              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-slate-600 rounded-full z-10" />
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-[#18191a] rounded-full z-10" />
             )}
           </div>
 
           {/* iframe container */}
           <div
-            className="absolute overflow-hidden bg-white"
+            className="absolute overflow-hidden bg-[#0f1011]"
             style={{
               top: 16,
               left: 16,
@@ -165,13 +165,13 @@ export default function MobileAppPage() {
       </div>
 
       {/* Bottom status bar */}
-      <div className="bg-white border-t border-slate-200 px-6 py-2 flex items-center justify-between text-xs text-slate-500 shrink-0">
+      <div className="bg-[#0f1011] border-t border-[#23252a] px-6 py-2 flex items-center justify-between text-xs text-[#8a8f98] shrink-0">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
           <span>Live Preview — Changes auto-reload via Expo</span>
         </div>
         <div className="flex items-center gap-4">
-          <span>Make sure <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono">npx expo start</code> is running in terminal</span>
+          <span>Make sure <code className="bg-[#141516] px-1.5 py-0.5 rounded font-mono">npx expo start</code> is running in terminal</span>
         </div>
       </div>
     </div>

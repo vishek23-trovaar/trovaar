@@ -216,13 +216,13 @@ function SignupForm() {
             <span className="w-full border-t border-border" />
           </div>
           <div className="relative flex justify-center text-xs">
-            <span className="bg-white px-3 text-muted">or sign up with email</span>
+            <span className="bg-surface px-3 text-muted">or sign up with email</span>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
-            <div role="alert" aria-live="polite" className="bg-red-50 text-danger text-sm p-3 rounded-lg">{error}</div>
+            <div role="alert" aria-live="polite" className="bg-[#f87171]/10 text-danger text-sm p-3 rounded-lg">{error}</div>
           )}
 
           {/* Role Selector */}
@@ -304,7 +304,7 @@ function SignupForm() {
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+1 (555) 000-0000"
               required
-              className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted transition-colors duration-200"
+              className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary placeholder-muted transition-colors duration-200"
             />
             <p className="text-xs text-muted mt-1">Used to verify your identity and generate your account number.</p>
           </div>
@@ -325,7 +325,7 @@ function SignupForm() {
                 placeholder="At least 8 characters"
                 minLength={8}
                 required
-                className="w-full px-4 py-2.5 pr-11 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted transition-colors duration-200"
+                className="w-full px-4 py-2.5 pr-11 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary placeholder-muted transition-colors duration-200"
               />
               <button
                 type="button"
@@ -340,17 +340,17 @@ function SignupForm() {
             {/* Password strength bar */}
             {password.length > 0 && (
               <div className="mt-2">
-                <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-[#141516] rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all duration-300 ${strength.color}`}
                     style={{ width: strength.width }}
                   />
                 </div>
                 <p className={`text-xs mt-1 font-medium ${
-                  strength.level === "strong" ? "text-green-600" :
-                  strength.level === "good" ? "text-blue-600" :
-                  strength.level === "fair" ? "text-amber-600" :
-                  "text-red-600"
+                  strength.level === "strong" ? "text-[#34d399]" :
+                  strength.level === "good" ? "text-[#60A5FA]" :
+                  strength.level === "fair" ? "text-[#fbbf24]" :
+                  "text-[#f87171]"
                 }`}>
                   {strength.label}
                 </p>
@@ -373,7 +373,7 @@ function SignupForm() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Re-enter your password"
                 required
-                className={`w-full px-4 py-2.5 pr-11 rounded-lg border focus:outline-none focus:ring-2 bg-white text-secondary placeholder-muted transition-colors duration-200 ${
+                className={`w-full px-4 py-2.5 pr-11 rounded-lg border focus:outline-none focus:ring-2 bg-[#141516] text-secondary placeholder-muted transition-colors duration-200 ${
                   confirmPassword && password !== confirmPassword
                     ? "border-danger focus:ring-danger/20"
                     : "border-border focus:ring-primary/20 focus:border-primary"
@@ -407,7 +407,7 @@ function SignupForm() {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder={role === "consumer" ? "123 Main St, Atlanta, GA 30301" : "Atlanta, GA"}
-                className="flex-1 px-3 py-2 rounded-lg border border-border bg-white text-secondary text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="flex-1 px-3 py-2 rounded-lg border border-border bg-[#141516] text-secondary text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
               <button
                 type="button"

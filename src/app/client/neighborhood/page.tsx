@@ -133,12 +133,12 @@ export default function NeighborhoodFeedPage() {
   }, [fetchFeed]);
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-[#010102] min-h-screen">
       <div className="max-w-2xl mx-auto px-4 py-8">
         {/* Header */}
         <Link
           href="/client/dashboard"
-          className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-emerald-600 transition-colors mb-3"
+          className="inline-flex items-center gap-1 text-sm text-[#8a8f98] hover:text-emerald-400 transition-colors mb-3"
         >
           &larr; Back to Dashboard
         </Link>
@@ -149,14 +149,14 @@ export default function NeighborhoodFeedPage() {
         />
 
         {/* Privacy notice */}
-        <div className="flex items-start gap-2 bg-emerald-50 border border-emerald-200 rounded-xl p-3 mb-6 text-sm text-emerald-800">
+        <div className="flex items-start gap-2 bg-[#27a644]/10 border border-[#27a644]/30 rounded-xl p-3 mb-6 text-sm text-[#34d399]">
           <span className="shrink-0 mt-0.5">🔒</span>
           <span>Activity is anonymized — no personal details are shown.</span>
         </div>
 
         {/* Location fallback notice */}
         {locationDenied && (
-          <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4 text-sm text-amber-800">
+          <div className="flex items-start gap-2 bg-[#fbbf24]/10 border border-[#fbbf24]/30 rounded-xl p-3 mb-4 text-sm text-[#fbbf24]">
             <span className="shrink-0 mt-0.5">📍</span>
             <span>Location access was denied — showing platform-wide activity instead.</span>
           </div>
@@ -165,11 +165,11 @@ export default function NeighborhoodFeedPage() {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 gap-3">
             <div className="animate-spin w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full" />
-            <p className="text-sm text-gray-500">Loading nearby activity...</p>
+            <p className="text-sm text-[#8a8f98]">Loading nearby activity...</p>
           </div>
         ) : error ? (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-            <p className="text-red-700 font-semibold">{error}</p>
+          <div className="bg-[#f87171]/10 border border-[#f87171]/30 rounded-xl p-6 text-center">
+            <p className="text-[#f87171] font-semibold">{error}</p>
             <button
               onClick={() => fetchFeed()}
               className="mt-3 px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
@@ -181,18 +181,18 @@ export default function NeighborhoodFeedPage() {
           <div className="space-y-4">
             {/* Summary card */}
             <ScrollReveal>
-            <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-lg transition-all duration-300">
+            <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] p-5 shadow-sm hover:shadow-lg transition-all duration-300">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-xl shrink-0">
+                <div className="w-10 h-10 rounded-full bg-[#27a644]/10 flex items-center justify-center text-xl shrink-0">
                   🏘️
                 </div>
                 <div>
-                  <p className="text-lg font-bold text-gray-900">
+                  <p className="text-lg font-bold text-[#f7f8f8]">
                     {data.summary.total_this_week} jobs completed{" "}
                     {data.platform_wide ? "platform-wide" : "near you"} this week
                   </p>
                   {data.summary.top_category && (
-                    <p className="text-sm text-gray-500 mt-0.5">
+                    <p className="text-sm text-[#8a8f98] mt-0.5">
                       Most popular: {getCategoryEmoji(data.summary.top_category)}{" "}
                       {data.nearby.find((n) => n.category === data.summary.top_category)?.category_label ??
                         data.summary.top_category}
@@ -206,18 +206,18 @@ export default function NeighborhoodFeedPage() {
             {/* Popular categories */}
             {data.popular_categories && data.popular_categories.length > 0 && (
               <ScrollReveal delay={100}>
-              <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-md transition-all duration-300">
-                <h2 className="text-sm font-bold text-gray-900 mb-3">Popular Categories {data.platform_wide ? "" : "Near You"}</h2>
+              <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] p-5 shadow-sm hover:shadow-md transition-all duration-300">
+                <h2 className="text-sm font-bold text-[#f7f8f8] mb-3">Popular Categories {data.platform_wide ? "" : "Near You"}</h2>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {data.popular_categories.map((cat) => (
                     <div
                       key={cat.category}
-                      className="flex items-center gap-2 px-3 py-2.5 bg-gray-50 rounded-xl border border-gray-100 hover:border-emerald-200 hover:bg-emerald-50/50 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-300"
+                      className="flex items-center gap-2 px-3 py-2.5 bg-[#010102] rounded-xl border border-[#23252a] hover:border-[#27a644]/30 hover:bg-[#27a644]/10 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-300"
                     >
                       <span className="text-lg">{getCategoryEmoji(cat.category)}</span>
                       <div className="min-w-0">
-                        <p className="text-xs font-semibold text-gray-900 truncate">{cat.category_label}</p>
-                        <p className="text-[10px] text-gray-500">{cat.count} job{cat.count !== 1 ? "s" : ""}</p>
+                        <p className="text-xs font-semibold text-[#f7f8f8] truncate">{cat.category_label}</p>
+                        <p className="text-[10px] text-[#8a8f98]">{cat.count} job{cat.count !== 1 ? "s" : ""}</p>
                       </div>
                     </div>
                   ))}
@@ -229,8 +229,8 @@ export default function NeighborhoodFeedPage() {
             {/* Trending contractors */}
             {data.trending_contractors && data.trending_contractors.length > 0 && (
               <ScrollReveal delay={200}>
-              <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-md transition-all duration-300">
-                <h2 className="text-sm font-bold text-gray-900 mb-3">
+              <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] p-5 shadow-sm hover:shadow-md transition-all duration-300">
+                <h2 className="text-sm font-bold text-[#f7f8f8] mb-3">
                   Trending Contractors {data.platform_wide ? "" : "Nearby"}
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -238,9 +238,9 @@ export default function NeighborhoodFeedPage() {
                     <Link
                       key={contractor.id}
                       href={`/profile/${contractor.id}`}
-                      className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100 hover:border-emerald-200 hover:bg-emerald-50/30 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-300 group"
+                      className="flex items-center gap-3 p-3 bg-[#010102] rounded-xl border border-[#23252a] hover:border-[#27a644]/30 hover:bg-[#27a644]/10 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-300 group"
                     >
-                      <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center overflow-hidden shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-[#27a644]/10 flex items-center justify-center overflow-hidden shrink-0">
                         {contractor.profile_photo ? (
                           <img
                             src={contractor.profile_photo}
@@ -248,27 +248,27 @@ export default function NeighborhoodFeedPage() {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <span className="text-sm font-bold text-emerald-600">
+                          <span className="text-sm font-bold text-emerald-400">
                             {contractor.name.charAt(0).toUpperCase()}
                           </span>
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-gray-900 truncate group-hover:text-emerald-700 transition-colors">
+                        <p className="text-sm font-semibold text-[#f7f8f8] truncate group-hover:text-emerald-400 transition-colors">
                           {contractor.name}
                         </p>
                         {contractor.headline && (
-                          <p className="text-[10px] text-gray-500 truncate">{contractor.headline}</p>
+                          <p className="text-[10px] text-[#8a8f98] truncate">{contractor.headline}</p>
                         )}
                         <div className="flex items-center gap-2 mt-0.5">
                           {contractor.rating > 0 && (
                             <span className="flex items-center gap-0.5 text-[10px]">
                               <span className="text-amber-400">&#9733;</span>
-                              <span className="font-medium text-gray-700">{contractor.rating.toFixed(1)}</span>
-                              <span className="text-gray-400">({contractor.rating_count})</span>
+                              <span className="font-medium text-[#d0d6e0]">{contractor.rating.toFixed(1)}</span>
+                              <span className="text-[#8a8f98]">({contractor.rating_count})</span>
                             </span>
                           )}
-                          <span className="text-[10px] text-emerald-600 font-medium">
+                          <span className="text-[10px] text-emerald-400 font-medium">
                             {contractor.jobs_completed} job{contractor.jobs_completed !== 1 ? "s" : ""} this month
                           </span>
                         </div>
@@ -282,14 +282,14 @@ export default function NeighborhoodFeedPage() {
 
             {/* Feed items */}
             {data.nearby.length === 0 ? (
-              <div className="bg-white rounded-2xl border border-gray-200 p-10 text-center">
+              <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] p-10 text-center">
                 <p className="text-4xl mb-3">🏘️</p>
-                <p className="font-semibold text-gray-700">No recent activity found</p>
-                <p className="text-sm text-gray-500 mt-1">Check back soon as jobs are completed in your area.</p>
+                <p className="font-semibold text-[#d0d6e0]">No recent activity found</p>
+                <p className="text-sm text-[#8a8f98] mt-1">Check back soon as jobs are completed in your area.</p>
               </div>
             ) : (
               <div className="space-y-2">
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide px-1">
+                <p className="text-xs font-semibold text-[#8a8f98] uppercase tracking-wide px-1">
                   {data.platform_wide ? "Recent platform activity (last 30 days)" : "Near you — last 30 days"}
                 </p>
                 {data.nearby.map((item, idx) => {
@@ -298,22 +298,22 @@ export default function NeighborhoodFeedPage() {
                   return (
                     <ScrollReveal key={`${item.category}-${item.city}-${item.zip}-${idx}`} delay={idx * 50}>
                     <div
-                      className="bg-white rounded-2xl border border-gray-200 px-5 py-4 flex items-center gap-4 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+                      className="bg-[#0f1011] rounded-2xl border border-[#23252a] px-5 py-4 flex items-center gap-4 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
                     >
-                      <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-xl shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-[#27a644]/10 flex items-center justify-center text-xl shrink-0">
                         {emoji}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-gray-900">
+                        <p className="text-sm font-semibold text-[#f7f8f8]">
                           {item.count} {item.category_label} job{item.count !== 1 ? "s" : ""} completed in{" "}
                           {location}
                         </p>
-                        <p className="text-xs text-gray-500 mt-0.5">
+                        <p className="text-xs text-[#8a8f98] mt-0.5">
                           Last completed {formatTimeAgo(item.last_completed)}
                           {item.zip ? ` · ZIP ${item.zip}` : ""}
                         </p>
                       </div>
-                      <span className="shrink-0 text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
+                      <span className="shrink-0 text-xs font-bold text-emerald-400 bg-[#27a644]/10 px-2.5 py-1 rounded-full">
                         {item.count}×
                       </span>
                     </div>

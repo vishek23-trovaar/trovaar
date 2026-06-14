@@ -9,7 +9,7 @@ export default function PrivacyPolicyPage() {
   return (
     <div className="space-y-10">
 
-      <section className="rounded-2xl bg-white/70 p-6 -mx-2 hover:bg-white/90 transition-colors duration-200">
+      <section className="rounded-2xl bg-[#0f1011]/70 p-6 -mx-2 hover:bg-[#0f1011]/90 transition-colors duration-200">
         <h2 className="text-xl font-semibold text-secondary mb-3">1. Information We Collect</h2>
         <p className="text-muted leading-relaxed">
           We collect information you provide directly to us, information collected automatically when you
@@ -238,7 +238,7 @@ export default function PrivacyPolicyPage() {
           If you have questions or concerns about this Privacy Policy or how we handle your personal data,
           please reach out:
         </p>
-        <div className="mt-3 p-4 bg-slate-50 rounded-2xl text-muted text-sm space-y-1 border border-slate-100">
+        <div className="mt-3 p-4 bg-[#010102] rounded-2xl text-muted text-sm space-y-1 border border-[#23252a]">
           <p><strong className="text-secondary">Trovaar, Inc.</strong></p>
           <p>Privacy Team</p>
           <p>Email: <a href="mailto:privacy@trovaar.com" className="text-primary hover:underline">privacy@trovaar.com</a></p>

@@ -244,12 +244,12 @@ export default function ClientMessagesPage() {
   const totalUnread = conversations.reduce((s, c) => s + (c.unread_count || 0), 0);
 
   return (
-    <div className="h-[calc(100vh-64px)] flex bg-white">
+    <div className="h-[calc(100vh-64px)] flex bg-[#0f1011]">
       {/* Sidebar — conversation list */}
       <div
         className={`${
           showSidebar ? "flex" : "hidden"
-        } md:flex flex-col w-full md:w-[360px] border-r border-gray-200 bg-white`}
+        } md:flex flex-col w-full md:w-[360px] border-r border-[#23252a] bg-[#0f1011]`}
       >
         {/* Sidebar header */}
         <div className="px-3 pt-3">
@@ -265,11 +265,11 @@ export default function ClientMessagesPage() {
 
         {/* Search placeholder */}
         <div className="px-3 py-2">
-          <div className="flex items-center gap-2 bg-gray-100/80 backdrop-blur-sm rounded-full px-3 py-2 transition-all duration-300 hover:bg-gray-100">
-            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="flex items-center gap-2 bg-[#141516] backdrop-blur-sm rounded-full px-3 py-2 transition-all duration-300 hover:bg-[#18191a]">
+            <svg className="w-4 h-4 text-[#8a8f98]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <span className="text-sm text-gray-400">Search messages</span>
+            <span className="text-sm text-[#8a8f98]">Search messages</span>
           </div>
         </div>
 
@@ -282,8 +282,8 @@ export default function ClientMessagesPage() {
           ) : conversations.length === 0 ? (
             <div className="px-6 py-12 text-center">
               <div className="text-4xl mb-3">💬</div>
-              <p className="font-semibold text-gray-800 text-sm">No conversations yet</p>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="font-semibold text-[#d0d6e0] text-sm">No conversations yet</p>
+              <p className="text-xs text-[#8a8f98] mt-1">
                 Once you accept a bid, you can chat with the contractor here.
               </p>
             </div>
@@ -292,7 +292,7 @@ export default function ClientMessagesPage() {
               <button
                 key={conv.job_id}
                 onClick={() => selectConversation(conv.job_id)}
-                className={`w-full flex items-center gap-3 px-3 py-3 hover:bg-gray-50 transition-all duration-200 text-left ${
+                className={`w-full flex items-center gap-3 px-3 py-3 hover:bg-[#141516] transition-all duration-200 text-left ${
                   activeJobId === conv.job_id ? "bg-primary/5 border-l-2 border-primary" : "border-l-2 border-transparent"
                 }`}
               >
@@ -311,25 +311,25 @@ export default function ClientMessagesPage() {
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline justify-between gap-2">
-                    <p className={`text-sm truncate ${conv.unread_count > 0 ? "font-bold text-gray-900" : "font-semibold text-gray-800"}`}>
+                    <p className={`text-sm truncate ${conv.unread_count > 0 ? "font-bold text-[#f7f8f8]" : "font-semibold text-[#d0d6e0]"}`}>
                       {conv.other_user_name}
                     </p>
                     {conv.last_message_at && (
-                      <p className={`text-[11px] shrink-0 ${conv.unread_count > 0 ? "text-primary font-semibold" : "text-gray-400"}`}>
+                      <p className={`text-[11px] shrink-0 ${conv.unread_count > 0 ? "text-primary font-semibold" : "text-[#8a8f98]"}`}>
                         {timeAgo(conv.last_message_at)}
                       </p>
                     )}
                   </div>
-                  <p className="text-xs text-gray-500 truncate">
+                  <p className="text-xs text-[#8a8f98] truncate">
                     <span className="mr-1">{getCategoryIcon(conv.job_category)}</span>
                     {conv.job_title}
                   </p>
                   {conv.last_message ? (
-                    <p className={`text-xs mt-0.5 truncate ${conv.unread_count > 0 ? "text-gray-900 font-medium" : "text-gray-400"}`}>
+                    <p className={`text-xs mt-0.5 truncate ${conv.unread_count > 0 ? "text-[#f7f8f8] font-medium" : "text-[#8a8f98]"}`}>
                       {conv.last_message}
                     </p>
                   ) : (
-                    <p className="text-xs text-gray-400 mt-0.5 italic">No messages yet</p>
+                    <p className="text-xs text-[#8a8f98] mt-0.5 italic">No messages yet</p>
                   )}
                 </div>
               </button>
@@ -339,18 +339,18 @@ export default function ClientMessagesPage() {
       </div>
 
       {/* Chat area */}
-      <div className={`${!showSidebar ? "flex" : "hidden"} md:flex flex-col flex-1 bg-white`}>
+      <div className={`${!showSidebar ? "flex" : "hidden"} md:flex flex-col flex-1 bg-[#0f1011]`}>
         {!activeJobId ? (
           /* Empty state */
-          <div className="flex-1 flex items-center justify-center bg-gray-50/50">
+          <div className="flex-1 flex items-center justify-center bg-[#010102]">
             <div className="text-center px-6">
               <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
               </div>
-              <h2 className="text-xl font-bold text-gray-900 mb-1">Your Messages</h2>
-              <p className="text-sm text-gray-500 max-w-xs">
+              <h2 className="text-xl font-bold text-[#f7f8f8] mb-1">Your Messages</h2>
+              <p className="text-sm text-[#8a8f98] max-w-xs">
                 Select a conversation to start chatting with your contractor.
               </p>
             </div>
@@ -358,13 +358,13 @@ export default function ClientMessagesPage() {
         ) : (
           <>
             {/* Chat header */}
-            <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-200 bg-white/90 backdrop-blur-sm shadow-sm">
+            <div className="flex items-center gap-3 px-4 py-3 border-b border-[#23252a] bg-[#0f1011]/90 backdrop-blur-sm shadow-sm">
               {/* Back button — mobile only */}
               <button
                 onClick={() => { setShowSidebar(true); setActiveJobId(null); }}
-                className="md:hidden p-1 -ml-1 rounded-lg hover:bg-gray-100"
+                className="md:hidden p-1 -ml-1 rounded-lg hover:bg-[#141516]"
               >
-                <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-[#8a8f98]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
@@ -373,8 +373,8 @@ export default function ClientMessagesPage() {
                 {activeConv?.other_user_name.charAt(0).toUpperCase() || "?"}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-gray-900 text-sm truncate">{activeConv?.other_user_name}</p>
-                <p className="text-xs text-gray-500 truncate">
+                <p className="font-semibold text-[#f7f8f8] text-sm truncate">{activeConv?.other_user_name}</p>
+                <p className="text-xs text-[#8a8f98] truncate">
                   {getCategoryIcon(activeConv?.job_category || "")} {activeConv?.job_title}
                 </p>
               </div>
@@ -387,14 +387,14 @@ export default function ClientMessagesPage() {
             </div>
 
             {/* Messages area */}
-            <div className="flex-1 overflow-y-auto px-4 py-4 bg-gray-50/30">
+            <div className="flex-1 overflow-y-auto px-4 py-4 bg-[#010102]">
               {messagesLoading && messages.length === 0 ? (
                 <div className="flex justify-center py-16">
                   <div className="w-6 h-6 border-3 border-primary border-t-transparent rounded-full animate-spin" />
                 </div>
               ) : messages.length === 0 ? (
                 <div className="text-center py-16">
-                  <p className="text-sm text-gray-500">No messages yet. Say hello!</p>
+                  <p className="text-sm text-[#8a8f98]">No messages yet. Say hello!</p>
                 </div>
               ) : (
                 <div className="space-y-1">
@@ -409,7 +409,7 @@ export default function ClientMessagesPage() {
                         {/* Date separator */}
                         {showDate && (
                           <div className="flex items-center justify-center my-4">
-                            <span className="text-[11px] text-gray-400 font-medium bg-white px-3 py-1 rounded-full shadow-sm border border-gray-100">
+                            <span className="text-[11px] text-[#8a8f98] font-medium bg-[#141516] px-3 py-1 rounded-full shadow-sm border border-[#23252a]">
                               {formatDateSeparator(msg.created_at)}
                             </span>
                           </div>
@@ -433,7 +433,7 @@ export default function ClientMessagesPage() {
                               className={`px-3 py-2 text-sm leading-relaxed ${
                                 msg.is_mine
                                   ? "bg-primary text-white rounded-2xl rounded-br-md"
-                                  : "bg-white text-gray-900 rounded-2xl rounded-bl-md shadow-sm border border-gray-100"
+                                  : "bg-[#141516] text-[#f7f8f8] rounded-2xl rounded-bl-md shadow-sm border border-[#23252a]"
                               }`}
                             >
                               {msg.content}
@@ -441,11 +441,11 @@ export default function ClientMessagesPage() {
                             {/* Timestamp + read receipt — show on last in group */}
                             {isLast && (
                               <div className={`flex items-center gap-1 mt-1 ${msg.is_mine ? "justify-end mr-1" : "ml-1"}`}>
-                                <span className="text-[10px] text-gray-400">
+                                <span className="text-[10px] text-[#8a8f98]">
                                   {formatTime(msg.created_at)}
                                 </span>
                                 {msg.is_mine && (
-                                  <span className={`text-[10px] ${msg.read ? "text-primary" : "text-gray-300"}`}>
+                                  <span className={`text-[10px] ${msg.read ? "text-primary" : "text-[#8a8f98]"}`}>
                                     {msg.read ? "✓✓" : "✓"}
                                   </span>
                                 )}
@@ -462,11 +462,11 @@ export default function ClientMessagesPage() {
                       <div className="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-indigo-600 flex items-center justify-center text-[10px] font-bold text-white">
                         {activeConv?.other_user_name.charAt(0).toUpperCase()}
                       </div>
-                      <div className="bg-white text-gray-400 rounded-2xl rounded-bl-md shadow-sm border border-gray-100 px-4 py-3">
+                      <div className="bg-[#141516] text-[#8a8f98] rounded-2xl rounded-bl-md shadow-sm border border-[#23252a] px-4 py-3">
                         <div className="flex gap-1">
-                          <span className="w-2 h-2 bg-gray-300 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                          <span className="w-2 h-2 bg-gray-300 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                          <span className="w-2 h-2 bg-gray-300 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                          <span className="w-2 h-2 bg-[#8a8f98] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                          <span className="w-2 h-2 bg-[#8a8f98] rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                          <span className="w-2 h-2 bg-[#8a8f98] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
                         </div>
                       </div>
                     </div>
@@ -477,7 +477,7 @@ export default function ClientMessagesPage() {
             </div>
 
             {/* Input area */}
-            <div className="px-4 py-3 border-t border-gray-200 bg-white/90 backdrop-blur-sm">
+            <div className="px-4 py-3 border-t border-[#23252a] bg-[#0f1011]/90 backdrop-blur-sm">
               <div className="flex items-center gap-2">
                 <input
                   ref={inputRef}
@@ -488,7 +488,7 @@ export default function ClientMessagesPage() {
                   placeholder="Type a message..."
                   disabled={sending}
                   maxLength={1000}
-                  className="flex-1 bg-gray-100 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:bg-white focus:border focus:border-primary/30 transition-all disabled:opacity-50 placeholder:text-gray-400"
+                  className="flex-1 bg-[#141516] text-[#f7f8f8] rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:bg-[#18191a] focus:border focus:border-primary/30 transition-all disabled:opacity-50 placeholder:text-[#8a8f98]"
                 />
                 <button
                   onClick={sendMessage}

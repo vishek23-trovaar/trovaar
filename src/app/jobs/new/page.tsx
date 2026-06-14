@@ -474,16 +474,16 @@ function PostJobContent() {
 
       {/* Step error */}
       {stepError && (
-        <div role="alert" aria-live="polite" className="mb-4 bg-red-50 text-danger text-sm p-3 rounded-lg border border-red-200">
+        <div role="alert" aria-live="polite" className="mb-4 bg-[#f87171]/10 text-danger text-sm p-3 rounded-lg border border-[#f87171]/30">
           {stepError}
         </div>
       )}
 
       {/* AI notice */}
       {aiNotice && (
-        <div className="mb-4 bg-amber-50 text-amber-800 text-sm p-3 rounded-lg border border-amber-200 flex items-center justify-between">
+        <div className="mb-4 bg-[#fbbf24]/10 text-[#fbbf24] text-sm p-3 rounded-lg border border-[#fbbf24]/30 flex items-center justify-between">
           <span>{aiNotice}</span>
-          <button onClick={() => setAiNotice("")} className="text-amber-600 hover:text-amber-800 ml-2 shrink-0">✕</button>
+          <button onClick={() => setAiNotice("")} className="text-[#fbbf24] hover:text-[#fde68a] ml-2 shrink-0">✕</button>
         </div>
       )}
 
@@ -545,14 +545,14 @@ function PostJobContent() {
                         value={link.url}
                         onChange={(e) => updateRefLink(i, "url", e.target.value)}
                         placeholder="https://www.amazon.com/... or any product URL"
-                        className="w-full px-3 py-2 text-sm rounded-lg border border-border focus:outline-none focus:ring-1 focus:ring-primary/20 bg-white placeholder-muted"
+                        className="w-full px-3 py-2 text-sm rounded-lg border border-border focus:outline-none focus:ring-1 focus:ring-primary/20 bg-[#141516] placeholder-muted"
                       />
                       <input
                         type="text"
                         value={link.label}
                         onChange={(e) => updateRefLink(i, "label", e.target.value)}
                         placeholder='Label — e.g. "OEM part I want"'
-                        className="w-full px-3 py-1.5 text-xs rounded-lg border border-border focus:outline-none bg-white placeholder-muted"
+                        className="w-full px-3 py-1.5 text-xs rounded-lg border border-border focus:outline-none bg-[#141516] placeholder-muted"
                       />
                     </div>
                     <button
@@ -627,7 +627,7 @@ function PostJobContent() {
               <select
                 value={category}
                 onChange={(e) => applyCategoryValue(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary"
+                className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary"
               >
                 <option value="">Select a category...</option>
                 {CATEGORY_GROUPS.map((group) => (
@@ -647,15 +647,15 @@ function PostJobContent() {
                 </div>
               )}
               {categorySuggestion && !categorySuggestionLoading && (
-                <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2.5 flex items-center gap-3">
+                <div className="mt-2 bg-[#3B82F6]/10 border border-[#3B82F6]/30 rounded-lg px-3 py-2.5 flex items-center gap-3">
                   <span className="text-sm">
                     {categorySuggestion.groupIcon || "🤖"}
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold text-blue-900">
+                    <p className="text-xs font-semibold text-[#bfdbfe]">
                       AI suggests: {categorySuggestion.label}
                     </p>
-                    <p className="text-xs text-blue-600">
+                    <p className="text-xs text-[#60A5FA]">
                       Based on your description, this may be a better fit
                     </p>
                   </div>
@@ -672,7 +672,7 @@ function PostJobContent() {
                   <button
                     type="button"
                     onClick={() => setCategorySuggestion(null)}
-                    className="text-blue-400 hover:text-blue-600 text-lg leading-none cursor-pointer shrink-0"
+                    className="text-[#60A5FA] hover:text-[#93c5fd] text-lg leading-none cursor-pointer shrink-0"
                   >
                     x
                   </button>
@@ -708,7 +708,7 @@ function PostJobContent() {
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Describe what needs to be done. Include the problem, any relevant measurements, what you've already tried, and any specific requirements."
                 rows={5}
-                className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted resize-none"
+                className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary placeholder-muted resize-none"
               />
               <p className="text-xs text-muted mt-1">{description.trim().length} characters{description.trim().length < 20 ? " (more detail = better bids)" : ""}</p>
             </div>
@@ -721,7 +721,7 @@ function PostJobContent() {
               <select
                 value={urgency}
                 onChange={(e) => { setUrgency(e.target.value); if (e.target.value !== "emergency") setEmergencyAcknowledged(false); }}
-                className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary"
+                className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary"
               >
                 <option value="">Select urgency...</option>
                 {URGENCY_LEVELS.map((u) => (
@@ -732,18 +732,18 @@ function PostJobContent() {
 
             {/* AI scenario-based questions */}
             {aiGenerated && aiQuestions.length > 0 && (
-              <div className="rounded-xl border border-violet-200 bg-violet-50/60 p-5">
+              <div className="rounded-xl border border-[#8b5cf6]/30 bg-[#8b5cf6]/10 p-5">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-lg">✨</span>
-                  <p className="text-sm font-semibold text-violet-900">Help contractors quote you accurately</p>
+                  <p className="text-sm font-semibold text-[#c4b5fd]">Help contractors quote you accurately</p>
                 </div>
-                <p className="text-xs text-violet-600 mb-4">
+                <p className="text-xs text-[#a78bfa] mb-4">
                   Answer these questions so pros have what they need to give you an accurate bid.
                 </p>
                 <div className="space-y-4">
                   {aiQuestions.map((q, i) => (
                     <div key={i}>
-                      <label className="block text-sm font-medium text-violet-900 mb-1.5">
+                      <label className="block text-sm font-medium text-[#c4b5fd] mb-1.5">
                         {i + 1}. {q.question}
                       </label>
                       {q.type === "yesno" ? (
@@ -754,7 +754,7 @@ function PostJobContent() {
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
                               q.answer === "Yes"
                                 ? "bg-primary text-white"
-                                : "bg-white border border-violet-200 text-secondary hover:border-primary"
+                                : "bg-[#141516] border border-[#8b5cf6]/30 text-secondary hover:border-primary"
                             }`}
                           >
                             Yes
@@ -765,7 +765,7 @@ function PostJobContent() {
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
                               q.answer === "No"
                                 ? "bg-primary text-white"
-                                : "bg-white border border-violet-200 text-secondary hover:border-primary"
+                                : "bg-[#141516] border border-[#8b5cf6]/30 text-secondary hover:border-primary"
                             }`}
                           >
                             No
@@ -779,7 +779,7 @@ function PostJobContent() {
                             value={q.answer}
                             onChange={(e) => updateAnswer(i, e.target.value)}
                             placeholder={q.placeholder}
-                            className="w-full pl-9 pr-3 py-2 rounded-lg border border-violet-200 focus:outline-none focus:ring-2 focus:ring-violet-300 bg-white text-secondary placeholder-muted text-sm"
+                            className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#8b5cf6]/30 focus:outline-none focus:ring-2 focus:ring-violet-300 bg-[#141516] text-secondary placeholder-muted text-sm"
                           />
                         </div>
                       ) : (
@@ -788,7 +788,7 @@ function PostJobContent() {
                           value={q.answer}
                           onChange={(e) => updateAnswer(i, e.target.value)}
                           placeholder={q.placeholder}
-                          className="w-full px-3 py-2 rounded-lg border border-violet-200 focus:outline-none focus:ring-2 focus:ring-violet-300 bg-white text-secondary placeholder-muted text-sm"
+                          className="w-full px-3 py-2 rounded-lg border border-[#8b5cf6]/30 focus:outline-none focus:ring-2 focus:ring-violet-300 bg-[#141516] text-secondary placeholder-muted text-sm"
                         />
                       )}
                     </div>
@@ -797,7 +797,7 @@ function PostJobContent() {
               </div>
             )}
             {aiQuestionsLoading && (
-              <div className="flex items-center gap-2 text-sm text-violet-600">
+              <div className="flex items-center gap-2 text-sm text-[#a78bfa]">
                 <div className="w-4 h-4 border-2 border-violet-400 border-t-transparent rounded-full animate-spin" />
                 Generating questions based on your project...
               </div>
@@ -815,7 +815,7 @@ function PostJobContent() {
             </div>
 
             {submitError && (
-              <div className="bg-red-50 text-danger text-sm p-3 rounded-lg border border-red-200">{submitError}</div>
+              <div className="bg-[#f87171]/10 text-danger text-sm p-3 rounded-lg border border-[#f87171]/30">{submitError}</div>
             )}
 
             {/* Review summary */}
@@ -868,19 +868,19 @@ function PostJobContent() {
 
               {budgetRange && (
                 <ReviewRow label="Budget Range">
-                  <span className="font-semibold text-green-600">{budgetRange}</span>
+                  <span className="font-semibold text-[#34d399]">{budgetRange}</span>
                 </ReviewRow>
               )}
             </div>
 
             {/* Emergency ack */}
             {urgency === "emergency" && (
-              <div className="rounded-xl border-2 border-amber-400 bg-amber-50 p-4">
+              <div className="rounded-xl border-2 border-[#fbbf24]/40 bg-[#fbbf24]/10 p-4">
                 <div className="flex items-start gap-3 mb-3">
                   <span className="text-2xl">⚡</span>
                   <div>
-                    <p className="font-semibold text-amber-900">Emergency Service Fee — $100</p>
-                    <p className="text-sm text-amber-800 mt-1">
+                    <p className="font-semibold text-[#fde68a]">Emergency Service Fee — $100</p>
+                    <p className="text-sm text-[#fbbf24] mt-1">
                       A <strong>$100 fee</strong> is added. In return, all qualified contractors within 20 miles are <strong>immediately notified</strong>, and they receive a <strong>+25% bonus</strong> to prioritize your job.
                     </p>
                   </div>
@@ -890,9 +890,9 @@ function PostJobContent() {
                     type="checkbox"
                     checked={emergencyAcknowledged}
                     onChange={(e) => setEmergencyAcknowledged(e.target.checked)}
-                    className="w-4 h-4 rounded border-amber-400 text-amber-600"
+                    className="w-4 h-4 rounded border-[#fbbf24]/40 text-[#fbbf24]"
                   />
-                  <span className="text-sm font-medium text-amber-900">I acknowledge the $100 emergency fee</span>
+                  <span className="text-sm font-medium text-[#fde68a]">I acknowledge the $100 emergency fee</span>
                 </label>
               </div>
             )}
@@ -905,7 +905,7 @@ function PostJobContent() {
                 value={expectedDate}
                 onChange={(e) => setExpectedDate(e.target.value)}
                 min={today}
-                className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 bg-white text-secondary"
+                className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 bg-[#141516] text-secondary"
               />
               <p className="text-xs text-muted mt-1">This is a goal, not a guarantee — helps pros plan availability.</p>
             </div>
@@ -968,7 +968,7 @@ function PostJobContent() {
                   💾 Save as Template
                 </button>
                 {templateSaved && (
-                  <span className="text-sm text-emerald-600 font-medium">Template saved!</span>
+                  <span className="text-sm text-[#34d399] font-medium">Template saved!</span>
                 )}
               </div>
             ) : (
@@ -978,7 +978,7 @@ function PostJobContent() {
                   value={templateName}
                   onChange={(e) => setTemplateName(e.target.value)}
                   placeholder="Template name (e.g. Leaky Faucet Fix)"
-                  className="flex-1 px-3 py-2 text-sm rounded-lg border border-border focus:outline-none focus:ring-1 focus:ring-primary/20 bg-white"
+                  className="flex-1 px-3 py-2 text-sm rounded-lg border border-border focus:outline-none focus:ring-1 focus:ring-primary/20 bg-[#141516]"
                   onKeyDown={(e) => { if (e.key === "Enter") handleSaveTemplate(); }}
                   autoFocus
                 />

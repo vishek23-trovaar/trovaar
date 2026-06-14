@@ -34,10 +34,10 @@ function fmtUSD(cents: number) {
 
 function KpiCard({ label, value, sub, color }: { label: string; value: string; sub: string; color: string }) {
   return (
-    <div className={`bg-white rounded-2xl border p-5 shadow-sm hover:shadow-lg transition-all duration-300 ${color}`}>
-      <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">{label}</p>
-      <p className="text-2xl font-bold text-slate-800 mt-1">{value}</p>
-      <p className="text-xs text-slate-400 mt-1">{sub}</p>
+    <div className={`bg-[#0f1011] rounded-2xl border p-5 shadow-sm hover:shadow-lg transition-all duration-300 ${color}`}>
+      <p className="text-xs font-medium text-[#8a8f98] uppercase tracking-wide">{label}</p>
+      <p className="text-2xl font-bold text-[#d0d6e0] mt-1">{value}</p>
+      <p className="text-xs text-[#8a8f98] mt-1">{sub}</p>
     </div>
   );
 }
@@ -66,7 +66,7 @@ export default function AdminRevenuePage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin w-8 h-8 border-4 border-slate-300 border-t-slate-700 rounded-full" />
+        <div className="animate-spin w-8 h-8 border-4 border-[#23252a] border-t-slate-700 rounded-full" />
       </div>
     );
   }
@@ -81,8 +81,8 @@ export default function AdminRevenuePage() {
   return (
     <div className="p-8 max-w-7xl space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-slate-800">Revenue & Analytics</h1>
-        <p className="text-slate-500 text-sm mt-1">Platform earnings, growth trends, and bid pricing data</p>
+        <h1 className="text-2xl font-bold text-[#d0d6e0]">Revenue & Analytics</h1>
+        <p className="text-[#8a8f98] text-sm mt-1">Platform earnings, growth trends, and bid pricing data</p>
       </div>
 
       {/* Date range picker */}
@@ -98,8 +98,8 @@ export default function AdminRevenuePage() {
             onClick={() => setRange(r.value)}
             className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors border ${
               range === r.value
-                ? "bg-slate-800 text-white border-slate-800"
-                : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
+                ? "bg-[#0f1011] text-white border-[#23252a]"
+                : "bg-[#0f1011] text-[#8a8f98] border-[#23252a] hover:border-[#23252a]"
             }`}
           >
             {r.label}
@@ -109,16 +109,16 @@ export default function AdminRevenuePage() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
-        <KpiCard label="All-Time Revenue" value={fmtUSD(kpis?.totalRevAllTime ?? 0)} sub="20% markup captured" color="border-emerald-200" />
-        <KpiCard label="Last 30 Days" value={fmtUSD(kpis?.totalRevLast30 ?? 0)} sub="Rolling 30-day window" color="border-blue-200" />
-        <KpiCard label="Last 7 Days" value={fmtUSD(kpis?.totalRevLast7 ?? 0)} sub="This week's earnings" color="border-indigo-200" />
-        <KpiCard label="Avg Accepted Bid" value={fmtUSD(kpis?.avgBidCents ?? 0)} sub={`${kpis?.conversionRate ?? 0}% bid conversion`} color="border-amber-200" />
+        <KpiCard label="All-Time Revenue" value={fmtUSD(kpis?.totalRevAllTime ?? 0)} sub="20% markup captured" color="border-[#27a644]/30" />
+        <KpiCard label="Last 30 Days" value={fmtUSD(kpis?.totalRevLast30 ?? 0)} sub="Rolling 30-day window" color="border-[#3B82F6]/30" />
+        <KpiCard label="Last 7 Days" value={fmtUSD(kpis?.totalRevLast7 ?? 0)} sub="This week's earnings" color="border-[#3B82F6]/30" />
+        <KpiCard label="Avg Accepted Bid" value={fmtUSD(kpis?.avgBidCents ?? 0)} sub={`${kpis?.conversionRate ?? 0}% bid conversion`} color="border-[#fbbf24]/30" />
       </div>
 
       {/* Revenue trend — line chart */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-        <h2 className="font-semibold text-slate-800 mb-1">Daily Platform Revenue</h2>
-        <p className="text-xs text-slate-400 mb-5">20% markup captured per accepted bid</p>
+      <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] p-6 shadow-sm">
+        <h2 className="font-semibold text-[#d0d6e0] mb-1">Daily Platform Revenue</h2>
+        <p className="text-xs text-[#8a8f98] mb-5">20% markup captured per accepted bid</p>
         <ResponsiveContainer width="100%" height={260}>
           <LineChart data={timeSeries} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
@@ -131,9 +131,9 @@ export default function AdminRevenuePage() {
       </div>
 
       {/* Growth chart — signups + jobs */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-        <h2 className="font-semibold text-slate-800 mb-1">Platform Growth</h2>
-        <p className="text-xs text-slate-400 mb-5">New users vs new jobs posted per day</p>
+      <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] p-6 shadow-sm">
+        <h2 className="font-semibold text-[#d0d6e0] mb-1">Platform Growth</h2>
+        <p className="text-xs text-[#8a8f98] mb-5">New users vs new jobs posted per day</p>
         <ResponsiveContainer width="100%" height={260}>
           <BarChart data={timeSeries} margin={{ top: 5, right: 20, left: 10, bottom: 5 }} barGap={2}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
@@ -148,11 +148,11 @@ export default function AdminRevenuePage() {
       </div>
 
       {/* Revenue by category */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-        <h2 className="font-semibold text-slate-800 mb-1">Revenue by Category</h2>
-        <p className="text-xs text-slate-400 mb-5">Top 10 categories by platform earnings (all time)</p>
+      <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] p-6 shadow-sm">
+        <h2 className="font-semibold text-[#d0d6e0] mb-1">Revenue by Category</h2>
+        <p className="text-xs text-[#8a8f98] mb-5">Top 10 categories by platform earnings (all time)</p>
         {catChartData.length === 0 ? (
-          <p className="text-slate-400 text-sm py-8 text-center">No accepted bids yet.</p>
+          <p className="text-[#8a8f98] text-sm py-8 text-center">No accepted bids yet.</p>
         ) : (
           <ResponsiveContainer width="100%" height={320}>
             <BarChart data={catChartData} layout="vertical" margin={{ top: 5, right: 40, left: 100, bottom: 5 }}>
@@ -168,27 +168,27 @@ export default function AdminRevenuePage() {
 
       {/* Category detail table */}
       {catChartData.length > 0 && (
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-100">
-            <h2 className="font-semibold text-slate-800">Category Breakdown</h2>
+        <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-[#23252a]">
+            <h2 className="font-semibold text-[#d0d6e0]">Category Breakdown</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50">
-                  <th className="text-left px-6 py-3 text-xs font-medium text-slate-500">Category</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-slate-500">Jobs Won</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-slate-500">Avg Bid (contractor)</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-emerald-600">Platform Revenue</th>
+                <tr className="border-b border-[#23252a] bg-[#010102]">
+                  <th className="text-left px-6 py-3 text-xs font-medium text-[#8a8f98]">Category</th>
+                  <th className="text-right px-6 py-3 text-xs font-medium text-[#8a8f98]">Jobs Won</th>
+                  <th className="text-right px-6 py-3 text-xs font-medium text-[#8a8f98]">Avg Bid (contractor)</th>
+                  <th className="text-right px-6 py-3 text-xs font-medium text-[#34d399]">Platform Revenue</th>
                 </tr>
               </thead>
               <tbody>
                 {revByCat.map((c) => (
-                  <tr key={c.category} className="border-b border-slate-50 hover:bg-slate-50 transition-colors">
-                    <td className="px-6 py-3 text-slate-700 capitalize font-medium">{c.category.replace(/_/g, " ")}</td>
-                    <td className="px-6 py-3 text-right text-slate-600">{c.jobs}</td>
-                    <td className="px-6 py-3 text-right text-slate-600">{fmtUSD(c.avg_bid_cents)}</td>
-                    <td className="px-6 py-3 text-right font-semibold text-emerald-600">{fmtUSD(c.revenue_cents)}</td>
+                  <tr key={c.category} className="border-b border-[#23252a] hover:bg-[#141516] transition-colors">
+                    <td className="px-6 py-3 text-[#d0d6e0] capitalize font-medium">{c.category.replace(/_/g, " ")}</td>
+                    <td className="px-6 py-3 text-right text-[#8a8f98]">{c.jobs}</td>
+                    <td className="px-6 py-3 text-right text-[#8a8f98]">{fmtUSD(c.avg_bid_cents)}</td>
+                    <td className="px-6 py-3 text-right font-semibold text-[#34d399]">{fmtUSD(c.revenue_cents)}</td>
                   </tr>
                 ))}
               </tbody>

@@ -15,7 +15,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
   const currentPage = navItems.find((item) => item.href === pathname);
 
   return (
-    <div className="bg-gradient-to-b from-slate-50 to-white min-h-screen">
+    <div className="bg-gradient-to-b from-[#010102] to-[#0f1011] min-h-screen">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Header */}
         <div className="mb-10" style={{ animation: "fadeInUp 0.5s ease-out" }}>
@@ -26,7 +26,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
         </div>
 
         {/* Navigation tabs */}
-        <nav className="flex items-center gap-1 mb-10 border-b border-slate-200" style={{ animation: "fadeInUp 0.5s ease-out 0.1s both" }}>
+        <nav className="flex items-center gap-1 mb-10 border-b border-[#23252a]" style={{ animation: "fadeInUp 0.5s ease-out 0.1s both" }}>
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -36,7 +36,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
                 className={`px-4 py-2.5 text-sm font-medium transition-all duration-200 border-b-2 -mb-px ${
                   isActive
                     ? "border-primary text-primary"
-                    : "border-transparent text-muted hover:text-secondary hover:border-slate-300"
+                    : "border-transparent text-muted hover:text-secondary hover:border-[#23252a]"
                 }`}
               >
                 {item.label}
@@ -51,7 +51,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
         </div>
 
         {/* Footer navigation */}
-        <div className="mt-12 pt-8 border-t border-slate-100 flex flex-col sm:flex-row gap-4 text-sm text-muted">
+        <div className="mt-12 pt-8 border-t border-[#23252a] flex flex-col sm:flex-row gap-4 text-sm text-muted">
           {navItems
             .filter((item) => item.href !== pathname)
             .map((item) => (

@@ -157,7 +157,7 @@ export default function AdminVerificationPage() {
             onClick={() => setTab(t)}
             className={
               "px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer capitalize " +
-              (tab === t ? "bg-white text-secondary shadow-sm" : "text-muted hover:text-secondary")
+              (tab === t ? "bg-[#0f1011] text-secondary shadow-sm" : "text-muted hover:text-secondary")
             }
           >
             {t === "verifications" ? "✓ Verifications" : "⚠️ Disputes"}
@@ -174,7 +174,7 @@ export default function AdminVerificationPage() {
       {tab === "verifications" && (
         <>
           {message && (
-            <div className="mb-4 bg-blue-50 text-blue-800 text-sm p-3 rounded-lg">{message}</div>
+            <div className="mb-4 bg-[#3B82F6]/10 text-[#60A5FA] text-sm p-3 rounded-lg">{message}</div>
           )}
           {loading ? (
             <div className="flex justify-center py-12">
@@ -204,8 +204,8 @@ export default function AdminVerificationPage() {
 
                     <div className="flex flex-col gap-3 min-w-fit">
                       {contractor.verification_status === "pending" && (
-                        <div className="border rounded-lg p-3 bg-blue-50">
-                          <p className="text-xs font-semibold text-blue-800 mb-2">✓ Verification Request</p>
+                        <div className="border rounded-lg p-3 bg-[#3B82F6]/10">
+                          <p className="text-xs font-semibold text-[#60A5FA] mb-2">✓ Verification Request</p>
                           <div className="flex gap-2">
                             <Button
                               size="sm"
@@ -227,8 +227,8 @@ export default function AdminVerificationPage() {
                       )}
 
                       {contractor.insurance_status === "pending" && (
-                        <div className="border rounded-lg p-3 bg-green-50">
-                          <p className="text-xs font-semibold text-green-800 mb-2">🛡 Insurance Request</p>
+                        <div className="border rounded-lg p-3 bg-[#27a644]/10">
+                          <p className="text-xs font-semibold text-[#34d399] mb-2">🛡 Insurance Request</p>
                           <div className="flex gap-2">
                             <Button
                               size="sm"
@@ -287,7 +287,7 @@ export default function AdminVerificationPage() {
                           {new Date(d.created_at).toLocaleDateString()}
                         </p>
                       </div>
-                      <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-medium shrink-0">
+                      <span className="text-xs bg-[#fbbf24]/10 text-[#fbbf24] px-2 py-0.5 rounded-full font-medium shrink-0">
                         {REASON_LABELS[d.reason] || d.reason}
                       </span>
                     </div>
@@ -356,7 +356,7 @@ export default function AdminVerificationPage() {
                       onChange={(e) => setResolution(e.target.value)}
                       rows={3}
                       placeholder="Explain the resolution to both parties..."
-                      className="w-full px-3 py-2 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted text-sm"
+                      className="w-full px-3 py-2 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#0f1011] text-secondary placeholder-muted text-sm"
                     />
                   </div>
 

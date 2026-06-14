@@ -154,21 +154,21 @@ export default function ContractorClientsPage() {
       {stats && (
         <ScrollReveal delay={0}>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-            <p className="text-xl font-bold text-gray-900">{stats.totalClients}</p>
-            <p className="text-xs text-gray-500 mt-1">Total Clients</p>
+          <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+            <p className="text-xl font-bold text-[#f7f8f8]">{stats.totalClients}</p>
+            <p className="text-xs text-[#8a8f98] mt-1">Total Clients</p>
           </div>
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-            <p className="text-xl font-bold text-indigo-600">{stats.repeatClients}</p>
-            <p className="text-xs text-gray-500 mt-1">Repeat Clients</p>
+          <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+            <p className="text-xl font-bold text-indigo-400">{stats.repeatClients}</p>
+            <p className="text-xs text-[#8a8f98] mt-1">Repeat Clients</p>
           </div>
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-            <p className="text-xl font-bold text-green-600">{formatCents(stats.totalEarned)}</p>
-            <p className="text-xs text-gray-500 mt-1">Total Earned</p>
+          <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+            <p className="text-xl font-bold text-[#34d399]">{formatCents(stats.totalEarned)}</p>
+            <p className="text-xs text-[#8a8f98] mt-1">Total Earned</p>
           </div>
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-            <p className="text-xl font-bold text-amber-600">{formatCents(stats.avgPerClient)}</p>
-            <p className="text-xs text-gray-500 mt-1">Avg per Client</p>
+          <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+            <p className="text-xl font-bold text-[#fbbf24]">{formatCents(stats.avgPerClient)}</p>
+            <p className="text-xs text-[#8a8f98] mt-1">Avg per Client</p>
           </div>
         </div>
         </ScrollReveal>
@@ -181,14 +181,14 @@ export default function ContractorClientsPage() {
           placeholder="Search clients..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+          className="flex-1 px-4 py-2.5 rounded-lg border border-[#23252a] bg-[#141516] text-[#f7f8f8] text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
         />
         <button
           onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
           className={`px-4 py-2.5 rounded-lg border text-sm font-medium transition-colors cursor-pointer ${
             showFavoritesOnly
-              ? "border-amber-300 bg-amber-50 text-amber-700"
-              : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
+              ? "border-[#fbbf24]/30 bg-[#fbbf24]/10 text-[#fbbf24]"
+              : "border-[#23252a] bg-[#141516] text-[#8a8f98] hover:bg-[#18191a]"
           }`}
         >
           {showFavoritesOnly ? "★ Favorites" : "☆ Favorites"}
@@ -201,28 +201,28 @@ export default function ContractorClientsPage() {
           <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : filteredClients.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-12 text-center">
+        <div className="bg-[#0f1011] rounded-xl border border-[#23252a] shadow-sm p-12 text-center">
           <div className="text-4xl mb-3">👥</div>
-          <p className="font-semibold text-gray-800">No clients yet</p>
-          <p className="text-sm text-gray-500 mt-1">Complete your first job to see your client list.</p>
+          <p className="font-semibold text-[#d0d6e0]">No clients yet</p>
+          <p className="text-sm text-[#8a8f98] mt-1">Complete your first job to see your client list.</p>
         </div>
       ) : (
         <div className="space-y-3">
           {filteredClients.map((client) => (
-            <div key={client.consumer_id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300">
+            <div key={client.consumer_id} className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300">
               <div
-                className="p-4 cursor-pointer hover:bg-gray-50 transition-all duration-200"
+                className="p-4 cursor-pointer hover:bg-[#141516] transition-all duration-200"
                 onClick={() => expandClient(client.consumer_id)}
               >
                 <div className="flex items-center gap-4">
                   {/* Avatar */}
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center text-lg font-semibold text-blue-700 shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500/20 to-indigo-500/20 flex items-center justify-center text-lg font-semibold text-[#60A5FA] shrink-0">
                     {client.name.charAt(0).toUpperCase()}
                   </div>
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="font-medium text-gray-900 truncate">{client.name}</p>
+                      <p className="font-medium text-[#f7f8f8] truncate">{client.name}</p>
                       <button
                         onClick={(e) => { e.stopPropagation(); toggleFavorite(client.consumer_id, client.is_favorite); }}
                         className="text-lg cursor-pointer"
@@ -231,18 +231,18 @@ export default function ContractorClientsPage() {
                         {client.is_favorite ? "★" : "☆"}
                       </button>
                     </div>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-[#8a8f98]">
                       {client.total_jobs} job{client.total_jobs !== 1 ? "s" : ""}
                       {client.last_job_date && <span> &middot; Last: {formatDate(client.last_job_date)}</span>}
                     </p>
                   </div>
                   {/* Earned */}
                   <div className="text-right shrink-0">
-                    <p className="text-sm font-semibold text-gray-900">{formatCents(client.total_earned_cents)}</p>
-                    <p className="text-xs text-gray-400">earned</p>
+                    <p className="text-sm font-semibold text-[#f7f8f8]">{formatCents(client.total_earned_cents)}</p>
+                    <p className="text-xs text-[#8a8f98]">earned</p>
                   </div>
                   {/* Expand arrow */}
-                  <svg className={`w-5 h-5 text-gray-400 transition-transform ${expandedId === client.consumer_id ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className={`w-5 h-5 text-[#8a8f98] transition-transform ${expandedId === client.consumer_id ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
@@ -250,7 +250,7 @@ export default function ContractorClientsPage() {
 
               {/* Expanded detail */}
               {expandedId === client.consumer_id && (
-                <div className="border-t border-gray-100 px-4 py-4 bg-gray-50/50">
+                <div className="border-t border-[#23252a] px-4 py-4 bg-[#010102]">
                   {detailLoading ? (
                     <div className="flex justify-center py-4">
                       <div className="w-6 h-6 border-3 border-blue-500 border-t-transparent rounded-full animate-spin" />
@@ -258,42 +258,42 @@ export default function ContractorClientsPage() {
                   ) : (
                     <>
                       {/* Past jobs */}
-                      <h4 className="text-xs font-medium text-gray-500 uppercase mb-2">Past Jobs</h4>
+                      <h4 className="text-xs font-medium text-[#8a8f98] uppercase mb-2">Past Jobs</h4>
                       {expandedJobs.length === 0 ? (
-                        <p className="text-sm text-gray-400 mb-4">No jobs found</p>
+                        <p className="text-sm text-[#8a8f98] mb-4">No jobs found</p>
                       ) : (
                         <div className="space-y-2 mb-4">
                           {expandedJobs.map((job) => (
                             <Link
                               key={job.id}
                               href={`/jobs/${job.id}`}
-                              className="flex items-center justify-between bg-white rounded-lg px-3 py-2 hover:bg-blue-50 transition-colors border border-gray-100"
+                              className="flex items-center justify-between bg-[#0f1011] rounded-lg px-3 py-2 hover:bg-[#3B82F6]/10 transition-colors border border-[#23252a]"
                             >
                               <div>
-                                <p className="text-sm font-medium text-gray-900">{job.title}</p>
-                                <p className="text-xs text-gray-500">
+                                <p className="text-sm font-medium text-[#f7f8f8]">{job.title}</p>
+                                <p className="text-xs text-[#8a8f98]">
                                   {job.completed_at ? formatDate(job.completed_at) : formatDate(job.created_at)}
                                   <span className={`ml-2 inline-flex px-1.5 py-0.5 rounded-full text-[10px] font-medium ${
-                                    job.status === "completed" ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700"
+                                    job.status === "completed" ? "bg-[#27a644]/10 text-[#34d399]" : "bg-[#3B82F6]/10 text-[#60A5FA]"
                                   }`}>
                                     {job.status}
                                   </span>
                                 </p>
                               </div>
-                              <p className="text-sm font-medium text-gray-700">{formatCents(job.price)}</p>
+                              <p className="text-sm font-medium text-[#d0d6e0]">{formatCents(job.price)}</p>
                             </Link>
                           ))}
                         </div>
                       )}
 
                       {/* Notes */}
-                      <h4 className="text-xs font-medium text-gray-500 uppercase mb-2">Notes</h4>
+                      <h4 className="text-xs font-medium text-[#8a8f98] uppercase mb-2">Notes</h4>
                       <div className="flex gap-2">
                         <textarea
                           value={expandedNotes}
                           onChange={(e) => setExpandedNotes(e.target.value)}
                           placeholder="Add notes about this client..."
-                          className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none"
+                          className="flex-1 px-3 py-2 border border-[#23252a] bg-[#141516] text-[#f7f8f8] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none"
                           rows={2}
                         />
                         <button

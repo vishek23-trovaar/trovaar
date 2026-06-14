@@ -86,7 +86,7 @@ function NotificationBell({ userId }: { userId: string }) {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-80 bg-white border border-border rounded-xl shadow-xl z-[200] overflow-hidden">
+        <div className="absolute right-0 top-full mt-2 w-80 bg-[#0f1011] border border-border rounded-xl shadow-xl z-[200] overflow-hidden">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border">
             <p className="font-semibold text-secondary text-sm">Notifications</p>
             {notifications.some((n) => !n.read) && (
@@ -165,7 +165,7 @@ export default function Navbar() {
     >
       Skip to main content
     </a>
-    <nav className="bg-white border-b border-border sticky top-0 z-[1000]">
+    <nav className="bg-[#0f1011] border-b border-border sticky top-0 z-[1000]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center gap-2">
@@ -220,22 +220,22 @@ export default function Navbar() {
                         "flex items-center gap-2 pl-1 pr-3 py-1 rounded-full border-2 transition-all " +
                         (isProfileActive
                           ? "border-primary bg-primary/5"
-                          : "border-border hover:border-primary/40 bg-white")
+                          : "border-border hover:border-primary/40 bg-[#0f1011]")
                       }
                     >
                       <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
                         <span className="text-xs font-bold text-primary">{user.name.charAt(0).toUpperCase()}</span>
                       </div>
                       <span className="text-sm font-medium text-secondary hidden sm:block">{user.name}</span>
-                      <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-indigo-100 text-indigo-700 leading-none">Pro</span>
+                      <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-[#3B82F6]/10 text-[#60A5FA] leading-none">Pro</span>
                     </Link>
                   ) : (user as unknown as { isAdmin?: boolean }).isAdmin ? (
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center">
-                        <span className="text-sm font-semibold text-amber-700">{user.name.charAt(0).toUpperCase()}</span>
+                      <div className="w-8 h-8 rounded-full bg-[#fbbf24]/10 flex items-center justify-center">
+                        <span className="text-sm font-semibold text-[#fbbf24]">{user.name.charAt(0).toUpperCase()}</span>
                       </div>
                       <span className="text-sm font-medium text-secondary hidden sm:block">{user.name}</span>
-                      <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-100 text-amber-700 leading-none">Admin</span>
+                      <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-[#fbbf24]/10 text-[#fbbf24] leading-none">Admin</span>
                     </div>
                   ) : (
                     <Link
@@ -244,14 +244,14 @@ export default function Navbar() {
                         "flex items-center gap-2 pl-1 pr-3 py-1 rounded-full border-2 transition-all " +
                         (pathname === "/client/profile"
                           ? "border-primary bg-primary/5"
-                          : "border-border hover:border-primary/40 bg-white")
+                          : "border-border hover:border-primary/40 bg-[#0f1011]")
                       }
                     >
-                      <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center border border-emerald-200">
-                        <span className="text-xs font-bold text-emerald-700">{user.name.charAt(0).toUpperCase()}</span>
+                      <div className="w-7 h-7 rounded-full bg-[#27a644]/10 flex items-center justify-center border border-[#27a644]/30">
+                        <span className="text-xs font-bold text-[#34d399]">{user.name.charAt(0).toUpperCase()}</span>
                       </div>
                       <span className="text-sm font-medium text-secondary hidden sm:block">{user.name}</span>
-                      <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-700 leading-none">Client</span>
+                      <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-[#27a644]/10 text-[#34d399] leading-none">Client</span>
                     </Link>
                   )}
                   <button onClick={logout} className="text-sm text-muted hover:text-danger transition-colors cursor-pointer whitespace-nowrap" title="Log out">

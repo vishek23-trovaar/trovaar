@@ -47,13 +47,13 @@ function timeAgo(dateStr: string): string {
 
 function UrgencyBadge({ urgency }: { urgency: string }) {
   const map: Record<string, string> = {
-    emergency: "bg-red-100 text-red-700",
-    high: "bg-orange-100 text-orange-700",
-    medium: "bg-yellow-100 text-yellow-700",
-    low: "bg-green-100 text-green-700",
+    emergency: "bg-[#f87171]/10 text-[#f87171]",
+    high: "bg-[#fb923c]/10 text-[#fb923c]",
+    medium: "bg-[#fbbf24]/10 text-[#fbbf24]",
+    low: "bg-[#27a644]/10 text-[#34d399]",
   };
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium capitalize ${map[urgency] || "bg-gray-100 text-gray-600"}`}>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium capitalize ${map[urgency] || "bg-[#141516] text-[#8a8f98]"}`}>
       {urgency}
     </span>
   );
@@ -61,13 +61,13 @@ function UrgencyBadge({ urgency }: { urgency: string }) {
 
 function BidStatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
-    pending: "bg-yellow-100 text-yellow-700",
-    accepted: "bg-green-100 text-green-700",
-    rejected: "bg-red-100 text-red-700",
-    withdrawn: "bg-gray-100 text-gray-500",
+    pending: "bg-[#fbbf24]/10 text-[#fbbf24]",
+    accepted: "bg-[#27a644]/10 text-[#34d399]",
+    rejected: "bg-[#f87171]/10 text-[#f87171]",
+    withdrawn: "bg-[#141516] text-[#8a8f98]",
   };
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium capitalize ${map[status] || "bg-gray-100 text-gray-600"}`}>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium capitalize ${map[status] || "bg-[#141516] text-[#8a8f98]"}`}>
       {status}
     </span>
   );
@@ -258,38 +258,38 @@ export default function ContractorDashboard() {
       <div className="grid grid-cols-3 gap-3 mb-6">
         <Link
           href="/contractor/calendar"
-          className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 hover:shadow-lg hover:-translate-y-0.5 hover:border-blue-200 transition-all duration-300 flex items-center gap-3"
+          className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4 hover:shadow-lg hover:-translate-y-0.5 hover:border-[#3B82F6]/30 transition-all duration-300 flex items-center gap-3"
         >
-          <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-xl">
+          <div className="w-10 h-10 rounded-xl bg-[#3B82F6]/10 flex items-center justify-center text-xl">
             📅
           </div>
           <div>
-            <p className="text-sm font-semibold text-gray-900">Calendar</p>
-            <p className="text-xs text-gray-500">Schedule & availability</p>
+            <p className="text-sm font-semibold text-[#f7f8f8]">Calendar</p>
+            <p className="text-xs text-[#8a8f98]">Schedule & availability</p>
           </div>
         </Link>
         <Link
           href="/contractor/invoices"
-          className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 hover:shadow-lg hover:-translate-y-0.5 hover:border-blue-200 transition-all duration-300 flex items-center gap-3"
+          className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4 hover:shadow-lg hover:-translate-y-0.5 hover:border-[#3B82F6]/30 transition-all duration-300 flex items-center gap-3"
         >
-          <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center text-xl">
+          <div className="w-10 h-10 rounded-xl bg-[#27a644]/10 flex items-center justify-center text-xl">
             📄
           </div>
           <div>
-            <p className="text-sm font-semibold text-gray-900">Invoices</p>
-            <p className="text-xs text-gray-500">Billing & payments</p>
+            <p className="text-sm font-semibold text-[#f7f8f8]">Invoices</p>
+            <p className="text-xs text-[#8a8f98]">Billing & payments</p>
           </div>
         </Link>
         <Link
           href="/contractor/clients"
-          className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 hover:shadow-lg hover:-translate-y-0.5 hover:border-blue-200 transition-all duration-300 flex items-center gap-3"
+          className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4 hover:shadow-lg hover:-translate-y-0.5 hover:border-[#3B82F6]/30 transition-all duration-300 flex items-center gap-3"
         >
-          <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-xl">
+          <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-xl">
             👥
           </div>
           <div>
-            <p className="text-sm font-semibold text-gray-900">My Clients</p>
-            <p className="text-xs text-gray-500">CRM & history</p>
+            <p className="text-sm font-semibold text-[#f7f8f8]">My Clients</p>
+            <p className="text-xs text-[#8a8f98]">CRM & history</p>
           </div>
         </Link>
       </div>
@@ -298,23 +298,23 @@ export default function ContractorDashboard() {
       {/* Stats bar */}
       <ScrollReveal delay={100}>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-          <p className="text-xl font-bold text-amber-600">
+        <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+          <p className="text-xl font-bold text-amber-500">
             {profile?.rating && profile.rating > 0 ? `${profile.rating.toFixed(1)} ⭐` : "—"}
           </p>
-          <p className="text-xs text-gray-500 mt-1">Rating</p>
+          <p className="text-xs text-[#8a8f98] mt-1">Rating</p>
         </div>
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-          <p className="text-xl font-bold text-indigo-600">{stats?.total_bids ?? 0}</p>
-          <p className="text-xs text-gray-500 mt-1">Bids Submitted</p>
+        <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+          <p className="text-xl font-bold text-indigo-400">{stats?.total_bids ?? 0}</p>
+          <p className="text-xs text-[#8a8f98] mt-1">Bids Submitted</p>
         </div>
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-          <p className="text-xl font-bold text-green-600">{stats?.accepted_bids ?? 0}</p>
-          <p className="text-xs text-gray-500 mt-1">Jobs Won</p>
+        <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+          <p className="text-xl font-bold text-[#34d399]">{stats?.accepted_bids ?? 0}</p>
+          <p className="text-xs text-[#8a8f98] mt-1">Jobs Won</p>
         </div>
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-          <p className="text-xl font-bold text-blue-600">{formatResponseTime(stats?.avg_response_hours ?? null)}</p>
-          <p className="text-xs text-gray-500 mt-1">Avg Response</p>
+        <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm p-4 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+          <p className="text-xl font-bold text-[#60A5FA]">{formatResponseTime(stats?.avg_response_hours ?? null)}</p>
+          <p className="text-xs text-[#8a8f98] mt-1">Avg Response</p>
         </div>
       </div>
       </ScrollReveal>
@@ -326,24 +326,24 @@ export default function ContractorDashboard() {
       <ScrollReveal delay={200}>
       <Link
         href="/referrals"
-        className="flex items-center justify-between gap-3 mb-6 bg-indigo-50 border border-indigo-200 rounded-2xl px-5 py-3.5 hover:bg-indigo-100 hover:shadow-md transition-all duration-300"
+        className="flex items-center justify-between gap-3 mb-6 bg-indigo-500/10 border border-indigo-500/30 rounded-2xl px-5 py-3.5 hover:bg-indigo-500/20 hover:shadow-md transition-all duration-300"
       >
         <div className="flex items-center gap-3 min-w-0">
           <span className="text-xl shrink-0">🎁</span>
-          <p className="text-sm text-indigo-900 font-medium leading-snug">
+          <p className="text-sm text-indigo-300 font-medium leading-snug">
             Invite a friend &amp; earn <strong>$25</strong> when they complete their first job
           </p>
         </div>
-        <span className="text-indigo-600 text-sm font-semibold shrink-0">Invite &amp; Earn →</span>
+        <span className="text-indigo-400 text-sm font-semibold shrink-0">Invite &amp; Earn →</span>
       </Link>
       </ScrollReveal>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-gray-100 p-1 rounded-xl mb-6 w-fit">
+      <div className="flex gap-1 bg-[#141516] p-1 rounded-xl mb-6 w-fit">
         <button
           onClick={() => setActiveTab("browse")}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
-            activeTab === "browse" ? "bg-white shadow-sm text-gray-900" : "text-gray-600 hover:text-gray-900"
+            activeTab === "browse" ? "bg-[#0f1011] shadow-sm text-[#f7f8f8]" : "text-[#8a8f98] hover:text-[#f7f8f8]"
           }`}
         >
           Browse Jobs
@@ -351,7 +351,7 @@ export default function ContractorDashboard() {
         <button
           onClick={() => setActiveTab("my_bids")}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
-            activeTab === "my_bids" ? "bg-white shadow-sm text-gray-900" : "text-gray-600 hover:text-gray-900"
+            activeTab === "my_bids" ? "bg-[#0f1011] shadow-sm text-[#f7f8f8]" : "text-[#8a8f98] hover:text-[#f7f8f8]"
           }`}
         >
           My Bids
@@ -368,12 +368,12 @@ export default function ContractorDashboard() {
               placeholder="Search jobs by title..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="flex-1 px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+              className="flex-1 px-4 py-2.5 rounded-lg border border-[#23252a] bg-[#141516] text-[#f7f8f8] text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
             />
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+              className="px-4 py-2.5 rounded-lg border border-[#23252a] bg-[#141516] text-[#f7f8f8] text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
             >
               <option value="">All Categories</option>
               {CATEGORY_GROUPS.map((group) => (
@@ -388,16 +388,16 @@ export default function ContractorDashboard() {
 
           {/* List / Map view toggle */}
           <div className="flex items-center justify-between mb-6">
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-[#8a8f98]">
               {filteredJobs.length} job{filteredJobs.length !== 1 ? "s" : ""} available
             </p>
-            <div className="flex gap-1 bg-gray-100 p-1 rounded-lg">
+            <div className="flex gap-1 bg-[#141516] p-1 rounded-lg">
               <button
                 onClick={() => setBrowseView("list")}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer ${
                   browseView === "list"
-                    ? "bg-white shadow-sm text-gray-900"
-                    : "text-gray-500 hover:text-gray-700"
+                    ? "bg-[#0f1011] shadow-sm text-[#f7f8f8]"
+                    : "text-[#8a8f98] hover:text-[#d0d6e0]"
                 }`}
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -409,8 +409,8 @@ export default function ContractorDashboard() {
                 onClick={() => setBrowseView("map")}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer ${
                   browseView === "map"
-                    ? "bg-white shadow-sm text-gray-900"
-                    : "text-gray-500 hover:text-gray-700"
+                    ? "bg-[#0f1011] shadow-sm text-[#f7f8f8]"
+                    : "text-[#8a8f98] hover:text-[#d0d6e0]"
                 }`}
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -429,26 +429,26 @@ export default function ContractorDashboard() {
           ) : browseView === "map" ? (
             /* ---- Map View ---- */
             filteredJobs.length === 0 ? (
-              <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-12 text-center">
+              <div className="bg-[#0f1011] rounded-xl border border-[#23252a] shadow-sm p-12 text-center">
                 <div className="text-4xl mb-3">🗺️</div>
-                <p className="font-semibold text-gray-800">No jobs to show on the map</p>
-                <p className="text-sm text-gray-500 mt-1">Try adjusting your search or filters.</p>
+                <p className="font-semibold text-[#d0d6e0]">No jobs to show on the map</p>
+                <p className="text-sm text-[#8a8f98] mt-1">Try adjusting your search or filters.</p>
               </div>
             ) : (
-              <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+              <div className="bg-[#0f1011] rounded-xl border border-[#23252a] shadow-sm overflow-hidden">
                 {/* Map legend */}
-                <div className="flex items-center gap-4 px-4 py-2.5 border-b border-gray-100 bg-gray-50/50">
-                  <span className="text-xs font-medium text-gray-500">Urgency:</span>
-                  <span className="flex items-center gap-1 text-xs text-gray-600">
+                <div className="flex items-center gap-4 px-4 py-2.5 border-b border-[#23252a] bg-[#010102]">
+                  <span className="text-xs font-medium text-[#8a8f98]">Urgency:</span>
+                  <span className="flex items-center gap-1 text-xs text-[#8a8f98]">
                     <span className="w-2.5 h-2.5 rounded-full bg-red-500 inline-block" /> Emergency
                   </span>
-                  <span className="flex items-center gap-1 text-xs text-gray-600">
+                  <span className="flex items-center gap-1 text-xs text-[#8a8f98]">
                     <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block" /> High
                   </span>
-                  <span className="flex items-center gap-1 text-xs text-gray-600">
+                  <span className="flex items-center gap-1 text-xs text-[#8a8f98]">
                     <span className="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block" /> Medium
                   </span>
-                  <span className="flex items-center gap-1 text-xs text-gray-600">
+                  <span className="flex items-center gap-1 text-xs text-[#8a8f98]">
                     <span className="w-2.5 h-2.5 rounded-full bg-gray-500 inline-block" /> Low
                   </span>
                 </div>
@@ -461,10 +461,10 @@ export default function ContractorDashboard() {
               </div>
             )
           ) : filteredJobs.length === 0 ? (
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-12 text-center">
+            <div className="bg-[#0f1011] rounded-xl border border-[#23252a] shadow-sm p-12 text-center">
               <div className="text-4xl mb-3">🔍</div>
-              <p className="font-semibold text-gray-800">No jobs found</p>
-              <p className="text-sm text-gray-500 mt-1">Try adjusting your search or filters.</p>
+              <p className="font-semibold text-[#d0d6e0]">No jobs found</p>
+              <p className="text-sm text-[#8a8f98] mt-1">Try adjusting your search or filters.</p>
             </div>
           ) : (
             /* ---- List View ---- */
@@ -472,51 +472,51 @@ export default function ContractorDashboard() {
               {filteredJobs.map((job) => {
                 const photos = (() => { try { return JSON.parse(job.photos || "[]"); } catch { return []; } })();
                 return (
-                  <div key={job.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col">
+                  <div key={job.id} className="bg-[#0f1011] rounded-2xl border border-[#23252a] shadow-sm overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col">
                     {/* Thumbnail */}
                     {photos.length > 0 ? (
                       <img src={photos[0]} alt="" className="w-full h-36 object-cover" />
                     ) : (
-                      <div className="w-full h-36 bg-gray-100 flex items-center justify-center text-4xl">
+                      <div className="w-full h-36 bg-[#141516] flex items-center justify-center text-4xl">
                         {getCategoryIcon(job.category)}
                       </div>
                     )}
                     <div className="p-4 flex flex-col flex-1">
                       <div className="flex items-start justify-between gap-2 mb-2">
                         <div className="min-w-0">
-                          <p className="text-xs text-gray-400 font-medium">{getCategoryIcon(job.category)} {getCategoryLabel(job.category)}</p>
-                          <p className="font-semibold text-gray-900 leading-tight truncate">{job.title}</p>
-                          <p className="text-xs text-gray-500 mt-0.5">{job.location}</p>
+                          <p className="text-xs text-[#8a8f98] font-medium">{getCategoryIcon(job.category)} {getCategoryLabel(job.category)}</p>
+                          <p className="font-semibold text-[#f7f8f8] leading-tight truncate">{job.title}</p>
+                          <p className="text-xs text-[#8a8f98] mt-0.5">{job.location}</p>
                           {(job as unknown as { consumer_name?: string }).consumer_name && (
-                            <p className="text-xs text-gray-500 mt-0.5 flex items-center gap-1 flex-wrap">
-                              <span className="font-medium text-gray-700">
+                            <p className="text-xs text-[#8a8f98] mt-0.5 flex items-center gap-1 flex-wrap">
+                              <span className="font-medium text-[#d0d6e0]">
                                 {(job as unknown as { consumer_name: string }).consumer_name}
                               </span>
                               {(job as unknown as { consumer_rating?: number | null }).consumer_rating != null && (job as unknown as { consumer_rating: number }).consumer_rating > 0 ? (
                                 <span className="text-amber-500 font-medium">
                                   ⭐ {(job as unknown as { consumer_rating: number }).consumer_rating.toFixed(1)}
-                                  <span className="text-gray-400 font-normal ml-0.5">
+                                  <span className="text-[#8a8f98] font-normal ml-0.5">
                                     ({(job as unknown as { consumer_rating_count: number }).consumer_rating_count} {(job as unknown as { consumer_rating_count: number }).consumer_rating_count === 1 ? "job" : "jobs"})
                                   </span>
                                 </span>
                               ) : (
-                                <span className="text-gray-400">New client</span>
+                                <span className="text-[#8a8f98]">New client</span>
                               )}
                             </p>
                           )}
                         </div>
                         <UrgencyBadge urgency={job.urgency} />
                       </div>
-                      <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-50">
-                        <div className="flex items-center gap-2 text-xs text-gray-400">
+                      <div className="flex items-center justify-between mt-auto pt-3 border-t border-[#23252a]">
+                        <div className="flex items-center gap-2 text-xs text-[#8a8f98]">
                           <span>{timeAgo(job.created_at)}</span>
-                          <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full font-medium">
+                          <span className="bg-[#141516] text-[#8a8f98] px-2 py-0.5 rounded-full font-medium">
                             {job.bid_count} bid{job.bid_count !== 1 ? "s" : ""}
                           </span>
                         </div>
                         <Link
                           href={`/jobs/${job.id}`}
-                          className="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline"
+                          className="text-sm font-medium text-[#60A5FA] hover:text-[#93c5fd] hover:underline"
                         >
                           View Job →
                         </Link>
@@ -538,37 +538,37 @@ export default function ContractorDashboard() {
               <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
             </div>
           ) : myBids.length === 0 ? (
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-12 text-center">
+            <div className="bg-[#0f1011] rounded-xl border border-[#23252a] shadow-sm p-12 text-center">
               <div className="text-4xl mb-3">🏷</div>
-              <p className="font-semibold text-gray-800">No bids yet</p>
-              <p className="text-sm text-gray-500 mt-1">Browse available jobs and submit your first bid.</p>
+              <p className="font-semibold text-[#d0d6e0]">No bids yet</p>
+              <p className="text-sm text-[#8a8f98] mt-1">Browse available jobs and submit your first bid.</p>
             </div>
           ) : (
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-              <div className="divide-y divide-gray-50">
+            <div className="bg-[#0f1011] rounded-xl border border-[#23252a] shadow-sm overflow-hidden">
+              <div className="divide-y divide-[#23252a]">
                 {myBids.map((bid) => (
-                  <div key={bid.id} className="p-4 hover:bg-gray-50 transition-colors">
+                  <div key={bid.id} className="p-4 hover:bg-[#141516] transition-colors">
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center text-lg shrink-0">
+                        <div className="w-9 h-9 rounded-lg bg-[#141516] flex items-center justify-center text-lg shrink-0">
                           {getCategoryIcon(bid.job_category)}
                         </div>
                         <div className="min-w-0">
-                          <p className="font-medium text-gray-900 truncate">{bid.job_title}</p>
-                          <p className="text-xs text-gray-400">{getCategoryLabel(bid.job_category)} · {timeAgo(bid.created_at)}</p>
+                          <p className="font-medium text-[#f7f8f8] truncate">{bid.job_title}</p>
+                          <p className="text-xs text-[#8a8f98]">{getCategoryLabel(bid.job_category)} · {timeAgo(bid.created_at)}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3 shrink-0">
                         <div className="text-right hidden sm:block">
-                          <p className="text-sm font-semibold text-gray-900">
+                          <p className="text-sm font-semibold text-[#f7f8f8]">
                             ${(bid.price / 100).toLocaleString("en-US", { minimumFractionDigits: 2 })}
                           </p>
-                          <p className="text-xs text-gray-400">your bid</p>
+                          <p className="text-xs text-[#8a8f98]">your bid</p>
                         </div>
                         <BidStatusBadge status={bid.status} />
                         <Link
                           href={`/jobs/${bid.job_id}`}
-                          className="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline"
+                          className="text-sm font-medium text-[#60A5FA] hover:text-[#93c5fd] hover:underline"
                         >
                           View →
                         </Link>
@@ -576,12 +576,12 @@ export default function ContractorDashboard() {
                     </div>
                     {/* Escrow indicators */}
                     {bid.status === "accepted" && ["accepted", "in_progress"].includes(bid.job_status) && (
-                      <div className="mt-2 ml-12 flex items-center gap-1.5 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-100 rounded-lg px-2.5 py-1.5 w-fit">
+                      <div className="mt-2 ml-12 flex items-center gap-1.5 text-xs font-medium text-[#60A5FA] bg-[#3B82F6]/10 border border-[#3B82F6]/30 rounded-lg px-2.5 py-1.5 w-fit">
                         🔒 Payment secured in escrow
                       </div>
                     )}
                     {bid.status === "accepted" && bid.job_status === "completed" && (
-                      <div className="mt-2 ml-12 flex items-center gap-1.5 text-xs font-medium text-green-700 bg-green-50 border border-green-100 rounded-lg px-2.5 py-1.5 w-fit">
+                      <div className="mt-2 ml-12 flex items-center gap-1.5 text-xs font-medium text-[#34d399] bg-[#27a644]/10 border border-[#27a644]/30 rounded-lg px-2.5 py-1.5 w-fit">
                         ✅ Payment released
                       </div>
                     )}

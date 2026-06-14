@@ -146,10 +146,10 @@ export default function JobCard({ job, userLat, userLng }: JobCardProps) {
         ) : (
           <div
             className="h-48 flex flex-col items-center justify-center gap-3 relative"
-            style={{ background: "linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%)" }}
+            style={{ background: "linear-gradient(135deg, #18191a 0%, #23252a 100%)" }}
           >
             <span className="text-3xl opacity-60">{categoryGroup?.icon ?? "🔧"}</span>
-            <span className="text-sm font-medium text-slate-500 px-4 text-center leading-tight">
+            <span className="text-sm font-medium text-[#8a8f98] px-4 text-center leading-tight">
               {category?.label ?? categoryGroup?.label ?? "Service Request"}
             </span>
             {isCollab && (
@@ -181,12 +181,12 @@ export default function JobCard({ job, userLat, userLng }: JobCardProps) {
             </div>
             <div className="flex items-center gap-2 shrink-0 ml-2">
               {distance && (
-                <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full">
+                <span className="text-xs font-semibold text-[#34d399] bg-[#27a644]/10 px-1.5 py-0.5 rounded-full">
                   {distance}
                 </span>
               )}
               {isCollab ? (
-                <div className="flex items-center gap-1 font-semibold text-indigo-600">
+                <div className="flex items-center gap-1 font-semibold text-[#60A5FA]">
                   <span className="text-sm">💰</span>
                   <span>{collabPay ?? "Paid"}</span>
                   {spotsLeft !== null && spotsLeft > 0 && (
@@ -208,13 +208,13 @@ export default function JobCard({ job, userLat, userLng }: JobCardProps) {
 
         {/* Collaboration bottom banner */}
         {isCollab && (
-          <div className="border-t border-indigo-100 bg-indigo-50 px-4 py-2.5 flex items-center gap-2">
+          <div className="border-t border-[#3B82F6]/20 bg-[#3B82F6]/10 px-4 py-2.5 flex items-center gap-2">
             <span className="text-base">🤝</span>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-indigo-700 leading-tight">Looking to Collaborate</p>
-              <p className="text-xs text-indigo-500 leading-tight">Learn on the job under a licensed pro</p>
+              <p className="text-xs font-semibold text-[#60A5FA] leading-tight">Looking to Collaborate</p>
+              <p className="text-xs text-[#60A5FA]/70 leading-tight">Learn on the job under a licensed pro</p>
             </div>
-            <span className="text-xs font-bold text-indigo-700 bg-indigo-100 px-2 py-0.5 rounded-full shrink-0">
+            <span className="text-xs font-bold text-[#60A5FA] bg-[#3B82F6]/20 px-2 py-0.5 rounded-full shrink-0">
               Apply →
             </span>
           </div>

@@ -42,13 +42,13 @@ function timeAgo(dateStr: string): string {
 
 function UrgencyBadge({ urgency }: { urgency: string }) {
   const map: Record<string, string> = {
-    emergency: "bg-red-100 text-red-700",
-    high: "bg-orange-100 text-orange-700",
-    medium: "bg-yellow-100 text-yellow-700",
-    low: "bg-green-100 text-green-700",
+    emergency: "bg-[#f87171]/10 text-[#f87171]",
+    high: "bg-[#fb923c]/10 text-[#fb923c]",
+    medium: "bg-[#fbbf24]/10 text-[#fbbf24]",
+    low: "bg-[#27a644]/10 text-[#34d399]",
   };
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium capitalize ${map[urgency] || "bg-gray-100 text-gray-600"}`}>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium capitalize ${map[urgency] || "bg-[#141516] text-[#8a8f98]"}`}>
       {urgency}
     </span>
   );
@@ -56,12 +56,12 @@ function UrgencyBadge({ urgency }: { urgency: string }) {
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
-    posted: "bg-blue-100 text-blue-700",
-    bidding: "bg-indigo-100 text-indigo-700",
-    accepted: "bg-purple-100 text-purple-700",
-    in_progress: "bg-amber-100 text-amber-700",
-    completed: "bg-green-100 text-green-700",
-    cancelled: "bg-gray-100 text-gray-500",
+    posted: "bg-[#3B82F6]/10 text-[#60A5FA]",
+    bidding: "bg-[#6366f1]/10 text-[#818cf8]",
+    accepted: "bg-[#a78bfa]/10 text-[#c4b5fd]",
+    in_progress: "bg-[#fbbf24]/10 text-[#fbbf24]",
+    completed: "bg-[#27a644]/10 text-[#34d399]",
+    cancelled: "bg-[#141516] text-[#8a8f98]",
   };
   const labels: Record<string, string> = {
     posted: "Posted",
@@ -72,7 +72,7 @@ function StatusBadge({ status }: { status: string }) {
     cancelled: "Cancelled",
   };
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${map[status] || "bg-gray-100 text-gray-600"}`}>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${map[status] || "bg-[#141516] text-[#8a8f98]"}`}>
       {labels[status] || status}
     </span>
   );
@@ -135,10 +135,10 @@ export default function ClientDashboard() {
   const inProgress = jobs.filter((j) => ["accepted", "in_progress"].includes(j.status)).length;
 
   const stats = [
-    { label: "Total Posted", value: totalPosted, color: "text-blue-600", bg: "bg-blue-50" },
-    { label: "Active Bids Received", value: activeBidsReceived, color: "text-indigo-600", bg: "bg-indigo-50" },
-    { label: "Completed", value: completed, color: "text-green-600", bg: "bg-green-50" },
-    { label: "In Progress", value: inProgress, color: "text-amber-600", bg: "bg-amber-50" },
+    { label: "Total Posted", value: totalPosted, color: "text-[#60A5FA]", bg: "bg-[#3B82F6]/10" },
+    { label: "Active Bids Received", value: activeBidsReceived, color: "text-[#818cf8]", bg: "bg-[#6366f1]/10" },
+    { label: "Completed", value: completed, color: "text-[#34d399]", bg: "bg-[#27a644]/10" },
+    { label: "In Progress", value: inProgress, color: "text-[#fbbf24]", bg: "bg-[#fbbf24]/10" },
   ];
 
   return (
@@ -179,19 +179,19 @@ export default function ClientDashboard() {
 
       {/* Home Health subscription banner — show if no subscription and not dismissed */}
       {hasSubscription === false && !subBannerDismissed && (
-        <div className="mb-6 flex items-center justify-between gap-3 bg-emerald-50 border border-emerald-200 rounded-xl px-5 py-3.5">
+        <div className="mb-6 flex items-center justify-between gap-3 bg-[#27a644]/10 border border-[#27a644]/30 rounded-xl px-5 py-3.5">
           <div className="flex items-center gap-3 min-w-0">
             <span className="text-xl shrink-0">🏠</span>
-            <p className="text-sm text-emerald-900 font-medium leading-snug">
+            <p className="text-sm text-[#34d399] font-medium leading-snug">
               Keep your home healthy year-round —{" "}
-              <Link href="/subscriptions" className="underline underline-offset-2 hover:text-emerald-700">
+              <Link href="/subscriptions" className="underline underline-offset-2 hover:text-[#6ee7b7]">
                 View Home Care Plans →
               </Link>
             </p>
           </div>
           <button
             onClick={() => setSubBannerDismissed(true)}
-            className="text-emerald-400 hover:text-emerald-600 transition-colors text-lg leading-none shrink-0"
+            className="text-[#34d399] hover:text-[#6ee7b7] transition-colors text-lg leading-none shrink-0"
             aria-label="Dismiss"
           >
             ×
@@ -202,24 +202,24 @@ export default function ClientDashboard() {
       {/* Referral Banner */}
       <Link
         href="/referrals"
-        className="flex items-center justify-between gap-3 mb-6 bg-indigo-50 border border-indigo-200 rounded-xl px-5 py-3.5 hover:bg-indigo-100 transition-colors"
+        className="flex items-center justify-between gap-3 mb-6 bg-[#6366f1]/10 border border-[#6366f1]/30 rounded-xl px-5 py-3.5 hover:bg-[#6366f1]/20 transition-colors"
       >
         <div className="flex items-center gap-3 min-w-0">
           <span className="text-xl shrink-0">🎁</span>
-          <p className="text-sm text-indigo-900 font-medium leading-snug">
+          <p className="text-sm text-[#818cf8] font-medium leading-snug">
             Invite a friend &amp; earn <strong>$25</strong> when they complete their first job
           </p>
         </div>
-        <span className="text-indigo-600 text-sm font-semibold shrink-0">Invite &amp; Earn →</span>
+        <span className="text-[#818cf8] text-sm font-semibold shrink-0">Invite &amp; Earn →</span>
       </Link>
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {stats.map((stat, i) => (
           <ScrollReveal key={stat.label} delay={i * 80}>
-            <div className={`${stat.bg} rounded-2xl p-4 text-center border border-white/60 backdrop-blur-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300`}>
+            <div className={`${stat.bg} rounded-2xl p-4 text-center border border-[#23252a] backdrop-blur-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300`}>
               <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
-              <p className="text-xs text-gray-500 mt-1">{stat.label}</p>
+              <p className="text-xs text-[#8a8f98] mt-1">{stat.label}</p>
             </div>
           </ScrollReveal>
         ))}
@@ -239,10 +239,10 @@ export default function ClientDashboard() {
         </div>
       ) : jobs.length === 0 ? (
         /* Empty state */
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-16 text-center">
+        <div className="bg-[#0f1011] rounded-2xl shadow-sm border border-[#23252a] p-16 text-center">
           <div className="text-5xl mb-4">📋</div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">No jobs yet</h2>
-          <p className="text-gray-500 text-sm mb-8 max-w-sm mx-auto">
+          <h2 className="text-xl font-semibold text-[#f7f8f8] mb-2">No jobs yet</h2>
+          <p className="text-[#8a8f98] text-sm mb-8 max-w-sm mx-auto">
             Post your first job to get competitive bids from local professionals
           </p>
           <Link
@@ -256,10 +256,10 @@ export default function ClientDashboard() {
         <div className="space-y-3">
           {jobs.map((job, i) => (
             <ScrollReveal key={job.id} delay={i * 60}>
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+            <div className="bg-[#0f1011] rounded-2xl shadow-sm border border-[#23252a] p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
               <div className="flex items-start gap-4">
                 {/* Category icon */}
-                <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center text-xl shrink-0">
+                <div className="w-10 h-10 rounded-lg bg-[#141516] flex items-center justify-center text-xl shrink-0">
                   {getCategoryIcon(job.category)}
                 </div>
 
@@ -267,9 +267,9 @@ export default function ClientDashboard() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2 flex-wrap">
                     <div>
-                      <p className="text-xs text-gray-400 font-medium mb-0.5">{getCategoryLabel(job.category)}</p>
-                      <p className="font-semibold text-gray-900 leading-tight">{job.title}</p>
-                      <p className="text-sm text-gray-500 mt-0.5">{job.location}</p>
+                      <p className="text-xs text-[#8a8f98] font-medium mb-0.5">{getCategoryLabel(job.category)}</p>
+                      <p className="font-semibold text-[#f7f8f8] leading-tight">{job.title}</p>
+                      <p className="text-sm text-[#8a8f98] mt-0.5">{job.location}</p>
                     </div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <UrgencyBadge urgency={job.urgency} />
@@ -279,30 +279,30 @@ export default function ClientDashboard() {
 
                   {/* Escrow indicator for accepted/in-progress jobs */}
                   {["accepted", "in_progress"].includes(job.status) && (
-                    <div className="flex items-center gap-2 mt-2 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
-                      <svg className="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="flex items-center gap-2 mt-2 bg-[#27a644]/10 border border-[#27a644]/30 rounded-lg px-3 py-2">
+                      <svg className="w-4 h-4 text-[#34d399] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                       </svg>
-                      <span className="text-xs font-semibold text-emerald-700">
+                      <span className="text-xs font-semibold text-[#34d399]">
                         {escrowAmounts[job.id]
                           ? `$${(escrowAmounts[job.id] / 100).toLocaleString("en-US", { minimumFractionDigits: 2 })} protected in escrow`
                           : "Payment held in escrow"}
                       </span>
-                      <span className="ml-auto text-[10px] text-emerald-500 font-medium hidden sm:inline">Trovaar Escrow</span>
+                      <span className="ml-auto text-[10px] text-[#34d399] font-medium hidden sm:inline">Trovaar Escrow</span>
                     </div>
                   )}
 
                   {/* Escrow released for completed jobs */}
                   {job.status === "completed" && (
-                    <div className="flex items-center gap-2 mt-2 bg-green-50 border border-green-100 rounded-lg px-3 py-2">
-                      <span className="text-sm">&#10003;</span>
-                      <span className="text-xs font-medium text-green-700">Payment released to contractor</span>
+                    <div className="flex items-center gap-2 mt-2 bg-[#27a644]/10 border border-[#27a644]/30 rounded-lg px-3 py-2">
+                      <span className="text-sm text-[#34d399]">&#10003;</span>
+                      <span className="text-xs font-medium text-[#34d399]">Payment released to contractor</span>
                     </div>
                   )}
 
                   <div className="flex items-center justify-between mt-3">
-                    <div className="flex items-center gap-3 text-sm text-gray-400">
-                      <span className="inline-flex items-center gap-1 bg-gray-100 px-2 py-0.5 rounded-full text-xs font-medium text-gray-600">
+                    <div className="flex items-center gap-3 text-sm text-[#8a8f98]">
+                      <span className="inline-flex items-center gap-1 bg-[#141516] px-2 py-0.5 rounded-full text-xs font-medium text-[#8a8f98]">
                         {job.bid_count} bid{job.bid_count !== 1 ? "s" : ""}
                       </span>
                       <span>{timeAgo(job.created_at)}</span>
@@ -321,7 +321,7 @@ export default function ClientDashboard() {
                       )}
                       <Link
                         href={`/jobs/${job.id}`}
-                        className="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline"
+                        className="text-sm font-medium text-[#60A5FA] hover:text-[#93c5fd] hover:underline"
                       >
                         {job.status === "in_progress" ? "Details →" : "View Bids →"}
                       </Link>

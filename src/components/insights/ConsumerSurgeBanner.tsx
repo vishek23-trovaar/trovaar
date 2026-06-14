@@ -28,17 +28,17 @@ export function ConsumerSurgeBanner({ category }: { category?: string }) {
   if (insights.length === 0) return null;
 
   return (
-    <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-start gap-3">
+    <div className="bg-[#fbbf24]/10 border border-[#fbbf24]/30 rounded-xl p-3 flex items-start gap-3">
       <span className="text-xl shrink-0">🔥</span>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-amber-900">High demand in your area</p>
+        <p className="text-sm font-semibold text-[#fbbf24]">High demand in your area</p>
         <div className="mt-0.5 space-y-0.5">
           {insights.map(insight => {
             const groupIcon = CATEGORY_GROUPS.find(g =>
               g.categories.some(c => c.value === insight.category)
             )?.icon ?? "🔧";
             return (
-              <p key={insight.category} className="text-xs text-amber-800">
+              <p key={insight.category} className="text-xs text-[#fbbf24]/80">
                 {groupIcon} <span className="capitalize">{insight.category.replace(/_/g, " ")}</span> jobs are up <strong>{Math.round(insight.multiplier)}×</strong> this week — bids may be slightly higher than usual
               </p>
             );

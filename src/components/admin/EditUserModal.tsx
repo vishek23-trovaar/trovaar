@@ -56,15 +56,15 @@ export default function EditUserModal({ user, onClose, onSaved }: Props) {
     <div className="fixed inset-0 z-50 flex items-start justify-end">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div
-        className="relative bg-white h-full shadow-2xl flex flex-col"
+        className="relative bg-[#0f1011] h-full shadow-2xl flex flex-col"
         style={{ width: 420 }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
-          <h2 className="text-base font-semibold text-slate-800">Edit User</h2>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#23252a]">
+          <h2 className="text-base font-semibold text-[#d0d6e0]">Edit User</h2>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 transition-colors text-lg leading-none"
+            className="text-[#8a8f98] hover:text-[#d0d6e0] transition-colors text-lg leading-none"
           >
             &times;
           </button>
@@ -73,61 +73,61 @@ export default function EditUserModal({ user, onClose, onSaved }: Props) {
         {/* Body */}
         <div className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
           {error && (
-            <div className="px-3 py-2.5 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+            <div className="px-3 py-2.5 bg-[#f87171]/10 border border-[#f87171]/30 text-[#f87171] rounded-lg text-sm">
               {error}
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1.5">Name</label>
+            <label className="block text-xs font-medium text-[#8a8f98] mb-1.5">Name</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+              className="w-full bg-[#141516] text-[#f7f8f8] border border-[#23252a] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
               placeholder="Full name"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1.5">Email</label>
+            <label className="block text-xs font-medium text-[#8a8f98] mb-1.5">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+              className="w-full bg-[#141516] text-[#f7f8f8] border border-[#23252a] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
               placeholder="email@example.com"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1.5">Phone</label>
+            <label className="block text-xs font-medium text-[#8a8f98] mb-1.5">Phone</label>
             <input
               type="text"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+              className="w-full bg-[#141516] text-[#f7f8f8] border border-[#23252a] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
               placeholder="+1 (555) 000-0000"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1.5">Location</label>
+            <label className="block text-xs font-medium text-[#8a8f98] mb-1.5">Location</label>
             <input
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
+              className="w-full bg-[#141516] text-[#f7f8f8] border border-[#23252a] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
               placeholder="City, State"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1.5">Role</label>
+            <label className="block text-xs font-medium text-[#8a8f98] mb-1.5">Role</label>
             <select
               value={role}
               onChange={(e) => setRole(e.target.value as "consumer" | "contractor")}
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200 bg-white"
+              className="w-full border border-[#23252a] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200 bg-[#141516] text-[#f7f8f8]"
             >
               <option value="consumer">Consumer</option>
               <option value="contractor">Contractor</option>
@@ -136,18 +136,18 @@ export default function EditUserModal({ user, onClose, onSaved }: Props) {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-slate-200 flex items-center justify-end gap-3">
+        <div className="px-6 py-4 border-t border-[#23252a] flex items-center justify-end gap-3">
           <button
             onClick={onClose}
             disabled={saving}
-            className="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 disabled:opacity-50 transition-colors"
+            className="px-4 py-2 text-sm font-medium text-[#8a8f98] bg-[#141516] rounded-lg hover:bg-[#18191a] disabled:opacity-50 transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
             disabled={saving}
-            className="px-5 py-2 text-sm font-medium text-white bg-slate-800 rounded-lg hover:bg-slate-700 disabled:opacity-50 transition-colors"
+            className="px-5 py-2 text-sm font-medium text-white bg-[#3B82F6] rounded-lg hover:bg-[#3B82F6]/90 disabled:opacity-50 transition-colors"
           >
             {saving ? "Saving…" : "Save Changes"}
           </button>

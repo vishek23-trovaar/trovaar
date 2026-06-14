@@ -22,7 +22,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           className={`w-full px-4 py-2.5 rounded-lg border transition-colors duration-200
             ${error ? "border-danger" : "border-border"}
             focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary
-            bg-white text-secondary cursor-pointer ${className}`}
+            bg-[#141516] text-secondary cursor-pointer ${className}`}
           {...props}
         >
           <option value="">Select...</option>

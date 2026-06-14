@@ -115,7 +115,7 @@ export default function QuoteBusterPage() {
   }
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-[#0f1011] min-h-screen">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-8">
         <PageHero
           title="Quote Buster"
@@ -133,7 +133,7 @@ export default function QuoteBusterPage() {
 
             <form onSubmit={handleSubmit} className="space-y-5">
               {error && (
-                <div className="bg-red-50 text-danger text-sm p-3 rounded-lg">{error}</div>
+                <div className="bg-[#f87171]/10 text-danger text-sm p-3 rounded-lg">{error}</div>
               )}
 
               {/* Quote Document Upload */}
@@ -164,12 +164,12 @@ export default function QuoteBusterPage() {
                   <div className="border border-border rounded-xl overflow-hidden">
                     {quotePreview ? (
                       <div className="relative">
-                        <img src={quotePreview} alt="Quote preview" className="w-full max-h-48 object-contain bg-slate-50" />
+                        <img src={quotePreview} alt="Quote preview" className="w-full max-h-48 object-contain bg-[#010102]" />
                       </div>
                     ) : (
-                      <div className="flex items-center gap-3 p-4 bg-slate-50">
-                        <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                          <span className="text-red-600 text-xs font-bold">PDF</span>
+                      <div className="flex items-center gap-3 p-4 bg-[#010102]">
+                        <div className="w-10 h-10 bg-[#f87171]/10 rounded-lg flex items-center justify-center">
+                          <span className="text-[#f87171] text-xs font-bold">PDF</span>
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-secondary truncate">{quoteFile.name}</p>
@@ -177,7 +177,7 @@ export default function QuoteBusterPage() {
                         </div>
                       </div>
                     )}
-                    <div className="flex items-center justify-between px-3 py-2 border-t border-border bg-white">
+                    <div className="flex items-center justify-between px-3 py-2 border-t border-border bg-[#0f1011]">
                       <span className="text-xs text-muted truncate">{quoteFile.name}</span>
                       <button
                         type="button"
@@ -198,7 +198,7 @@ export default function QuoteBusterPage() {
                   id="category"
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary transition-colors"
+                  className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#0f1011] text-secondary transition-colors"
                 >
                   <option value="">Select a category...</option>
                   {CATEGORY_GROUPS.map((group) => (
@@ -223,7 +223,7 @@ export default function QuoteBusterPage() {
                     value={quoteAmount}
                     onChange={(e) => setQuoteAmount(e.target.value)}
                     placeholder="e.g. 2,500"
-                    className="w-full pl-8 pr-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted transition-colors"
+                    className="w-full pl-8 pr-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#0f1011] text-secondary placeholder-muted transition-colors"
                   />
                 </div>
               </div>
@@ -239,7 +239,7 @@ export default function QuoteBusterPage() {
                   onChange={(e) => setDescription(e.target.value)}
                   rows={3}
                   placeholder="e.g. Replace water heater, 50-gallon tank, includes removal of old unit"
-                  className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted transition-colors resize-none"
+                  className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#0f1011] text-secondary placeholder-muted transition-colors resize-none"
                 />
               </div>
 
@@ -256,7 +256,7 @@ export default function QuoteBusterPage() {
                   value={zipCode}
                   onChange={(e) => setZipCode(e.target.value.replace(/\D/g, ""))}
                   placeholder="e.g. 90210"
-                  className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted transition-colors"
+                  className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#0f1011] text-secondary placeholder-muted transition-colors"
                 />
               </div>
 
@@ -296,30 +296,30 @@ export default function QuoteBusterPage() {
             {result && (
               <div className="space-y-5">
                 {/* Savings headline */}
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-6 text-center shadow-sm">
-                  <p className="text-sm font-medium text-green-700 mb-1">You could save up to</p>
-                  <p className="text-4xl sm:text-5xl font-extrabold text-green-600 mb-1">
+                <div className="bg-gradient-to-br from-[#27a644]/10 to-[#27a644]/10 border border-[#27a644]/30 rounded-2xl p-6 text-center shadow-sm">
+                  <p className="text-sm font-medium text-[#34d399] mb-1">You could save up to</p>
+                  <p className="text-4xl sm:text-5xl font-extrabold text-[#34d399] mb-1">
                     {formatCurrency(result.savingsHigh)}
                   </p>
                   {result.savingsPercentHigh > 0 && (
-                    <p className="text-lg font-bold text-green-500">
+                    <p className="text-lg font-bold text-[#34d399]">
                       That&apos;s {result.savingsPercentLow}–{result.savingsPercentHigh}% less
                     </p>
                   )}
                 </div>
 
                 {/* Price comparison bar */}
-                <div className="bg-white border border-border rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+                <div className="bg-[#0f1011] border border-border rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
                   <h3 className="text-sm font-semibold text-secondary mb-4">Price Comparison</h3>
 
                   {/* Their quote */}
                   <div className="mb-4">
                     <div className="flex justify-between text-sm mb-1.5">
                       <span className="text-muted">Big company quote</span>
-                      <span className="font-bold text-red-500">{formatCurrency(result.originalQuote)}</span>
+                      <span className="font-bold text-[#f87171]">{formatCurrency(result.originalQuote)}</span>
                     </div>
-                    <div className="h-3 bg-red-100 rounded-full overflow-hidden">
-                      <div className="h-full bg-red-400 rounded-full" style={{ width: "100%" }} />
+                    <div className="h-3 bg-[#f87171]/10 rounded-full overflow-hidden">
+                      <div className="h-full bg-[#f87171] rounded-full" style={{ width: "100%" }} />
                     </div>
                   </div>
 
@@ -327,11 +327,11 @@ export default function QuoteBusterPage() {
                   <div>
                     <div className="flex justify-between text-sm mb-1.5">
                       <span className="text-muted">Local pro estimate</span>
-                      <span className="font-bold text-green-600">
+                      <span className="font-bold text-[#34d399]">
                         {formatCurrency(result.estimatedFairLow)} – {formatCurrency(result.estimatedFairHigh)}
                       </span>
                     </div>
-                    <div className="h-3 bg-green-100 rounded-full overflow-hidden">
+                    <div className="h-3 bg-[#27a644]/10 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-green-500 rounded-full"
                         style={{ width: `${Math.round((result.estimatedFairHigh / result.originalQuote) * 100)}%` }}
@@ -341,19 +341,19 @@ export default function QuoteBusterPage() {
                 </div>
 
                 {/* Breakdown */}
-                <div className="bg-slate-50 border border-border rounded-2xl p-6 shadow-sm">
+                <div className="bg-[#010102] border border-border rounded-2xl p-6 shadow-sm">
                   <h3 className="text-sm font-semibold text-secondary mb-2">Why the difference?</h3>
                   <p className="text-sm text-muted leading-relaxed">{result.breakdown}</p>
                 </div>
 
                 {/* Tips */}
                 {result.tips.length > 0 && (
-                  <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 shadow-sm">
-                    <h3 className="text-sm font-semibold text-blue-800 mb-3">Pro tips</h3>
+                  <div className="bg-[#3B82F6]/10 border border-[#3B82F6]/30 rounded-2xl p-6 shadow-sm">
+                    <h3 className="text-sm font-semibold text-[#60A5FA] mb-3">Pro tips</h3>
                     <ul className="space-y-2">
                       {result.tips.map((tip, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-blue-700">
-                          <span className="text-blue-400 mt-0.5">✓</span>
+                        <li key={i} className="flex items-start gap-2 text-sm text-[#60A5FA]">
+                          <span className="text-[#60A5FA] mt-0.5">✓</span>
                           {tip}
                         </li>
                       ))}

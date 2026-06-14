@@ -228,7 +228,7 @@ export default function QuizPage() {
 
   if (quizState === "select") {
     return (
-      <div className="bg-white min-h-screen">
+      <div className="bg-[#010102] min-h-screen">
         <div className="max-w-2xl mx-auto px-4 py-8">
           {/* Header */}
           <PageHero
@@ -237,7 +237,7 @@ export default function QuizPage() {
           />
 
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 text-sm text-red-700">
+            <div className="bg-[#f87171]/10 border border-[#f87171]/30 rounded-xl p-4 mb-6 text-sm text-[#f87171]">
               {error}
             </div>
           )}
@@ -254,7 +254,7 @@ export default function QuizPage() {
                 return (
                   <div
                     key={cat}
-                    className="bg-white rounded-2xl border border-border p-5 flex items-center justify-between gap-4 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+                    className="bg-[#0f1011] rounded-2xl border border-border p-5 flex items-center justify-between gap-4 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
                   >
                     <div className="flex-1 min-w-0">
                       <h3 className="text-sm font-bold text-secondary">{label}</h3>
@@ -263,10 +263,10 @@ export default function QuizPage() {
                           <span
                             className={`inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-semibold ${
                               existing.best_percentage >= 80
-                                ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                                ? "bg-[#27a644]/10 text-[#34d399] border border-[#27a644]/30"
                                 : existing.best_percentage >= 70
-                                  ? "bg-blue-50 text-blue-700 border border-blue-200"
-                                  : "bg-gray-100 text-gray-600 border border-gray-200"
+                                  ? "bg-[#3B82F6]/10 text-[#60A5FA] border border-[#3B82F6]/30"
+                                  : "bg-[#141516] text-[#8a8f98] border border-[#23252a]"
                             }`}
                           >
                             {existing.best_percentage >= 70 ? "\uD83E\uDDE0" : ""} {existing.best_percentage}%
@@ -299,9 +299,9 @@ export default function QuizPage() {
             </div>
           )}
 
-          <div className="mt-8 bg-blue-50 border border-blue-200 rounded-2xl p-4">
-            <h3 className="text-sm font-semibold text-blue-800 mb-1">How it works</h3>
-            <ul className="text-xs text-blue-700 space-y-1">
+          <div className="mt-8 bg-[#3B82F6]/10 border border-[#3B82F6]/30 rounded-2xl p-4">
+            <h3 className="text-sm font-semibold text-[#60A5FA] mb-1">How it works</h3>
+            <ul className="text-xs text-[#60A5FA] space-y-1">
               <li>- 10 questions per quiz, drawn from real trade knowledge</li>
               <li>- Score 70%+ to display your badge on your public profile</li>
               <li>- Score 80%+ for a highlighted achievement badge</li>
@@ -323,7 +323,7 @@ export default function QuizPage() {
     const progressPct = Math.round(((currentIndex + 1) / questions.length) * 100);
 
     return (
-      <div className="bg-white min-h-screen">
+      <div className="bg-[#010102] min-h-screen">
         <div className="max-w-2xl mx-auto px-4 py-8">
           {/* Header bar */}
           <div className="flex items-center justify-between mb-6">
@@ -341,7 +341,7 @@ export default function QuizPage() {
           </div>
 
           {/* Progress bar */}
-          <div className="w-full h-2 bg-gray-100 rounded-full mb-8 overflow-hidden">
+          <div className="w-full h-2 bg-[#141516] rounded-full mb-8 overflow-hidden">
             <div
               className="h-full bg-primary rounded-full transition-all duration-300"
               style={{ width: `${progressPct}%` }}
@@ -353,10 +353,10 @@ export default function QuizPage() {
             <span
               className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${
                 currentQuestion.difficulty === "basic"
-                  ? "bg-green-100 text-green-700"
+                  ? "bg-[#27a644]/10 text-[#34d399]"
                   : currentQuestion.difficulty === "intermediate"
-                    ? "bg-amber-100 text-amber-700"
-                    : "bg-red-100 text-red-700"
+                    ? "bg-[#fbbf24]/10 text-[#fbbf24]"
+                    : "bg-[#f87171]/10 text-[#f87171]"
               }`}
             >
               {currentQuestion.difficulty}
@@ -379,7 +379,7 @@ export default function QuizPage() {
                   className={`w-full text-left px-4 py-3.5 rounded-xl border text-sm transition-all cursor-pointer ${
                     selected
                       ? "border-primary bg-primary/5 text-secondary font-medium ring-2 ring-primary/20"
-                      : "border-border text-secondary hover:border-primary/40 hover:bg-gray-50"
+                      : "border-border text-secondary hover:border-primary/40 hover:bg-[#141516]"
                   }`}
                 >
                   <span className="font-mono text-xs text-muted mr-2">
@@ -411,7 +411,7 @@ export default function QuizPage() {
                       ? "bg-primary text-white"
                       : selectedAnswers[q.id] !== undefined
                         ? "bg-primary/10 text-primary"
-                        : "bg-gray-100 text-gray-400"
+                        : "bg-[#141516] text-[#8a8f98]"
                   }`}
                 >
                   {idx + 1}
@@ -455,15 +455,15 @@ export default function QuizPage() {
     const excellent = percentage >= 80;
 
     return (
-      <div className="bg-white min-h-screen">
+      <div className="bg-[#010102] min-h-screen">
         <div className="max-w-2xl mx-auto px-4 py-8">
           {/* Score hero */}
           <div className={`rounded-2xl p-8 text-center mb-8 ${
             excellent
-              ? "bg-gradient-to-br from-emerald-50 to-green-50 border border-emerald-200"
+              ? "bg-gradient-to-br from-[#27a644]/10 to-[#27a644]/5 border border-[#27a644]/30"
               : passed
-                ? "bg-gradient-to-br from-blue-50 to-sky-50 border border-blue-200"
-                : "bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200"
+                ? "bg-gradient-to-br from-[#3B82F6]/10 to-[#3B82F6]/5 border border-[#3B82F6]/30"
+                : "bg-gradient-to-br from-[#141516] to-[#0f1011] border border-[#23252a]"
           }`}>
             {excellent && (
               <div className="text-4xl mb-3 animate-bounce">
@@ -480,25 +480,25 @@ export default function QuizPage() {
 
             {excellent ? (
               <div className="mt-4">
-                <span className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-800 text-sm font-bold px-4 py-2 rounded-full border border-emerald-300">
+                <span className="inline-flex items-center gap-2 bg-[#27a644]/20 text-[#34d399] text-sm font-bold px-4 py-2 rounded-full border border-[#27a644]/40">
                   \uD83C\uDFC6 Excellent! Scored {percentage}% on {getCategoryLabel(selectedCategory!)}
                 </span>
-                <p className="text-sm text-emerald-700 mt-2">
+                <p className="text-sm text-[#34d399] mt-2">
                   Congratulations! Your badge is now displayed on your profile.
                 </p>
               </div>
             ) : passed ? (
               <div className="mt-4">
-                <span className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 text-sm font-bold px-4 py-2 rounded-full border border-blue-300">
+                <span className="inline-flex items-center gap-2 bg-[#3B82F6]/20 text-[#60A5FA] text-sm font-bold px-4 py-2 rounded-full border border-[#3B82F6]/40">
                   \uD83E\uDDE0 Scored {percentage}% on {getCategoryLabel(selectedCategory!)}
                 </span>
-                <p className="text-sm text-blue-700 mt-2">
+                <p className="text-sm text-[#60A5FA] mt-2">
                   Passed! Your badge is now displayed on your profile.
                 </p>
               </div>
             ) : (
               <div className="mt-4">
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-[#8a8f98]">
                   Score 70% or higher to earn a badge. You can retake this quiz in 24 hours.
                 </p>
               </div>
@@ -516,16 +516,16 @@ export default function QuizPage() {
                   key={q.id}
                   className={`rounded-2xl border p-4 transition-all duration-300 hover:shadow-md ${
                     result?.correct
-                      ? "border-emerald-200 bg-emerald-50/30"
-                      : "border-red-200 bg-red-50/30"
+                      ? "border-[#27a644]/30 bg-[#27a644]/5"
+                      : "border-[#f87171]/30 bg-[#f87171]/5"
                   }`}
                 >
                   <div className="flex items-start gap-3">
                     <span
                       className={`shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
                         result?.correct
-                          ? "bg-emerald-100 text-emerald-700"
-                          : "bg-red-100 text-red-700"
+                          ? "bg-[#27a644]/10 text-[#34d399]"
+                          : "bg-[#f87171]/10 text-[#f87171]"
                       }`}
                     >
                       {result?.correct ? "\u2713" : "\u2717"}
@@ -543,10 +543,10 @@ export default function QuizPage() {
                               key={oi}
                               className={`text-xs px-2.5 py-1.5 rounded-lg ${
                                 isCorrect
-                                  ? "bg-emerald-100 text-emerald-800 font-medium"
+                                  ? "bg-[#27a644]/10 text-[#34d399] font-medium"
                                   : isSelected && !isCorrect
-                                    ? "bg-red-100 text-red-700 line-through"
-                                    : "text-gray-500"
+                                    ? "bg-[#f87171]/10 text-[#f87171] line-through"
+                                    : "text-[#8a8f98]"
                               }`}
                             >
                               <span className="font-mono mr-1">{String.fromCharCode(65 + oi)}.</span>
@@ -573,7 +573,7 @@ export default function QuizPage() {
                 setSelectedCategory(null);
                 setError(null);
               }}
-              className="flex-1 px-4 py-3 bg-gray-100 text-secondary text-sm font-semibold rounded-xl hover:bg-gray-200 transition-colors cursor-pointer"
+              className="flex-1 px-4 py-3 bg-[#141516] text-secondary text-sm font-semibold rounded-xl hover:bg-[#18191a] transition-colors cursor-pointer"
             >
               Take Another Quiz
             </button>

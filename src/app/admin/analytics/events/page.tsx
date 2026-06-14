@@ -138,8 +138,8 @@ export default function AnalyticsEventsPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Event Analytics</h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <h1 className="text-2xl font-bold text-[#f7f8f8]">Event Analytics</h1>
+          <p className="text-sm text-[#8a8f98] mt-1">
             Track user actions and conversion funnels across the platform
           </p>
         </div>
@@ -150,8 +150,8 @@ export default function AnalyticsEventsPage() {
               onClick={() => setRange(opt.value)}
               className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-colors ${
                 range === opt.value
-                  ? "bg-slate-900 text-white"
-                  : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+                  ? "bg-[#010102] text-white"
+                  : "bg-[#0f1011] text-[#8a8f98] border border-[#23252a] hover:bg-[#141516]"
               }`}
             >
               {opt.label}
@@ -161,7 +161,7 @@ export default function AnalyticsEventsPage() {
       </div>
 
       {loading && !data ? (
-        <div className="flex items-center justify-center py-20 text-slate-400">
+        <div className="flex items-center justify-center py-20 text-[#8a8f98]">
           Loading analytics...
         </div>
       ) : (
@@ -169,31 +169,31 @@ export default function AnalyticsEventsPage() {
           {/* Key Metrics Cards */}
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
             {[
-              { label: "Total Events", value: totalEvents.toLocaleString(), sub: `${range}d`, color: "text-blue-600" },
-              { label: "Unique Users", value: totalUniqueUsers.toLocaleString(), sub: "active", color: "text-indigo-600" },
-              { label: "Signups", value: signups.toLocaleString(), sub: `${range}d`, color: "text-green-600" },
-              { label: "Jobs Posted", value: jobsPosted.toLocaleString(), sub: `${range}d`, color: "text-purple-600" },
-              { label: "Completion Rate", value: completionRate, sub: "posted to completed", color: "text-orange-600" },
+              { label: "Total Events", value: totalEvents.toLocaleString(), sub: `${range}d`, color: "text-[#60A5FA]" },
+              { label: "Unique Users", value: totalUniqueUsers.toLocaleString(), sub: "active", color: "text-[#60A5FA]" },
+              { label: "Signups", value: signups.toLocaleString(), sub: `${range}d`, color: "text-[#34d399]" },
+              { label: "Jobs Posted", value: jobsPosted.toLocaleString(), sub: `${range}d`, color: "text-[#60A5FA]" },
+              { label: "Completion Rate", value: completionRate, sub: "posted to completed", color: "text-[#fbbf24]" },
             ].map((card) => (
               <div
                 key={card.label}
-                className="bg-white rounded-2xl border border-slate-200 p-4 hover:shadow-lg transition-all duration-300"
+                className="bg-[#0f1011] rounded-2xl border border-[#23252a] p-4 hover:shadow-lg transition-all duration-300"
               >
-                <div className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                <div className="text-xs font-medium text-[#8a8f98] uppercase tracking-wide">
                   {card.label}
                 </div>
                 <div className={`text-2xl font-bold mt-1 ${card.color}`}>
                   {card.value}
                 </div>
-                <div className="text-xs text-slate-400 mt-0.5">{card.sub}</div>
+                <div className="text-xs text-[#8a8f98] mt-0.5">{card.sub}</div>
               </div>
             ))}
           </div>
 
           {/* Funnel Visualization */}
           {funnelSteps.length > 0 && (
-            <div className="bg-white rounded-2xl border border-slate-200 p-6">
-              <h2 className="text-lg font-semibold text-slate-800 mb-4">
+            <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] p-6">
+              <h2 className="text-lg font-semibold text-[#d0d6e0] mb-4">
                 Conversion Funnel
               </h2>
               <div className="space-y-3">
@@ -208,7 +208,7 @@ export default function AnalyticsEventsPage() {
                       : null;
                   return (
                     <div key={step.label} className="flex items-center gap-3">
-                      <div className="w-28 text-sm text-slate-600 font-medium shrink-0 text-right">
+                      <div className="w-28 text-sm text-[#8a8f98] font-medium shrink-0 text-right">
                         {step.label}
                       </div>
                       <div className="flex-1 relative">
@@ -222,7 +222,7 @@ export default function AnalyticsEventsPage() {
                         </div>
                       </div>
                       {conversionFromPrev && (
-                        <div className="w-16 text-xs text-slate-400 shrink-0">
+                        <div className="w-16 text-xs text-[#8a8f98] shrink-0">
                           {conversionFromPrev}
                         </div>
                       )}
@@ -235,8 +235,8 @@ export default function AnalyticsEventsPage() {
 
           {/* Daily Event Timeline (CSS-only bar chart) */}
           {data && data.daily.length > 0 && (
-            <div className="bg-white rounded-2xl border border-slate-200 p-6">
-              <h2 className="text-lg font-semibold text-slate-800 mb-4">
+            <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] p-6">
+              <h2 className="text-lg font-semibold text-[#d0d6e0] mb-4">
                 Daily Event Volume (Last 30 Days)
               </h2>
               <div className="flex items-end gap-[2px] h-48">
@@ -256,7 +256,7 @@ export default function AnalyticsEventsPage() {
                       />
                       {/* Tooltip */}
                       <div className="absolute bottom-full mb-2 hidden group-hover:block z-10">
-                        <div className="bg-slate-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap">
+                        <div className="bg-[#0f1011] text-white text-xs rounded px-2 py-1 whitespace-nowrap">
                           {d.day}: {d.event_count} events, {d.unique_users} users
                         </div>
                       </div>
@@ -264,7 +264,7 @@ export default function AnalyticsEventsPage() {
                   );
                 })}
               </div>
-              <div className="flex justify-between mt-2 text-xs text-slate-400">
+              <div className="flex justify-between mt-2 text-xs text-[#8a8f98]">
                 <span>{data.daily[0]?.day}</span>
                 <span>{data.daily[data.daily.length - 1]?.day}</span>
               </div>
@@ -273,34 +273,34 @@ export default function AnalyticsEventsPage() {
 
           {/* Top Events Table */}
           {data && data.summary.length > 0 && (
-            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-              <div className="px-6 py-4 border-b border-slate-100">
-                <h2 className="text-lg font-semibold text-slate-800">
+            <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] overflow-hidden">
+              <div className="px-6 py-4 border-b border-[#23252a]">
+                <h2 className="text-lg font-semibold text-[#d0d6e0]">
                   Top Events
                 </h2>
               </div>
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-slate-50 text-left text-xs font-medium text-slate-500 uppercase tracking-wide">
+                  <tr className="bg-[#010102] text-left text-xs font-medium text-[#8a8f98] uppercase tracking-wide">
                     <th className="px-6 py-3">Event</th>
                     <th className="px-6 py-3 text-right">Count</th>
                     <th className="px-6 py-3 text-right">Unique Users</th>
                     <th className="px-6 py-3 text-right">Avg / User</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-[#23252a]">
                   {data.summary.map((e) => (
-                    <tr key={e.event_name} className="hover:bg-slate-50">
-                      <td className="px-6 py-3 font-medium text-slate-700">
+                    <tr key={e.event_name} className="hover:bg-[#141516]">
+                      <td className="px-6 py-3 font-medium text-[#d0d6e0]">
                         {EVENT_LABELS[e.event_name] || e.event_name}
                       </td>
-                      <td className="px-6 py-3 text-right text-slate-600">
+                      <td className="px-6 py-3 text-right text-[#8a8f98]">
                         {e.event_count.toLocaleString()}
                       </td>
-                      <td className="px-6 py-3 text-right text-slate-600">
+                      <td className="px-6 py-3 text-right text-[#8a8f98]">
                         {e.unique_users.toLocaleString()}
                       </td>
-                      <td className="px-6 py-3 text-right text-slate-600">
+                      <td className="px-6 py-3 text-right text-[#8a8f98]">
                         {e.unique_users
                           ? (e.event_count / e.unique_users).toFixed(1)
                           : "-"}
@@ -314,30 +314,30 @@ export default function AnalyticsEventsPage() {
 
           {/* Top Active Users */}
           {data && data.topUsers.length > 0 && (
-            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-              <div className="px-6 py-4 border-b border-slate-100">
-                <h2 className="text-lg font-semibold text-slate-800">
+            <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] overflow-hidden">
+              <div className="px-6 py-4 border-b border-[#23252a]">
+                <h2 className="text-lg font-semibold text-[#d0d6e0]">
                   Most Active Users (Last 30 Days)
                 </h2>
               </div>
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-slate-50 text-left text-xs font-medium text-slate-500 uppercase tracking-wide">
+                  <tr className="bg-[#010102] text-left text-xs font-medium text-[#8a8f98] uppercase tracking-wide">
                     <th className="px-6 py-3">User ID</th>
                     <th className="px-6 py-3 text-right">Total Events</th>
                     <th className="px-6 py-3 text-right">Distinct Event Types</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-[#23252a]">
                   {data.topUsers.map((u) => (
-                    <tr key={u.user_id} className="hover:bg-slate-50">
-                      <td className="px-6 py-3 font-mono text-xs text-slate-600">
+                    <tr key={u.user_id} className="hover:bg-[#141516]">
+                      <td className="px-6 py-3 font-mono text-xs text-[#8a8f98]">
                         {u.user_id}
                       </td>
-                      <td className="px-6 py-3 text-right text-slate-600">
+                      <td className="px-6 py-3 text-right text-[#8a8f98]">
                         {u.event_count.toLocaleString()}
                       </td>
-                      <td className="px-6 py-3 text-right text-slate-600">
+                      <td className="px-6 py-3 text-right text-[#8a8f98]">
                         {u.distinct_events}
                       </td>
                     </tr>
@@ -349,9 +349,9 @@ export default function AnalyticsEventsPage() {
 
           {/* Empty state */}
           {data && data.summary.length === 0 && (
-            <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
-              <div className="text-slate-400 text-lg mb-2">No events tracked yet</div>
-              <p className="text-sm text-slate-400">
+            <div className="bg-[#0f1011] rounded-2xl border border-[#23252a] p-12 text-center">
+              <div className="text-[#8a8f98] text-lg mb-2">No events tracked yet</div>
+              <p className="text-sm text-[#8a8f98]">
                 Analytics events will appear here as users interact with the platform.
               </p>
             </div>

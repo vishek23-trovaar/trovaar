@@ -123,7 +123,7 @@ export default function DisputePage({ params }: { params: Promise<{ id: string }
     return (
       <div className="max-w-lg mx-auto px-4 py-12">
         <Card className="p-8 text-center rounded-2xl shadow-md">
-          <div className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-4">
+          <div className="w-14 h-14 rounded-full bg-[#fbbf24]/10 flex items-center justify-center mx-auto mb-4">
             <svg className="w-7 h-7 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
             </svg>
@@ -170,7 +170,7 @@ export default function DisputePage({ params }: { params: Promise<{ id: string }
       <Card className="p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300">
         {success ? (
           <div className="text-center py-6">
-            <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 rounded-full bg-[#27a644]/10 flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
@@ -192,7 +192,7 @@ export default function DisputePage({ params }: { params: Promise<{ id: string }
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-secondary mb-2">
-                What went wrong? <span className="text-red-500">*</span>
+                What went wrong? <span className="text-[#f87171]">*</span>
               </label>
               <div className="space-y-2">
                 {reasons.map((r) => (
@@ -220,7 +220,7 @@ export default function DisputePage({ params }: { params: Promise<{ id: string }
 
             <div>
               <label className="block text-sm font-medium text-secondary mb-2">
-                Describe the issue <span className="text-red-500">*</span>
+                Describe the issue <span className="text-[#f87171]">*</span>
               </label>
               <textarea
                 value={description}
@@ -228,20 +228,20 @@ export default function DisputePage({ params }: { params: Promise<{ id: string }
                 rows={4}
                 maxLength={2000}
                 placeholder="Please provide as much detail as possible about what happened, including dates, amounts, and what resolution you are seeking..."
-                className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-white text-secondary placeholder-muted text-sm"
+                className="w-full px-4 py-2.5 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[#141516] text-secondary placeholder-muted text-sm"
               />
               <p className="text-xs text-muted mt-1">{description.length} / 2000 characters</p>
             </div>
 
             {/* Info box */}
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+            <div className="bg-[#3B82F6]/10 border border-[#3B82F6]/30 rounded-xl p-4">
               <div className="flex gap-2">
-                <svg className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-[#60A5FA] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <div>
-                  <p className="text-sm font-medium text-blue-800">What happens next?</p>
-                  <p className="text-xs text-blue-700 mt-1">
+                  <p className="text-sm font-medium text-[#93c5fd]">What happens next?</p>
+                  <p className="text-xs text-[#60A5FA] mt-1">
                     Our team will review your dispute within 24-48 hours. Both parties will be notified and can respond.
                     A resolution will be proposed, and both parties must accept for it to take effect.
                   </p>
@@ -250,7 +250,7 @@ export default function DisputePage({ params }: { params: Promise<{ id: string }
             </div>
 
             {error && (
-              <div className="bg-red-50 text-red-700 text-sm p-3 rounded-lg">{error}</div>
+              <div className="bg-[#f87171]/10 text-[#f87171] text-sm p-3 rounded-lg">{error}</div>
             )}
 
             <div className="flex gap-3">
