@@ -160,6 +160,8 @@ export default function ClientLayout() {
 
       {/* ── Hidden screens (navigated to from within the app) ── */}
       <Tabs.Screen name="job/[id]" options={{ href: null }} />
+      <Tabs.Screen name="job-edit/[id]" options={{ href: null, title: "Edit Job" }} />
+      <Tabs.Screen name="certificate/[id]" options={{ href: null, title: "Certificate" }} />
       <Tabs.Screen name="chat/[jobId]" options={{ href: null, title: "Chat" }} />
       <Tabs.Screen name="neighborhood" options={{ href: null, title: "Explore" }} />
       <Tabs.Screen name="templates" options={{ href: null, title: "Job Templates" }} />

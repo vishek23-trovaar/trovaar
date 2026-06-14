@@ -905,6 +905,17 @@ export default function ContractorJobDetail() {
                 </Text>
               </View>
             )}
+
+            {job.status === "completed" && (
+              <TouchableOpacity
+                style={styles.certBtn}
+                onPress={() => router.push(`/(contractor)/certificate/${id}` as never)}
+                activeOpacity={0.85}
+              >
+                <Ionicons name="ribbon-outline" size={18} color={COLORS.primary} />
+                <Text style={styles.certBtnText}>View Completion Certificate</Text>
+              </TouchableOpacity>
+            )}
           </View>
 
           {/* Upload Before/After Photos */}
@@ -1526,6 +1537,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(52,211,153,0.30)",
   },
+  certBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    marginTop: 12,
+    paddingVertical: 14,
+    borderRadius: 12,
+    backgroundColor: "#121316",
+    borderWidth: 1,
+    borderColor: "rgba(59,130,246,0.30)",
+  },
+  certBtnText: { color: COLORS.primary, fontSize: 15, fontWeight: "600" },
   completedBannerText: {
     fontSize: 14,
     color: "#065f46",

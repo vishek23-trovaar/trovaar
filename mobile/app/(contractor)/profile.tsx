@@ -20,6 +20,8 @@ import { useAuth } from "@/lib/auth";
 import { api, getToken, API_URL } from "@/lib/api";
 import { useAppTheme } from "@/lib/appTheme";
 import { colors, typography, spacing, radius, shadows, getCategoryIcon } from "../../lib/theme";
+import ChangePasswordModal from "@/components/ChangePasswordModal";
+import { confirmDeleteAccount, exportMyData } from "@/lib/accountActions";
 
 const COLORS = {
   primary: colors.primary,
@@ -211,6 +213,7 @@ function TrustBadge({
 
 export default function ContractorProfile() {
   const { user, logout, refreshUser } = useAuth();
+  const [pwModal, setPwModal] = useState(false);
   const router = useRouter();
   const { setMode, isDark } = useAppTheme();
   const screenOpacity = useRef(new Animated.Value(0)).current;
@@ -498,21 +501,7 @@ export default function ContractorProfile() {
     setUploading(null);
   };
 
-  const handleDeleteAccount = () => {
-    Alert.alert(
-      "Delete Account",
-      "Are you sure you want to delete your account? This action cannot be undone.",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: () =>
-            Alert.alert("Delete Account", "Coming soon"),
-        },
-      ]
-    );
-  };
+  const handleDeleteAccount = () => confirmDeleteAccount(logout);
 
   const handleLogout = () => {
     Alert.alert("Log Out", "Are you sure you want to log out?", [
@@ -1315,6 +1304,7 @@ export default function ContractorProfile() {
           <SettingsRow icon="wallet-outline" label="Earnings" onPress={() => router.push("/(contractor)/earnings")} />
           <SettingsRow icon="receipt-outline" label="Invoices" onPress={() => router.push("/(contractor)/invoices")} />
           <SettingsRow icon="bar-chart-outline" label="Tax & Reports" onPress={() => router.push("/(contractor)/tax")} />
+          <SettingsRow icon="notifications-outline" label="Job Alerts" onPress={() => router.push("/(contractor)/job-alerts")} />
           <SettingsRow icon="people-outline" label="My Clients" onPress={() => router.push("/(contractor)/clients")} isLast />
         </View>
 
@@ -1324,7 +1314,12 @@ export default function ContractorProfile() {
           <SettingsRow
             icon="lock-closed-outline"
             label="Change Password"
-            onPress={comingSoon("Change Password")}
+            onPress={() => setPwModal(true)}
+          />
+          <SettingsRow
+            icon="download-outline"
+            label="Export My Data"
+            onPress={exportMyData}
           />
           <SettingsRow
             icon="card-outline"
@@ -1390,6 +1385,8 @@ export default function ContractorProfile() {
           </TouchableOpacity>
         </View>
       )}
+
+      <ChangePasswordModal visible={pwModal} onClose={() => setPwModal(false)} />
     </Animated.View>
   );
 }

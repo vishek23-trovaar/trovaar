@@ -153,6 +153,8 @@ export default function ContractorLayout() {
       {/* ── Hidden screens (navigated to from within the app) ── */}
       <Tabs.Screen name="job/[id]" options={{ href: null }} />
       <Tabs.Screen name="notifications" options={{ href: null, title: "Notifications" }} />
+      <Tabs.Screen name="job-alerts" options={{ href: null, title: "Job Alerts" }} />
+      <Tabs.Screen name="certificate/[id]" options={{ href: null, title: "Certificate" }} />
       <Tabs.Screen name="chat/[jobId]" options={{ href: null, title: "Chat" }} />
       <Tabs.Screen name="calendar" options={{ href: null, title: "Calendar" }} />
       <Tabs.Screen name="invoices" options={{ href: null, title: "Invoices" }} />

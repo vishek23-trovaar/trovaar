@@ -850,6 +850,17 @@ export default function JobDetailScreen() {
                   </View>
                 )}
 
+                {job.status === "completed" && (
+                  <TouchableOpacity
+                    style={styles.certBtn}
+                    onPress={() => router.push(`/(client)/certificate/${id}` as never)}
+                    activeOpacity={0.85}
+                  >
+                    <Ionicons name="ribbon-outline" size={18} color={colors.primary} />
+                    <Text style={styles.certBtnText}>View Completion Certificate</Text>
+                  </TouchableOpacity>
+                )}
+
                 {/* Before/After Photos */}
                 {job.status === "completed" && photos.length > 0 && (
                   <View style={styles.beforeAfterCard}>
@@ -1098,10 +1109,16 @@ export default function JobDetailScreen() {
           )}
 
           {(job.status === "posted" || job.status === "bidding") && (
-            <TouchableOpacity style={styles.cancelBtn} onPress={cancelJob}>
-              <Ionicons name="close-circle-outline" size={20} color="#F87171" />
-              <Text style={styles.cancelBtnText}>Cancel Job</Text>
-            </TouchableOpacity>
+            <>
+              <TouchableOpacity style={styles.editBtn} onPress={() => router.push(`/(client)/job-edit/${id}` as never)}>
+                <Ionicons name="create-outline" size={20} color={colors.primary} />
+                <Text style={styles.editBtnText}>Edit Job</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.cancelBtn} onPress={cancelJob}>
+                <Ionicons name="close-circle-outline" size={20} color="#F87171" />
+                <Text style={styles.cancelBtnText}>Cancel Job</Text>
+              </TouchableOpacity>
+            </>
           )}
         </ScrollView>
       )}
@@ -1506,6 +1523,18 @@ const styles = StyleSheet.create({
     borderWidth: 1.5, borderColor: "rgba(248,113,113,0.30)",
   },
   cancelBtnText: { color: "#F87171", fontSize: 16, fontWeight: "600" },
+  editBtn: {
+    flexDirection: "row", alignItems: "center", justifyContent: "center",
+    backgroundColor: colors.white, paddingVertical: 16, borderRadius: radius.lg, marginTop: 12, gap: 8,
+    borderWidth: 1.5, borderColor: "rgba(59,130,246,0.30)",
+  },
+  editBtnText: { color: colors.primary, fontSize: 16, fontWeight: "600" },
+  certBtn: {
+    flexDirection: "row", alignItems: "center", justifyContent: "center",
+    backgroundColor: colors.white, paddingVertical: 14, borderRadius: radius.lg, marginBottom: 12, gap: 8,
+    borderWidth: 1, borderColor: "rgba(59,130,246,0.30)",
+  },
+  certBtnText: { color: colors.primary, fontSize: 15, fontWeight: "600" },
 
   // Empty tab
   emptyTab: { alignItems: "center", paddingVertical: 48 },
