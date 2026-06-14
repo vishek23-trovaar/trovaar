@@ -5,15 +5,21 @@ import Footer from "./Footer";
 
 export function NavbarWrapper() {
   const pathname = usePathname();
-  // Admin has its own sidebar layout — suppress global navbar there only
-  if (pathname.startsWith("/admin")) return null;
+  // Admin has its own sidebar layout; design-preview routes are full-bleed
+  // standalone mockups — suppress the global navbar on both.
+  if (pathname.startsWith("/admin") || pathname.startsWith("/design-preview")) return null;
   return <Navbar />;
 }
 
 export function FooterWrapper() {
   const pathname = usePathname();
-  // Hide footer inside portals and admin (they have their own layouts)
-  if (pathname.startsWith("/admin") || pathname.startsWith("/client") || pathname.startsWith("/contractor")) {
+  // Hide footer inside portals, admin, and design-preview mockups.
+  if (
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/client") ||
+    pathname.startsWith("/contractor") ||
+    pathname.startsWith("/design-preview")
+  ) {
     return null;
   }
   return <Footer />;
