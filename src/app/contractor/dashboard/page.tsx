@@ -226,7 +226,7 @@ export default function ContractorDashboard() {
       {/* Midnight hero band (see DESIGN.md) */}
       <div
         className="relative overflow-hidden rounded-3xl px-6 py-7 sm:px-8 sm:py-8 mb-6 text-white"
-        style={{ background: "linear-gradient(135deg, #0a0f1e 0%, #0f172a 50%, #1e1b4b 100%)" }}
+        style={{ backgroundColor: "#0f1011", border: "1px solid #23252a" }}
       >
         <div aria-hidden className="absolute -top-24 -right-16 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="relative flex items-center justify-between gap-4 flex-wrap">

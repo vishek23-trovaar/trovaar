@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ShieldCheck, Zap, DollarSign } from "lucide-react";
 
 interface AuthLayoutProps {
@@ -8,73 +9,53 @@ interface AuthLayoutProps {
 }
 
 /**
- * Split auth layout matching the brand (see DESIGN.md): a midnight-gradient
- * hero panel (brand wordmark, "Stop searching, start finding." tagline, live
- * eyebrow, trust bullets) beside the form. Mirrors the mobile auth screens.
- * On mobile it stacks — a compact midnight band on top, form below.
+ * Split auth layout in Linear's design language (near-black canvas, hairline
+ * panels, single brand-blue accent, tight display type) — matches the homepage.
+ * Left: a near-black brand hero (logo, "Stop searching, start finding." tagline,
+ * trust bullets). Right: the form. Stacks on mobile.
  * Shared by login / signup / forgot-password / reset-password.
  */
 export default function AuthLayout({ children }: AuthLayoutProps) {
   return (
-    <div className="min-h-screen grid lg:grid-cols-2">
-      {/* ── Midnight hero panel ── */}
+    <div className="min-h-screen grid lg:grid-cols-2" style={{ backgroundColor: "#010102" }}>
+      {/* ── Brand hero panel ── */}
       <div
-        className="relative overflow-hidden flex flex-col justify-between px-6 sm:px-10 lg:px-14 py-8 lg:py-14 text-white"
-        style={{ background: "linear-gradient(135deg, #0a0f1e 0%, #0f172a 50%, #1e1b4b 100%)" }}
+        className="relative flex flex-col justify-between px-6 sm:px-10 lg:px-14 py-8 lg:py-14"
+        style={{ backgroundColor: "#010102", borderRight: "1px solid #23252a", color: "#f7f8f8" }}
       >
-        {/* grid texture + glow */}
-        <div
-          className="absolute inset-0 opacity-[0.05] pointer-events-none"
-          style={{
-            backgroundImage:
-              "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
-            backgroundSize: "44px 44px",
-          }}
-        />
-        <div className="absolute -top-24 -left-16 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        {/* Brand wordmark */}
-        <Link href="/" className="relative inline-flex items-center gap-2 self-start">
-          <span className="w-9 h-9 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center">
-            <svg className="w-5 h-5 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-              <polyline points="9 22 9 12 15 12 15 22" />
-            </svg>
-          </span>
-          <span className="text-xl font-extrabold tracking-tight">Trovaar</span>
+        <Link href="/" className="relative inline-flex items-center gap-2.5 self-start">
+          <Image src="/trovaar-icon.png" alt="Trovaar" width={30} height={22} priority style={{ height: 22, width: "auto" }} />
+          <span style={{ fontSize: "1.0625rem", fontWeight: 600, letterSpacing: "-0.02em" }}>Trovaar</span>
         </Link>
 
-        {/* Hero copy */}
         <div className="relative my-8 lg:my-0">
-          <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 rounded-full px-4 py-1.5 mb-6 text-sm backdrop-blur-sm">
+          <div
+            className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 mb-6"
+            style={{ backgroundColor: "#141516", border: "1px solid #23252a" }}
+          >
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full" style={{ backgroundColor: "#27a644", opacity: 0.75 }} />
+              <span className="relative inline-flex rounded-full h-2 w-2" style={{ backgroundColor: "#27a644" }} />
             </span>
-            <span className="text-slate-200">Live marketplace — pros bidding now</span>
+            <span style={{ fontSize: "0.8125rem", color: "#8a8f98" }}>Live marketplace — pros bidding now</span>
           </div>
-          <h2 className="text-4xl lg:text-5xl font-extrabold leading-[1.05] tracking-tight">
+          <h2 style={{ fontFamily: 'Inter, system-ui, sans-serif', fontSize: "clamp(2rem, 4.4vw, 3.25rem)", fontWeight: 600, lineHeight: 1.08, letterSpacing: "-0.028em" }}>
             Stop searching,
             <br />
-            <span
-              className="text-transparent bg-clip-text"
-              style={{ backgroundImage: "linear-gradient(90deg, #60a5fa, #818cf8, #a78bfa)" }}
-            >
-              start finding.
-            </span>
+            <span style={{ color: "#3B82F6" }}>start finding.</span>
           </h2>
-          <p className="text-slate-300 mt-5 max-w-md leading-relaxed">
+          <p style={{ fontSize: "1.0625rem", color: "#8a8f98", lineHeight: 1.5 }} className="mt-5 max-w-md">
             Post a job and watch verified local pros compete in real time. Home repairs, auto, commercial — save 20–40%.
           </p>
 
           <ul className="mt-8 space-y-3 hidden lg:block">
             {[
-              { icon: <Zap className="w-4 h-4 text-blue-400" />, text: "Competitive bids within minutes" },
-              { icon: <ShieldCheck className="w-4 h-4 text-green-400" />, text: "Background-checked, verified pros" },
-              { icon: <DollarSign className="w-4 h-4 text-amber-400" />, text: "Free for consumers — always" },
+              { icon: <Zap className="w-4 h-4" style={{ color: "#3B82F6" }} />, text: "Competitive bids within minutes" },
+              { icon: <ShieldCheck className="w-4 h-4" style={{ color: "#27a644" }} />, text: "Background-checked, verified pros" },
+              { icon: <DollarSign className="w-4 h-4" style={{ color: "#8a8f98" }} />, text: "Free for consumers — always" },
             ].map((b) => (
-              <li key={b.text} className="flex items-center gap-3 text-sm text-slate-300">
-                <span className="w-8 h-8 rounded-lg bg-white/[0.07] border border-white/10 flex items-center justify-center shrink-0">
+              <li key={b.text} className="flex items-center gap-3" style={{ fontSize: "0.875rem", color: "#d0d6e0" }}>
+                <span className="grid h-8 w-8 place-items-center rounded-lg shrink-0" style={{ backgroundColor: "#0f1011", border: "1px solid #23252a" }}>
                   {b.icon}
                 </span>
                 {b.text}
@@ -83,13 +64,13 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
           </ul>
         </div>
 
-        <p className="relative text-xs text-slate-500 hidden lg:block">
-          © {2026} Trovaar — Stop searching, start finding.
+        <p className="relative hidden lg:block" style={{ fontSize: "0.75rem", color: "#62666d" }}>
+          © 2026 Trovaar — Stop searching, start finding.
         </p>
       </div>
 
       {/* ── Form panel ── */}
-      <div className="flex items-center justify-center px-4 py-12 bg-surface">
+      <div className="flex items-center justify-center px-4 py-12" style={{ backgroundColor: "#0f1011" }}>
         <div className="w-full max-w-md">{children}</div>
       </div>
     </div>
