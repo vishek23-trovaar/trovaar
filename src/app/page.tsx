@@ -8,17 +8,7 @@ import {
   Gavel,
   CheckCircle2,
   Wrench,
-  Zap,
-  Wind,
   Home,
-  Paintbrush,
-  Hammer,
-  Trees,
-  Car,
-  Refrigerator,
-  Boxes,
-  Sparkles,
-  Truck,
   ShieldCheck,
   BadgeCheck,
   Lock,
@@ -26,6 +16,7 @@ import {
   Star,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { CATEGORIES as ALL_CATEGORIES } from "@/lib/constants";
 
 /*
  * Trovaar homepage — Linear design language.
@@ -88,21 +79,6 @@ const STEPS = [
   { icon: CheckCircle2, n: "03", title: "Choose & Save", body: "Pick your pro, save 20–40%, and pay nothing until you accept. No obligation, ever." },
 ];
 
-const CATEGORIES = [
-  { icon: Wrench, label: "Plumbing", value: "plumbing" },
-  { icon: Zap, label: "Electrical", value: "electrical" },
-  { icon: Wind, label: "HVAC", value: "hvac" },
-  { icon: Home, label: "Roofing", value: "roofing" },
-  { icon: Paintbrush, label: "Painting", value: "painting" },
-  { icon: Hammer, label: "Carpentry", value: "carpentry" },
-  { icon: Trees, label: "Landscaping", value: "landscaping" },
-  { icon: Car, label: "Auto Repair", value: "auto_repair" },
-  { icon: Refrigerator, label: "Appliance Repair", value: "appliance_repair" },
-  { icon: Boxes, label: "Handyman", value: "handyman" },
-  { icon: Sparkles, label: "Cleaning", value: "cleaning" },
-  { icon: Truck, label: "Moving", value: "moving" },
-];
-
 const STATS = [
   { value: "149", label: "Services" },
   { value: "13", label: "Categories" },
@@ -119,6 +95,40 @@ const TRUST = [
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return <span style={{ ...ty.eyebrow, color: T.inkSubtle }} className="inline-block uppercase">{children}</span>;
+}
+
+/* ── Category marquee — a row of chips scrolls continuously; hover pauses.
+ * (marqueeLeft/marqueeRight keyframes live in globals.css.) Re-skinned to
+ * Linear: charcoal chips, hairline borders, no emoji. */
+function MarqueeRow({
+  items,
+  direction,
+  duration,
+}: {
+  items: { value: string; label: string }[];
+  direction: "left" | "right";
+  duration: number;
+}) {
+  const animation = direction === "left" ? "marqueeLeft" : "marqueeRight";
+  return (
+    <div className="group/marquee overflow-hidden">
+      <div
+        className="flex w-max gap-3 group-hover/marquee:[animation-play-state:paused]"
+        style={{ animation: `${animation} ${duration}s linear infinite` }}
+      >
+        {[...items, ...items].map((cat, i) => (
+          <Link
+            key={`${cat.value}-${i}`}
+            href={`/jobs?category=${cat.value}`}
+            className="shrink-0 rounded-[8px] px-4 py-2 transition-colors hover:bg-[#141516]"
+            style={{ backgroundColor: T.surface1, border: `1px solid ${T.hairline}`, ...ty.bodySm, color: T.inkMuted }}
+          >
+            {cat.label}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 /* ── The kept animation, re-skinned to Linear ───────────────────────────────
@@ -207,6 +217,11 @@ function AnimatedBidPanel() {
     </div>
   );
 }
+
+// Split all 149 services into 3 roughly-equal marquee rows (module-level —
+// the list is static).
+const marqueeRows: { value: string; label: string }[][] = [[], [], []];
+ALL_CATEGORIES.forEach((c, i) => marqueeRows[i % 3].push({ value: c.value, label: c.label }));
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -314,22 +329,24 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── Categories ── */}
-        <section className="mx-auto max-w-[1280px] px-6 pt-24 md:pt-32">
-          <div className="max-w-[640px]">
-            <Eyebrow>Categories</Eyebrow>
-            <h2 style={ty.displayLg} className="mt-4 text-balance">Every trade, one network.</h2>
-            <p style={{ ...ty.subhead, color: T.inkSubtle }} className="mt-4">149 services across 13 categories — from a leaky faucet to a full commercial build-out.</p>
+        {/* ── Categories (marquee) ── */}
+        <section className="pt-24 md:pt-32">
+          <div className="mx-auto max-w-[1280px] px-6">
+            <div className="max-w-[640px]">
+              <Eyebrow>Categories</Eyebrow>
+              <h2 style={ty.displayLg} className="mt-4 text-balance">Every trade, one network.</h2>
+              <p style={{ ...ty.subhead, color: T.inkSubtle }} className="mt-4">149 services across 13 categories — hover to pause, click to browse.</p>
+            </div>
           </div>
-          <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {CATEGORIES.map(({ icon: Icon, label, value }) => (
-              <Link key={value} href={`/jobs?category=${value}`} className="group flex items-center gap-3 rounded-[12px] px-4 py-3.5 transition-colors hover:bg-[#141516]" style={{ backgroundColor: T.surface1, border: `1px solid ${T.hairline}` }}>
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[8px]" style={{ backgroundColor: T.surface3, border: `1px solid ${T.hairline}` }}>
-                  <Icon size={16} color={T.inkMuted} strokeWidth={1.8} />
-                </span>
-                <span style={{ ...ty.bodySm, color: T.ink }}>{label}</span>
-              </Link>
-            ))}
+          {/* full-bleed scrolling chip rows with edge fades */}
+          <div className="relative mt-12 overflow-hidden">
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 sm:w-28" style={{ background: `linear-gradient(to right, ${T.canvas}, transparent)` }} />
+            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 sm:w-28" style={{ background: `linear-gradient(to left, ${T.canvas}, transparent)` }} />
+            <div className="space-y-3 px-6">
+              <MarqueeRow items={marqueeRows[0]} direction="left" duration={70} />
+              <MarqueeRow items={marqueeRows[1]} direction="right" duration={88} />
+              <MarqueeRow items={marqueeRows[2]} direction="left" duration={60} />
+            </div>
           </div>
         </section>
 
