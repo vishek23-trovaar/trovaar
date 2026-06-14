@@ -7,7 +7,6 @@ import {
   Camera,
   Gavel,
   CheckCircle2,
-  Wrench,
   Home,
   ShieldCheck,
   BadgeCheck,
@@ -15,6 +14,7 @@ import {
   ScrollText,
   Star,
 } from "lucide-react";
+import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
 import { CATEGORIES as ALL_CATEGORIES } from "@/lib/constants";
 
@@ -28,8 +28,10 @@ import { CATEGORIES as ALL_CATEGORIES } from "@/lib/constants";
  */
 
 const T = {
-  primary: "#5e6ad2",
-  primaryHover: "#828fff",
+  // Linear's system, but with Trovaar's brand blue as the single accent
+  // (matches the custom logo) instead of Linear's lavender.
+  primary: "#3B82F6",
+  primaryHover: "#60A5FA",
   onPrimary: "#ffffff",
   ink: "#f7f8f8",
   inkMuted: "#d0d6e0",
@@ -244,9 +246,7 @@ export default function HomePage() {
         <nav className="mx-auto flex h-14 max-w-[1280px] items-center justify-between px-6">
           <div className="flex items-center gap-9">
             <Link href="/" className="flex items-center gap-2.5">
-              <span className="grid h-6 w-6 place-items-center rounded-[6px]" style={{ backgroundColor: T.primary }}>
-                <Wrench size={14} color={T.onPrimary} strokeWidth={2.4} />
-              </span>
+              <Image src="/trovaar-icon.png" alt="Trovaar" width={30} height={22} priority style={{ height: 22, width: "auto" }} />
               <span style={{ fontSize: "1.0625rem", fontWeight: 600, letterSpacing: "-0.02em" }}>Trovaar</span>
             </Link>
             <div className="hidden items-center gap-7 md:flex">
@@ -404,9 +404,7 @@ export default function HomePage() {
           <div className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]" style={{ borderTop: `1px solid ${T.hairline}` }}>
             <div>
               <div className="flex items-center gap-2.5">
-                <span className="grid h-6 w-6 place-items-center rounded-[6px]" style={{ backgroundColor: T.primary }}>
-                  <Wrench size={14} color={T.onPrimary} strokeWidth={2.4} />
-                </span>
+                <Image src="/trovaar-icon.png" alt="Trovaar" width={30} height={22} style={{ height: 22, width: "auto" }} />
                 <span style={{ fontSize: "1.0625rem", fontWeight: 600, letterSpacing: "-0.02em" }}>Trovaar</span>
               </div>
               <p style={{ ...ty.bodySm, color: T.inkSubtle }} className="mt-4 max-w-[34ch]">The network that connects every skilled trade to every job.</p>
