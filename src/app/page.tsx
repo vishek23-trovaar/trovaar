@@ -1,836 +1,424 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import type { CSSProperties } from "react";
 import Link from "next/link";
-import Button from "@/components/ui/Button";
-import { CATEGORY_GROUPS, CONTRACTOR_TYPES } from "@/lib/constants";
-import { useAuth } from "@/context/AuthContext";
-import ScrollReveal from "@/components/ui/ScrollReveal";
-import { useAnimatedCounter } from "@/hooks/useScrollReveal";
 import {
-  Camera,
-  Zap,
-  CheckCircle2,
-  Shield,
-  Search,
-  Star,
-  Lock,
-  ClipboardCheck,
   ArrowRight,
-  Sparkles,
-  Award,
+  Camera,
+  Gavel,
+  CheckCircle2,
   Wrench,
-  DollarSign,
+  Zap,
+  Wind,
+  Home,
+  Paintbrush,
+  Hammer,
+  Trees,
+  Car,
+  Refrigerator,
+  Boxes,
+  Sparkles,
+  Truck,
+  ShieldCheck,
+  BadgeCheck,
+  Lock,
+  ScrollText,
+  Star,
 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
-/* ═══════════════════════════════════════════════════════════════════════════
- * Shared helpers
- * ═══════════════════════════════════════════════════════════════════════════ */
+/*
+ * Trovaar homepage — Linear design language.
+ * Tokens from .design-ref/design-md/linear.app/DESIGN.md: near-black canvas
+ * (#010102), a four-step charcoal surface ladder, hairline borders, a single
+ * lavender-blue accent (#5e6ad2) used sparingly, and display type with tight
+ * negative tracking. The hero's live-bid panel keeps the original animation
+ * (job posts, then bids slide in one at a time), re-skinned to these tokens.
+ */
 
-function StatCounter({ end, suffix = "", prefix = "" }: { end: number; suffix?: string; prefix?: string }) {
-  const { count, ref } = useAnimatedCounter(end, 2000);
-  return <span ref={ref}>{prefix}{count}{suffix}</span>;
+const T = {
+  primary: "#5e6ad2",
+  primaryHover: "#828fff",
+  onPrimary: "#ffffff",
+  ink: "#f7f8f8",
+  inkMuted: "#d0d6e0",
+  inkSubtle: "#8a8f98",
+  inkTertiary: "#62666d",
+  canvas: "#010102",
+  surface1: "#0f1011",
+  surface2: "#141516",
+  surface3: "#18191a",
+  hairline: "#23252a",
+  hairlineStrong: "#34343a",
+  success: "#27a644",
+} as const;
+
+const DISPLAY_STACK =
+  'Inter, "SF Pro Display", -apple-system, system-ui, "Segoe UI", Roboto, sans-serif';
+
+type Type = Pick<CSSProperties, "fontFamily" | "fontSize" | "fontWeight" | "lineHeight" | "letterSpacing">;
+const display = (fontSize: string, letterSpacing: string, fontWeight = 600, lineHeight = 1.1): Type => ({
+  fontFamily: DISPLAY_STACK, fontSize, fontWeight, lineHeight, letterSpacing,
+});
+
+const ty = {
+  displayXl: display("clamp(2.5rem, 6.2vw, 5rem)", "-0.03em"),
+  displayLg: display("clamp(2rem, 4.4vw, 3.5rem)", "-0.022em", 600, 1.1),
+  displayMd: display("clamp(1.75rem, 3vw, 2.5rem)", "-0.018em", 600, 1.15),
+  headline: display("1.75rem", "-0.021em", 600, 1.2),
+  cardTitle: display("1.375rem", "-0.018em", 500, 1.25),
+  subhead: { fontFamily: DISPLAY_STACK, fontSize: "1.25rem", fontWeight: 400, lineHeight: 1.4, letterSpacing: "-0.01em" } as Type,
+  bodyLg: { fontSize: "1.125rem", fontWeight: 400, lineHeight: 1.5, letterSpacing: "-0.005em" } as Type,
+  body: { fontSize: "1rem", fontWeight: 400, lineHeight: 1.5, letterSpacing: "-0.003em" } as Type,
+  bodySm: { fontSize: "0.875rem", fontWeight: 400, lineHeight: 1.5, letterSpacing: "0" } as Type,
+  caption: { fontSize: "0.75rem", fontWeight: 400, lineHeight: 1.4, letterSpacing: "0" } as Type,
+  button: { fontSize: "0.875rem", fontWeight: 500, lineHeight: 1.2, letterSpacing: "0" } as Type,
+  eyebrow: { fontSize: "0.8125rem", fontWeight: 500, lineHeight: 1.3, letterSpacing: "0.4px" } as Type,
+} as const;
+
+const NAV_LINKS = [
+  { label: "Quote Buster", href: "/quote-buster" },
+  { label: "About", href: "/about" },
+  { label: "Browse Jobs", href: "/jobs" },
+];
+
+const STEPS = [
+  { icon: Camera, n: "01", title: "Snap & Post", body: "Upload a photo and describe the job in under 2 minutes. No phone tag, no waiting on callbacks." },
+  { icon: Gavel, n: "02", title: "Pros Compete", body: "Verified local tradespeople send competitive bids in real time. You watch the offers come in." },
+  { icon: CheckCircle2, n: "03", title: "Choose & Save", body: "Pick your pro, save 20–40%, and pay nothing until you accept. No obligation, ever." },
+];
+
+const CATEGORIES = [
+  { icon: Wrench, label: "Plumbing", value: "plumbing" },
+  { icon: Zap, label: "Electrical", value: "electrical" },
+  { icon: Wind, label: "HVAC", value: "hvac" },
+  { icon: Home, label: "Roofing", value: "roofing" },
+  { icon: Paintbrush, label: "Painting", value: "painting" },
+  { icon: Hammer, label: "Carpentry", value: "carpentry" },
+  { icon: Trees, label: "Landscaping", value: "landscaping" },
+  { icon: Car, label: "Auto Repair", value: "auto_repair" },
+  { icon: Refrigerator, label: "Appliance Repair", value: "appliance_repair" },
+  { icon: Boxes, label: "Handyman", value: "handyman" },
+  { icon: Sparkles, label: "Cleaning", value: "cleaning" },
+  { icon: Truck, label: "Moving", value: "moving" },
+];
+
+const STATS = [
+  { value: "149", label: "Services" },
+  { value: "13", label: "Categories" },
+  { value: "20–40%", label: "Average savings" },
+  { value: "Free", label: "For consumers" },
+];
+
+const TRUST = [
+  { icon: ShieldCheck, label: "Background-checked pros" },
+  { icon: BadgeCheck, label: "ID verified" },
+  { icon: Lock, label: "Secure escrow payments" },
+  { icon: ScrollText, label: "Licensed where required" },
+];
+
+function Eyebrow({ children }: { children: React.ReactNode }) {
+  return <span style={{ ...ty.eyebrow, color: T.inkSubtle }} className="inline-block uppercase">{children}</span>;
 }
 
-function HeroParticles() {
-  const [particles, setParticles] = useState<Array<{
-    w: number; h: number; bg: string; left: string; top: string; dur: string; delay: string;
-  }>>([]);
-
-  useEffect(() => {
-    setParticles(
-      Array.from({ length: 20 }, () => {
-        const size = Math.random() * 4 + 2;
-        return {
-          w: size,
-          h: size,
-          bg: `hsl(${220 + Math.random() * 40}, 80%, ${60 + Math.random() * 20}%)`,
-          left: `${Math.random() * 100}%`,
-          top: `${Math.random() * 100}%`,
-          dur: `${8 + Math.random() * 12}s`,
-          delay: `${Math.random() * 5}s`,
-        };
-      })
-    );
-  }, []);
-
-  if (particles.length === 0) return null;
-
+/* ── The kept animation, re-skinned to Linear ───────────────────────────────
+ * A job posts, then three bids slide in one at a time (slideInRight, staggered
+ * delays — keyframes live in globals.css), then the savings card fades up. */
+function AnimatedBidPanel() {
+  const bids = [
+    { name: "Mike R.", initials: "MR", price: "$180", time: "Tomorrow", rating: "4.9", delay: "0.6s", lead: true },
+    { name: "Sarah T.", initials: "ST", price: "$155", time: "Today 5pm", rating: "4.8", delay: "1.6s", lead: false },
+    { name: "Carlos M.", initials: "CM", price: "$145", time: "Tomorrow AM", rating: "5.0", delay: "2.6s", lead: false },
+  ];
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {particles.map((p, i) => (
-        <div
-          key={i}
-          className="absolute rounded-full opacity-20"
-          style={{
-            width: `${p.w}px`,
-            height: `${p.h}px`,
-            background: p.bg,
-            left: p.left,
-            top: p.top,
-            animation: `float ${p.dur} ease-in-out infinite`,
-            animationDelay: p.delay,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
-function HeroIllustration() {
-  return (
-    <div className="relative w-full max-w-lg mx-auto">
-      <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 rounded-3xl blur-3xl" />
-      <div className="relative bg-white/5 border border-white/10 backdrop-blur-sm rounded-2xl p-6 space-y-4">
-        <div className="bg-white/10 rounded-xl p-4 border border-white/10">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-full bg-blue-500/30 flex items-center justify-center">
-              <svg className="w-5 h-5 text-blue-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
-            </div>
-            <div>
-              <div className="text-sm font-semibold text-white">Kitchen Faucet Replacement</div>
-              <div className="text-xs text-slate-400">Posted 3 min ago</div>
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <span className="px-2 py-0.5 text-xs rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/20">Plumbing</span>
-            <span className="px-2 py-0.5 text-xs rounded-full bg-green-500/20 text-green-300 border border-green-500/20">3 bids</span>
-          </div>
+    <div className="mx-auto max-w-[1080px] rounded-[16px] p-2" style={{ backgroundColor: T.surface1, border: `1px solid ${T.hairline}` }}>
+      <div className="overflow-hidden rounded-[10px]" style={{ backgroundColor: T.canvas, border: `1px solid ${T.hairline}` }}>
+        {/* faux app chrome */}
+        <div className="flex items-center gap-2 px-4 py-2.5" style={{ borderBottom: `1px solid ${T.hairline}` }}>
+          <span className="flex gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: T.hairlineStrong }} />
+            <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: T.hairlineStrong }} />
+            <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: T.hairlineStrong }} />
+          </span>
+          <span style={{ ...ty.caption, color: T.inkTertiary }} className="ml-2 font-mono">trovaar.com/jobs/kitchen-faucet</span>
         </div>
-        {[
-          { name: "Mike R.", price: "$180", time: "Tomorrow", rating: "4.9", delay: "0.5s" },
-          { name: "Sarah T.", price: "$155", time: "Today 5pm", rating: "4.8", delay: "1.5s" },
-          { name: "Carlos M.", price: "$145", time: "Tomorrow AM", rating: "5.0", delay: "2.5s" },
-        ].map((bid, i) => (
-          <div
-            key={i}
-            className="bg-white/10 rounded-xl p-3 border border-white/10 flex items-center justify-between"
-            style={{
-              animation: `slideInRight 0.5s ease-out forwards`,
-              animationDelay: bid.delay,
-              opacity: 0,
-            }}
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-indigo-400 flex items-center justify-center text-xs font-bold text-white">
-                {bid.name[0]}
-              </div>
-              <div>
-                <div className="text-sm font-medium text-white">{bid.name}</div>
-                <div className="text-xs text-slate-400 flex items-center gap-1">
-                  <Star className="w-3 h-3 text-amber-400 fill-amber-400" /> {bid.rating}
+
+        <div className="grid gap-3 p-5 sm:grid-cols-[1fr_260px]">
+          {/* live board */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between rounded-[8px] px-3.5 py-3" style={{ backgroundColor: T.surface1, border: `1px solid ${T.hairline}` }}>
+              <div className="flex items-center gap-3">
+                <span className="grid h-9 w-9 place-items-center rounded-[8px]" style={{ backgroundColor: T.surface3, border: `1px solid ${T.hairline}` }}>
+                  <Home size={16} color={T.inkMuted} strokeWidth={1.8} />
+                </span>
+                <div>
+                  <div style={{ ...ty.bodySm, color: T.ink, fontWeight: 500 }}>Kitchen Faucet Replacement</div>
+                  <div style={{ ...ty.caption, color: T.inkSubtle }}>Posted 3 min ago · Plumbing</div>
                 </div>
               </div>
-            </div>
-            <div className="text-right">
-              <div className="text-sm font-bold text-green-400">{bid.price}</div>
-              <div className="text-xs text-slate-400">{bid.time}</div>
-            </div>
-          </div>
-        ))}
-        <div
-          className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-xl p-3 text-center"
-          style={{ animation: "fadeInUp 0.5s ease-out 3.5s forwards", opacity: 0 }}
-        >
-          <div className="text-xs text-green-300 mb-0.5">You save vs. big company quote</div>
-          <div className="text-xl font-extrabold text-green-400">$255 saved (37%)</div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
- * SECTION 1 — HERO
- * ═══════════════════════════════════════════════════════════════════════════ */
-
-function HeroSection() {
-  const { user } = useAuth();
-
-  return (
-    <section
-      className="relative overflow-hidden text-white"
-      style={{ background: "linear-gradient(135deg, #0a0f1e 0%, #0f172a 50%, #1e1b4b 100%)" }}
-    >
-      <div
-        className="absolute inset-0 opacity-[0.04]"
-        style={{
-          backgroundImage: "linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }}
-      />
-      <HeroParticles />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-blue-500/5 rounded-full blur-3xl" />
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 mb-8 text-sm backdrop-blur-sm"
-              style={{ animation: "fadeInUp 0.6s ease-out" }}>
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span>
+              <span className="rounded-full px-2 py-0.5 inline-flex items-center gap-1.5" style={{ ...ty.caption, backgroundColor: T.surface2, color: T.success }}>
+                <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: T.success }} /> Live
               </span>
-              <span className="text-slate-200">Live marketplace — pros bidding now</span>
             </div>
 
-            <h1
-              className="text-balance text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-[1.05] tracking-tight mb-6"
-              style={{ animation: "fadeInUp 0.6s ease-out 0.1s both" }}
-            >
-              The network that connects{" "}
-              <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(90deg, #60a5fa, #818cf8, #a78bfa)" }}>
-                every skilled trade
-              </span>{" "}
-              to every job.
-            </h1>
-
-            <p
-              className="text-lg sm:text-xl text-slate-300 mb-10 max-w-2xl leading-relaxed"
-              style={{ animation: "fadeInUp 0.6s ease-out 0.2s both" }}
-            >
-              Like Uber — but for home repairs, auto work, and commercial services.
-              Post a job, watch pros compete in real time, save 20–40%.
-            </p>
-
-            <div
-              className="flex flex-col sm:flex-row gap-4 mb-16"
-              style={{ animation: "fadeInUp 0.6s ease-out 0.3s both" }}
-            >
-              {user?.role === "consumer" ? (
-                <Link href="/jobs/new">
-                  <Button size="lg" className="w-full sm:w-auto px-8 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-shadow">Post a Job</Button>
-                </Link>
-              ) : user?.role === "contractor" ? (
-                <Link href="/jobs">
-                  <Button size="lg" className="w-full sm:w-auto px-8 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-shadow">Find Jobs Near You</Button>
-                </Link>
-              ) : (
-                <>
-                  <Link href="/signup?role=consumer">
-                    <Button size="lg" className="w-full sm:w-auto px-8 bg-blue-500 hover:bg-blue-600 border-0 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-shadow">
-                      Post a Job
-                      <ArrowRight className="ml-2 w-4 h-4" />
-                    </Button>
-                  </Link>
-                  <Link href="/signup?role=contractor">
-                    <Button size="lg" variant="outline" className="w-full sm:w-auto px-8 border-white/40 text-white hover:bg-white/10 backdrop-blur-sm">
-                      Find Work Near You
-                    </Button>
-                  </Link>
-                </>
-              )}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-xl"
-              style={{ animation: "fadeInUp 0.6s ease-out 0.4s both" }}>
-              <div className="bg-white/[0.07] border border-white/[0.12] rounded-2xl p-5 flex gap-4 items-start backdrop-blur-sm hover:bg-white/[0.12] transition-colors group">
-                <div className="w-11 h-11 rounded-xl bg-blue-500/20 flex items-center justify-center shrink-0 group-hover:bg-blue-500/30 transition-colors">
-                  <svg className="w-5 h-5 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
+            {bids.map((bid) => (
+              <div
+                key={bid.name}
+                className="flex items-center justify-between rounded-[8px] px-3.5 py-3"
+                style={{
+                  backgroundColor: T.surface1,
+                  border: `1px solid ${bid.lead ? T.hairlineStrong : T.hairline}`,
+                  animation: "slideInRight 0.5s ease-out forwards",
+                  animationDelay: bid.delay,
+                  opacity: 0,
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="grid h-8 w-8 place-items-center rounded-full" style={{ backgroundColor: T.surface3, ...ty.caption, color: T.inkMuted }}>{bid.initials}</span>
+                  <div>
+                    <div style={{ ...ty.bodySm, color: T.ink }}>{bid.name}</div>
+                    <div className="flex items-center gap-1" style={{ ...ty.caption, color: T.inkSubtle }}>
+                      <Star size={11} fill={T.inkSubtle} strokeWidth={0} /> {bid.rating} · {bid.time}
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-white mb-1 text-sm">For Homeowners & Businesses</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">Post once. Qualified local pros compete on price, rating, and availability.</p>
-                  <Link href="/signup?role=consumer" className="inline-flex items-center gap-1 mt-2 text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors">
-                    Post a job <ArrowRight className="w-3 h-3" />
-                  </Link>
-                </div>
-              </div>
-              <div className="bg-white/[0.07] border border-white/[0.12] rounded-2xl p-5 flex gap-4 items-start backdrop-blur-sm hover:bg-white/[0.12] transition-colors group">
-                <div className="w-11 h-11 rounded-xl bg-indigo-500/20 flex items-center justify-center shrink-0 group-hover:bg-indigo-500/30 transition-colors">
-                  <Wrench className="w-5 h-5 text-indigo-400" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-white mb-1 text-sm">For Contractors & Tradespeople</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">See jobs on a live map. Bid what you want, when you want. No monthly fees.</p>
-                  <Link href="/signup?role=contractor" className="inline-flex items-center gap-1 mt-2 text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition-colors">
-                    Find work <ArrowRight className="w-3 h-3" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="hidden lg:block" style={{ animation: "fadeInRight 0.8s ease-out 0.5s both" }}>
-            <HeroIllustration />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
- * SECTION 2 — HOW IT WORKS
- * ═══════════════════════════════════════════════════════════════════════════ */
-
-function HowItWorksSection() {
-  const steps = [
-    {
-      icon: <Camera className="w-6 h-6" />,
-      title: "Snap & Post",
-      description: "Upload a photo and describe your job — under 2 minutes.",
-      color: "from-blue-500 to-cyan-500",
-      iconBg: "bg-blue-50",
-      iconColor: "text-blue-600",
-    },
-    {
-      icon: <Zap className="w-6 h-6" />,
-      title: "Pros Compete",
-      description: "Verified local tradespeople send you competitive bids.",
-      color: "from-amber-500 to-orange-500",
-      iconBg: "bg-amber-50",
-      iconColor: "text-amber-600",
-    },
-    {
-      icon: <CheckCircle2 className="w-6 h-6" />,
-      title: "Choose & Save",
-      description: "Pick your pro, save 20–40%. No obligation until you accept.",
-      color: "from-green-500 to-emerald-500",
-      iconBg: "bg-green-50",
-      iconColor: "text-green-600",
-    },
-  ];
-
-  return (
-    <section className="py-20 sm:py-24 bg-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <ScrollReveal>
-          <div className="mx-auto mb-14 max-w-2xl text-center">
-            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
-              How it works
-            </h2>
-            <p className="mt-4 text-lg text-slate-500">
-              Three simple steps to save money on any service.
-            </p>
-          </div>
-        </ScrollReveal>
-
-        <ScrollReveal>
-          <div className="relative mx-auto mb-8 hidden md:block">
-            <div aria-hidden className="absolute left-[16.6667%] top-4 h-0.5 w-[66.6667%] bg-gradient-to-r from-blue-200 via-amber-200 to-green-200" />
-            <div className="relative grid grid-cols-3">
-              {steps.map((_, i) => (
-                <div
-                  key={i}
-                  className={`flex h-8 w-8 items-center justify-center justify-self-center rounded-full bg-gradient-to-br ${steps[i].color} font-bold text-white text-sm ring-4 ring-white shadow-md`}
-                >
-                  {i + 1}
-                </div>
-              ))}
-            </div>
-          </div>
-        </ScrollReveal>
-
-        <div className="mx-auto grid grid-cols-1 gap-6 md:grid-cols-3">
-          {steps.map((step, i) => (
-            <ScrollReveal key={step.title} delay={i * 120}>
-              <div className="relative rounded-2xl border border-slate-100 bg-white p-7 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 h-full">
-                <div className={`mb-5 flex h-12 w-12 items-center justify-center rounded-xl ${step.iconBg} ${step.iconColor}`}>
-                  {step.icon}
-                </div>
-                <div className="flex items-baseline gap-2 mb-2">
-                  <span className="md:hidden text-3xl font-black text-slate-200 leading-none">{i + 1}</span>
-                  <h3 className="text-lg font-semibold text-slate-900">{step.title}</h3>
-                </div>
-                <p className="text-slate-500 leading-relaxed">{step.description}</p>
-              </div>
-            </ScrollReveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
- * SECTION 3 — QUOTE BUSTER CTA
- * ═══════════════════════════════════════════════════════════════════════════ */
-
-function QuoteBusterSection() {
-  return (
-    <ScrollReveal>
-      <section className="py-16 relative overflow-hidden" style={{ background: "linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #3b82f6 100%)" }}>
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "32px 32px" }} />
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-          <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-6">
-            <DollarSign className="w-8 h-8 text-white" />
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold mb-3">Got an expensive quote?</h2>
-          <p className="text-lg text-blue-100 mb-8 max-w-2xl mx-auto">
-            Big companies charge 30–50% more than local pros. Use our free Quote Buster
-            to see what you should really be paying.
-          </p>
-          <Link href="/quote-buster">
-            <Button size="lg" variant="white" className="px-8 shadow-lg shadow-blue-900/30 hover:shadow-xl transition-shadow">
-              Bust My Quote
-            </Button>
-          </Link>
-        </div>
-      </section>
-    </ScrollReveal>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
- * SECTION 4 — SERVICE CATEGORIES
- * ═══════════════════════════════════════════════════════════════════════════ */
-
-type FlatCategory = { value: string; label: string; groupIcon: string };
-
-function MarqueeRow({
-  items,
-  direction,
-  duration,
-}: {
-  items: FlatCategory[];
-  direction: "left" | "right";
-  duration: number;
-}) {
-  const animation = direction === "left" ? "marqueeLeft" : "marqueeRight";
-  // Two copies side-by-side for a seamless infinite loop
-  return (
-    <div className="group/marquee overflow-hidden">
-      <div
-        className="flex gap-3 w-max group-hover/marquee:[animation-play-state:paused]"
-        style={{ animation: `${animation} ${duration}s linear infinite` }}
-      >
-        {[...items, ...items].map((cat, i) => (
-          <Link
-            key={`${cat.value}-${i}`}
-            href={`/jobs?category=${cat.value}`}
-            className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm bg-white border border-slate-200 text-slate-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 hover:shadow-md hover:shadow-blue-500/20 transition-colors"
-          >
-            <span className="text-base leading-none opacity-70">{cat.groupIcon}</span>
-            {cat.label}
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function CategorySection() {
-  const total = CATEGORY_GROUPS.reduce((s, g) => s + g.categories.length, 0);
-
-  // Flatten and split categories into 3 roughly-equal rows for the marquee
-  const rows = useMemo(() => {
-    const flat: FlatCategory[] = CATEGORY_GROUPS.flatMap((g) =>
-      g.categories.map((c) => ({ value: c.value, label: c.label, groupIcon: g.icon }))
-    );
-    const r: FlatCategory[][] = [[], [], []];
-    flat.forEach((cat, i) => r[i % 3].push(cat));
-    return r;
-  }, []);
-
-  return (
-    <section
-      className="py-20 relative overflow-hidden"
-      style={{ background: "linear-gradient(180deg, #0f172a 0%, #1e1b4b 100%)" }}
-    >
-      <div
-        aria-hidden
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-blue-500/10 rounded-full blur-3xl pointer-events-none"
-      />
-      {/* Edge fade overlays so chips fade in/out at the boundaries */}
-      <div
-        aria-hidden
-        className="absolute inset-y-0 left-0 w-16 sm:w-24 z-10 pointer-events-none"
-        style={{ background: "linear-gradient(to right, #0f172a, transparent)" }}
-      />
-      <div
-        aria-hidden
-        className="absolute inset-y-0 right-0 w-16 sm:w-24 z-10 pointer-events-none"
-        style={{ background: "linear-gradient(to left, #1e1b4b, transparent)" }}
-      />
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <ScrollReveal>
-          <div className="text-center mb-12 text-white">
-            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-3">
-              Every trade. Every job.
-            </h2>
-            <p className="text-lg text-slate-300 max-w-2xl mx-auto">
-              <span className="font-semibold text-white tabular-nums">{total}</span> live services across{" "}
-              <span className="font-semibold text-white">{CATEGORY_GROUPS.length}</span> categories. Hover to pause, click to browse.
-            </p>
-          </div>
-        </ScrollReveal>
-
-        <div className="space-y-3">
-          <MarqueeRow items={rows[0]} direction="left" duration={60} />
-          <MarqueeRow items={rows[1]} direction="right" duration={75} />
-          <MarqueeRow items={rows[2]} direction="left" duration={50} />
-        </div>
-
-        <ScrollReveal>
-          <div className="text-center mt-12">
-            <Link href="/jobs">
-              <Button variant="white" size="lg">Browse Live Jobs</Button>
-            </Link>
-          </div>
-        </ScrollReveal>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
- * SECTION 5 — TRUST & SAFETY BAR
- * ═══════════════════════════════════════════════════════════════════════════ */
-
-function TrustBar() {
-  const items = [
-    { icon: <Search className="w-5 h-5 text-blue-600" />, label: "Background Checked", sub: "Every contractor verified", bg: "bg-blue-50" },
-    { icon: <Shield className="w-5 h-5 text-green-600" />, label: "ID Verified", sub: "Government ID confirmed", bg: "bg-green-50" },
-    { icon: <Star className="w-5 h-5 text-amber-500 fill-amber-500" />, label: "Review Verified", sub: "Only real job reviews", bg: "bg-amber-50" },
-    { icon: <Lock className="w-5 h-5 text-purple-600" />, label: "Secure Payments", sub: "Held in escrow until done", bg: "bg-purple-50" },
-    { icon: <ClipboardCheck className="w-5 h-5 text-cyan-600" />, label: "Licensed Pros", sub: "License on file where required", bg: "bg-cyan-50" },
-  ];
-
-  return (
-    <section className="py-10 bg-white border-y border-slate-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <ScrollReveal>
-          <div className="flex flex-wrap justify-center gap-8 md:gap-12">
-            {items.map((item) => (
-              <div key={item.label} className="flex items-center gap-3 group">
-                <div className={`w-10 h-10 rounded-xl ${item.bg} flex items-center justify-center group-hover:scale-110 transition-transform duration-200`}>
-                  {item.icon}
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">{item.label}</p>
-                  <p className="text-xs text-slate-500">{item.sub}</p>
+                <div className="text-right">
+                  <div style={{ ...ty.bodySm, color: T.ink, fontWeight: 600 }}>{bid.price}</div>
+                  {bid.lead && <div style={{ ...ty.caption, color: T.primary }}>Lowest bid</div>}
                 </div>
               </div>
             ))}
           </div>
-        </ScrollReveal>
-      </div>
-    </section>
-  );
-}
 
-/* ═══════════════════════════════════════════════════════════════════════════
- * SECTION 6 — STATS BAR
- * ═══════════════════════════════════════════════════════════════════════════ */
-
-function StatsSection() {
-  const stats: Array<{ value: number; suffix?: string; label: string; prefix?: string }> = [
-    { value: 13, suffix: "+", label: "Service Categories" },
-    { value: 80, suffix: "+", label: "Skilled Trades" },
-    { value: 40, suffix: "%", label: "Average Savings" },
-    { value: 0, label: "Cost for Consumers", prefix: "Free" },
-  ];
-
-  return (
-    <section className="py-20 relative overflow-hidden" style={{ background: "linear-gradient(135deg, #0a0f1e 0%, #0f172a 100%)" }}>
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-blue-500/15 rounded-full blur-3xl" />
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-6 text-center">
-          {stats.map((stat, i) => (
-            <ScrollReveal key={stat.label} delay={i * 100}>
-              <div className="group">
-                <p className="text-5xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-blue-300 to-blue-500 mb-2 tabular-nums">
-                  {stat.prefix ? stat.prefix : <StatCounter end={stat.value} suffix={stat.suffix} />}
-                </p>
-                <p className="text-sm text-slate-400 uppercase tracking-wide font-medium">{stat.label}</p>
-              </div>
-            </ScrollReveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
- * SECTION 7 — TESTIMONIALS
- * ═══════════════════════════════════════════════════════════════════════════ */
-
-function TestimonialsSection() {
-  const testimonials = [
-    {
-      name: "Jessica M.",
-      role: "Homeowner, Chicago",
-      text: "Got 4 bids within an hour of posting my roof repair. Saved over $800 compared to the first quote I got from a big company. Game changer.",
-      rating: 5,
-      initial: "J",
-      gradient: "from-pink-500 to-rose-500",
-    },
-    {
-      name: "David K.",
-      role: "Licensed Electrician",
-      text: "I pick up 3-4 extra jobs a week through Trovaar. No monthly fees, I only pay when I win. Best platform for independent tradespeople.",
-      rating: 5,
-      initial: "D",
-      gradient: "from-blue-500 to-cyan-500",
-    },
-    {
-      name: "Maria S.",
-      role: "Property Manager",
-      text: "Managing 12 properties means constant maintenance. Trovaar lets me post jobs and get competitive bids fast. The escrow payments give me peace of mind.",
-      rating: 5,
-      initial: "M",
-      gradient: "from-purple-500 to-indigo-500",
-    },
-  ];
-
-  return (
-    <section className="py-24 bg-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <ScrollReveal>
-          <div className="text-center mb-14">
-            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 mb-3">
-              Trusted by homeowners and pros alike.
-            </h2>
-            <p className="text-lg text-slate-500 max-w-2xl mx-auto">
-              Real stories from real Trovaar users.
-            </p>
+          {/* savings panel — fades up after the bids land */}
+          <div
+            className="hidden flex-col justify-between rounded-[8px] p-4 sm:flex"
+            style={{ backgroundColor: T.surface1, border: `1px solid ${T.hairline}`, animation: "fadeInUp 0.5s ease-out 3.6s forwards", opacity: 0 }}
+          >
+            <div className="space-y-1">
+              <div style={{ ...ty.caption, color: T.inkSubtle }}>You save vs. big-company quote</div>
+              <div style={{ ...ty.displayMd, color: T.ink }}>$255</div>
+              <div style={{ ...ty.caption, color: T.success }}>37% lower</div>
+            </div>
+            <div style={{ ...ty.button, backgroundColor: T.primary, color: T.onPrimary }} className="mt-4 grid h-9 place-items-center rounded-[8px]">Accept bid</div>
           </div>
-        </ScrollReveal>
-
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {testimonials.map((t, i) => (
-            <ScrollReveal key={t.name} delay={i * 100}>
-              <div className="relative rounded-2xl border border-slate-200 bg-white p-6 h-full hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <div className="flex gap-1 mb-4" aria-label={`${t.rating} out of 5 stars`}>
-                  {Array.from({ length: 5 }).map((_, idx) => (
-                    <Star
-                      key={idx}
-                      className={`w-4 h-4 ${idx < t.rating ? "text-amber-400 fill-amber-400" : "text-slate-200"}`}
-                    />
-                  ))}
-                </div>
-                <p className="text-slate-700 leading-relaxed mb-6 text-[15px]">&ldquo;{t.text}&rdquo;</p>
-                <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
-                  <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${t.gradient} flex items-center justify-center text-white font-bold text-sm`}>
-                    {t.initial}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-slate-900">{t.name}</p>
-                    <p className="text-xs text-slate-500">{t.role}</p>
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
-          ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
- * SECTION 8 — SENIOR PROTECTION AD
- * ═══════════════════════════════════════════════════════════════════════════ */
+export default function HomePage() {
+  const { user } = useAuth();
 
-function SeniorProtectionSection() {
+  const primaryCta =
+    user?.role === "consumer"
+      ? { href: "/jobs/new", label: "Post a Job" }
+      : user?.role === "contractor"
+        ? { href: "/jobs", label: "Find Jobs Near You" }
+        : { href: "/signup?role=consumer", label: "Post a Job" };
+  const secondaryCta =
+    user?.role
+      ? { href: "/jobs", label: "Browse Jobs" }
+      : { href: "/signup?role=contractor", label: "Find Work Near You" };
+
   return (
-    <ScrollReveal>
-      <section className="py-16 bg-white border-b border-slate-100">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-2xl overflow-hidden shadow-xl" style={{ background: "linear-gradient(135deg, #0a0f1e 0%, #1e1b4b 100%)" }}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-              <div className="p-8 sm:p-10 border-b md:border-b-0 md:border-r border-white/10">
-                <div className="inline-flex items-center gap-2 bg-red-500/20 border border-red-400/30 rounded-full px-3 py-1 mb-5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
-                  <span className="text-red-300 text-xs font-semibold uppercase tracking-wide">Real Story</span>
-                </div>
-                <blockquote className="text-white/90 text-base sm:text-lg leading-relaxed mb-5">
-                  <p className="mb-3">
-                    An <strong className="text-white">86-year-old man</strong> was quoted <strong className="text-red-400">$11,000–$13,000</strong> to redo his bathroom.
-                  </p>
-                  <p className="mb-3">
-                    His son got quoted <strong className="text-green-400">$5,800–$7,000</strong> for the <em>exact same job</em>.
-                  </p>
-                  <p className="text-white/60 text-sm">
-                    That&apos;s not a coincidence. That&apos;s predatory pricing — targeting a senior who they assumed wouldn&apos;t question it, wouldn&apos;t shop around, and wouldn&apos;t have someone in his corner to catch it.
-                  </p>
-                </blockquote>
-                <p className="text-slate-400 text-xs">
-                  Senior citizens are targeted at every turn because they grew up in an era where you trusted professionals and didn&apos;t question the bill.<br />
-                  <strong className="text-slate-300">That trust is being weaponized against them every single day.</strong>
-                </p>
+    <div style={{ backgroundColor: T.canvas, color: T.ink, fontFamily: DISPLAY_STACK }} className="min-h-screen w-full antialiased selection:bg-[#5e6ad2]/30">
+      {/* ── Nav ── */}
+      <header className="sticky top-0 z-50 backdrop-blur-md" style={{ backgroundColor: "rgba(1,1,2,0.72)", borderBottom: `1px solid ${T.hairline}` }}>
+        <nav className="mx-auto flex h-14 max-w-[1280px] items-center justify-between px-6">
+          <div className="flex items-center gap-9">
+            <Link href="/" className="flex items-center gap-2.5">
+              <span className="grid h-6 w-6 place-items-center rounded-[6px]" style={{ backgroundColor: T.primary }}>
+                <Wrench size={14} color={T.onPrimary} strokeWidth={2.4} />
+              </span>
+              <span style={{ fontSize: "1.0625rem", fontWeight: 600, letterSpacing: "-0.02em" }}>Trovaar</span>
+            </Link>
+            <div className="hidden items-center gap-7 md:flex">
+              {NAV_LINKS.map((link) => (
+                <Link key={link.href} href={link.href} style={{ ...ty.bodySm, color: T.inkSubtle }} className="transition-colors hover:text-[#f7f8f8]">{link.label}</Link>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            {user ? (
+              <Link href="/dashboard" style={{ ...ty.button, backgroundColor: T.primary, color: T.onPrimary }} className="rounded-[8px] px-3.5 py-2 transition-colors hover:bg-[#828fff]">Dashboard</Link>
+            ) : (
+              <>
+                <Link href="/login" style={{ ...ty.button, color: T.inkMuted }} className="hidden rounded-[8px] px-3 py-2 transition-colors hover:text-[#f7f8f8] sm:inline-block">Sign in</Link>
+                <Link href="/signup" style={{ ...ty.button, backgroundColor: T.primary, color: T.onPrimary }} className="rounded-[8px] px-3.5 py-2 transition-colors hover:bg-[#828fff]">Sign up</Link>
+              </>
+            )}
+          </div>
+        </nav>
+      </header>
+
+      <main>
+        {/* ── Hero ── */}
+        <section className="mx-auto max-w-[1280px] px-6">
+          <div className="mx-auto max-w-[860px] pt-24 pb-16 text-center md:pt-32 md:pb-20">
+            <div className="mb-7 inline-flex items-center gap-2 rounded-full px-3 py-1" style={{ backgroundColor: T.surface2, border: `1px solid ${T.hairline}` }}>
+              <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: T.success }} />
+              <span style={{ ...ty.caption, color: T.inkMuted }}>Stop searching, start finding.</span>
+            </div>
+            <h1 style={ty.displayXl} className="mx-auto max-w-[14ch] text-balance">The network that connects every skilled trade to every job.</h1>
+            <p style={{ ...ty.bodyLg, color: T.inkSubtle }} className="mx-auto mt-7 max-w-[58ch] text-pretty">
+              Like Uber — but for home repairs, auto work, and commercial services. Post a job, watch local pros compete in real time, and save 20–40%.
+            </p>
+            <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link href={primaryCta.href} style={{ ...ty.button, backgroundColor: T.primary, color: T.onPrimary }} className="inline-flex h-10 items-center gap-1.5 rounded-[8px] px-5 transition-colors hover:bg-[#828fff]">
+                {primaryCta.label}<ArrowRight size={16} strokeWidth={2.2} />
+              </Link>
+              <Link href={secondaryCta.href} style={{ ...ty.button, backgroundColor: T.surface1, color: T.ink, border: `1px solid ${T.hairline}` }} className="inline-flex h-10 items-center rounded-[8px] px-5 transition-colors hover:bg-[#141516]">
+                {secondaryCta.label}
+              </Link>
+            </div>
+          </div>
+
+          {/* the kept animation */}
+          <AnimatedBidPanel />
+        </section>
+
+        {/* ── Trust row ── */}
+        <section className="mx-auto max-w-[1280px] px-6">
+          <div className="mt-20 grid grid-cols-2 gap-px overflow-hidden rounded-[12px] md:grid-cols-4" style={{ backgroundColor: T.hairline, border: `1px solid ${T.hairline}` }}>
+            {TRUST.map(({ icon: Icon, label }) => (
+              <div key={label} className="flex items-center gap-2.5 px-5 py-4" style={{ backgroundColor: T.canvas }}>
+                <Icon size={16} color={T.inkSubtle} strokeWidth={1.8} />
+                <span style={{ ...ty.bodySm, color: T.inkMuted }}>{label}</span>
               </div>
-              <div className="p-8 sm:p-10 flex flex-col justify-between">
-                <div>
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-3 leading-tight">
-                    Don&apos;t let them be<br />
-                    <span className="text-transparent bg-clip-text" style={{ backgroundImage: "linear-gradient(90deg, #60a5fa, #818cf8)" }}>
-                      alone in that room.
-                    </span>
-                  </h3>
-                  <p className="text-slate-300 text-sm mb-6 leading-relaxed">
-                    Trovaar gives every consumer — young or old — transparent, competitive bids from verified pros. Post once, see real prices, compare without pressure.
-                  </p>
-                  <ul className="space-y-2 mb-8">
-                    {[
-                      "Multiple bids on every job — no single-quote traps",
-                      "Verified contractor reviews & credentials",
-                      "Secure payment held until the job is done",
-                      "Free for consumers — always",
-                    ].map((point) => (
-                      <li key={point} className="flex items-start gap-2 text-sm text-slate-300">
-                        <CheckCircle2 className="w-4 h-4 text-green-400 shrink-0 mt-0.5" />
-                        {point}
-                      </li>
-                    ))}
-                  </ul>
+            ))}
+          </div>
+        </section>
+
+        {/* ── How it works ── */}
+        <section className="mx-auto max-w-[1280px] px-6 pt-24 md:pt-32">
+          <div className="max-w-[640px]">
+            <Eyebrow>How it works</Eyebrow>
+            <h2 style={ty.displayLg} className="mt-4 text-balance">From photo to hired in minutes.</h2>
+            <p style={{ ...ty.subhead, color: T.inkSubtle }} className="mt-4">Three steps. No middlemen, no markup, no obligation until you accept.</p>
+          </div>
+          <div className="mt-12 grid gap-4 md:grid-cols-3">
+            {STEPS.map(({ icon: Icon, n, title, body }) => (
+              <div key={n} className="rounded-[12px] p-6" style={{ backgroundColor: T.surface1, border: `1px solid ${T.hairline}` }}>
+                <div className="flex items-center justify-between">
+                  <span className="grid h-10 w-10 place-items-center rounded-[8px]" style={{ backgroundColor: T.surface3, border: `1px solid ${T.hairline}` }}>
+                    <Icon size={18} color={T.ink} strokeWidth={1.8} />
+                  </span>
+                  <span style={{ ...ty.caption, color: T.inkTertiary }} className="font-mono">{n}</span>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Link href="/jobs/new" className="flex-1">
-                    <Button size="lg" className="w-full shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40">
-                      Post a Job — It&apos;s Free
-                    </Button>
-                  </Link>
-                  <Link href="/about" className="flex-1">
-                    <Button size="lg" variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
-                      Learn More
-                    </Button>
-                  </Link>
-                </div>
+                <h3 style={ty.cardTitle} className="mt-6">{title}</h3>
+                <p style={{ ...ty.bodySm, color: T.inkSubtle }} className="mt-2.5">{body}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Categories ── */}
+        <section className="mx-auto max-w-[1280px] px-6 pt-24 md:pt-32">
+          <div className="max-w-[640px]">
+            <Eyebrow>Categories</Eyebrow>
+            <h2 style={ty.displayLg} className="mt-4 text-balance">Every trade, one network.</h2>
+            <p style={{ ...ty.subhead, color: T.inkSubtle }} className="mt-4">149 services across 13 categories — from a leaky faucet to a full commercial build-out.</p>
+          </div>
+          <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {CATEGORIES.map(({ icon: Icon, label, value }) => (
+              <Link key={value} href={`/jobs?category=${value}`} className="group flex items-center gap-3 rounded-[12px] px-4 py-3.5 transition-colors hover:bg-[#141516]" style={{ backgroundColor: T.surface1, border: `1px solid ${T.hairline}` }}>
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[8px]" style={{ backgroundColor: T.surface3, border: `1px solid ${T.hairline}` }}>
+                  <Icon size={16} color={T.inkMuted} strokeWidth={1.8} />
+                </span>
+                <span style={{ ...ty.bodySm, color: T.ink }}>{label}</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Stats ── */}
+        <section className="mx-auto max-w-[1280px] px-6 pt-24 md:pt-32">
+          <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[16px] md:grid-cols-4" style={{ backgroundColor: T.hairline, border: `1px solid ${T.hairline}` }}>
+            {STATS.map(({ value, label }) => (
+              <div key={label} className="px-6 py-10 text-center" style={{ backgroundColor: T.surface1 }}>
+                <div style={{ ...ty.displayMd, color: T.ink }}>{value}</div>
+                <div style={{ ...ty.bodySm, color: T.inkSubtle }} className="mt-2">{label}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Testimonial ── */}
+        <section className="mx-auto max-w-[1280px] px-6 pt-24 md:pt-32">
+          <div className="mx-auto max-w-[820px] rounded-[12px] p-8 md:p-12" style={{ backgroundColor: T.surface1, border: `1px solid ${T.hairline}` }}>
+            <div className="flex gap-1">
+              {Array.from({ length: 5 }).map((_, i) => <Star key={i} size={16} fill={T.primary} color={T.primary} strokeWidth={0} />)}
+            </div>
+            <blockquote style={{ ...ty.headline, color: T.ink }} className="mt-6 text-balance">
+              &ldquo;Got 4 bids within an hour of posting my roof repair. Saved over $800.&rdquo;
+            </blockquote>
+            <div className="mt-7 flex items-center gap-3">
+              <span className="grid h-10 w-10 place-items-center rounded-full" style={{ backgroundColor: T.surface3, ...ty.bodySm, color: T.inkMuted }}>JM</span>
+              <div>
+                <div style={{ ...ty.bodySm, color: T.ink, fontWeight: 500 }}>Jessica M.</div>
+                <div style={{ ...ty.caption, color: T.inkSubtle }}>Homeowner</div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-    </ScrollReveal>
-  );
-}
+        </section>
 
-/* ═══════════════════════════════════════════════════════════════════════════
- * SECTION 9 — CONTRACTOR TIERS
- * ═══════════════════════════════════════════════════════════════════════════ */
-
-function ContractorTiersSection() {
-  const tierIcons: Record<string, React.ReactNode> = {
-    independent: <Wrench className="w-7 h-7" />,
-    licensed: <ClipboardCheck className="w-7 h-7" />,
-    certified: <Award className="w-7 h-7" />,
-    master: <Star className="w-7 h-7 fill-current" />,
-  };
-
-  const tierFrames: Record<string, string> = {
-    independent: "bg-gradient-to-b from-slate-300 to-slate-500",
-    licensed: "bg-gradient-to-b from-blue-400 to-indigo-600",
-    certified: "bg-gradient-to-b from-purple-400 to-fuchsia-600",
-    master: "bg-gradient-to-b from-amber-400 to-orange-500",
-  };
-
-  const tierAccents: Record<string, string> = {
-    independent: "text-slate-600",
-    licensed: "text-blue-600",
-    certified: "text-purple-600",
-    master: "text-amber-600",
-  };
-
-  return (
-    <section className="py-24" style={{ background: "#f8fafc" }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <ScrollReveal>
-          <div className="text-center mb-14">
-            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 mb-3">
-              From hustle to mastery
-            </h2>
-            <p className="text-lg text-slate-500 max-w-2xl mx-auto">
-              Whether you&apos;re picking up side jobs or running a full-time trade business —
-              there&apos;s a tier for your level. Build credibility, win better jobs, command better rates.
+        {/* ── Closing CTA ── */}
+        <section className="mx-auto max-w-[1280px] px-6 pt-24 md:pt-32">
+          <div className="relative overflow-hidden rounded-[12px] px-8 py-16 text-center md:px-12 md:py-20" style={{ backgroundColor: T.surface1, border: `1px solid ${T.hairline}` }}>
+            <h2 style={ty.displayLg} className="mx-auto max-w-[20ch] text-balance">Stop searching. Start finding.</h2>
+            <p style={{ ...ty.bodyLg, color: T.inkSubtle }} className="mx-auto mt-5 max-w-[52ch]">
+              Post your first job in under two minutes and watch local pros compete. Free for consumers, no obligation.
             </p>
+            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link href={primaryCta.href} style={{ ...ty.button, backgroundColor: T.primary, color: T.onPrimary }} className="inline-flex h-10 items-center gap-1.5 rounded-[8px] px-5 transition-colors hover:bg-[#828fff]">
+                {primaryCta.label}<ArrowRight size={16} strokeWidth={2.2} />
+              </Link>
+              <Link href={secondaryCta.href} style={{ ...ty.button, backgroundColor: "transparent", color: T.ink, border: `1px solid ${T.hairlineStrong}` }} className="inline-flex h-10 items-center rounded-[8px] px-5 transition-colors hover:bg-[#141516]">
+                {secondaryCta.label}
+              </Link>
+            </div>
           </div>
-        </ScrollReveal>
+        </section>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {CONTRACTOR_TYPES.map((tier, i) => (
-            <ScrollReveal key={tier.value} delay={i * 100}>
-              <div className={`rounded-3xl p-[2px] ${tierFrames[tier.value] ?? "bg-gradient-to-b from-slate-300 to-slate-500"} transition-transform duration-300 hover:-translate-y-2 h-full`}>
-                <div className="rounded-[22px] bg-white h-full p-7 flex flex-col">
-                  <div className={`mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-50 ${tierAccents[tier.value] ?? "text-slate-600"}`}>
-                    {tierIcons[tier.value] || <Wrench className="w-7 h-7" />}
-                  </div>
-                  <span className={`inline-block self-start text-xs font-semibold px-2.5 py-1 rounded-full mb-3 ${tier.badgeClass}`}>
-                    {tier.badge}
-                  </span>
-                  <p className="text-sm text-slate-600 leading-relaxed flex-1">{tier.description}</p>
-                </div>
+        {/* ── Footer ── */}
+        <footer className="mx-auto mt-24 max-w-[1280px] px-6 md:mt-32">
+          <div className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]" style={{ borderTop: `1px solid ${T.hairline}` }}>
+            <div>
+              <div className="flex items-center gap-2.5">
+                <span className="grid h-6 w-6 place-items-center rounded-[6px]" style={{ backgroundColor: T.primary }}>
+                  <Wrench size={14} color={T.onPrimary} strokeWidth={2.4} />
+                </span>
+                <span style={{ fontSize: "1.0625rem", fontWeight: 600, letterSpacing: "-0.02em" }}>Trovaar</span>
               </div>
-            </ScrollReveal>
-          ))}
-        </div>
-
-        <ScrollReveal delay={400}>
-          <div className="text-center mt-12">
-            <Link href="/signup?role=contractor">
-              <Button size="lg" className="px-8 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-shadow">
-                Join as a Pro <ArrowRight className="ml-2 w-4 h-4" />
-              </Button>
-            </Link>
+              <p style={{ ...ty.bodySm, color: T.inkSubtle }} className="mt-4 max-w-[34ch]">The network that connects every skilled trade to every job.</p>
+            </div>
+            {[
+              { h: "Product", links: [{ label: "Post a Job", href: "/signup?role=consumer" }, { label: "Find Work", href: "/signup?role=contractor" }, { label: "Browse Jobs", href: "/jobs" }, { label: "Quote Buster", href: "/quote-buster" }] },
+              { h: "Company", links: [{ label: "About", href: "/about" }, { label: "Help", href: "/help-requests" }, { label: "Referrals", href: "/referrals" }] },
+              { h: "Legal", links: [{ label: "Terms", href: "/legal/terms" }, { label: "Privacy", href: "/legal/privacy" }, { label: "Guarantee", href: "/legal/guarantee" }] },
+            ].map((col) => (
+              <div key={col.h}>
+                <div style={{ ...ty.caption, color: T.inkTertiary }} className="uppercase tracking-wider">{col.h}</div>
+                <ul className="mt-4 space-y-2.5">
+                  {col.links.map((l) => (
+                    <li key={l.href}><Link href={l.href} style={{ ...ty.bodySm, color: T.inkSubtle }} className="transition-colors hover:text-[#f7f8f8]">{l.label}</Link></li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
-        </ScrollReveal>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
- * SECTION 10 — BOTTOM CTA
- * ═══════════════════════════════════════════════════════════════════════════ */
-
-function BottomCTASection() {
-  const { user } = useAuth();
-
-  return (
-    <section className="py-20 relative overflow-hidden" style={{ background: "linear-gradient(135deg, #1d4ed8 0%, #4338ca 100%)" }}>
-      <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "32px 32px" }} />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-white/5 rounded-full blur-3xl" />
-
-      <div className="relative max-w-3xl mx-auto px-4 sm:px-6 text-center text-white">
-        <ScrollReveal>
-          <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 mb-6 text-xs backdrop-blur-sm">
-            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-            <span className="text-slate-100 uppercase tracking-wide font-semibold">Always free for consumers</span>
+          <div className="flex flex-col items-start justify-between gap-3 py-6 sm:flex-row sm:items-center" style={{ borderTop: `1px solid ${T.hairline}` }}>
+            <span style={{ ...ty.caption, color: T.inkTertiary }}>© 2026 Trovaar, Inc. All rights reserved.</span>
+            <div className="flex gap-5">
+              {[{ label: "Terms", href: "/legal/terms" }, { label: "Privacy", href: "/legal/privacy" }].map((l) => (
+                <Link key={l.href} href={l.href} style={{ ...ty.caption, color: T.inkTertiary }} className="transition-colors hover:text-[#8a8f98]">{l.label}</Link>
+              ))}
+            </div>
           </div>
-          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">
-            Ready to join the network?
-          </h2>
-          <p className="text-blue-100 text-lg mb-10 max-w-xl mx-auto">
-            Consumers post free. Pros pay only when they win. No subscriptions, no hidden fees.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href={user?.role === "consumer" ? "/jobs/new" : "/signup?role=consumer"}>
-              <Button size="lg" variant="white" className="w-full sm:w-auto px-8 shadow-lg shadow-blue-900/30 hover:shadow-xl transition-shadow">
-                Post a Job — It&apos;s Free
-              </Button>
-            </Link>
-            <Link href={user?.role === "contractor" ? "/contractor/dashboard" : "/signup?role=contractor"}>
-              <Button size="lg" variant="outline" className="w-full sm:w-auto px-8 border-white/40 text-white hover:bg-white/10 backdrop-blur-sm">
-                Start Winning Jobs
-              </Button>
-            </Link>
-          </div>
-        </ScrollReveal>
-      </div>
-    </section>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
- * PAGE
- * ═══════════════════════════════════════════════════════════════════════════ */
-
-export default function Home() {
-  return (
-    <div className="bg-white">
-      <HeroSection />
-      <HowItWorksSection />
-      <QuoteBusterSection />
-      <CategorySection />
-      <TrustBar />
-      <StatsSection />
-      <TestimonialsSection />
-      <SeniorProtectionSection />
-      <ContractorTiersSection />
-      <BottomCTASection />
+        </footer>
+      </main>
     </div>
   );
 }
