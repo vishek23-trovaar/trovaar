@@ -155,6 +155,8 @@ export default function ContractorLayout() {
       <Tabs.Screen name="notifications" options={{ href: null, title: "Notifications" }} />
       <Tabs.Screen name="job-alerts" options={{ href: null, title: "Job Alerts" }} />
       <Tabs.Screen name="certificate/[id]" options={{ href: null, title: "Certificate" }} />
+      <Tabs.Screen name="help-requests" options={{ href: null, title: "Find Subcontract Work" }} />
+      <Tabs.Screen name="request-help/[jobId]" options={{ href: null, title: "Request Help" }} />
       <Tabs.Screen name="chat/[jobId]" options={{ href: null, title: "Chat" }} />
       <Tabs.Screen name="calendar" options={{ href: null, title: "Calendar" }} />
       <Tabs.Screen name="invoices" options={{ href: null, title: "Invoices" }} />

@@ -893,6 +893,17 @@ export default function ContractorJobDetail() {
               </TouchableOpacity>
             )}
 
+            {(job.status === "accepted" || job.status === "in_progress") && (
+              <TouchableOpacity
+                style={styles.requestHelpBtn}
+                onPress={() => router.push(`/(contractor)/request-help/${id}` as never)}
+                activeOpacity={0.85}
+              >
+                <Ionicons name="people-circle-outline" size={20} color={COLORS.primary} />
+                <Text style={styles.requestHelpBtnText}>Request Help on This Job</Text>
+              </TouchableOpacity>
+            )}
+
             {job.status === "completed" && (
               <View style={styles.completedBanner}>
                 <Ionicons
@@ -1550,6 +1561,18 @@ const styles = StyleSheet.create({
     borderColor: "rgba(59,130,246,0.30)",
   },
   certBtnText: { color: COLORS.primary, fontSize: 15, fontWeight: "600" },
+  requestHelpBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    paddingVertical: 14,
+    borderRadius: 12,
+    backgroundColor: "#121316",
+    borderWidth: 1,
+    borderColor: "rgba(59,130,246,0.30)",
+  },
+  requestHelpBtnText: { color: COLORS.primary, fontSize: 15, fontWeight: "600" },
   completedBannerText: {
     fontSize: 14,
     color: "#065f46",

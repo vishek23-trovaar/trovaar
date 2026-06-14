@@ -931,14 +931,21 @@ export default function JobDetailScreen() {
                     </View>
                   )}
                   <View style={styles.bidHeader}>
-                    <View style={styles.bidContractor}>
+                    <TouchableOpacity
+                      style={styles.bidContractor}
+                      activeOpacity={0.7}
+                      onPress={() => item.contractor_id && router.push(`/(client)/contractor/${item.contractor_id}` as never)}
+                    >
                       <View style={styles.bidAvatar}>
                         <Text style={styles.bidAvatarText}>
                           {(item.contractor_name || "C").charAt(0).toUpperCase()}
                         </Text>
                       </View>
                       <View>
-                        <Text style={styles.bidName}>{item.contractor_name || "Contractor"}</Text>
+                        <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+                          <Text style={styles.bidName}>{item.contractor_name || "Contractor"}</Text>
+                          <Ionicons name="chevron-forward" size={14} color={colors.muted} />
+                        </View>
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
                           {renderStars(item.contractor_rating)}
                           {item.contractor_rating ? (
@@ -946,7 +953,7 @@ export default function JobDetailScreen() {
                           ) : null}
                         </View>
                       </View>
-                    </View>
+                    </TouchableOpacity>
                     <View style={{ alignItems: "flex-end" }}>
                       <Text style={styles.bidPrice}>${item.price?.toLocaleString()}</Text>
                       {matchScore != null && (

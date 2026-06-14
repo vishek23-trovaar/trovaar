@@ -1305,6 +1305,7 @@ export default function ContractorProfile() {
           <SettingsRow icon="receipt-outline" label="Invoices" onPress={() => router.push("/(contractor)/invoices")} />
           <SettingsRow icon="bar-chart-outline" label="Tax & Reports" onPress={() => router.push("/(contractor)/tax")} />
           <SettingsRow icon="notifications-outline" label="Job Alerts" onPress={() => router.push("/(contractor)/job-alerts")} />
+          <SettingsRow icon="people-circle-outline" label="Find Subcontract Work" onPress={() => router.push("/(contractor)/help-requests")} />
           <SettingsRow icon="people-outline" label="My Clients" onPress={() => router.push("/(contractor)/clients")} isLast />
         </View>
 

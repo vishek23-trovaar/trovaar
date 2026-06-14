@@ -392,6 +392,7 @@ export default function ClientProfile() {
         {/* Services */}
         <SectionHeader title="Services" />
         <View style={styles.settingsCard}>
+          <SettingsRow icon="bookmark-outline" label="Saved Pros" onPress={() => router.push("/(client)/saved")} />
           <SettingsRow icon="copy-outline" label="Job Templates" onPress={() => router.push("/(client)/templates")} />
           <SettingsRow icon="people-outline" label="Refer & Earn" onPress={() => router.push("/(client)/referral")} />
           <SettingsRow icon="star-outline" label="My Plan" onPress={() => router.push("/(client)/subscriptions")} isLast />
