@@ -7,7 +7,7 @@ export default function NotFound() {
       <div className="text-center max-w-md">
         {/* Logo */}
         <Link href="/" className="inline-flex items-center gap-2 mb-8">
-          <Image src="/trovaar-icon.png" alt="Trovaar" width={40} height={40} className="w-10 h-10 rounded-xl" />
+          <Image src="/trovaar-icon.png" alt="Trovaar" width={65} height={40} className="h-10 w-auto" />
           <span className="text-xl font-bold text-secondary">Trovaar</span>
         </Link>
 
