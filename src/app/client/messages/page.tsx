@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { CATEGORY_GROUPS } from "@/lib/constants";
-import PageHero from "@/components/ui/PageHero";
 
 interface Conversation {
   job_id: string;
@@ -251,16 +250,14 @@ export default function ClientMessagesPage() {
           showSidebar ? "flex" : "hidden"
         } md:flex flex-col w-full md:w-[360px] border-r border-[#23252a] bg-[#0f1011]`}
       >
-        {/* Sidebar header */}
-        <div className="px-3 pt-3">
-          <PageHero
-            title="Messages"
-            subtitle={
-              totalUnread > 0
-                ? `${totalUnread} unread message${totalUnread !== 1 ? "s" : ""}`
-                : "Chat with contractors about your jobs."
-            }
-          />
+        {/* Sidebar header (slim, so the conversation list gets the height) */}
+        <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-[#23252a]">
+          <h1 className="text-lg font-semibold tracking-tight text-[#f7f8f8]">Messages</h1>
+          {totalUnread > 0 && (
+            <span className="text-xs font-semibold text-white bg-primary rounded-full px-2 py-0.5">
+              {totalUnread}
+            </span>
+          )}
         </div>
 
         {/* Search placeholder */}

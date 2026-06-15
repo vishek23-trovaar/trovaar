@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { CATEGORY_GROUPS } from "@/lib/constants";
-import PageHero from "@/components/ui/PageHero";
 
 interface Conversation {
   job_id: string;
@@ -234,11 +233,9 @@ export default function ContractorMessagesPage() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-64px)] bg-[#010102]">
-      <div className="px-4 sm:px-6 lg:px-8 pt-6">
-        <PageHero
-          title="Messages"
-          subtitle="Chat with clients about active jobs and accepted bids."
-        />
+      <div className="flex items-center gap-2.5 px-4 sm:px-6 py-3 border-b border-[#23252a] shrink-0">
+        <h1 className="text-lg sm:text-xl font-semibold tracking-tight text-[#f7f8f8]">Messages</h1>
+        <span className="text-sm text-[#8a8f98] truncate hidden md:inline">Chat with clients about active jobs and accepted bids.</span>
       </div>
       <div className="flex flex-1 min-h-0 bg-[#010102]">
       {/* Sidebar */}
