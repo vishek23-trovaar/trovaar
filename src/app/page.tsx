@@ -154,7 +154,7 @@ function AnimatedBidPanel() {
     { name: "Carlos M.", initials: "CM", price: "$145", time: "Tomorrow AM", rating: "5.0", delay: "2.6s", lead: false },
   ];
   return (
-    <div className="mx-auto max-w-[1080px] rounded-[16px] p-2" style={{ backgroundColor: T.surface1, border: `1px solid ${T.hairline}` }}>
+    <div className="w-full rounded-[16px] p-2" style={{ backgroundColor: T.surface1, border: `1px solid ${T.hairline}` }}>
       <div className="overflow-hidden rounded-[10px]" style={{ backgroundColor: T.canvas, border: `1px solid ${T.hairline}` }}>
         {/* faux app chrome */}
         <div className="flex items-center gap-2 px-4 py-2.5" style={{ borderBottom: `1px solid ${T.hairline}` }}>
@@ -166,7 +166,7 @@ function AnimatedBidPanel() {
           <span style={{ ...ty.caption, color: T.inkTertiary }} className="ml-2 font-mono">trovaar.com/jobs/kitchen-faucet</span>
         </div>
 
-        <div className="grid gap-3 p-5 sm:grid-cols-[1fr_260px]">
+        <div className="space-y-3 p-4">
           {/* live board */}
           <div className="space-y-3">
             <div className="flex items-center justify-between rounded-[8px] px-3.5 py-3" style={{ backgroundColor: T.surface1, border: `1px solid ${T.hairline}` }}>
@@ -213,17 +213,19 @@ function AnimatedBidPanel() {
             ))}
           </div>
 
-          {/* savings panel — fades up after the bids land */}
+          {/* savings bar — fades up after the bids land */}
           <div
-            className="hidden flex-col justify-between rounded-[8px] p-4 sm:flex"
+            className="flex items-center justify-between gap-4 rounded-[8px] p-4"
             style={{ backgroundColor: T.surface1, border: `1px solid ${T.hairline}`, animation: "fadeInUp 0.5s ease-out 3.6s forwards", opacity: 0 }}
           >
-            <div className="space-y-1">
+            <div>
               <div style={{ ...ty.caption, color: T.inkSubtle }}>You save vs. big-company quote</div>
-              <div style={{ ...ty.displayMd, color: T.ink }}>$255</div>
-              <div style={{ ...ty.caption, color: T.success }}>37% lower</div>
+              <div className="flex items-baseline gap-2">
+                <span style={{ ...ty.displayMd, color: T.ink }}>$255</span>
+                <span style={{ ...ty.caption, color: T.success }}>37% lower</span>
+              </div>
             </div>
-            <div style={{ ...ty.button, backgroundColor: T.primary, color: T.onPrimary }} className="mt-4 grid h-9 place-items-center rounded-[8px]">Accept bid</div>
+            <div style={{ ...ty.button, backgroundColor: T.primary, color: T.onPrimary }} className="grid h-9 shrink-0 place-items-center rounded-[8px] px-4">Accept bid</div>
           </div>
         </div>
       </div>
@@ -282,27 +284,32 @@ export default function HomePage() {
       <main>
         {/* ── Hero ── */}
         <section className="mx-auto max-w-[1280px] px-6">
-          <div className="mx-auto max-w-[860px] pt-24 pb-16 text-center md:pt-32 md:pb-20">
-            <div className="mb-7 inline-flex items-center gap-2 rounded-full px-3 py-1" style={{ backgroundColor: T.surface2, border: `1px solid ${T.hairline}` }}>
-              <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: T.success }} />
-              <span style={{ ...ty.caption, color: T.inkMuted }}>Stop searching, start finding.</span>
+          <div className="grid items-center gap-10 pt-20 pb-16 md:pt-24 md:pb-20 lg:grid-cols-[1fr_minmax(420px,500px)] lg:gap-14">
+            {/* left — copy + CTAs */}
+            <div className="text-center lg:text-left">
+              <div className="mb-7 inline-flex items-center gap-2 rounded-full px-3 py-1" style={{ backgroundColor: T.surface2, border: `1px solid ${T.hairline}` }}>
+                <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: T.success }} />
+                <span style={{ ...ty.caption, color: T.inkMuted }}>Stop searching, start finding.</span>
+              </div>
+              <h1 style={ty.displayXl} className="mx-auto max-w-[15ch] text-balance lg:mx-0">The network that connects every skilled trade to every job.</h1>
+              <p style={{ ...ty.bodyLg, color: T.inkSubtle }} className="mx-auto mt-7 max-w-[52ch] text-pretty lg:mx-0">
+                Like Uber — but for home repairs, auto work, and commercial services. Post a job, watch local pros compete in real time, and save 20–40%.
+              </p>
+              <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
+                <Link href={primaryCta.href} style={{ ...ty.button, backgroundColor: T.primary, color: T.onPrimary }} className="inline-flex h-10 items-center gap-1.5 rounded-[8px] px-5 transition-colors hover:bg-[#828fff]">
+                  {primaryCta.label}<ArrowRight size={16} strokeWidth={2.2} />
+                </Link>
+                <Link href={secondaryCta.href} style={{ ...ty.button, backgroundColor: T.surface1, color: T.ink, border: `1px solid ${T.hairline}` }} className="inline-flex h-10 items-center rounded-[8px] px-5 transition-colors hover:bg-[#141516]">
+                  {secondaryCta.label}
+                </Link>
+              </div>
             </div>
-            <h1 style={ty.displayXl} className="mx-auto max-w-[14ch] text-balance">The network that connects every skilled trade to every job.</h1>
-            <p style={{ ...ty.bodyLg, color: T.inkSubtle }} className="mx-auto mt-7 max-w-[58ch] text-pretty">
-              Like Uber — but for home repairs, auto work, and commercial services. Post a job, watch local pros compete in real time, and save 20–40%.
-            </p>
-            <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link href={primaryCta.href} style={{ ...ty.button, backgroundColor: T.primary, color: T.onPrimary }} className="inline-flex h-10 items-center gap-1.5 rounded-[8px] px-5 transition-colors hover:bg-[#828fff]">
-                {primaryCta.label}<ArrowRight size={16} strokeWidth={2.2} />
-              </Link>
-              <Link href={secondaryCta.href} style={{ ...ty.button, backgroundColor: T.surface1, color: T.ink, border: `1px solid ${T.hairline}` }} className="inline-flex h-10 items-center rounded-[8px] px-5 transition-colors hover:bg-[#141516]">
-                {secondaryCta.label}
-              </Link>
+
+            {/* right — the kept live-bid animation, now above the fold */}
+            <div className="w-full">
+              <AnimatedBidPanel />
             </div>
           </div>
-
-          {/* the kept animation */}
-          <AnimatedBidPanel />
         </section>
 
         {/* ── Trust row ── */}
