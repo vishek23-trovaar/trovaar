@@ -17,7 +17,7 @@ export default function ContractorLayout({ children }: { children: React.ReactNo
   }, [user, loading, router]);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-[#010102] flex flex-col">
       <main className="flex-1">
         {confirmedRef.current ? children : (
           <div className="flex items-center justify-center min-h-[60vh]">
