@@ -175,8 +175,8 @@ function AnimatedBidPanel() {
                   <Home size={16} color={T.inkMuted} strokeWidth={1.8} />
                 </span>
                 <div>
-                  <div style={{ ...ty.bodySm, color: T.ink, fontWeight: 500 }}>Kitchen Faucet Replacement</div>
-                  <div style={{ ...ty.caption, color: T.inkSubtle }}>Posted 3 min ago · Plumbing</div>
+                  <div style={{ fontSize: "1.125rem", fontWeight: 600, lineHeight: 1.25, letterSpacing: "-0.014em", color: T.ink }}>Kitchen Faucet Replacement</div>
+                  <div style={{ ...ty.bodySm, color: T.inkSubtle }}>Posted 3 min ago · Plumbing</div>
                 </div>
               </div>
               <span className="rounded-full px-2 py-0.5 inline-flex items-center gap-1.5" style={{ ...ty.caption, backgroundColor: T.surface2, color: T.success }}>
