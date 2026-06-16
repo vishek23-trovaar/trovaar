@@ -1,50 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthPayload } from "@/lib/auth";
 import { aiLogger as logger } from "@/lib/logger";
+import {
+  geminiJson,
+  photosToInlineParts,
+  questionItemSchema,
+  SCENARIO_QUESTION_GUIDANCE,
+  normalizeQuestions,
+  type ScenarioQuestion,
+} from "@/lib/gemini";
 
-const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
-
-// ── Convert photo URL to Gemini inline data ────────────────────────────────
-type MediaType = "image/jpeg" | "image/png" | "image/webp" | "image/gif";
-
-async function photoToInlineData(url: string): Promise<{ mimeType: MediaType; data: string } | null> {
-  try {
-    if (url.startsWith("http")) {
-      const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
-      if (!res.ok) return null;
-      const buf = await res.arrayBuffer();
-      const ct = res.headers.get("content-type") ?? "image/jpeg";
-      const mimeType: MediaType =
-        ct.includes("png") ? "image/png" :
-        ct.includes("webp") ? "image/webp" :
-        ct.includes("gif") ? "image/gif" : "image/jpeg";
-      return { mimeType, data: Buffer.from(buf).toString("base64") };
-    }
-    if (url.startsWith("/")) {
-      const fs = await import("fs");
-      const path = await import("path");
-      const filePath = path.join(process.cwd(), "public", url);
-      if (!fs.existsSync(filePath)) return null;
-      const buffer = fs.readFileSync(filePath);
-      const ext = path.extname(url).toLowerCase();
-      const mimeType: MediaType =
-        ext === ".png" ? "image/png" :
-        ext === ".webp" ? "image/webp" :
-        ext === ".gif" ? "image/gif" : "image/jpeg";
-      return { mimeType, data: buffer.toString("base64") };
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
-
-// ── Question type ──────────────────────────────────────────────────────────
-interface ScenarioQuestion {
-  question: string;
-  type: "text" | "measurement" | "choice" | "yesno";
-  placeholder: string;
-}
+const RESPONSE_SCHEMA = {
+  type: "OBJECT",
+  properties: {
+    questions: { type: "ARRAY", items: questionItemSchema },
+  },
+  required: ["questions"],
+};
 
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
@@ -53,7 +25,7 @@ export async function POST(request: NextRequest) {
   const payload = getAuthPayload(request.headers);
   if (!payload) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { category, title, description, photos } = await request.json() as {
+  const { category, title, description, photos } = (await request.json()) as {
     category: string;
     title?: string;
     description?: string;
@@ -70,80 +42,34 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // Build image parts for vision if photos are available
-    const imageParts: Array<{ inlineData: { mimeType: MediaType; data: string } }> = [];
-    if (photos?.length) {
-      const inlineResults = await Promise.all(photos.slice(0, 2).map(photoToInlineData));
-      for (const r of inlineResults) {
-        if (r) imageParts.push({ inlineData: { mimeType: r.mimeType, data: r.data } });
-      }
-    }
+    const imageParts = await photosToInlineParts(photos, 2);
 
     const contextLines = [
       `Service category: ${category}`,
       title?.trim() ? `Job title: "${title.trim()}"` : null,
       description?.trim() ? `Customer description: "${description.trim()}"` : null,
-      imageParts.length > 0 ? `\nThe customer also uploaded ${imageParts.length} photo(s) of the project — examine them carefully for additional context about the scope, condition, and materials.` : null,
-    ].filter(Boolean).join("\n");
+      imageParts.length > 0
+        ? `\nThe customer also uploaded ${imageParts.length} photo(s) of the project — examine them carefully for additional context about the scope, condition, and materials.`
+        : null,
+    ]
+      .filter(Boolean)
+      .join("\n");
 
     const promptText = `You are an expert contractor estimating assistant for Trovaar, a home services & trades marketplace. A customer has posted a service request. Generate the specific scenario-based questions a contractor NEEDS answered to provide an accurate quote.
 
 ${contextLines}
 
-Generate between 2 and 10 questions tailored specifically to this job. Every question should directly help a contractor price the job — don't pad with generic ones. A simple task needs 2-3 questions; a complex renovation might need 8-10.
+${SCENARIO_QUESTION_GUIDANCE}`;
 
-Focus questions on:
-- Exact measurements (room dimensions, pipe sizes, area square footage, fence length, etc.)
-- Desired end result ("How do you want it to look after?" / "What finish/material do you prefer?")
-- Current condition details the photos don't show (age of system, what's behind the wall, etc.)
-- Access considerations (stairs, crawl spaces, parking for work trucks)
-- Materials — do they have them or need them sourced?
-- Timeline and scheduling constraints
-- Previous repair attempts or existing damage not visible
-- Budget range or priorities (quality vs. cost)
-- For vehicles: year, make, model, mileage
-- For rooms: which floor, how many rooms, occupied or empty
-
-Do NOT ask about things already clearly described in the title, description, or visible in the photos.
-
-Each question must have:
-- "question": The question text
-- "type": One of "text", "measurement", "choice", "yesno"
-- "placeholder": A helpful example answer or hint
-
-Respond with ONLY valid JSON (no markdown, no code blocks):
-[{"question":"...","type":"text|measurement|choice|yesno","placeholder":"..."},...]`;
-
-    const parts = [...imageParts, { text: promptText }];
-
-    const res = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts }],
-        generationConfig: { maxOutputTokens: 1200, temperature: 0.3 },
-      }),
+    const result = await geminiJson<{ questions?: unknown }>({
+      apiKey,
+      parts: [...imageParts, { text: promptText }],
+      schema: RESPONSE_SCHEMA,
+      temperature: 0.3,
+      maxOutputTokens: 1200,
     });
 
-    if (!res.ok) {
-      logger.error({ body: await res.text() }, "Gemini job-questions error");
-      return NextResponse.json({ questions: getFallbackQuestions(category) });
-    }
-
-    const json = await res.json();
-    const text = (json.candidates?.[0]?.content?.parts?.[0]?.text ?? "").trim()
-      .replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-
-    const parsed = JSON.parse(text);
-    const questions: ScenarioQuestion[] = (Array.isArray(parsed) ? parsed : parsed.questions || [])
-      .slice(0, 10)
-      .map((q: { question?: string; type?: string; placeholder?: string }) => ({
-        question: q.question || "",
-        type: ["text", "measurement", "choice", "yesno"].includes(q.type || "") ? q.type : "text",
-        placeholder: q.placeholder || "Your answer",
-      }))
-      .filter((q: ScenarioQuestion) => q.question.length > 0);
-
+    const questions = normalizeQuestions(result.questions);
     if (questions.length === 0) throw new Error("No valid questions generated");
 
     return NextResponse.json({ questions });
@@ -200,10 +126,12 @@ function getFallbackQuestions(category: string): ScenarioQuestion[] {
     ],
   };
 
-  return fallbacks[category] || [
-    { question: "What is the approximate size or scope of the project?", type: "measurement", placeholder: "e.g. dimensions, square footage, quantity" },
-    { question: "Is this a repair or a new installation?", type: "choice", placeholder: "Repair / New installation / Replacement" },
-    { question: "Are there any access challenges?", type: "text", placeholder: "e.g. 2nd floor, tight crawl space, no parking nearby" },
-    { question: "Will you be supplying materials or should the contractor source everything?", type: "choice", placeholder: "I'll supply / Contractor sources / Not sure" },
-  ];
+  return (
+    fallbacks[category] || [
+      { question: "What is the approximate size or scope of the project?", type: "measurement", placeholder: "e.g. dimensions, square footage, quantity" },
+      { question: "Is this a repair or a new installation?", type: "choice", placeholder: "Repair / New installation / Replacement" },
+      { question: "Are there any access challenges?", type: "text", placeholder: "e.g. 2nd floor, tight crawl space, no parking nearby" },
+      { question: "Will you be supplying materials or should the contractor source everything?", type: "choice", placeholder: "I'll supply / Contractor sources / Not sure" },
+    ]
+  );
 }
