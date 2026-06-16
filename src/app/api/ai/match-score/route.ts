@@ -1,17 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
+import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
 import { getAuthPayload } from "@/lib/auth";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { checkRateLimit } from "@/lib/rate-limit-api";
 import { aiLogger as logger } from "@/lib/logger";
+import { AI_MODEL, parseStructured } from "@/lib/ai";
 
-interface MatchScoreResult {
-  score: number;
-  reasoning: string;
-  highlights: string[];
-  concerns: string[];
-}
+const MatchScoreSchema = z.object({
+  score: z.number(),
+  reasoning: z.string(),
+  highlights: z.array(z.string()),
+  concerns: z.array(z.string()),
+});
 
 export async function POST(request: NextRequest) {
   const payload = getAuthPayload(request.headers);
@@ -100,13 +101,6 @@ export async function POST(request: NextRequest) {
     // Get AI profile summary if available
     const aiSummary = profile.ai_profile_summary ? String(profile.ai_profile_summary) : null;
 
-    const apiKey = process.env.ANTHROPIC_API_KEY;
-    if (!apiKey) {
-      return NextResponse.json({ error: "AI service not configured" }, { status: 503 });
-    }
-
-    const client = new Anthropic({ apiKey });
-
     const categories = (() => {
       try { return JSON.parse(String(profile.categories || "[]")); } catch { return []; }
     })();
@@ -178,20 +172,15 @@ Return ONLY a JSON object with:
 
 Return ONLY valid JSON with no markdown formatting, no code fences, no extra text.`;
 
-    const message = await client.messages.create({
-      model: "claude-haiku-4-5",
-      max_tokens: 512,
-      messages: [{ role: "user", content: promptText }],
+    const result = await parseStructured({
+      model: AI_MODEL.fast,
+      schema: MatchScoreSchema,
+      content: promptText,
+      maxTokens: 512,
+      temperature: 0,
     });
 
-    const responseBlock = message.content[0];
-    if (responseBlock.type !== "text") throw new Error("Unexpected response type");
-
-    const text = responseBlock.text.trim();
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error("Could not parse match score");
-
-    const result: MatchScoreResult = JSON.parse(jsonMatch[0]);
+    if (!result) throw new Error("Could not parse match score");
 
     // Validate
     if (typeof result.score !== "number" || result.score < 0 || result.score > 100) {

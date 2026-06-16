@@ -1,14 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
+import { z } from "zod";
 import { getAuthPayload } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rate-limit-api";
 import { aiLogger as logger } from "@/lib/logger";
+import { AI_MODEL, parseStructured, categoryBidStats, type CategoryBidStats } from "@/lib/ai";
 
 interface PriceEstimate {
   low: number;
   high: number;
   note: string;
 }
+
+const EstimateSchema = z.object({
+  low: z.number(),
+  high: z.number(),
+  note: z.string(),
+});
 
 export async function POST(request: NextRequest) {
   const payload = getAuthPayload(request.headers);
@@ -29,18 +36,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "category and description are required" }, { status: 400 });
   }
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    return NextResponse.json({ estimate: getFallbackEstimate(category) });
-  }
-
   try {
-    const client = new Anthropic({ apiKey });
-
-    // Build content array — include photos for Vision analysis if available
-    type ContentBlock =
-      | { type: "text"; text: string }
-      | { type: "image"; source: { type: "url"; url: string } };
+    // Ground the estimate in Trovaar's own real bids for this category.
+    const stats = await categoryBidStats(category);
+    const grounding = stats
+      ? `\nReference data — ${stats.count} recent bids on Trovaar for "${category}": roughly $${stats.lowUsd}–$${stats.highUsd}, typical ~$${stats.medianUsd}. Anchor your range to this, adjusting up or down for the job's specific scope.`
+      : "";
 
     const promptText = `You are a contractor pricing assistant. Based on the service job details below${photos?.length ? " AND the photos attached" : ""}, provide a realistic price range estimate in USD that a skilled contractor might charge.
 
@@ -48,45 +49,39 @@ Category: ${category}
 Job title: ${title || ""}
 Job description: ${description}
 Location: ${location || "United States"}
-${photos?.length ? `\nJob photos included: ${photos.length} photo(s) — analyze the scope, condition, and complexity visible in the images to refine your estimate.` : ""}
+${photos?.length ? `\nJob photos included: ${photos.length} photo(s) — analyze the scope, condition, and complexity visible in the images to refine your estimate.` : ""}${grounding}
 
-Return ONLY a JSON object with these exact fields:
+Provide:
 - low: lowest realistic price in dollars (integer, no cents)
 - high: highest realistic price in dollars (integer, no cents)
 - note: one short sentence (max 20 words) explaining the main cost driver${photos?.length ? " (mention if photo shows complex or simple work)" : ""}
 
-Example: {"low": 200, "high": 600, "note": "Moderate damage visible in photo — repair complexity drives range."}
+Base your estimate on real US labor rates${stats ? " and the Trovaar reference data above" : ""}.`;
 
-Base your estimate on real US labor rates. Do NOT include $ signs in the number fields.`;
+    const content: Array<
+      | { type: "text"; text: string }
+      | { type: "image"; source: { type: "url"; url: string } }
+    > = [{ type: "text", text: promptText }];
 
-    const content: ContentBlock[] = [{ type: "text", text: promptText }];
-
-    // Attach up to 3 photos (keep token usage reasonable)
     if (photos && photos.length > 0) {
-      const photoUrls = photos.slice(0, 3).filter(url => url?.startsWith("http"));
+      const photoUrls = photos.slice(0, 3).filter((url) => url?.startsWith("http"));
       for (const url of photoUrls) {
         content.push({ type: "image", source: { type: "url", url } });
       }
     }
 
-    const model = photos?.length ? "claude-opus-4-6" : "claude-haiku-4-5";
+    const model = photos?.length ? AI_MODEL.vision : AI_MODEL.fast;
 
-    const message = await client.messages.create({
+    const estimate = await parseStructured({
       model,
-      max_tokens: 512,
-      messages: [{ role: "user", content }],
+      schema: EstimateSchema,
+      content,
+      maxTokens: 512,
+      temperature: 0,
     });
 
-    const responseBlock = message.content[0];
-    if (responseBlock.type !== "text") throw new Error("Unexpected response type");
-
-    const text = responseBlock.text.trim();
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error("Could not parse estimate");
-
-    const estimate: PriceEstimate = JSON.parse(jsonMatch[0]);
-    if (typeof estimate.low !== "number" || typeof estimate.high !== "number") {
-      throw new Error("Invalid estimate format");
+    if (!estimate || typeof estimate.low !== "number" || typeof estimate.high !== "number") {
+      return NextResponse.json({ estimate: getFallbackEstimate(category, stats) });
     }
 
     return NextResponse.json({ estimate });
@@ -96,7 +91,16 @@ Base your estimate on real US labor rates. Do NOT include $ signs in the number 
   }
 }
 
-function getFallbackEstimate(category: string): PriceEstimate {
+function getFallbackEstimate(category: string, stats?: CategoryBidStats | null): PriceEstimate {
+  // Prefer real Trovaar bid data when available.
+  if (stats) {
+    return {
+      low: stats.lowUsd,
+      high: Math.max(stats.highUsd, stats.lowUsd + 1),
+      note: `Based on ${stats.count} recent bids from local pros on Trovaar for this category.`,
+    };
+  }
+
   const estimates: Record<string, PriceEstimate> = {
     plumbing:          { low: 150,  high: 800,  note: "Range depends on complexity and whether pipe access is needed." },
     electrical:        { low: 200,  high: 1200, note: "Range depends on scope, permits required, and panel access." },

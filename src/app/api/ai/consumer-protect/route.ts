@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
+import { z } from "zod";
 import { getAuthPayload } from "@/lib/auth";
 import { aiLogger as logger } from "@/lib/logger";
+import { AI_MODEL, parseStructured, categoryBidStats, type CategoryBidStats } from "@/lib/ai";
 
 interface ProtectionReport {
   fair_low: number;
@@ -11,6 +12,15 @@ interface ProtectionReport {
   questions: string[];
   fair_includes: string[];
 }
+
+const ProtectionSchema = z.object({
+  fair_low: z.number(),
+  fair_high: z.number(),
+  price_note: z.string(),
+  upsell_warnings: z.array(z.string()),
+  questions: z.array(z.string()),
+  fair_includes: z.array(z.string()),
+});
 
 export async function POST(request: NextRequest) {
   const payload = getAuthPayload(request.headers);
@@ -25,74 +35,45 @@ export async function POST(request: NextRequest) {
 
   if (!category) return NextResponse.json({ error: "category is required" }, { status: 400 });
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    return NextResponse.json({ report: getFallbackReport(category) });
-  }
-
   try {
-    const client = new Anthropic({ apiKey });
+    // Ground the fair-price range in Trovaar's own real bids for this category.
+    const stats = await categoryBidStats(category);
+    const grounding = stats
+      ? `\nReference data — ${stats.count} recent bids on Trovaar for "${category}": roughly $${stats.lowUsd}–$${stats.highUsd}, typical ~$${stats.medianUsd}. Anchor fair_low/fair_high to this, adjusted for the described job's scope.`
+      : "";
 
-    const message = await client.messages.create({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 1024,
-      messages: [
-        {
-          role: "user",
-          content: `You are a consumer protection advisor helping ordinary people avoid being overcharged or upsold on service work.
+    const report = await parseStructured({
+      model: AI_MODEL.fast,
+      schema: ProtectionSchema,
+      maxTokens: 1024,
+      temperature: 0,
+      content: `You are a consumer protection advisor helping ordinary people avoid being overcharged or upsold on service work.
 
 Service category: ${category}
 Job title: ${title || ""}
 Description: ${description || ""}
 Location: ${location || "United States"}
+${grounding}
 
-Return ONLY a JSON object with these exact fields:
-{
-  "fair_low": <lowest realistic USD price — integer>,
-  "fair_high": <highest realistic USD price — integer>,
-  "price_note": "<one sentence, max 20 words, explaining the main cost driver>",
-  "upsell_warnings": [
-    "<specific thing this trade/dealer commonly adds that may not be needed>",
-    "<another common unnecessary upsell for this specific job>",
-    "<third upsell if relevant>"
-  ],
-  "questions": [
-    "<protective question the consumer should ask before accepting>",
-    "<another question>",
-    "<another question>"
-  ],
-  "fair_includes": [
-    "<what a legitimate quote for this job should include>",
-    "<another item that should be included>",
-    "<third item>"
-  ]
-}
+Provide:
+- fair_low / fair_high: the realistic USD price range (integers) for this specific job.
+- price_note: one sentence (max 20 words) explaining the main cost driver.
+- upsell_warnings: 2-3 things this trade/dealer commonly adds that may not be needed — SPECIFIC to this exact job and trade, not generic. (e.g. auto repair: "cabin air filter replacement", "fuel system cleaning"; plumbing: "whole-house repiping upsell", "water softener push".)
+- questions: 3 protective questions the consumer should ask before accepting (e.g. "Ask to see the worn part they removed", "Get an itemized quote in writing before any work starts").
+- fair_includes: 3 things a legitimate quote for this job should include.
 
-For upsell_warnings, be SPECIFIC to this exact job and trade — not generic. For example, for auto repair at a dealer, mention specific items dealers push like "cabin air filter replacement", "fuel system cleaning", "tire rotation added to brake job", etc. For plumbing, mention "whole-house repiping upsell", "water softener push", etc.
-
-For questions, help the consumer protect themselves — e.g. "Ask to see the worn part they removed", "Get an itemized quote in writing before any work starts", "Ask if this repair is required for safety or just recommended".
-
-Base price range on real US labor and parts rates for the described job specifically.`,
-        },
-      ],
+Base the price range on real US labor and parts rates for the described job specifically${stats ? ", anchored to the Trovaar reference data above" : ""}.`,
     });
 
-    const text =
-      message.content[0]?.type === "text" ? message.content[0].text.trim() : "";
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error("Could not parse report");
-
-    const report: ProtectionReport = JSON.parse(jsonMatch[0]);
-
-    // Validate required shape
     if (
+      !report ||
       typeof report.fair_low !== "number" ||
       typeof report.fair_high !== "number" ||
       !Array.isArray(report.upsell_warnings) ||
       !Array.isArray(report.questions) ||
       !Array.isArray(report.fair_includes)
     ) {
-      throw new Error("Invalid report format");
+      return NextResponse.json({ report: getFallbackReport(category, stats) });
     }
 
     return NextResponse.json({ report });
@@ -102,7 +83,7 @@ Base price range on real US labor and parts rates for the described job specific
   }
 }
 
-function getFallbackReport(category: string): ProtectionReport {
+function getFallbackReport(category: string, stats?: CategoryBidStats | null): ProtectionReport {
   const reports: Record<string, ProtectionReport> = {
     auto_repair: {
       fair_low: 80,
@@ -200,7 +181,7 @@ function getFallbackReport(category: string): ProtectionReport {
     },
   };
 
-  return (
+  const base =
     reports[category] || {
       fair_low: 100,
       fair_high: 1500,
@@ -220,6 +201,16 @@ function getFallbackReport(category: string): ProtectionReport {
         "Written warranty on work performed",
         "Clean worksite after completion",
       ],
-    }
-  );
+    };
+
+  // Prefer real Trovaar bid data for the price range when we have enough of it.
+  if (stats) {
+    return {
+      ...base,
+      fair_low: stats.lowUsd,
+      fair_high: Math.max(stats.highUsd, stats.lowUsd + 1),
+      price_note: `Based on ${stats.count} recent bids from local pros on Trovaar for this category.`,
+    };
+  }
+  return base;
 }

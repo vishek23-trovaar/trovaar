@@ -1,16 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
+import { z } from "zod";
 import { getAuthPayload } from "@/lib/auth";
 import { getDb, initializeDatabase } from "@/lib/db";
 import { checkRateLimit } from "@/lib/rate-limit-api";
 import { aiLogger as logger } from "@/lib/logger";
+import { AI_MODEL, parseStructured } from "@/lib/ai";
 
-interface ProfileAnalysis {
-  specialties: Array<{ category: string; level: string; years: number }>;
-  strengths: string[];
-  certifications_summary: string;
-  experience_tier: "entry" | "mid" | "senior" | "master";
-}
+const ProfileAnalysisSchema = z.object({
+  specialties: z.array(
+    z.object({
+      category: z.string(),
+      level: z.string(),
+      years: z.number(),
+    })
+  ),
+  strengths: z.array(z.string()),
+  certifications_summary: z.string(),
+  experience_tier: z.enum(["entry", "mid", "senior", "master"]),
+});
 
 export async function POST(request: NextRequest) {
   const payload = getAuthPayload(request.headers);
@@ -65,13 +72,6 @@ export async function POST(request: NextRequest) {
       // skill_assessments table may not exist yet
     }
 
-    const apiKey = process.env.ANTHROPIC_API_KEY;
-    if (!apiKey) {
-      return NextResponse.json({ error: "AI service not configured" }, { status: 503 });
-    }
-
-    const client = new Anthropic({ apiKey });
-
     const categories = (() => {
       try { return JSON.parse(String(profile.categories || "[]")); } catch { return []; }
     })();
@@ -119,20 +119,15 @@ Based on ALL the above information, analyze this contractor and return a JSON ob
 
 Return ONLY valid JSON with no markdown formatting, no code fences, no extra text.`;
 
-    const message = await client.messages.create({
-      model: "claude-haiku-4-5",
-      max_tokens: 1024,
-      messages: [{ role: "user", content: promptText }],
+    const analysis = await parseStructured({
+      model: AI_MODEL.fast,
+      schema: ProfileAnalysisSchema,
+      content: promptText,
+      maxTokens: 1024,
+      temperature: 0,
     });
 
-    const responseBlock = message.content[0];
-    if (responseBlock.type !== "text") throw new Error("Unexpected response type");
-
-    const text = responseBlock.text.trim();
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error("Could not parse AI analysis");
-
-    const analysis: ProfileAnalysis = JSON.parse(jsonMatch[0]);
+    if (!analysis) throw new Error("Could not parse AI analysis");
 
     // Validate required fields
     if (!Array.isArray(analysis.specialties) || !Array.isArray(analysis.strengths)) {
