@@ -14,89 +14,152 @@ interface MatchScoreEntry {
   concerns: string[];
 }
 
-const MatchScoreSchema = z.object({
-  score: z.number(),
-  reasoning: z.string(),
-  highlights: z.array(z.string()),
-  concerns: z.array(z.string()),
+// One result per contractor, identified by its 1-based index in the prompt.
+const BatchScoreSchema = z.object({
+  scores: z.array(
+    z.object({
+      index: z.number(),
+      score: z.number(),
+      reasoning: z.string(),
+      highlights: z.array(z.string()),
+      concerns: z.array(z.string()),
+    })
+  ),
 });
 
-async function computeMatchScore(
+// How many contractors to score per Claude call. Most jobs have far fewer bids
+// than this, so they resolve in a single call; large jobs split into a few.
+const CHUNK_SIZE = 10;
+
+/** Return a fresh (<24h) cached score for a contractor, or null. */
+async function getCachedScore(
   db: ReturnType<typeof getDb>,
   jobId: string,
   contractorId: string,
-  jobData: Record<string, unknown>,
-): Promise<MatchScoreEntry> {
-  // Check cache first
-  const cached = await db.prepare(
-    `SELECT score, reasoning, highlights, concerns, computed_at
-     FROM match_score_cache WHERE job_id = ? AND contractor_id = ?`
-  ).get(jobId, contractorId) as Record<string, unknown> | undefined;
+): Promise<MatchScoreEntry | null> {
+  const cached = (await db
+    .prepare(
+      `SELECT score, reasoning, highlights, concerns, computed_at
+       FROM match_score_cache WHERE job_id = ? AND contractor_id = ?`
+    )
+    .get(jobId, contractorId)) as Record<string, unknown> | undefined;
 
-  if (cached) {
-    const computedAt = new Date(String(cached.computed_at));
-    const ageHours = (Date.now() - computedAt.getTime()) / (1000 * 60 * 60);
-    if (ageHours < 24) {
-      return {
-        score: Number(cached.score),
-        reasoning: String(cached.reasoning || ""),
-        highlights: JSON.parse(String(cached.highlights || "[]")),
-        concerns: JSON.parse(String(cached.concerns || "[]")),
-      };
-    }
-  }
+  if (!cached) return null;
+  const computedAt = new Date(String(cached.computed_at));
+  const ageHours = (Date.now() - computedAt.getTime()) / (1000 * 60 * 60);
+  if (ageHours >= 24) return null;
 
-  // Gather contractor data
-  const profile = await db.prepare(
-    `SELECT cp.*, u.name, u.location as user_location
-     FROM contractor_profiles cp
-     JOIN users u ON u.id = cp.user_id
-     WHERE cp.user_id = ?`
-  ).get(contractorId) as Record<string, unknown> | undefined;
+  return {
+    score: Number(cached.score),
+    reasoning: String(cached.reasoning || ""),
+    highlights: JSON.parse(String(cached.highlights || "[]")),
+    concerns: JSON.parse(String(cached.concerns || "[]")),
+  };
+}
 
-  if (!profile) {
-    return { score: 0, reasoning: "Contractor profile not found", highlights: [], concerns: ["Profile missing"] };
-  }
+/** Upsert a contractor's score into the 24h cache. */
+async function cacheScore(
+  db: ReturnType<typeof getDb>,
+  jobId: string,
+  contractorId: string,
+  entry: MatchScoreEntry,
+): Promise<void> {
+  await db
+    .prepare(
+      `INSERT INTO match_score_cache (id, job_id, contractor_id, score, reasoning, highlights, concerns, computed_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
+       ON CONFLICT (job_id, contractor_id) DO UPDATE SET
+         score = EXCLUDED.score,
+         reasoning = EXCLUDED.reasoning,
+         highlights = EXCLUDED.highlights,
+         concerns = EXCLUDED.concerns,
+         computed_at = NOW()`
+    )
+    .run(
+      uuidv4(),
+      jobId,
+      contractorId,
+      entry.score,
+      entry.reasoning,
+      JSON.stringify(entry.highlights),
+      JSON.stringify(entry.concerns),
+    );
+}
 
-  const workHistory = await db.prepare(
-    `SELECT company_name, role, start_date, end_date, description
-     FROM work_history WHERE contractor_id = ? ORDER BY start_date DESC`
-  ).all(contractorId) as Array<Record<string, unknown>>;
+interface ContractorBlock {
+  contractorId: string;
+  block: string;
+}
 
-  const certifications = await db.prepare(
-    `SELECT name, issuer, verified
-     FROM certifications WHERE contractor_id = ? ORDER BY issue_date DESC`
-  ).all(contractorId) as Array<Record<string, unknown>>;
+/** Gather a contractor's profile into a compact text block, or null if missing. */
+async function gatherContractorBlock(
+  db: ReturnType<typeof getDb>,
+  contractorId: string,
+  jobCategory: string,
+): Promise<ContractorBlock | null> {
+  const profile = (await db
+    .prepare(
+      `SELECT cp.*, u.name, u.location as user_location
+       FROM contractor_profiles cp
+       JOIN users u ON u.id = cp.user_id
+       WHERE cp.user_id = ?`
+    )
+    .get(contractorId)) as Record<string, unknown> | undefined;
+
+  if (!profile) return null;
+
+  const workHistory = (await db
+    .prepare(
+      `SELECT company_name, role, start_date, end_date
+       FROM work_history WHERE contractor_id = ? ORDER BY start_date DESC`
+    )
+    .all(contractorId)) as Array<Record<string, unknown>>;
+
+  const certifications = (await db
+    .prepare(
+      `SELECT name, verified
+       FROM certifications WHERE contractor_id = ? ORDER BY issue_date DESC`
+    )
+    .all(contractorId)) as Array<Record<string, unknown>>;
 
   let quizScores: Array<Record<string, unknown>> = [];
   try {
-    quizScores = await db.prepare(
-      `SELECT category, percentage FROM skill_assessments WHERE user_id = ?`
-    ).all(contractorId) as Array<Record<string, unknown>>;
+    quizScores = (await db
+      .prepare(`SELECT category, percentage FROM skill_assessments WHERE user_id = ?`)
+      .all(contractorId)) as Array<Record<string, unknown>>;
   } catch {
     // skill_assessments may not exist yet
   }
 
   const categories = (() => {
-    try { return JSON.parse(String(profile.categories || "[]")); } catch { return []; }
+    try {
+      return JSON.parse(String(profile.categories || "[]"));
+    } catch {
+      return [];
+    }
   })();
 
-  const jobCategory = String(jobData.category || "");
   const categoryMatch = categories.includes(jobCategory);
   const relevantQuiz = quizScores.find((q) => String(q.category) === jobCategory);
   const aiSummary = profile.ai_profile_summary ? String(profile.ai_profile_summary) : null;
 
-  const promptText = `Score how well this contractor matches this specific job. Consider all factors carefully.
+  const work =
+    workHistory.length > 0
+      ? workHistory
+          .slice(0, 5)
+          .map(
+            (w) =>
+              `${w.role || "Worker"} at ${w.company_name} (${w.start_date || "?"}–${w.end_date || "Present"})`
+          )
+          .join("; ")
+      : "None";
 
-JOB DETAILS:
-- Title: ${jobData.title}
-- Description: ${jobData.description || "No description"}
-- Category: ${jobCategory}
-- Urgency: ${jobData.urgency}
-- Location: ${jobData.location}
+  const certs =
+    certifications.length > 0
+      ? certifications.map((c) => `${c.name} (verified: ${c.verified ? "Yes" : "No"})`).join("; ")
+      : "None";
 
-CONTRACTOR PROFILE:
-- Name: ${profile.name}
+  const block = `- Name: ${profile.name}
 - Location: ${profile.user_location || "Not specified"}
 - Service Categories: ${categories.join(", ") || "None listed"}
 - Category Match: ${categoryMatch ? "YES" : "NO"}
@@ -107,67 +170,90 @@ CONTRACTOR PROFILE:
 - Insured: ${profile.insurance_status === "approved" ? "Yes" : "No"}
 - Background Check: ${profile.background_check_status || "none"}
 - License: ${profile.license_number || "None"}
+- Work History: ${work}
+- Certifications: ${certs}
+- Quiz Score for ${jobCategory}: ${relevantQuiz ? `${relevantQuiz.percentage}%` : "Not taken"}${aiSummary ? `\n- AI Summary: ${aiSummary}` : ""}`;
 
-WORK HISTORY:
-${workHistory.length > 0
-  ? workHistory.slice(0, 5).map((w) =>
-    `- ${w.role || "Worker"} at ${w.company_name} (${w.start_date || "?"} to ${w.end_date || "Present"})`
-  ).join("\n")
-  : "None"}
+  return { contractorId, block };
+}
 
-CERTIFICATIONS:
-${certifications.length > 0
-  ? certifications.map((c) => `- ${c.name} (verified: ${c.verified ? "Yes" : "No"})`).join("\n")
-  : "None"}
+/**
+ * Score one chunk of contractors against the job in a SINGLE Claude call.
+ * The job context + scoring rubric are stated once for the whole chunk
+ * instead of being re-sent per contractor — the core token saving.
+ */
+async function scoreChunk(
+  db: ReturnType<typeof getDb>,
+  jobId: string,
+  jobData: Record<string, unknown>,
+  chunk: ContractorBlock[],
+): Promise<Record<string, MatchScoreEntry>> {
+  const out: Record<string, MatchScoreEntry> = {};
+  const jobCategory = String(jobData.category || "");
 
-QUIZ SCORE FOR ${jobCategory}: ${relevantQuiz ? `${relevantQuiz.percentage}%` : "Not taken"}
+  const contractorsText = chunk
+    .map((c, i) => `=== Contractor #${i + 1} ===\n${c.block}`)
+    .join("\n\n");
 
-${aiSummary ? `AI PROFILE SUMMARY:\n${aiSummary}` : ""}
+  const promptText = `Score how well EACH contractor below matches this specific job. Consider all factors carefully and return one score per contractor, identified by their "Contractor #" index.
 
-Score 0-100. Return ONLY valid JSON:
-{"score": number, "reasoning": "1-2 sentences", "highlights": ["short positive factor", ...], "concerns": ["short gap", ...]}`;
+JOB DETAILS:
+- Title: ${jobData.title}
+- Description: ${jobData.description || "No description"}
+- Category: ${jobCategory}
+- Urgency: ${jobData.urgency}
+- Location: ${jobData.location}
+
+SCORING GUIDELINES (0-100):
+- 90-100: Perfect match — strong category expertise, great rating, relevant certs, high quiz score
+- 75-89: Strong match — good expertise in category, decent experience
+- 60-74: Moderate match — some relevant experience but gaps
+- 40-59: Weak match — limited relevant experience
+- 0-39: Poor match — wrong specialty area
+
+CONTRACTORS (${chunk.length}):
+
+${contractorsText}
+
+Return a "scores" array with exactly one entry per contractor. Each entry:
+- "index": the contractor's number (1 to ${chunk.length})
+- "score": integer 0-100
+- "reasoning": 1-2 sentences explaining the score
+- "highlights": 2-4 short positive factors (e.g. "12 years plumbing experience", "Master licensed")
+- "concerns": 0-2 short gaps (e.g. "No HVAC certification", "New to platform")`;
 
   const result = await parseStructured({
     model: AI_MODEL.fast,
-    schema: MatchScoreSchema,
+    schema: BatchScoreSchema,
     content: promptText,
-    maxTokens: 512,
+    maxTokens: Math.min(8192, 300 * chunk.length + 256),
     temperature: 0,
   });
 
-  if (!result) throw new Error("Could not parse match score");
-
-  if (typeof result.score !== "number" || result.score < 0 || result.score > 100) {
-    throw new Error("Invalid score value");
+  const byIndex = new Map<number, z.infer<typeof BatchScoreSchema>["scores"][number]>();
+  if (result?.scores) {
+    for (const s of result.scores) byIndex.set(s.index, s);
   }
 
-  // Cache result
-  const cacheId = uuidv4();
-  await db.prepare(
-    `INSERT INTO match_score_cache (id, job_id, contractor_id, score, reasoning, highlights, concerns, computed_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
-     ON CONFLICT (job_id, contractor_id) DO UPDATE SET
-       score = EXCLUDED.score,
-       reasoning = EXCLUDED.reasoning,
-       highlights = EXCLUDED.highlights,
-       concerns = EXCLUDED.concerns,
-       computed_at = NOW()`
-  ).run(
-    cacheId,
-    jobId,
-    contractorId,
-    result.score,
-    result.reasoning || "",
-    JSON.stringify(result.highlights || []),
-    JSON.stringify(result.concerns || []),
-  );
+  for (let i = 0; i < chunk.length; i++) {
+    const cid = chunk[i].contractorId;
+    const s = byIndex.get(i + 1);
+    if (s && typeof s.score === "number" && s.score >= 0 && s.score <= 100) {
+      const entry: MatchScoreEntry = {
+        score: s.score,
+        reasoning: s.reasoning || "",
+        highlights: s.highlights || [],
+        concerns: s.concerns || [],
+      };
+      out[cid] = entry;
+      await cacheScore(db, jobId, cid, entry); // only cache successful scores
+    } else {
+      // Missing/invalid entry for this contractor — surface a neutral result, don't cache.
+      out[cid] = { score: 0, reasoning: "Unable to compute match score", highlights: [], concerns: [] };
+    }
+  }
 
-  return {
-    score: result.score,
-    reasoning: result.reasoning || "",
-    highlights: result.highlights || [],
-    concerns: result.concerns || [],
-  };
+  return out;
 }
 
 export async function GET(request: NextRequest) {
@@ -187,9 +273,9 @@ export async function GET(request: NextRequest) {
 
   try {
     // Verify the job exists and the requester is the job owner
-    const job = await db.prepare(
-      `SELECT * FROM jobs WHERE id = ?`
-    ).get(jobId) as Record<string, unknown> | undefined;
+    const job = (await db.prepare(`SELECT * FROM jobs WHERE id = ?`).get(jobId)) as
+      | Record<string, unknown>
+      | undefined;
 
     if (!job) {
       return NextResponse.json({ error: "Job not found" }, { status: 404 });
@@ -200,29 +286,47 @@ export async function GET(request: NextRequest) {
     }
 
     // Get all bids for this job
-    const bids = await db.prepare(
-      `SELECT contractor_id FROM bids WHERE job_id = ? AND status != 'withdrawn'`
-    ).all(jobId) as Array<Record<string, unknown>>;
+    const bids = (await db
+      .prepare(`SELECT contractor_id FROM bids WHERE job_id = ? AND status != 'withdrawn'`)
+      .all(jobId)) as Array<Record<string, unknown>>;
 
     if (bids.length === 0) {
       return NextResponse.json({ scores: {} });
     }
 
-    // Compute scores for each bidder (sequentially to avoid rate limits)
+    const jobCategory = String(job.category || "");
     const scores: Record<string, MatchScoreEntry> = {};
 
+    // 1. Serve fresh cache hits immediately; collect the rest to score.
+    const toScore: string[] = [];
+    const seen = new Set<string>();
     for (const bid of bids) {
       const cid = String(bid.contractor_id);
+      if (seen.has(cid)) continue; // a contractor can only have one active bid, but be safe
+      seen.add(cid);
+      const cached = await getCachedScore(db, jobId, cid);
+      if (cached) scores[cid] = cached;
+      else toScore.push(cid);
+    }
+
+    // 2. Gather profiles for cache-misses; missing profiles get a neutral result.
+    const blocks: ContractorBlock[] = [];
+    for (const cid of toScore) {
+      const block = await gatherContractorBlock(db, cid, jobCategory);
+      if (block) blocks.push(block);
+      else scores[cid] = { score: 0, reasoning: "Contractor profile not found", highlights: [], concerns: ["Profile missing"] };
+    }
+
+    // 3. Score the cache-misses in batched Claude calls (one per chunk).
+    for (let i = 0; i < blocks.length; i += CHUNK_SIZE) {
+      const chunk = blocks.slice(i, i + CHUNK_SIZE);
       try {
-        scores[cid] = await computeMatchScore(db, jobId, cid, job);
+        Object.assign(scores, await scoreChunk(db, jobId, job, chunk));
       } catch (err) {
-        logger.warn({ err, contractorId: cid }, "Failed to compute match score for contractor");
-        scores[cid] = {
-          score: 0,
-          reasoning: "Unable to compute match score",
-          highlights: [],
-          concerns: [],
-        };
+        logger.warn({ err, count: chunk.length }, "Failed to compute match scores for chunk");
+        for (const c of chunk) {
+          scores[c.contractorId] = { score: 0, reasoning: "Unable to compute match score", highlights: [], concerns: [] };
+        }
       }
     }
 
