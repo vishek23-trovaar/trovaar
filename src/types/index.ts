@@ -98,6 +98,25 @@ export interface ContractorProfile {
   created_at: string;
 }
 
+/**
+ * Structured AI understanding of a job post (see JOB_INTAKE_DESIGN.md).
+ * Defined here (no server deps) so client components can render it.
+ */
+export interface JobBrief {
+  title: string;
+  description: string;
+  category: string;
+  urgency: "low" | "medium" | "high" | "emergency";
+  scopeItems: string[];
+  likelyMaterials: string[];
+  accessNotes: string | null;
+  riskFlags: string[];
+  requiredCapabilities: Array<{ skill: string; importance: "required" | "preferred" }>;
+  openQuestions: Array<{ question: string; type: string; placeholder: string }>;
+  sources: Array<"text" | "photo" | "video">;
+  confidence: "high" | "medium" | "low";
+}
+
 export interface Job {
   id: string;
   consumer_id: string;
@@ -137,6 +156,7 @@ export interface JobWithBidCount extends Job {
   payment_status?: string | null;
   payment_intent_id?: string | null;
   ai_questions?: string | null; // JSON: [{question, answer}]
+  ai_brief?: string | null; // JSON: JobBrief (AI Job Intake, shadow mode)
   // Collaboration fields — present when is_collab === true
   is_collab?: boolean;
   collab_help_request_id?: string;   // the help_request row id

@@ -22,7 +22,7 @@ import GuaranteeBadge from "@/components/GuaranteeBadge";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { CATEGORIES, CATEGORY_GROUPS, URGENCY_LEVELS, PLATFORM_MARKUP } from "@/lib/constants";
 import { clientScanMessage } from "@/lib/messageScanner";
-import { JobWithBidCount, BidWithContractor, JobStatus, Review } from "@/types";
+import { JobWithBidCount, BidWithContractor, JobStatus, Review, JobBrief } from "@/types";
 import { distanceMiles, formatDistance } from "@/lib/utils";
 import { useBidStream } from "@/hooks/useBidStream";
 
@@ -570,6 +570,16 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
   const aiQuestions = job.ai_questions
     ? (JSON.parse(job.ai_questions) as { question: string; answer: string }[]).filter((q) => q.answer?.trim())
     : [];
+  const aiBrief: JobBrief | null = (() => {
+    try { return (job as { ai_brief?: string | null }).ai_brief ? (JSON.parse((job as { ai_brief?: string | null }).ai_brief!) as JobBrief) : null; } catch { return null; }
+  })();
+  const hasBrief = !!aiBrief && (
+    aiBrief.scopeItems?.length > 0 ||
+    aiBrief.likelyMaterials?.length > 0 ||
+    aiBrief.requiredCapabilities?.length > 0 ||
+    !!aiBrief.accessNotes ||
+    aiBrief.riskFlags?.length > 0
+  );
   const referenceLinks: Array<{ url: string; label: string }> = (() => {
     try { return JSON.parse((job as any).reference_links || "[]"); } catch { return []; }
   })();
@@ -946,6 +956,73 @@ export default function JobDetailPage({ params }: { params: Promise<{ id: string
               <Card className="p-6 rounded-2xl">
                 <h2 className="font-semibold text-secondary mb-2">Description</h2>
                 <p className="text-muted whitespace-pre-wrap">{job.description}</p>
+              </Card>
+            )}
+
+            {/* AI Job Brief — structured understanding of the post (contractor-facing) */}
+            {hasBrief && aiBrief && (
+              <Card className="p-6 border-[#8b5cf6]/20 bg-[#8b5cf6]/10 rounded-2xl">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-lg">🧠</span>
+                  <h2 className="font-semibold text-secondary text-sm">Job Brief</h2>
+                  <span className="text-xs text-[#a78bfa] bg-[#8b5cf6]/10 px-2 py-0.5 rounded-full ml-auto">AI-assisted</span>
+                </div>
+
+                {aiBrief.scopeItems?.length > 0 && (
+                  <div className="mb-4">
+                    <p className="text-xs font-medium text-muted mb-1.5">Scope of work</p>
+                    <ul className="space-y-1">
+                      {aiBrief.scopeItems.map((s, i) => (
+                        <li key={i} className="text-sm text-secondary flex gap-2"><span className="text-[#a78bfa]">•</span>{s}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {aiBrief.requiredCapabilities?.length > 0 && (
+                  <div className="mb-4">
+                    <p className="text-xs font-medium text-muted mb-1.5">Skills needed</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {aiBrief.requiredCapabilities.map((c, i) => (
+                        <span
+                          key={i}
+                          className={`text-xs rounded-full px-2 py-0.5 border ${c.importance === "required" ? "text-[#a78bfa] border-[#8b5cf6]/30 bg-[#8b5cf6]/10" : "text-muted border-[#23252a] bg-[#1a1b1f]"}`}
+                        >
+                          {c.skill}{c.importance === "preferred" ? " · preferred" : ""}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {aiBrief.likelyMaterials?.length > 0 && (
+                  <div className="mb-4">
+                    <p className="text-xs font-medium text-muted mb-1.5">Likely materials</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {aiBrief.likelyMaterials.map((m, i) => (
+                        <span key={i} className="text-xs text-secondary bg-[#1a1b1f] border border-[#23252a] rounded-full px-2 py-0.5">{m}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {aiBrief.accessNotes && (
+                  <div className="mb-4">
+                    <p className="text-xs font-medium text-muted mb-1.5">Access notes</p>
+                    <p className="text-sm text-secondary">{aiBrief.accessNotes}</p>
+                  </div>
+                )}
+
+                {aiBrief.riskFlags?.length > 0 && (
+                  <div>
+                    <p className="text-xs font-medium text-muted mb-1.5">Watch out for</p>
+                    <ul className="space-y-1">
+                      {aiBrief.riskFlags.map((r, i) => (
+                        <li key={i} className="text-sm text-amber-300/90 flex gap-2"><span>⚠</span>{r}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </Card>
             )}
 

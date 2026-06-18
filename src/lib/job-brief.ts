@@ -5,32 +5,20 @@ import {
   questionItemSchema,
   SCENARIO_QUESTION_GUIDANCE,
   normalizeQuestions,
-  type ScenarioQuestion,
 } from "@/lib/gemini";
 import { aiLogger as logger } from "@/lib/logger";
+import type { JobBrief } from "@/types";
 
 /**
  * JobBrief — one structured understanding of a customer's post, fused from all
  * modalities (typed text + photos; video transcripts are already folded into the
- * description upstream by voice-analyze). See JOB_INTAKE_DESIGN.md.
+ * description upstream by voice-analyze). The type lives in @/types (no server
+ * deps) so client components can render it. See JOB_INTAKE_DESIGN.md.
  *
  * Phase 1 is SHADOW MODE: the brief is generated and persisted on the job, but
  * no UI reads it yet — it exists for quality comparison with zero user-facing risk.
  */
-export interface JobBrief {
-  title: string;
-  description: string;
-  category: string;
-  urgency: "low" | "medium" | "high" | "emergency";
-  scopeItems: string[];
-  likelyMaterials: string[];
-  accessNotes: string | null;
-  riskFlags: string[];
-  requiredCapabilities: Array<{ skill: string; importance: "required" | "preferred" }>;
-  openQuestions: ScenarioQuestion[];
-  sources: Array<"text" | "photo" | "video">;
-  confidence: "high" | "medium" | "low";
-}
+export type { JobBrief };
 
 const URGENCIES = ["low", "medium", "high", "emergency"] as const;
 const IMPORTANCE = ["required", "preferred"] as const;
