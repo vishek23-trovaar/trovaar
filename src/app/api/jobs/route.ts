@@ -342,7 +342,7 @@ export async function POST(request: NextRequest) {
     })();
 
     // Geocode all jobs (non-blocking) so they appear on the map
-    ;(async () => {
+    void (async () => {
       try {
         const coords = await geocodeLocation(location);
         if (coords) {
