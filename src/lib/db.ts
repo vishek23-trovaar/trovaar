@@ -1551,6 +1551,16 @@ export async function initializeDatabase(): Promise<void> {
          );
        END IF;
      END $$`,
+    // AI Job Intake (Phase 1, shadow mode): structured JobBrief per post.
+    // Stored as JSON text (matching the photos/ai_questions convention).
+    `DO $$ BEGIN
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='jobs' AND column_name='ai_brief') THEN
+         ALTER TABLE jobs ADD COLUMN ai_brief TEXT;
+       END IF;
+       IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='jobs' AND column_name='ai_brief_at') THEN
+         ALTER TABLE jobs ADD COLUMN ai_brief_at TIMESTAMPTZ;
+       END IF;
+     END $$`,
 
   ];
 

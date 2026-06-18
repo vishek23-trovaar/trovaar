@@ -8,6 +8,7 @@ import { sanitizeText, sanitizeDescription } from "@/lib/sanitize";
 import { trackEvent } from "@/lib/analytics";
 import { jobsLogger as logger } from "@/lib/logger";
 import { CATEGORIES as FALLBACK_CATEGORIES } from "@/lib/constants";
+import { generateJobBrief, storeJobBrief } from "@/lib/job-brief";
 
 const VALID_URGENCIES = ['low', 'medium', 'high', 'emergency'];
 
@@ -322,6 +323,23 @@ export async function POST(request: NextRequest) {
     );
 
     try { trackEvent("job_posted", { userId: payload.userId, jobId: id, properties: { category, urgency } }); } catch {}
+
+    // AI Job Intake (Phase 1, shadow mode): compute a structured JobBrief for
+    // this post and store it on the job. Non-blocking and best-effort — no UI
+    // reads ai_brief yet, so a failure here never affects job creation.
+    void (async () => {
+      try {
+        const brief = await generateJobBrief({
+          title: sanitizedTitle,
+          description: sanitizedDescription,
+          category,
+          photos: photosArray,
+        });
+        if (brief) await storeJobBrief(db, id, brief);
+      } catch (err) {
+        logger.error({ err, jobId: id }, "Shadow job-brief generation failed");
+      }
+    })();
 
     // Geocode all jobs (non-blocking) so they appear on the map
     ;(async () => {
