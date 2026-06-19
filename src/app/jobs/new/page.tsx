@@ -158,25 +158,25 @@ function PostJobContent() {
     setPhotos(newPhotos);
   }
 
-  // ── AI Analysis: call /api/ai/parse-job after upload ───────────────────────
+  // ── AI Analysis: call /api/ai/job-intake after upload ──────────────────────
   async function runAiAnalysis() {
     setAiLoading(true);
     setStepError("");
     try {
-      // Send photos directly — the API uses Gemini Vision to analyze them
-      const res = await fetch("/api/ai/parse-job", {
+      // Unified intake — Gemini analyzes the photos into a structured brief
+      const res = await fetch("/api/ai/job-intake", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ photos: photos.slice(0, 4) }),
       });
 
       if (res.ok) {
-        const data = await res.json();
+        const { brief } = await res.json();
         // Only auto-fill description — title and category are left for the user
-        if (data.description) setDescription(data.description);
+        if (brief?.description) setDescription(brief.description);
         // Set scenario-based questions with type and placeholder
-        if (data.questions?.length) {
-          setAiQuestions(data.questions.map((q: { question: string; type?: string; placeholder?: string }) => ({
+        if (brief?.openQuestions?.length) {
+          setAiQuestions(brief.openQuestions.map((q: { question: string; type?: string; placeholder?: string }) => ({
             question: q.question,
             answer: "",
             type: q.type || "text",
@@ -240,17 +240,16 @@ function PostJobContent() {
   async function generateQuestions(cat: string, ttl: string, desc: string, photoUrls: string[]) {
     setAiQuestionsLoading(true);
     try {
-      const res = await fetch("/api/ai/job-questions", {
+      const res = await fetch("/api/ai/job-intake", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ category: cat, title: ttl, description: desc, photos: photoUrls.slice(0, 2) }),
       });
       if (res.ok) {
-        const data = await res.json();
-        const newQuestions: AiQuestion[] = data.questions.map((q: string | { question: string; type?: string; placeholder?: string }) => {
-          if (typeof q === "string") return { question: q, answer: "", type: "text", placeholder: "Your answer" };
-          return { question: q.question, answer: "", type: q.type || "text", placeholder: q.placeholder || "Your answer" };
-        });
+        const { brief } = await res.json();
+        const newQuestions: AiQuestion[] = (brief?.openQuestions ?? []).map((q: { question: string; type?: string; placeholder?: string }) => (
+          { question: q.question, answer: "", type: q.type || "text", placeholder: q.placeholder || "Your answer" }
+        ));
         // Preserve existing answers when a matching question comes back
         setAiQuestions((prev) => {
           const answerMap = new Map(prev.filter((p) => p.answer.trim()).map((p) => [p.question.toLowerCase().trim(), p.answer]));

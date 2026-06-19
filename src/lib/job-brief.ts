@@ -189,6 +189,33 @@ ${SCENARIO_QUESTION_GUIDANCE}`;
   }
 }
 
+/**
+ * A minimal brief with generic scenario questions, returned to the UI when AI is
+ * unavailable so the post-a-job flow never loses its question step. A fallback
+ * brief is never persisted (only real generated briefs are stored).
+ */
+export function fallbackBrief(category: string): JobBrief {
+  return {
+    title: "",
+    description: "",
+    category,
+    urgency: "medium",
+    scopeItems: [],
+    likelyMaterials: [],
+    accessNotes: null,
+    riskFlags: [],
+    requiredCapabilities: [],
+    openQuestions: [
+      { question: "What is the approximate size or scope of the project?", type: "measurement", placeholder: "e.g. dimensions, square footage, quantity" },
+      { question: "Is this a repair or a new installation?", type: "choice", placeholder: "Repair / New installation / Replacement" },
+      { question: "Are there any access challenges?", type: "text", placeholder: "e.g. 2nd floor, tight crawl space, no parking nearby" },
+      { question: "Will you supply materials or should the contractor source everything?", type: "choice", placeholder: "I'll supply / Contractor sources / Not sure" },
+    ],
+    sources: [],
+    confidence: "low",
+  };
+}
+
 /** Persist a brief onto the job (stored as JSON text, matching the photos/ai_questions convention). */
 export async function storeJobBrief(
   db: ReturnType<typeof getDb>,
