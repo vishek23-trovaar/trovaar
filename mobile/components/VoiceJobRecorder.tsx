@@ -352,21 +352,40 @@ export default function VoiceJobRecorder({ onComplete, onCancel }: Props) {
 
       const mimeType = videoMimeTypeRef.current.split(";")[0]; // strip codec suffix for API
 
-      const { data } = await api<ParsedJob & { transcript: string; visual_notes: string }>(
-        "/api/ai/voice-analyze",
-        {
-          method: "POST",
-          body: JSON.stringify({ videoBase64: base64, mimeType }),
-        }
-      );
+      const { data } = await api<{
+        brief: {
+          title?: string;
+          description?: string;
+          category?: string;
+          urgency?: string;
+          openQuestions?: Array<{ question: string }>;
+        };
+      }>("/api/ai/job-intake", {
+        method: "POST",
+        body: JSON.stringify({ videoBase64: base64, videoMimeType: mimeType }),
+      });
 
-      setTranscript(data.transcript || "");
-      setVisualNotes(data.visual_notes || "");
-      setParsed(data);
-      setEditTitle(data.title);
-      setEditDesc(data.description);
-      setEditCategory(data.category);
-      setEditUrgency(data.urgency || "medium");
+      // Map the unified brief into the shape this recorder's review UI expects.
+      // The brief already fuses the spoken narration into the description, so the
+      // separate transcript / visual-notes cards are simply left empty.
+      const brief = data.brief || {};
+      const result: ParsedJob = {
+        title: brief.title || "",
+        description: brief.description || "",
+        category: brief.category || "",
+        urgency: brief.urgency || "medium",
+        questions: (brief.openQuestions || []).map((q) => q.question),
+        transcript: "",
+        visual_notes: "",
+      };
+
+      setTranscript("");
+      setVisualNotes("");
+      setParsed(result);
+      setEditTitle(result.title);
+      setEditDesc(result.description);
+      setEditCategory(result.category);
+      setEditUrgency(result.urgency);
       setAnswers({});
       setPhase("review");
     } catch (err) {

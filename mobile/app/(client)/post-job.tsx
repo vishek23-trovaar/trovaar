@@ -191,37 +191,51 @@ export default function PostJobScreen() {
     }
     setAiParsing(true);
     try {
-      // Build form data with media
-      const formData = new FormData();
-      mediaUris.forEach((uri, i) => {
+      // Read local media into base64 (photos inline, first video separately) and
+      // send to the unified AI job-intake endpoint — Gemini analyzes them and
+      // returns one structured brief (it also detects the category).
+      const videoExts = ["mp4", "mov", "avi", "mkv", "webm", "wmv", "3gp", "m4v"];
+      const uriToBase64 = async (uri: string): Promise<{ data: string; mimeType: string }> => {
+        const res = await fetch(uri);
+        const blob = await res.blob();
+        const data: string = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result).split(",")[1] || "");
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+        return { data, mimeType: blob.type || "" };
+      };
+
+      const photosBase64: Array<{ mimeType: string; data: string }> = [];
+      let videoBase64: string | undefined;
+      let videoMimeType: string | undefined;
+      for (const uri of mediaUris.slice(0, 5)) {
         const ext = uri.split(".").pop()?.toLowerCase() || "jpg";
-        const videoExts = ["mp4", "mov", "avi", "mkv", "webm", "wmv", "3gp", "m4v"];
-        const type = videoExts.includes(ext) ? `video/${ext === "mov" ? "quicktime" : ext}` : `image/${ext === "jpg" ? "jpeg" : ext}`;
-        formData.append("media", {
-          uri,
-          name: `upload_${i}.${ext}`,
-          type,
-        } as any);
-      });
+        const { data, mimeType } = await uriToBase64(uri);
+        if (videoExts.includes(ext)) {
+          if (!videoBase64) {
+            videoBase64 = data;
+            videoMimeType = mimeType || `video/${ext === "mov" ? "quicktime" : ext}`;
+          }
+        } else {
+          photosBase64.push({ mimeType: mimeType || "image/jpeg", data });
+        }
+      }
 
       const { data } = await api<{
-        title: string;
-        description: string;
-        category: string;
-        urgency: string;
-      }>("/api/ai/parse-job", {
+        brief: { title?: string; description?: string; category?: string; urgency?: string };
+      }>("/api/ai/job-intake", {
         method: "POST",
-        body: formData,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        body: JSON.stringify({ photosBase64, videoBase64, videoMimeType }),
       });
 
-      // Populate AI-detected fields
-      if (data.title) setTitle(data.title);
-      if (data.description) setDescription(data.description);
-      if (data.category) setCategory(data.category);
-      if (data.urgency) setUrgency(data.urgency);
+      // Populate AI-detected fields from the brief
+      const brief = data.brief;
+      if (brief?.title) setTitle(brief.title);
+      if (brief?.description) setDescription(brief.description);
+      if (brief?.category) setCategory(brief.category);
+      if (brief?.urgency) setUrgency(brief.urgency);
       setAiParsed(true);
 
       // Move to step 2 - AI results
