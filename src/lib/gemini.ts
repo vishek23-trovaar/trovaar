@@ -15,9 +15,11 @@ import { aiLogger as logger } from "@/lib/logger";
  *   contractor would ask" logic lives in one place rather than three copies.
  */
 
-// Already proven in this codebase (parse-job, job-questions). Handles images,
-// video, and audio; cheaper and faster than 1.5-pro on the video path.
-export const GEMINI_MODEL = "gemini-2.0-flash";
+// Current multimodal Flash model (images, video, audio). Verified callable on the
+// configured key — the older IDs this codebase used are dead: gemini-1.5-flash /
+// gemini-1.5-pro now 404 (retired), and gemini-2.0-flash returns 429 (free-tier
+// quota 0). Consolidating every breakdown route here means one swap fixes all.
+export const GEMINI_MODEL = "gemini-2.5-flash";
 
 const BASE = "https://generativelanguage.googleapis.com/v1beta";
 
