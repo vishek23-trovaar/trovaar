@@ -5,6 +5,10 @@ import {
   questionItemSchema,
   SCENARIO_QUESTION_GUIDANCE,
   normalizeQuestions,
+  uploadVideoToGemini,
+  deleteGeminiFile,
+  videoFilePart,
+  type GeminiUploadedFile,
 } from "@/lib/gemini";
 import { aiLogger as logger } from "@/lib/logger";
 import type { JobBrief } from "@/types";
@@ -107,7 +111,10 @@ export function normalizeJobBrief(
 }
 
 /**
- * Generate a JobBrief from a post's text + photos via one multimodal Gemini call.
+ * Generate a JobBrief from a post's text + photos + optional video via one
+ * multimodal Gemini call. Video is uploaded through the File API and analyzed
+ * inline (Gemini hears the audio narration and sees the footage), so a
+ * video-only post produces the same structured brief as a typed one.
  * Returns null when AI is unavailable or the call fails (callers no-op).
  */
 export async function generateJobBrief(input: {
@@ -115,26 +122,41 @@ export async function generateJobBrief(input: {
   description?: string;
   category: string;
   photos?: string[];
+  videoBase64?: string;
+  videoMimeType?: string;
 }): Promise<JobBrief | null> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return null;
 
+  let uploaded: GeminiUploadedFile | null = null;
   try {
     const imageParts = await photosToInlineParts(input.photos, 4);
+
+    if (input.videoBase64) {
+      uploaded = await uploadVideoToGemini(apiKey, input.videoBase64, input.videoMimeType || "video/webm");
+    }
+    const hasVideo = !!uploaded;
 
     const sources: Array<"text" | "photo" | "video"> = [];
     if (input.title?.trim() || input.description?.trim()) sources.push("text");
     if (imageParts.length > 0) sources.push("photo");
+    if (hasVideo) sources.push("video");
 
-    const prompt = `You are an expert project analyst for Trovaar, a home services & trades marketplace. A customer posted a service request. Produce ONE structured brief that fuses everything provided (typed text${imageParts.length ? " and the attached photo(s)" : ""}) so contractors understand the job and can bid accurately.
+    const media = [
+      imageParts.length ? `${imageParts.length} photo(s)` : null,
+      hasVideo ? "a short video with audio narration" : null,
+    ].filter(Boolean).join(" and ");
+    const mediaClause = media ? ` and the attached ${media}` : "";
+
+    const prompt = `You are an expert project analyst for Trovaar, a home services & trades marketplace. A customer posted a service request. Produce ONE structured brief that fuses everything provided (typed text${mediaClause}) so contractors understand the job and can bid accurately.
 
 Service category: ${input.category}
 Job title: ${input.title?.trim() || "(none)"}
-Customer description: ${input.description?.trim() || "(none)"}${imageParts.length ? `\n\n${imageParts.length} photo(s) attached — examine them for scope, condition, materials, and access.` : ""}
+Customer description: ${input.description?.trim() || "(none)"}${imageParts.length ? `\n\n${imageParts.length} photo(s) attached — examine them for scope, condition, materials, and access.` : ""}${hasVideo ? `\n\nA video is attached — transcribe what the customer says, note what is visible in the footage, and fold both into the description and the fields below.` : ""}
 
 Produce:
 - title: a clear <= 60 char title (improve the customer's if vague)
-- description: 2-5 sentences, first person, fusing the text and what's visible in the photos
+- description: 2-5 sentences, first person, fusing the text${hasVideo ? ", what the customer says in the video," : ""} and what's visible in the ${hasVideo ? "footage/photos" : "photos"}
 - urgency: one of low, medium, high, emergency (infer from the situation)
 - scopeItems: the discrete tasks involved (e.g. "replace P-trap", "repair water-damaged cabinet floor")
 - likelyMaterials: materials a pro would likely need
@@ -146,9 +168,13 @@ Produce:
 
 ${SCENARIO_QUESTION_GUIDANCE}`;
 
+    const parts: object[] = [...imageParts];
+    if (uploaded) parts.push(videoFilePart(uploaded));
+    parts.push({ text: prompt });
+
     const raw = await geminiJson<Record<string, unknown>>({
       apiKey,
-      parts: [...imageParts, { text: prompt }],
+      parts,
       schema: JOB_BRIEF_SCHEMA,
       temperature: 0.2,
       maxOutputTokens: 1500,
@@ -158,6 +184,8 @@ ${SCENARIO_QUESTION_GUIDANCE}`;
   } catch (err) {
     logger.error({ err }, "generateJobBrief failed");
     return null;
+  } finally {
+    if (uploaded) deleteGeminiFile(apiKey, uploaded.fileName);
   }
 }
 

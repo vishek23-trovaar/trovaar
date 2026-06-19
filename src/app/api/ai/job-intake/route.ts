@@ -23,19 +23,21 @@ export async function POST(request: NextRequest) {
   const rl = checkRateLimit(request, { maxRequests: 20, windowMs: 60 * 60 * 1000, keyPrefix: "ai-job-intake" });
   if (rl) return rl;
 
-  const { jobId, title, description, category, photos } = (await request.json()) as {
+  const { jobId, title, description, category, photos, videoBase64, videoMimeType } = (await request.json()) as {
     jobId?: string;
     title?: string;
     description?: string;
     category?: string;
     photos?: string[];
+    videoBase64?: string;
+    videoMimeType?: string;
   };
 
   if (!category) {
     return NextResponse.json({ error: "category is required" }, { status: 400 });
   }
 
-  const brief = await generateJobBrief({ title, description, category, photos });
+  const brief = await generateJobBrief({ title, description, category, photos, videoBase64, videoMimeType });
   if (!brief) {
     return NextResponse.json({ error: "Unable to generate brief" }, { status: 503 });
   }

@@ -159,3 +159,75 @@ export function normalizeQuestions(raw: unknown): ScenarioQuestion[] {
     }))
     .filter((q) => q.question.length > 0);
 }
+
+// ── Video via the Gemini File API ────────────────────────────────────────────
+const UPLOAD_BASE = "https://generativelanguage.googleapis.com/upload/v1beta/files";
+
+export interface GeminiUploadedFile {
+  fileUri: string;
+  fileName: string;
+  mimeType: string;
+}
+
+/** Delete a previously uploaded Gemini file (fire and forget). */
+export function deleteGeminiFile(apiKey: string, fileName: string): void {
+  fetch(`${BASE}/${fileName}?key=${apiKey}`, { method: "DELETE" }).catch(() => {});
+}
+
+/**
+ * Upload a base64-encoded video to the Gemini File API and poll until it's ACTIVE.
+ * Returns a file handle for use with videoFilePart(), or null on failure/timeout.
+ * The caller is responsible for deleteGeminiFile(fileName) when done.
+ */
+export async function uploadVideoToGemini(
+  apiKey: string,
+  videoBase64: string,
+  mimeType: string,
+): Promise<GeminiUploadedFile | null> {
+  try {
+    const videoBytes = Buffer.from(videoBase64, "base64");
+    const uploadRes = await fetch(`${UPLOAD_BASE}?key=${apiKey}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": mimeType,
+        "X-Goog-Upload-Command": "upload, finalize",
+        "X-Goog-Upload-Header-Content-Length": String(videoBytes.length),
+        "X-Goog-Upload-Header-Content-Type": mimeType,
+      },
+      body: videoBytes,
+    });
+    if (!uploadRes.ok) {
+      logger.error({ status: uploadRes.status, body: await uploadRes.text() }, "Gemini video upload error");
+      return null;
+    }
+
+    const uploadData = (await uploadRes.json()) as { file: { name: string; uri: string; state: string } };
+    const fileName = uploadData.file.name;
+    const fileUri = uploadData.file.uri;
+    let state = uploadData.file.state;
+
+    // Poll until the file finishes processing (usually instant for short clips).
+    let attempts = 0;
+    while (state === "PROCESSING" && attempts < 10) {
+      await new Promise((r) => setTimeout(r, 1000));
+      const pollRes = await fetch(`${BASE}/${fileName}?key=${apiKey}`);
+      const pollData = (await pollRes.json()) as { state: string };
+      state = pollData.state;
+      attempts++;
+    }
+
+    if (state !== "ACTIVE") {
+      deleteGeminiFile(apiKey, fileName); // don't leak an unusable upload
+      return null;
+    }
+    return { fileUri, fileName, mimeType };
+  } catch (err) {
+    logger.error({ err }, "uploadVideoToGemini failed");
+    return null;
+  }
+}
+
+/** A file_data part referencing an uploaded Gemini file, for inclusion in `parts`. */
+export function videoFilePart(file: GeminiUploadedFile): object {
+  return { file_data: { mime_type: file.mimeType, file_uri: file.fileUri } };
+}
