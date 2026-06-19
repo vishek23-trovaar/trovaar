@@ -75,6 +75,27 @@ export async function photosToInlineParts(urls: string[] | undefined, limit: num
 }
 
 /**
+ * Map up to `limit` base64 images (e.g. from a mobile client that has local files,
+ * not uploaded URLs) into Gemini inlineData parts.
+ */
+export function base64ToInlineParts(
+  items: Array<{ mimeType?: string; data: string }> | undefined,
+  limit: number,
+): InlineImagePart[] {
+  if (!items?.length) return [];
+  const allowed: GeminiMediaType[] = ["image/png", "image/webp", "image/gif", "image/jpeg"];
+  return items
+    .slice(0, limit)
+    .filter((it) => it?.data)
+    .map((it) => ({
+      inlineData: {
+        mimeType: (allowed.includes(it.mimeType as GeminiMediaType) ? it.mimeType : "image/jpeg") as GeminiMediaType,
+        data: it.data,
+      },
+    }));
+}
+
+/**
  * Call Gemini generateContent with a JSON response schema and return the parsed
  * object. Throws on transport error / empty response / invalid JSON (callers
  * fall back). No markdown-fence stripping needed — response_schema yields raw JSON.
@@ -98,6 +119,10 @@ export async function geminiJson<T>(opts: {
         maxOutputTokens,
         response_mime_type: "application/json",
         response_schema: schema,
+        // These are deterministic structured-extraction calls — disable 2.5's
+        // default "thinking", which otherwise consumes the output-token budget
+        // and truncates the JSON (breaking tight budgets like detect-category's).
+        thinkingConfig: { thinkingBudget: 0 },
       },
     }),
   });

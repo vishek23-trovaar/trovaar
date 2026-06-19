@@ -23,23 +23,24 @@ export async function POST(request: NextRequest) {
   const rl = checkRateLimit(request, { maxRequests: 20, windowMs: 60 * 60 * 1000, keyPrefix: "ai-job-intake" });
   if (rl) return rl;
 
-  const { jobId, title, description, category, photos, videoBase64, videoMimeType } = (await request.json()) as {
+  const { jobId, title, description, category, photos, photosBase64, videoBase64, videoMimeType } = (await request.json()) as {
     jobId?: string;
     title?: string;
     description?: string;
     category?: string;
     photos?: string[];
+    photosBase64?: Array<{ mimeType?: string; data: string }>;
     videoBase64?: string;
     videoMimeType?: string;
   };
 
-  // category is optional: the early photo-analysis step runs before the user has
-  // picked one (detect-category fills it separately). Brief carries through "".
+  // category is optional: a mobile photo/video post (or the web early photo step)
+  // runs before the user picks one — generateJobBrief detects it from the media.
   const cat = category || "";
 
   // Only a real, AI-generated brief is persisted; a fallback brief is returned to
   // keep the post-a-job flow's question step alive but is never stored.
-  const real = await generateJobBrief({ title, description, category: cat, photos, videoBase64, videoMimeType });
+  const real = await generateJobBrief({ title, description, category: cat, photos, photosBase64, videoBase64, videoMimeType });
   const brief = real ?? fallbackBrief(cat);
 
   // Optional persistence — only when a real brief was generated AND a jobId the caller owns is supplied.

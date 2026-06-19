@@ -2,6 +2,7 @@ import { getDb } from "@/lib/db";
 import {
   geminiJson,
   photosToInlineParts,
+  base64ToInlineParts,
   questionItemSchema,
   SCENARIO_QUESTION_GUIDANCE,
   normalizeQuestions,
@@ -11,7 +12,10 @@ import {
   type GeminiUploadedFile,
 } from "@/lib/gemini";
 import { aiLogger as logger } from "@/lib/logger";
+import { CATEGORIES } from "@/lib/constants";
 import type { JobBrief } from "@/types";
+
+const CATEGORY_VALUES = CATEGORIES.map((c) => c.value);
 
 /**
  * JobBrief — one structured understanding of a customer's post, fused from all
@@ -53,6 +57,11 @@ const JOB_BRIEF_SCHEMA = {
     },
     openQuestions: { type: "ARRAY", items: questionItemSchema },
     confidence: { type: "STRING", enum: [...CONFIDENCE] },
+    // Best-matching category, used when the caller hasn't supplied one (e.g. a
+    // mobile photo/video post where category isn't picked yet). Plain string +
+    // prompt-listed options + code validation — a 40-value enum here makes the
+    // schema "too branchy" for Gemini's constrained decoding (400).
+    detectedCategory: { type: "STRING" },
   },
   required: ["title", "description", "urgency", "scopeItems", "openQuestions", "confidence"],
 };
@@ -120,8 +129,9 @@ export function normalizeJobBrief(
 export async function generateJobBrief(input: {
   title?: string;
   description?: string;
-  category: string;
+  category?: string;
   photos?: string[];
+  photosBase64?: Array<{ mimeType?: string; data: string }>;
   videoBase64?: string;
   videoMimeType?: string;
 }): Promise<JobBrief | null> {
@@ -130,12 +140,15 @@ export async function generateJobBrief(input: {
 
   let uploaded: GeminiUploadedFile | null = null;
   try {
-    const imageParts = await photosToInlineParts(input.photos, 4);
+    // Photos may arrive as uploaded URLs (web) or inline base64 (mobile local files).
+    const urlParts = await photosToInlineParts(input.photos, 4);
+    const imageParts = [...urlParts, ...base64ToInlineParts(input.photosBase64, 4)].slice(0, 4);
 
     if (input.videoBase64) {
       uploaded = await uploadVideoToGemini(apiKey, input.videoBase64, input.videoMimeType || "video/webm");
     }
     const hasVideo = !!uploaded;
+    const hasCategory = !!input.category?.trim();
 
     const sources: Array<"text" | "photo" | "video"> = [];
     if (input.title?.trim() || input.description?.trim()) sources.push("text");
@@ -150,7 +163,7 @@ export async function generateJobBrief(input: {
 
     const prompt = `You are an expert project analyst for Trovaar, a home services & trades marketplace. A customer posted a service request. Produce ONE structured brief that fuses everything provided (typed text${mediaClause}) so contractors understand the job and can bid accurately.
 
-Service category: ${input.category}
+Service category: ${hasCategory ? input.category : "(not specified — infer the best match)"}
 Job title: ${input.title?.trim() || "(none)"}
 Customer description: ${input.description?.trim() || "(none)"}${imageParts.length ? `\n\n${imageParts.length} photo(s) attached — examine them for scope, condition, materials, and access.` : ""}${hasVideo ? `\n\nA video is attached — transcribe what the customer says, note what is visible in the footage, and fold both into the description and the fields below.` : ""}
 
@@ -165,6 +178,7 @@ Produce:
 - requiredCapabilities: skills/credentials needed, each with importance "required" or "preferred"
 - openQuestions: the gaps you could NOT resolve from the inputs — the questions a contractor still needs answered
 - confidence: "high" only if the inputs are clear and complete; "low" if sparse or ambiguous
+- detectedCategory: the single best-matching category value for this job from this list — ${CATEGORY_VALUES.join(", ")}${hasCategory ? " (echo the category given above)" : ""}
 
 ${SCENARIO_QUESTION_GUIDANCE}`;
 
@@ -180,7 +194,11 @@ ${SCENARIO_QUESTION_GUIDANCE}`;
       maxOutputTokens: 1500,
     });
 
-    return normalizeJobBrief(raw, input.category, sources);
+    // Use the caller's category if given, else the model's detected one.
+    const detected = typeof raw.detectedCategory === "string" ? raw.detectedCategory : "";
+    const finalCategory = input.category?.trim() || (CATEGORY_VALUES.includes(detected) ? detected : "");
+
+    return normalizeJobBrief(raw, finalCategory, sources);
   } catch (err) {
     logger.error({ err }, "generateJobBrief failed");
     return null;
